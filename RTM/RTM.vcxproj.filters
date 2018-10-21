@@ -18,7 +18,10 @@
     <ClCompile Include="test\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vectors\Vector2f.cpp">
+    <ClCompile Include="src\vectors\Vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vectors\Vector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +29,13 @@
     <ClInclude Include="test\test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vectors\Vector2f.h">
+    <ClInclude Include="src\vectors\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vectors\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
