@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rtm
+namespace gm
 {
 	void PrintLog();
 }

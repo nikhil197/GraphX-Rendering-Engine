@@ -2,7 +2,7 @@
 
 #include "iostream"
 
-namespace rtm
+namespace gm
 {
 	void PrintLog()
 	{

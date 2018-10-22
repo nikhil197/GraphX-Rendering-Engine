@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-namespace rtm
+namespace gm
 {
 	namespace vector
 	{

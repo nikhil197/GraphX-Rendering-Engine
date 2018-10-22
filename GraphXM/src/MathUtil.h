@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rtm
+namespace gm
 {
 	/* Maths utility for the maths library */
 	struct MathUtil

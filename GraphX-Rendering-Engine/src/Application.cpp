@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 #include "VertexArray.h"
 #include "shaders/Shader.h"
 #include "buffers/VertexBuffer.h"
@@ -45,6 +44,9 @@ int main()
 	shaders::Shader shader("res/shaders/Basic.shader");
 	shader.Bind();
 
+	float r = 0.0f;
+	float increment = 0.01f;
+
 	// Draw while the window doesn't close
 	while (!window->IsClosed())
 	{
@@ -53,6 +55,7 @@ int main()
 
 		vao.Bind();
 		shader.Bind();
+		shader.SetUniform4f(r, 1.0f, r, 1.0, "u_Color");
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
 
 		//Draw the triangle - Legacy OpenGL
@@ -61,6 +64,19 @@ int main()
 		glVertex2f( 0.5f, -0.5f);
 		glVertex2f( 0.0f,  0.5f);
 		glEnd();*/
+
+		r += increment;
+
+		if (r > 1.0)
+		{
+			r = 1.0;
+			increment = -increment;
+		}
+		else if (r < 0.0)
+		{
+			r = 0.0;
+			increment = -increment;
+		}
 
 		//Poll events and swap buffers
 		window->Update();

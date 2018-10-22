@@ -2,7 +2,7 @@
 
 #include "../MathUtil.h"
 
-namespace rtm
+namespace gm
 {
 	namespace vector
 	{

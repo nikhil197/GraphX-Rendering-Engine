@@ -34,6 +34,8 @@ namespace engine
 			/* Un Bind the shader */
 			void UnBind() const;
 
+			void SetUniform4f(float r, float g, float b, float a, const char* Name);
+
 		private:
 			/* Parse the source file and get the shader source codes */
 			ShaderSource ParseShaderSource(const std::string& filePath);

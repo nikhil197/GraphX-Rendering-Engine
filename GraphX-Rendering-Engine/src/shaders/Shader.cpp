@@ -32,6 +32,12 @@ namespace engine
 			GLCall(glUseProgram(0));
 		}
 
+		void Shader::SetUniform4f(float r, float g, float b, float a, const char* Name)
+		{
+			int location = glGetUniformLocation(m_RendererID, Name);
+			glUniform4f(location, r, g, b, a);
+		}
+
 		ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 		{
 			enum class ShaderType
