@@ -1,7 +1,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
-#include "../Math.h"
+#include "../MathUtil.h"
 
 namespace rtm
 {
@@ -190,12 +190,12 @@ namespace rtm
 		/* Member functions */
 		float Vector3::Magnitude() const
 		{
-			return Math::Sqrt(MagnitudeSquare());
+			return MathUtil::Sqrt(MagnitudeSquare());
 		}
 
 		float Vector3::MagnitudeSquare() const
 		{
-			return (Math::Square(x) + Math::Square(y) + Math::Square(z));
+			return (MathUtil::Square(x) + MathUtil::Square(y) + MathUtil::Square(z));
 		}
 
 		bool Vector3::IsZero() const
@@ -217,12 +217,12 @@ namespace rtm
 
 		float Vector3::Distance(const Vector3& V1, const Vector3& V2)
 		{
-			return Math::Sqrt(Vector3::DistanceSquared(V1, V2));
+			return MathUtil::Sqrt(Vector3::DistanceSquared(V1, V2));
 		}
 
 		float Vector3::DistanceSquared(const Vector3& V1, const Vector3& V2)
 		{
-			return (Math::Square(V1.x - V2.x) + Math::Square(V1.y - V2.y) + Math::Square(V1.z - V2.z));
+			return (MathUtil::Square(V1.x - V2.x) + MathUtil::Square(V1.y - V2.y) + MathUtil::Square(V1.z - V2.z));
 		}
 	}
 }

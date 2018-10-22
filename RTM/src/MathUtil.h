@@ -3,7 +3,7 @@
 namespace rtm
 {
 	/* Maths utility for the maths library */
-	struct Math
+	struct MathUtil
 	{
 		/* Returns the square of the value */
 		template<typename T>

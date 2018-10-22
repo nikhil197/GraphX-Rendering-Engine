@@ -35,7 +35,7 @@
     <ClInclude Include="src\vectors\Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Math.h">
+    <ClInclude Include="src\MathUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

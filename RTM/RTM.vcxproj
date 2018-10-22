@@ -115,7 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Math.h" />
+    <ClInclude Include="src\MathUtil.h" />
     <ClInclude Include="src\vectors\Vector2.h" />
     <ClInclude Include="src\vectors\Vector3.h" />
     <ClInclude Include="test\test.h" />
