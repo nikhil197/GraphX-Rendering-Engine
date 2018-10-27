@@ -12,6 +12,9 @@ namespace gm
 		// Define the unit vector
 		const Vector2 Vector2::UnitVector(1, 1);
 
+		// Define the number of components
+		const int Vector2::Components = 2;
+
 		Vector2::Vector2()
 			:x(0), y(0)
 		{}
@@ -42,7 +45,7 @@ namespace gm
 
 		bool Vector2::operator!=(const Vector2& OtherVector) const
 		{
-			return (x != OtherVector.x || y != OtherVector.y);
+			return !(*this == OtherVector);
 		}
 
 		const Vector2 Vector2::operator+(const Vector2& OtherVector) const
@@ -107,64 +110,56 @@ namespace gm
 		/* Assignment operators */
 		Vector2& Vector2::operator+=(const Vector2& OtherVector)
 		{
-			x += OtherVector.x;
-			y += OtherVector.y;
+			*this = *this + OtherVector;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator-=(const Vector2& OtherVector)
 		{
-			x -= OtherVector.x;
-			y -= OtherVector.y;
+			*this = *this - OtherVector;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator*=(const Vector2& OtherVector)
 		{
-			x *= OtherVector.x;
-			y *= OtherVector.y;
+			*this = *this * OtherVector;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator/=(const Vector2& OtherVector)
 		{
-			x = (OtherVector.x == 0) ? FLT_MAX : (x / OtherVector.x);
-			y = (OtherVector.y == 0) ? FLT_MAX : (y / OtherVector.y);
+			*this = *this / OtherVector;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator+=(float Value)
 		{
-			x += Value;
-			y += Value;
+			*this = *this + Value;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator-=(float Value)
 		{
-			x -= Value;
-			y -= Value;
+			*this = *this - Value;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator*=(float Value)
 		{
-			x *= Value;
-			y *= Value;
+			*this = *this * Value;
 
 			return *this;
 		}
 
 		Vector2& Vector2::operator/=(float Value)
 		{
-			x = (Value == 0) ? FLT_MAX : x / Value;
-			y = (Value == 0) ? FLT_MAX : y / Value;
+			*this = *this / Value;
 
 			return *this;
 		}

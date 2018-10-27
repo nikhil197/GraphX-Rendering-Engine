@@ -13,6 +13,9 @@ namespace gm
 		// Define the Unit Vector
 		const Vector3 Vector3::UnitVector(1, 1, 1);
 
+		// Define the number of components in the vector
+		const int Vector3::Components = 3;
+
 		Vector3::Vector3()
 			:x(0), y(0), z(0)
 		{}
@@ -54,7 +57,7 @@ namespace gm
 
 		bool Vector3::operator!=(const Vector3& OtherVector) const
 		{
-			return (x == OtherVector.x || y == OtherVector.y || z == OtherVector.z);
+			return !(*this == OtherVector);
 		}
 
 		/* Arithmatic operators */
@@ -117,72 +120,56 @@ namespace gm
 		/* Assignment operators */
 		Vector3& Vector3::operator+=(const Vector3& OtherVector)
 		{
-			x += OtherVector.x;
-			y += OtherVector.y;
-			z += OtherVector.z;
+			*this = *this + OtherVector;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator-=(const Vector3& OtherVector)
 		{
-			x -= OtherVector.x;
-			y -= OtherVector.y;
-			z -= OtherVector.z;
+			*this = *this - OtherVector;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator*=(const Vector3& OtherVector)
 		{
-			x *= OtherVector.x;
-			y *= OtherVector.y;
-			z *= OtherVector.z;
+			*this = *this * OtherVector;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator/=(const Vector3& OtherVector)
 		{
-			x = (OtherVector.x == 0) ? FLT_MAX : x / OtherVector.x;
-			y = (OtherVector.y == 0) ? FLT_MAX : y / OtherVector.y;
-			z = (OtherVector.z == 0) ? FLT_MAX : z / OtherVector.z;
+			*this = *this / OtherVector;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator+=(float Value)
 		{
-			x += Value;
-			y += Value;
-			z += Value;
+			*this = *this + Value;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator-=(float Value)
 		{
-			x += Value;
-			y += Value;
-			z += Value;
+			*this = *this - Value;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator*=(float Value)
 		{
-			x *= Value;
-			y *= Value;
-			z *= Value;
+			*this = *this - Value;
 
 			return *this;
 		}
 
 		Vector3& Vector3::operator/=(float Value)
 		{
-			x = (Value == 0) ? FLT_MAX : x / Value;
-			y = (Value == 0) ? FLT_MAX : y / Value;
-			z = (Value == 0) ? FLT_MAX : z / Value;
+			*this = *this / Value;
 
 			return *this;
 		}

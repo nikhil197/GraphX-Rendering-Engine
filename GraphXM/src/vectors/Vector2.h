@@ -20,13 +20,16 @@ namespace gm
 			/* 2D Unit Vector constant(1, 1) */
 			static const Vector2 UnitVector;
 
+			/* Number of components in the vector */
+			static const int Components;
+
 		public:
 			/* Contructors */
 			explicit Vector2();
 
 			explicit Vector2(float Value);
 
-			explicit Vector2(float x, float y);
+			Vector2(float x, float y);
 
 			Vector2(const Vector2& OtherVector);
 

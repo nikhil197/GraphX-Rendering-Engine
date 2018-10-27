@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "vectors/Vector2.h"
+#include "vectors/Vector3.h"
+
 #include "VertexArray.h"
 #include "shaders/Shader.h"
 #include "buffers/VertexBuffer.h"
@@ -11,6 +14,7 @@
 int main()
 {
 	using namespace engine;
+	using namespace gm::vector;
 
 	//Title of the window
 	std::string title = "Real Time Rendering Engine";
@@ -26,17 +30,17 @@ int main()
 	// Print the gl version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	float vertices[] = {
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.0f,  0.5f
+	Vector2 vertices[] = {
+		{-0.5f, -0.5f},
+		{ 0.5f, -0.5f},
+		{ 0.0f,  0.5f}
 	};
 
 	arrays::VertexArray vao;
-	buffers::VertexBuffer vbo(vertices, 2 * 3 * sizeof(float));
+	buffers::VertexBuffer vbo(vertices, 3 * sizeof(Vector2));
 	buffers::VertexBufferLayout layout;
 
-	layout.Push<float>(2);
+	layout.Push<float>(Vector2::Components);
 
 	vao.AddBuffer(vbo, layout);
 	vao.UnBind();

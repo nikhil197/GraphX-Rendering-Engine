@@ -34,8 +34,36 @@ namespace engine
 
 		void Shader::SetUniform4f(float r, float g, float b, float a, const char* Name)
 		{
-			int location = glGetUniformLocation(m_RendererID, Name);
+			int location = GetLocation(Name);
+			if (location == -1)
+				return;
+
 			glUniform4f(location, r, g, b, a);
+		}
+
+		int Shader::GetLocation(const std::string& Name)
+		{
+			// First check if the uniform location is cached and return it
+			if (m_UniformLocations.find(Name) != m_UniformLocations.end())
+				return m_UniformLocations[Name];
+			else
+			{
+				// Get the location of the uniform
+				int location = glGetUniformLocation(m_RendererID, Name.c_str());
+				
+				//If the name is invalid
+				if (location == -1)
+				{
+					std::cout << "Warning!!! " << Name << " uniform not present in the current bound shader." << std::endl;
+				}
+				// Cache the location
+				else
+				{
+					m_UniformLocations[Name] = location;
+				}
+
+				return location;
+			}
 		}
 
 		ShaderSource Shader::ParseShaderSource(const std::string& filePath)

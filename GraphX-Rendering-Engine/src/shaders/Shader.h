@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 namespace engine
 {
@@ -21,6 +22,9 @@ namespace engine
 
 			/* ID of the shader */
 			unsigned int m_RendererID;
+
+			/* To cache the uniform locations */
+			std::unordered_map<std::string, int> m_UniformLocations;
 
 		public:
 			/* filePath is the path to the source file */
@@ -45,6 +49,9 @@ namespace engine
 
 			/* Create a program and attach the shaders to it */
 			unsigned int CreateShader(const std::string& vertexSource, const std::string& fragmentSource);
+
+			/* Returns the location of the uniform with the given name */
+			int GetLocation(const std::string& Name);
 		};
 	}
 }

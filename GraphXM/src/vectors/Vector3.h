@@ -24,11 +24,14 @@ namespace gm
 			/* 3D Unit Vector constant (1, 1, 1)*/
 			static const Vector3 UnitVector;
 
+			/* Number of components in the vector */
+			static const int Components;
+
 		public:
 			/* Constructors */
-			Vector3();
+			explicit Vector3();
 
-			Vector3(float Value);
+			explicit Vector3(float Value);
 
 			Vector3(float x, float y, float z);
 
