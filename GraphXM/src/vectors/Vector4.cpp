@@ -6,222 +6,237 @@
 
 namespace gm
 {
-	namespace vector
+	// Define the Zero vector
+	const Vector4 Vector4::ZeroVector(0, 0, 0, 0);
+
+	// Define the Unit vector
+	const Vector4 Vector4::UnitVector(1, 1, 1, 1);
+
+	// Define the number of components in the vector
+	const int Vector4::Components = 4;
+
+	Vector4::Vector4()
+		: x(0), y(0), z(0), w(0)
+	{}
+
+	Vector4::Vector4(float Value)
+		: x(Value), y(Value), z(Value), w(Value)
+	{}
+
+	Vector4::Vector4(float x, float y, float z, float w)
+		: x(x), y(y), z(z), w(w)
+	{}
+
+	Vector4::Vector4(const Vector2& Vec, float z, float w)
+		: x(Vec.x), y(Vec.y), z(z), w(w)
+	{}
+
+	Vector4::Vector4(float x, const Vector2& Vec, float w)
+		: x(x), y(Vec.x), z(Vec.y), w(w)
+	{}
+
+	Vector4::Vector4(float x, float y, const Vector2& Vec)
+		: x(x), y(y), z(Vec.x), w(Vec.y)
+	{}
+
+	Vector4::Vector4(const Vector3& Vec, float w)
+		: x(Vec.x), y(Vec.y), z(Vec.z), w(w)
+	{}
+
+	Vector4::Vector4(float x, const Vector3& Vec)
+		: x(x), y(Vec.x), z(Vec.y), w(Vec.z)
+	{}
+
+	// Operators
+	Vector4& Vector4::operator=(const Vector4& OtherVector)
 	{
-		// Define the Zero vector
-		const Vector4 Vector4::ZeroVector(0, 0, 0, 0);
+		x = OtherVector.x;
+		y = OtherVector.y;
+		z = OtherVector.z;
+		w = OtherVector.w;
 
-		// Define the Unit vector
-		const Vector4 Vector4::UnitVector(1, 1, 1, 1);
+		return *this;
+	}
 
-		// Define the number of components in the vector
-		const int Vector4::Components = 4;
+	bool Vector4::operator==(const Vector4& OtherVector) const
+	{
+		return (x == OtherVector.x && y == OtherVector.y && z == OtherVector.z && w == OtherVector.w);
+	}
 
-		Vector4::Vector4()
-			: w(0), x(0), y(0), z(0)
-		{}
+	bool Vector4::operator!=(const Vector4& OtherVector) const
+	{
+		return !(*this == OtherVector);
+	}
 
-		Vector4::Vector4(float Value)
-			: w(Value), x(Value), y(Value), z(Value)
-		{}
+	// Arithmetic Operators
+	const Vector4 Vector4::operator+(const Vector4& OtherVector) const
+	{
+		Vector4 result(x + OtherVector.x, y + OtherVector.y, z + OtherVector.z, w + OtherVector.w);
+		return result;
+	}
 
-		Vector4::Vector4(float w, float x, float y, float z)
-			: w(w), x(x), y(y), z(z)
-		{}
+	const Vector4 Vector4::operator-(const Vector4& OtherVector) const
+	{
+		Vector4 result(x - OtherVector.x, y - OtherVector.y, z - OtherVector.z, w - OtherVector.w);
+		return result;
+	}
 
-		Vector4::Vector4(const Vector2& Vec, float y, float z)
-			: w(Vec.x), x(Vec.y), y(y), z(z)
-		{}
+	const Vector4 Vector4::operator*(const Vector4& OtherVector) const
+	{
+		Vector4 result(x * OtherVector.x, y * OtherVector.y, z * OtherVector.z, w * OtherVector.w);
+		return result;
+	}
 
-		Vector4::Vector4(float w, const Vector2& Vec, float z)
-			: w(w), x(Vec.x), y(Vec.y), z(z)
-		{}
+	const Vector4 Vector4::operator/(const Vector4& OtherVector) const
+	{
+		float xVal = OtherVector.x == 0 ? FLT_MAX : x / OtherVector.x;
+		float yVal = OtherVector.y == 0 ? FLT_MAX : y / OtherVector.y;
+		float zVal = OtherVector.z == 0 ? FLT_MAX : z / OtherVector.z;
+		float wVal = OtherVector.w == 0 ? FLT_MAX : w / OtherVector.w;
 
-		Vector4::Vector4(float w, float x, const Vector2& Vec)
-			: w(w), x(x), y(Vec.x), z(Vec.y)
-		{}
+		Vector4 result(xVal, yVal, zVal, wVal);
+		return result;
+	}
 
-		Vector4::Vector4(const Vector3& Vec, float z)
-			: w(Vec.x), x(Vec.y), y(Vec.z), z(z)
-		{}
+	const Vector4 Vector4::operator+(float Value) const
+	{
+		Vector4 result(x + Value, y + Value, z + Value, w + Value);
+		return result;
+	}
 
-		Vector4::Vector4(float w, const Vector3& Vec)
-			: w(w), x(Vec.x), y(Vec.y), z(Vec.z)
-		{}
+	const Vector4 Vector4::operator-(float Value) const
+	{
+		Vector4 result(x - Value, y - Value, z - Value, w - Value);
+		return result;
+	}
 
-		// Operators
-		Vector4& Vector4::operator=(const Vector4& OtherVector)
-		{
-			w = OtherVector.w;
-			x = OtherVector.x;
-			y = OtherVector.y;
-			z = OtherVector.z;
+	const Vector4 Vector4::operator*(float Value) const
+	{
+		Vector4 result(x * Value, y * Value, z * Value, w * Value);
+		return result;
+	}
 
-			return *this;
-		}
+	const Vector4 Vector4::operator/(float Value) const
+	{
+		float xVal = (Value == 0) ? FLT_MAX : x / Value;
+		float yVal = (Value == 0) ? FLT_MAX : y / Value;
+		float zVal = (Value == 0) ? FLT_MAX : z / Value;
+		float wVal = (Value == 0) ? FLT_MAX : w / Value;
 
-		bool Vector4::operator==(const Vector4& OtherVector) const
-		{
-			return (w == OtherVector.w && x == OtherVector.x && y == OtherVector.y && z == OtherVector.z);
-		}
+		Vector4 result(xVal, yVal, zVal, wVal);
+		return result;
+	}
 
-		bool Vector4::operator!=(const Vector4& OtherVector) const
-		{
-			return !(*this == OtherVector);
-		}
+	// Assignment Operators
+	Vector4& Vector4::operator+=(const Vector4& OtherVector)
+	{
+		*this = *this + OtherVector;
 
-		// Arithmetic Operators
-		const Vector4 Vector4::operator+(const Vector4& OtherVector) const
-		{
-			Vector4 result(w + OtherVector.w, x + OtherVector.x, y + OtherVector.y, z + OtherVector.z);
-			return result;
-		}
+		return *this;
+	}
 
-		const Vector4 Vector4::operator-(const Vector4& OtherVector) const
-		{
-			Vector4 result(w - OtherVector.w, x - OtherVector.x, y - OtherVector.y, z - OtherVector.z);
-			return result;
-		}
+	Vector4& Vector4::operator-=(const Vector4& OtherVector)
+	{
+		*this = *this - OtherVector;
 
-		const Vector4 Vector4::operator*(const Vector4& OtherVector) const
-		{
-			Vector4 result(w * OtherVector.w, x * OtherVector.x, y * OtherVector.y, z * OtherVector.z);
-			return result;
-		}
+		return *this;
+	}
 
-		const Vector4 Vector4::operator/(const Vector4& OtherVector) const
-		{
-			float wVal = OtherVector.w == 0 ? FLT_MAX : w / OtherVector.w;
-			float xVal = OtherVector.x == 0 ? FLT_MAX : x / OtherVector.x;
-			float yVal = OtherVector.y == 0 ? FLT_MAX : y / OtherVector.y;
-			float zVal = OtherVector.z == 0 ? FLT_MAX : z / OtherVector.z;
+	Vector4& Vector4::operator*=(const Vector4& OtherVector)
+	{
+		*this = *this * OtherVector;
 
-			Vector4 result(wVal, xVal, yVal, zVal);
-			return result;
-		}
+		return *this;
+	}
 
-		const Vector4 Vector4::operator+(float Value) const
-		{
-			Vector4 result(w + Value, x + Value, y + Value, z + Value);
-			return result;
-		}
+	Vector4& Vector4::operator/=(const Vector4& OtherVector)
+	{
+		*this = *this / OtherVector;
 
-		const Vector4 Vector4::operator-(float Value) const
-		{
-			Vector4 result(w - Value, x - Value, y - Value, z - Value);
-			return result;
-		}
+		return *this;
+	}
 
-		const Vector4 Vector4::operator*(float Value) const
-		{
-			Vector4 result(w * Value, x * Value, y * Value, z * Value);
-			return result;
-		}
+	Vector4& Vector4::operator+=(float Value)
+	{
+		*this = *this + Value;
 
-		const Vector4 Vector4::operator/(float Value) const
-		{
-			float wVal = (Value == 0) ? FLT_MAX : w / Value;
-			float xVal = (Value == 0) ? FLT_MAX : x / Value;
-			float yVal = (Value == 0) ? FLT_MAX : y / Value;
-			float zVal = (Value == 0) ? FLT_MAX : z / Value;
+		return *this;
+	}
 
-			Vector4 result(wVal, xVal, yVal, zVal);
-			return result;
-		}
+	Vector4& Vector4::operator-=(float Value)
+	{
+		*this = *this - Value;
 
-		// Assignment Operators
-		Vector4& Vector4::operator+=(const Vector4& OtherVector)
-		{
-			*this = *this + OtherVector;
+		return *this;
+	}
 
-			return *this;
-		}
+	Vector4& Vector4::operator*=(float Value)
+	{
+		*this = *this * Value;
 
-		Vector4& Vector4::operator-=(const Vector4& OtherVector)
-		{
-			*this = *this - OtherVector;
+		return *this;
+	}
 
-			return *this;
-		}
+	Vector4& Vector4::operator/=(float Value)
+	{
+		*this = *this / Value;
 
-		Vector4& Vector4::operator*=(const Vector4& OtherVector)
-		{
-			*this = *this * OtherVector;
+		return *this;
+	}
 
-			return *this;
-		}
+	// Member Functions
+	float Vector4::Magnitude() const
+	{
+		return MathUtil::Sqrt(MagnitudeSquare());
+	}
 
-		Vector4& Vector4::operator/=(const Vector4& OtherVector)
-		{
-			*this = *this / OtherVector;
+	float Vector4::MagnitudeSquare() const
+	{
+		return (MathUtil::Square(x) + MathUtil::Square(y) + MathUtil::Square(z) + MathUtil::Square(w));
+	}
 
-			return *this;
-		}
+	bool Vector4::IsZero() const
+	{
+		return (*this == Vector4::ZeroVector);
+	}
 
-		Vector4& Vector4::operator+=(float Value)
-		{
-			*this = *this + Value;
+	float Vector4::DotProduct(const Vector4& V1, const Vector4& V2)
+	{
+		return (V1.x * V2.x + V1.y * V2.y + V1.z * V2.z + V1.w * V2.w);
+	}
 
-			return *this;
-		}
+	// To be Completed
+	const Vector4 Vector4::CrossProduct(const Vector4& V1, const Vector4& V2)
+	{
+		return Vector4();
+	}
 
-		Vector4& Vector4::operator-=(float Value)
-		{
-			*this = *this - Value;
+	float Vector4::Distance(const Vector4& V1, const Vector4& V2)
+	{
+		return MathUtil::Sqrt(Vector4::DistanceSquared(V1, V2));
+	}
 
-			return *this;
-		}
+	float Vector4::DistanceSquared(const Vector4& V1, const Vector4& V2)
+	{
+		return (MathUtil::Square(V1.x - V2.x) + MathUtil::Square(V1.y - V2.y) + MathUtil::Square(V1.z - V2.z) + MathUtil::Square(V1.w - V2.w));
+	}
 
-		Vector4& Vector4::operator*=(float Value)
-		{
-			*this = *this * Value;
+	/* Non - Member functions */
+	std::ostream& operator<<(std::ostream& Out, const Vector4& Vec)
+	{
+		return Out << "X: " << Vec.x << " Y: " << Vec.y << " Z: " << Vec.z << " W: " << Vec.w << std::endl;
+	}
 
-			return *this;
-		}
+	const Vector4 operator+(int Value, const Vector4& Vec)
+	{
+		Vector4 result(Value + Vec.x, Value + Vec.y, Value + Vec.z, Value + Vec.w);
+		return result;
+	}
 
-		Vector4& Vector4::operator/=(float Value)
-		{
-			*this = *this / Value;
-
-			return *this;
-		}
-
-		// Member Functions
-		float Vector4::Magnitude() const
-		{
-			return MathUtil::Sqrt(MagnitudeSquare());
-		}
-
-		float Vector4::MagnitudeSquare() const
-		{
-			return (MathUtil::Square(w) + MathUtil::Square(x) + MathUtil::Square(y) + MathUtil::Square(z));
-		}
-
-		bool Vector4::IsZero() const
-		{
-			return (*this == Vector4::ZeroVector);
-		}
-
-		float Vector4::DotProduct(const Vector4& V1, const Vector4& V2)
-		{
-			return (V1.w * V2.w + V1.x * V2.x + V1.y * V2.y + V1.z * V2.z);
-		}
-
-		// To be Completed
-		const Vector4 Vector4::CrossProduct(const Vector4& V1, const Vector4 & V2)
-		{
-			return Vector4();
-		}
-
-		float Vector4::Distance(const Vector4& V1, const Vector4 & V2)
-		{
-			return MathUtil::Sqrt(Vector4::DistanceSquared(V1, V2));
-		}
-
-		float Vector4::DistanceSquared(const Vector4& V1, const Vector4 & V2)
-		{
-			return (MathUtil::Square(V1.w - V2.w) + MathUtil::Square(V1.x - V2.x) + MathUtil::Square(V1.y - V2.y) + MathUtil::Square(V1.z - V2.z));
-		}
+	const Vector4 operator*(int Value, const Vector4& Vec)
+	{
+		Vector4 result(Value * Vec.x, Value * Vec.y, Value * Vec.z, Value * Vec.w);
+		return result;
 	}
 }
 
