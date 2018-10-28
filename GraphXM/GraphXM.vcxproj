@@ -119,11 +119,13 @@
     <ClInclude Include="src\MathUtil.h" />
     <ClInclude Include="src\vectors\Vector2.h" />
     <ClInclude Include="src\vectors\Vector3.h" />
+    <ClInclude Include="src\vectors\Vector4.h" />
     <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\vectors\Vector2.cpp" />
     <ClCompile Include="src\vectors\Vector3.cpp" />
+    <ClCompile Include="src\vectors\Vector4.cpp" />
     <ClCompile Include="test\test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
