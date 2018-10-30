@@ -16,15 +16,14 @@ namespace gm
 		Init(Value);
 	}
 
+	Matrix4::Matrix4(const float(*arr)[4])
+	{
+		Init(arr);
+	}
+
 	Matrix4::Matrix4(const Matrix4& OtherMat)
 	{
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 4; j++)
-			{
-				M[i][j] = OtherMat.M[i][j];
-			}
-		}
+		Init(OtherMat.M);
 	}
 
 	void Matrix4::Init(float Value)
@@ -34,6 +33,17 @@ namespace gm
 			for (int j = 0; j < 4; j++)
 			{
 				M[i][j] = Value;
+			}
+		}
+	}
+
+	void Matrix4::Init(const float(*arr)[4])
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				M[i][j] = arr[i][j];
 			}
 		}
 	}

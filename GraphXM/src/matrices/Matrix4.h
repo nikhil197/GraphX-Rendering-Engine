@@ -18,6 +18,9 @@ namespace gm
 		/* Initialise the matrix with Value */
 		explicit Matrix4(float Value);
 
+		/* Initialise the matrix with the array */
+		Matrix4(const float(*arr)[4]);
+
 		/* Copy Contructor */
 		Matrix4(const Matrix4& OtherMat);
 
@@ -94,6 +97,9 @@ namespace gm
 	private:
 		/* Initialise the matrix with Value */
 		void Init(float Value);
+
+		/* Initialise the matrix with the contents of an array */
+		void Init(const float (*arr)[4]);
 	};
 
 	/* Non Member functions */
