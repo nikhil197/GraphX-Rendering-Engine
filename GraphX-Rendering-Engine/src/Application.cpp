@@ -14,7 +14,7 @@
 int main()
 {
 	using namespace engine;
-	using namespace gm::vector;
+	using namespace gm;
 
 	//Title of the window
 	std::string title = "Real Time Rendering Engine";
