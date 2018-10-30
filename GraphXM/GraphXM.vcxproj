@@ -117,14 +117,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\MathUtil.h" />
-    <ClInclude Include="src\matrix\Matrix.h" />
+    <ClInclude Include="src\matrices\Matrix3.h" />
+    <ClInclude Include="src\matrices\Matrix4.h" />
     <ClInclude Include="src\vectors\Vector2.h" />
     <ClInclude Include="src\vectors\Vector3.h" />
     <ClInclude Include="src\vectors\Vector4.h" />
     <ClInclude Include="test\test.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\matrix\Matrix.cpp" />
+    <ClCompile Include="src\matrices\Matrix3.cpp" />
+    <ClCompile Include="src\matrices\Matrix4.cpp" />
     <ClCompile Include="src\vectors\Vector2.cpp" />
     <ClCompile Include="src\vectors\Vector3.cpp" />
     <ClCompile Include="src\vectors\Vector4.cpp" />
