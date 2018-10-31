@@ -16,16 +16,294 @@ namespace gm
 
 	Matrix3::Matrix3(const Matrix3& OtherMat)
 	{
-
-	}
-
-	void Matrix3::Identity()
-	{
-
+		Init(OtherMat.M);
 	}
 
 	void Matrix3::Init(float Value)
 	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				M[i][j] = Value;
+			}
+		}
+	}
 
+	void Matrix3::Init(const float(*arr)[3])
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				M[i][j] = arr[i][j];
+			}
+		}
+	}
+
+	void Matrix3::Identity()
+	{
+		M[0][0] = 1, M[0][1] = 0, M[0][2] = 0;
+		M[1][0] = 0, M[1][1] = 1, M[1][2] = 0;
+		M[2][0] = 0, M[2][1] = 0, M[2][2] = 1;
+	}
+
+	#pragma region Operators
+	bool Matrix3::operator==(const Matrix3& OtherMat) const
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (M[i][j] != OtherMat.M[i][j])
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool Matrix3::operator!=(const Matrix3& OtherMat) const
+	{
+		return !(*this == OtherMat);
+	}
+
+	const Matrix3 Matrix3::operator+(const Matrix3& OtherMat) const
+	{
+		Matrix3 result;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = M[i][j] + OtherMat.M[i][j];
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator-(const Matrix3& OtherMat) const
+	{
+		Matrix3 result;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = M[i][j] - OtherMat.M[i][j];
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator*(const Matrix3& OtherMat) const
+	{
+		Matrix3 result;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				float val = 0;
+
+				for (int k = 0; k < 3; k++)
+				{
+					val += M[i][k] * OtherMat.M[k][j];
+				}
+				result.M[i][j] = val;
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator+(float Value) const
+	{
+		Matrix3 result;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = M[i][j] + Value;
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator-(float Value) const
+	{
+		Matrix3 result;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = M[i][j] - Value;
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator*(float Value) const
+	{
+		Matrix3 result;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = M[i][j] * Value;
+			}
+		}
+
+		return result;
+	}
+
+	const Matrix3 Matrix3::operator/(float Value) const
+	{
+		Matrix3 result;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[i][j] = (Value == 0) ? FLT_MAX : M[i][j] / Value;
+			}
+		}
+
+		return result;
+	}
+
+	Matrix3& Matrix3::operator+=(const Matrix3& OtherMat)
+	{
+		*this = *this + OtherMat;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator-=(const Matrix3& OtherMat)
+	{
+		*this = *this - OtherMat;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator*=(const Matrix3& OtherMat)
+	{
+		*this = *this * OtherMat;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator+=(float Value)
+	{
+		*this = *this + Value;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator-=(float Value)
+	{
+		*this = *this - Value;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator*=(float Value)
+	{
+		*this = *this * Value;
+		return *this;
+	}
+
+	Matrix3& Matrix3::operator/=(float Value)
+	{
+		*this = *this / Value;
+		return *this;
+	}
+
+	#pragma endregion
+
+	Matrix3 Matrix3::Transpose() const
+	{
+		Matrix3 result;
+
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				result.M[j][i] = M[i][j];
+			}
+		}
+
+		return result;
+	}
+
+	const Vector3 Matrix3::operator*(const Vector3& Vec) const
+	{
+		Vector3 result(
+			M[0][0] * Vec.x + M[0][1] * Vec.y + M[0][2] * Vec.z,
+			M[1][0] * Vec.x + M[1][1] * Vec.y + M[1][2] * Vec.z,
+			M[2][0] * Vec.x + M[2][1] * Vec.y + M[2][2] * Vec.z
+		);
+
+		return result;
+	}
+
+	
+
+	float Matrix3::Determinant() const
+	{
+		return (
+			+ M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1])
+			- M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0])
+			+ M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0])
+			);
+	}
+
+	Matrix3 Matrix3::Adjoint() const
+	{
+		Matrix3 mat;
+
+		// First Row
+		mat.M[0][0] = +(M[1][1] * M[2][2] - M[1][2] * M[2][1]);
+		mat.M[0][1] = -(M[1][0] * M[2][2] - M[1][2] * M[2][0]);
+		mat.M[0][2] = +(M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+		
+		// Second Row
+		mat.M[1][0] = -(M[0][1] * M[2][2] - M[0][2] * M[2][1]);
+		mat.M[1][1] = +(M[0][0] * M[2][2] - M[0][2] * M[2][0]);
+		mat.M[1][2] = -(M[0][0] * M[2][1] - M[0][1] * M[2][0]);
+
+		// Third Row
+		mat.M[2][0] = +(M[0][1] * M[1][2] - M[0][2] * M[1][1]);
+		mat.M[2][1] = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
+		mat.M[2][2] = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
+
+		// Transposing the Matrix
+		mat = mat.Transpose();
+		return mat;
+	}
+
+	Matrix3 Matrix3::Inverse() const
+	{
+		Matrix3 mat;
+
+		// Get the adjoint of the matrix
+		mat = mat.Adjoint();
+
+		// Divide the adjoint matrix by determinant
+		mat /= mat.Determinant();
+		return mat;
+	}
+
+	/* Non Member functions */
+	std::ostream& operator<<(std::ostream& Out, const Matrix3& Mat)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+				Out << Mat.M[i][j] << " ";
+
+			Out << std::endl;
+		}
+
+		return Out;
 	}
 }
