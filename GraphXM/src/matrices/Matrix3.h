@@ -16,6 +16,9 @@ namespace gm
 		/* Initialise the matrix with a value */
 		explicit Matrix3(float Value);
 
+		/* Initialise the matrix with an array */
+		explicit Matrix3(const float(*arr)[3]);
+
 		/* Copy constructor */
 		Matrix3(const Matrix3& OtherMat);
 

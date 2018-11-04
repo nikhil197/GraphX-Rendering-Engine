@@ -14,6 +14,11 @@ namespace gm
 		Init(Value);
 	}
 
+	Matrix3::Matrix3(const float(*arr)[3])
+	{
+		Init(arr);
+	}
+
 	Matrix3::Matrix3(const Matrix3& OtherMat)
 	{
 		Init(OtherMat.M);

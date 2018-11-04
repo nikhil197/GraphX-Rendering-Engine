@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -119,6 +119,9 @@
     <ClInclude Include="src\MathUtil.h" />
     <ClInclude Include="src\matrices\Matrix3.h" />
     <ClInclude Include="src\matrices\Matrix4.h" />
+    <ClInclude Include="src\transformations\Rotation.h" />
+    <ClInclude Include="src\transformations\Scaling.h" />
+    <ClInclude Include="src\transformations\Translation.h" />
     <ClInclude Include="src\vectors\Vector2.h" />
     <ClInclude Include="src\vectors\Vector3.h" />
     <ClInclude Include="src\vectors\Vector4.h" />
@@ -127,6 +130,9 @@
   <ItemGroup>
     <ClCompile Include="src\matrices\Matrix3.cpp" />
     <ClCompile Include="src\matrices\Matrix4.cpp" />
+    <ClCompile Include="src\transformations\Rotation.cpp" />
+    <ClCompile Include="src\transformations\Scaling.cpp" />
+    <ClCompile Include="src\transformations\Translation.cpp" />
     <ClCompile Include="src\vectors\Vector2.cpp" />
     <ClCompile Include="src\vectors\Vector3.cpp" />
     <ClCompile Include="src\vectors\Vector4.cpp" />

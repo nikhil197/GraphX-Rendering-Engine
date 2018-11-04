@@ -1,6 +1,7 @@
 #pragma once
 
-#define PI 3.14159265
+// Define the value of PI
+const double PI = 3.14159265;
 
 namespace gm
 {
