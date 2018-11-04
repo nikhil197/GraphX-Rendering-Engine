@@ -1,4 +1,5 @@
 #include "Rotation.h"
+#include "Translation.h"
 
 #include "../vectors/Vector2.h"
 #include "../vectors/Vector3.h"
@@ -13,6 +14,13 @@ namespace gm
 	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles)
 	{
 		Matrix4 result = GetRotationMatrix(Angles);
+
+		return Mat * result;
+	}
+
+	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles, const Vector3& Axis)
+	{
+		Matrix4 result = GetRotationMatrix(Angles, Axis);
 
 		return Mat * result;
 	}
@@ -50,12 +58,20 @@ namespace gm
 		resultY.M[2][0] = -(float)MathUtil::Sin(Vec.y);
 
 		// Rotating about z - axis
-		resultZ.M[0][0] =  (float)MathUtil::Cos(Vec.x);
-		resultZ.M[0][1] = -(float)MathUtil::Sin(Vec.x);
-		resultZ.M[1][0] =  (float)MathUtil::Sin(Vec.x);
-		resultZ.M[1][1] =  (float)MathUtil::Cos(Vec.x);
+		resultZ.M[0][0] =  (float)MathUtil::Cos(Vec.z);
+		resultZ.M[0][1] = -(float)MathUtil::Sin(Vec.z);
+		resultZ.M[1][0] =  (float)MathUtil::Sin(Vec.z);
+		resultZ.M[1][1] =  (float)MathUtil::Cos(Vec.z);
 
 		return resultZ * resultY * resultX;
+	}
+
+	Matrix4 Rotation::GetRotationMatrix(const Vector3& Angles, const Vector3& Axis)
+	{
+		Matrix4 T = Translation::GetTranslationMatrix(Axis);
+		Matrix4 R = GetRotationMatrix(Angles);
+
+		return T * R * T.Inverse();
 	}
 
 	Matrix3 Rotation::GetRotationMatrix(float Value)

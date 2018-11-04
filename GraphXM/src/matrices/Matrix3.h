@@ -23,6 +23,9 @@ namespace gm
 		Matrix3(const Matrix3& OtherMat);
 
 	public:
+		/* Assignment Operator */
+		Matrix3& operator=(const Matrix3& OtherMat);
+
 		/* Returns whether the matrix is equal to this one */
 		bool operator==(const Matrix3& OtherMat) const;
 
@@ -76,6 +79,9 @@ namespace gm
 	public:
 		/* Returns the vector obtained after multipying a vec4 with this matrix */
 		const Vector3 operator*(const Vector3& Vec) const;
+
+		/* Index operator returns a pointer to the row specified by the index */
+		float* const operator[](int index) const;
 
 	public:
 		/* Converts this matrix into an identiy matrix */

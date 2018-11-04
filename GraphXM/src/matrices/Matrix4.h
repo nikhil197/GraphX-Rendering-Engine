@@ -25,6 +25,9 @@ namespace gm
 		Matrix4(const Matrix4& OtherMat);
 
 	public:
+		/* Assignment operator */
+		Matrix4& operator=(const Matrix4& OtherMat);
+
 		/* Returns whether the matrix is equal to this one */
 		bool operator==(const Matrix4& OtherMat) const;
 
@@ -78,6 +81,8 @@ namespace gm
 	public:
 		/* Returns the vector obtained after multipying a vec4 with this matrix */
 		const Vector4 operator*(const Vector4& Vec) const;
+
+		float* const operator[](int index) const;
 
 		/* Converts the matrix into an identity matrix */
 		void Identity();

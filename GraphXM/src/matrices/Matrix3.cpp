@@ -54,13 +54,20 @@ namespace gm
 	}
 
 	#pragma region Operators
+	Matrix3& Matrix3::operator=(const Matrix3& OtherMat)
+	{
+		Init(OtherMat.M);
+
+		return *this;
+	}
+
 	bool Matrix3::operator==(const Matrix3& OtherMat) const
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				if (M[i][j] != OtherMat.M[i][j])
+				if (M[i][j] != OtherMat[i][j])
 					return false;
 			}
 		}
@@ -80,7 +87,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = M[i][j] + OtherMat.M[i][j];
+				result[i][j] = M[i][j] + OtherMat[i][j];
 			}
 		}
 
@@ -94,7 +101,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = M[i][j] - OtherMat.M[i][j];
+				result[i][j] = M[i][j] - OtherMat[i][j];
 			}
 		}
 
@@ -112,9 +119,9 @@ namespace gm
 
 				for (int k = 0; k < 3; k++)
 				{
-					val += M[i][k] * OtherMat.M[k][j];
+					val += M[i][k] * OtherMat[k][j];
 				}
-				result.M[i][j] = val;
+				result[i][j] = val;
 			}
 		}
 
@@ -129,7 +136,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = M[i][j] + Value;
+				result[i][j] = M[i][j] + Value;
 			}
 		}
 
@@ -144,7 +151,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = M[i][j] - Value;
+				result[i][j] = M[i][j] - Value;
 			}
 		}
 
@@ -159,7 +166,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = M[i][j] * Value;
+				result[i][j] = M[i][j] * Value;
 			}
 		}
 
@@ -174,7 +181,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[i][j] = (Value == 0) ? FLT_MAX : M[i][j] / Value;
+				result[i][j] = (Value == 0) ? FLT_MAX : M[i][j] / Value;
 			}
 		}
 
@@ -233,7 +240,7 @@ namespace gm
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result.M[j][i] = M[i][j];
+				result[j][i] = M[i][j];
 			}
 		}
 
@@ -251,7 +258,15 @@ namespace gm
 		return result;
 	}
 
-	
+	float* const Matrix3::operator[](int index) const
+	{
+		if (index < 0)
+			index = 0;
+		else if (index > 3)
+			index = 3;
+
+		return (float* const)M[index];
+	}
 
 	float Matrix3::Determinant() const
 	{
@@ -267,19 +282,19 @@ namespace gm
 		Matrix3 mat;
 
 		// First Row
-		mat.M[0][0] = +(M[1][1] * M[2][2] - M[1][2] * M[2][1]);
-		mat.M[0][1] = -(M[1][0] * M[2][2] - M[1][2] * M[2][0]);
-		mat.M[0][2] = +(M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+		mat[0][0] = +(M[1][1] * M[2][2] - M[1][2] * M[2][1]);
+		mat[0][1] = -(M[1][0] * M[2][2] - M[1][2] * M[2][0]);
+		mat[0][2] = +(M[1][0] * M[2][1] - M[1][1] * M[2][0]);
 		
 		// Second Row
-		mat.M[1][0] = -(M[0][1] * M[2][2] - M[0][2] * M[2][1]);
-		mat.M[1][1] = +(M[0][0] * M[2][2] - M[0][2] * M[2][0]);
-		mat.M[1][2] = -(M[0][0] * M[2][1] - M[0][1] * M[2][0]);
+		mat[1][0] = -(M[0][1] * M[2][2] - M[0][2] * M[2][1]);
+		mat[1][1] = +(M[0][0] * M[2][2] - M[0][2] * M[2][0]);
+		mat[1][2] = -(M[0][0] * M[2][1] - M[0][1] * M[2][0]);
 
 		// Third Row
-		mat.M[2][0] = +(M[0][1] * M[1][2] - M[0][2] * M[1][1]);
-		mat.M[2][1] = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
-		mat.M[2][2] = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
+		mat[2][0] = +(M[0][1] * M[1][2] - M[0][2] * M[1][1]);
+		mat[2][1] = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
+		mat[2][2] = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
 
 		// Transposing the Matrix
 		mat = mat.Transpose();
@@ -304,7 +319,7 @@ namespace gm
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
-				Out << Mat.M[i][j] << " ";
+				Out << Mat[i][j] << " ";
 
 			Out << std::endl;
 		}

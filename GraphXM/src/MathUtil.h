@@ -52,7 +52,12 @@ namespace gm
 		template <typename T>
 		static double Sec(T angleInDegrees)
 		{
-			return 1 / Cos(angleInDegrees);
+			double val = Cos(angleInDegrees);
+
+			if (val == 0)
+				return DBL_MAX;
+			else
+				return 1 / val;
 		}
 
 		// Sine Function
@@ -66,7 +71,12 @@ namespace gm
 		template <typename T>
 		static double Csc(T angleInDegrees)
 		{
-			return 1 / Sin(angleInDegrees);
+			double val = Sin(angleInDegrees);
+
+			if (val == 0)
+				return DBL_MAX;
+			else
+				return 1 / val;
 		}
 
 		// Tangent Function
@@ -80,7 +90,12 @@ namespace gm
 		template <typename T>
 		static double Cot(T angleInDegrees)
 		{
-			return 1 / Tan(angleInDegrees);
+			double val = Tan(angleInDegrees);
+
+			if (val == 0)
+				return DBL_MAX;
+			else
+				return 1 / val;
 		}
 
 		/************ Inverse Trignometric functions  **************/
