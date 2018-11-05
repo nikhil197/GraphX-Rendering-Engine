@@ -2,11 +2,15 @@
 
 #include "vectors/Vector2.h"
 #include "vectors/Vector3.h"
+#include "matrices/Matrix4.h"
+#include "transformations/Translation.h"
 
 #include "VertexArray.h"
+#include "Renderer.h"
 #include "shaders/Shader.h"
 #include "buffers/VertexBuffer.h"
 #include "buffers/VertexBufferLayout.h"
+#include "buffers/IndexBuffer.h"
 
 #include "ErrorHandler.h"
 #include "Window.h"
@@ -31,22 +35,31 @@ int main()
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	Vector2 vertices[] = {
-		{-0.5f, -0.5f},
-		{ 0.5f, -0.5f},
-		{ 0.0f,  0.5f}
+		{-0.5f, -0.5f}, //0
+		{ 0.5f, -0.5f}, //1
+		{ 0.5f,  0.5f}, //2
+		{-0.5f,  0.5f}  //3
 	};
 
-	arrays::VertexArray vao;
-	buffers::VertexBuffer vbo(vertices, 3 * sizeof(Vector2));
-	buffers::VertexBufferLayout layout;
+	unsigned int indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
 
+	VertexArray vao;
+	VertexBuffer vbo(vertices, 4 * sizeof(Vector2));
+	VertexBufferLayout layout;
+	IndexBuffer ibo(indices, 6);
 	layout.Push<float>(Vector2::Components);
 
 	vao.AddBuffer(vbo, layout);
+	ibo.UnBind();
 	vao.UnBind();
 
-	shaders::Shader shader("res/shaders/Basic.shader");
+	Shader shader("res/shaders/Basic.shader");
 	shader.Bind();
+
+	Renderer renderer;
 
 	float r = 0.0f;
 	float increment = 0.01f;
@@ -57,30 +70,22 @@ int main()
 		// Clear the window 
 		window->Clear();
 
-		vao.Bind();
+		// Resize the window before rendering
+		window->Resize();
+
 		shader.Bind();
-		shader.SetUniform4f(r, 1.0f, r, 1.0, "u_Color");
-		GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
+		shader.SetUniform4f("u_Color", r, 1.0f, r, 1.0);
+		renderer.Draw(vao, ibo, shader);
 
-		//Draw the triangle - Legacy OpenGL
-		/*glBegin(GL_TRIANGLES);
-		glVertex2f(-0.5f, -0.5f);
-		glVertex2f( 0.5f, -0.5f);
-		glVertex2f( 0.0f,  0.5f);
-		glEnd();*/
-
+		if (r > 1.0f)
+		{
+			increment = -0.05f;
+		}
+		else if (r < 0.0f)
+		{
+			increment = 0.05f;
+		}
 		r += increment;
-
-		if (r > 1.0)
-		{
-			r = 1.0;
-			increment = -increment;
-		}
-		else if (r < 0.0)
-		{
-			r = 0.0;
-			increment = -increment;
-		}
 
 		//Poll events and swap buffers
 		window->Update();

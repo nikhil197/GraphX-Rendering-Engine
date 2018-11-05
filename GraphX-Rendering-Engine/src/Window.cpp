@@ -1,4 +1,7 @@
 #include "Window.h"
+
+#include "ErrorHandler.h"
+#include "GLFW/glfw3.h"
 #include <iostream>
 
 namespace engine
@@ -37,6 +40,12 @@ namespace engine
 		// Make the context current
 		glfwMakeContextCurrent(m_Window);
 
+		// Setting the swap interval
+		glfwSwapInterval(1);
+
+		// Set the error callback for glfw
+		glfwSetErrorCallback(&GlfwErrorCallback);
+
 		return true;
 	}
 
@@ -56,6 +65,17 @@ namespace engine
 	void Window::SetClearColor(float r, float g, float b, float a)
 	{
 		glClearColor(r, g, b, a);
+	}
+
+	void Window::Resize()
+	{
+		int width, height;
+	
+		// Get the new width and height of the window
+		glfwGetFramebufferSize(m_Window, &width, &height);
+
+		// Set the new size of the window
+		glViewport(0, 0, width, height);
 	}
 
 	void Window::Clear()
@@ -78,7 +98,10 @@ namespace engine
 
 	Window::~Window()
 	{
-		/* Terminate the window */
+		/* Destroy the window */
+		glfwDestroyWindow(m_Window);
+
+		/* Terminate */
 		glfwTerminate();
 	}
 

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <string>
 
 namespace engine
 {
+	class GLFWwindow;
+
 	class Window
 	{
 	private:
@@ -30,6 +31,9 @@ namespace engine
 
 		/* Returns whether the window has been closed */
 		bool IsClosed() const;
+
+		/* Resize the window */
+		void Resize();
 
 		/* Clear the screen before each frame */
 		void Clear();

@@ -5,27 +5,24 @@
 
 namespace engine
 {
-	namespace arrays
+	class VertexArray
 	{
-		class VertexArray
-		{
-		private:
-			/* Identifier for the vao */
-			unsigned int m_RendererID;
+	private:
+		/* Identifier for the vao */
+		unsigned int m_RendererID;
 
-		public:
-			VertexArray();
+	public:
+		VertexArray();
 
-			~VertexArray();
+		~VertexArray();
 
-			/* Add new buffer to the vao object to be bound */
-			void AddBuffer(buffers::VertexBuffer& vbo, buffers::VertexBufferLayout& layout);
+		/* Add new buffer to the vao object to be bound */
+		void AddBuffer(VertexBuffer& vbo, VertexBufferLayout& layout);
 
-			/* Bind the vao */
-			void Bind() const;
+		/* Bind the vao */
+		void Bind() const;
 
-			/* Un Bind the vao */
-			void UnBind() const;
-		};
-	}
+		/* Un Bind the vao */
+		void UnBind() const;
+	};
 }

@@ -2,56 +2,57 @@
 
 #include <string>
 #include <unordered_map>
+#include "matrices/Matrix4.h"
 
 namespace engine
 {
-	namespace shaders
+	// Struct to hold the both the shaders' source
+	struct ShaderSource
 	{
-		// Struct to hold the both the shaders' source
-		struct ShaderSource
-		{
-			std::string VertexShaderSource;
-			std::string FragmentShaderSource;
-		};
+		std::string VertexShaderSource;
+		std::string FragmentShaderSource;
+	};
 
-		class Shader
-		{
-		private: 
-			/* Path to the shader source file */
-			std::string m_FilePath;
+	class Shader
+	{
+	private: 
+		/* Path to the shader source file */
+		std::string m_FilePath;
 
-			/* ID of the shader */
-			unsigned int m_RendererID;
+		/* ID of the shader */
+		unsigned int m_RendererID;
 
-			/* To cache the uniform locations */
-			std::unordered_map<std::string, int> m_UniformLocations;
+		/* To cache the uniform locations */
+		std::unordered_map<std::string, int> m_UniformLocations;
 
-		public:
-			/* filePath is the path to the source file */
-			Shader(const std::string& filePath);
+	public:
+		/* filePath is the path to the source file */
+		Shader(const std::string& filePath);
 
-			~Shader();
+		~Shader();
 
-			/* Bind the shader */
-			void Bind() const;
+		/* Bind the shader */
+		void Bind() const;
 
-			/* Un Bind the shader */
-			void UnBind() const;
+		/* Un Bind the shader */
+		void UnBind() const;
 
-			void SetUniform4f(float r, float g, float b, float a, const char* Name);
+		/* Set uniforms */
+		void SetUniform4f(const char* Name, float r, float g, float b, float a);
 
-		private:
-			/* Parse the source file and get the shader source codes */
-			ShaderSource ParseShaderSource(const std::string& filePath);
+		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
 
-			/* Compile the shader source extracted from the file */
-			unsigned int CompileShader(unsigned int type, const std::string& shaderSouce);
+	private:
+		/* Parse the source file and get the shader source codes */
+		ShaderSource ParseShaderSource(const std::string& filePath);
 
-			/* Create a program and attach the shaders to it */
-			unsigned int CreateShader(const std::string& vertexSource, const std::string& fragmentSource);
+		/* Compile the shader source extracted from the file */
+		unsigned int CompileShader(unsigned int type, const std::string& shaderSouce);
 
-			/* Returns the location of the uniform with the given name */
-			int GetLocation(const std::string& Name);
-		};
-	}
+		/* Create a program and attach the shaders to it */
+		unsigned int CreateShader(const std::string& vertexSource, const std::string& fragmentSource);
+
+		/* Returns the location of the uniform with the given name */
+		int GetLocation(const std::string& Name);
+	};
 }
