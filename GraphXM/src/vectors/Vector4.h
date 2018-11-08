@@ -89,6 +89,9 @@ namespace gm
 
 		Vector4& operator/=(float Value);
 
+		/* Unary negation operator */
+		void operator-();
+
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;
 
@@ -97,6 +100,9 @@ namespace gm
 
 		/* Returns whether vector is zero */
 		bool IsZero() const;
+
+		/* Get a normal vector (unit vector) for this vector */
+		Vector4 Normal() const;
 
 		/*********** Static Member functions ***********/
 		/* Dot product of the two vectors */

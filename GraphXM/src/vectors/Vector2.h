@@ -87,6 +87,12 @@ namespace gm
 		static float DistanceSquared(const Vector2& V1, const Vector2& V2);
 
 	public:
+		/* Unary Negation operator */
+		void operator-();
+
+		/* Returns a normal vector(unit vector) of this vector */
+		Vector2 Normal() const;
+
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;
 

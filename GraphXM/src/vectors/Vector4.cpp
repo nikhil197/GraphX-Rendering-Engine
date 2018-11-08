@@ -184,6 +184,11 @@ namespace gm
 		return *this;
 	}
 
+	void Vector4::operator-()
+	{
+		*this = Vector4::ZeroVector - *this;
+	}
+
 	// Member Functions
 	float Vector4::Magnitude() const
 	{
@@ -198,6 +203,19 @@ namespace gm
 	bool Vector4::IsZero() const
 	{
 		return (*this == Vector4::ZeroVector);
+	}
+
+	Vector4 Vector4::Normal() const
+	{
+		Vector4 result;
+		float magnitude = Magnitude();
+
+		result.x = x / magnitude;
+		result.y = y / magnitude;
+		result.z = z / magnitude;
+		result.w = w / magnitude;
+
+		return result;
 	}
 
 	float Vector4::DotProduct(const Vector4& V1, const Vector4& V2)

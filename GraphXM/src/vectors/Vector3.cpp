@@ -172,7 +172,24 @@ namespace gm
 		return *this;
 	}
 
+	void Vector3::operator-()
+	{
+		*this = Vector3::ZeroVector - *this;
+	}
+
 	/* Member functions */
+	Vector3 Vector3::Normal() const
+	{
+		Vector3 result;
+		float magnitude = Magnitude();
+
+		result.x = x / magnitude;
+		result.y = y / magnitude;
+		result.z = z / magnitude;
+
+		return result;
+	}
+
 	float Vector3::Magnitude() const
 	{
 		return MathUtil::Sqrt(MagnitudeSquare());

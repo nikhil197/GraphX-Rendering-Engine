@@ -83,6 +83,12 @@ namespace gm
 		Vector3& operator/=(float Value);
 
 	public:
+		/* Unary Negation operator */
+		void operator-();
+
+		/* Returns a normal vector(unit vector) of this vector */
+		Vector3 Normal() const;
+
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;
 

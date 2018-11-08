@@ -162,7 +162,23 @@ namespace gm
 		return *this;
 	}
 
+	void Vector2::operator-()
+	{
+		*this = Vector2::ZeroVector - *this;
+	}
+
 	/* Member functions */
+	Vector2 Vector2::Normal() const
+	{
+		Vector2 result;
+		float magnitude = Magnitude();
+
+		result.x = x / magnitude;
+		result.y = y / magnitude;
+
+		return result;
+	}
+
 	float Vector2::Magnitude() const
 	{
 		return MathUtil::Sqrt(MagnitudeSquare());
