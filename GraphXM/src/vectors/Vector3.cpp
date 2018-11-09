@@ -172,12 +172,22 @@ namespace gm
 		return *this;
 	}
 
-	void Vector3::operator-()
+	Vector3 Vector3::operator-() const
 	{
-		*this = Vector3::ZeroVector - *this;
+		return Vector3::ZeroVector - *this;
 	}
 
 	/* Member functions */
+	Vector3 Vector3::Reciprocal() const
+	{
+		Vector3 result;
+		result.x = x != 0 ? 1 / x : FLT_MAX;
+		result.y = y != 0 ? 1 / y : FLT_MAX;
+		result.z = z != 0 ? 1 / z : FLT_MAX;
+
+		return result;
+	}
+	
 	Vector3 Vector3::Normal() const
 	{
 		Vector3 result;

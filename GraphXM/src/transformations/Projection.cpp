@@ -23,11 +23,11 @@ namespace gm
 		Vector3 ScaleVector;
 		ScaleVector.x = (right == left) ? right : 2 / rml;
 		ScaleVector.y = (top == bottom) ? top : 2 / tmb;
-		ScaleVector.z = (far == near) ? far : -2 / fmn;
+		ScaleVector.z = (far == near) ? far : 2 / fmn;
 
-		Matrix4 trans = Translation::GetTranslationMatrix(TranslationVector);
+		Translation trans(TranslationVector);
 
-		Matrix4 scale = Scaling::GetScaleMatrix(ScaleVector);
+		Scaling scale(ScaleVector);
 
 		return trans * scale;
 	}

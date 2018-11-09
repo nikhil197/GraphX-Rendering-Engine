@@ -90,7 +90,10 @@ namespace gm
 		Vector4& operator/=(float Value);
 
 		/* Unary negation operator */
-		void operator-();
+		Vector4 operator-() const;
+
+		/* Returns the reciprocal of the vector (reciprocal of each component)*/
+		Vector4 Reciprocal() const;
 
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;

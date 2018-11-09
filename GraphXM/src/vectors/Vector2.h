@@ -88,7 +88,10 @@ namespace gm
 
 	public:
 		/* Unary Negation operator */
-		void operator-();
+		Vector2 operator-() const;
+
+		/* Returns the reciprocal of the vector (reciprocal of each component)*/
+		Vector2 Reciprocal() const;
 
 		/* Returns a normal vector(unit vector) of this vector */
 		Vector2 Normal() const;

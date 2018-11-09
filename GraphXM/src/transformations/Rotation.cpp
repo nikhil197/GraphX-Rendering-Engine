@@ -11,77 +11,81 @@
 
 namespace gm
 {
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles)
+	Rotation::Rotation(float Value)
+		:Matrix4(),
+		m_Angles(Vector3(Value))
 	{
-		Matrix4 result = GetRotationMatrix(Angles);
-
-		return Mat * result;
+		M[0][0] =  (float)MathUtil::Cos(Value);
+		M[0][1] = -(float)MathUtil::Sin(Value);
+		M[1][0] =  (float)MathUtil::Sin(Value);
+		M[1][1] =  (float)MathUtil::Cos(Value);
 	}
 
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles, const Vector3& Axis)
-	{
-		Matrix4 result = GetRotationMatrix(Angles, Axis);
-
-		return Mat * result;
-	}
-
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Value)
-	{
-		Matrix4 result = GetRotationMatrix(Vector3(Value));
-
-		return Mat * result;
-	}
-
-	Matrix3 Rotation::Rotate(const Matrix3& Mat, float Value)
-	{
-		Matrix3 result = GetRotationMatrix(Value);
-
-		return Mat * result;
-	}
-
-	Matrix4 Rotation::GetRotationMatrix(const Vector3& Vec)
+	Rotation::Rotation(const Vector3& Angles)
+		: Matrix4(),
+		m_Angles(Angles)
 	{
 		Matrix4 resultX;
 		Matrix4 resultY;
 		Matrix4 resultZ;
 
 		// Rotating about x - axis
-		resultX.M[1][1] =  (float)MathUtil::Cos(Vec.x);
-		resultX.M[2][2] =  (float)MathUtil::Cos(Vec.x);
-		resultX.M[1][2] = -(float)MathUtil::Sin(Vec.x);
-		resultX.M[2][1] =  (float)MathUtil::Sin(Vec.x);
+		resultX[1][1] =  (float)MathUtil::Cos(Angles.x);
+		resultX[2][2] =  (float)MathUtil::Cos(Angles.x);
+		resultX[1][2] = -(float)MathUtil::Sin(Angles.x);
+		resultX[2][1] =  (float)MathUtil::Sin(Angles.x);
 
 		// Rotating about y - axis
-		resultY.M[0][0] =  (float)MathUtil::Cos(Vec.y);
-		resultY.M[0][2] =  (float)MathUtil::Sin(Vec.y);
-		resultY.M[2][2] =  (float)MathUtil::Cos(Vec.y);
-		resultY.M[2][0] = -(float)MathUtil::Sin(Vec.y);
+		resultY[0][0] =  (float)MathUtil::Cos(Angles.y);
+		resultY[0][2] =  (float)MathUtil::Sin(Angles.y);
+		resultY[2][2] =  (float)MathUtil::Cos(Angles.y);
+		resultY[2][0] = -(float)MathUtil::Sin(Angles.y);
 
 		// Rotating about z - axis
-		resultZ.M[0][0] =  (float)MathUtil::Cos(Vec.z);
-		resultZ.M[0][1] = -(float)MathUtil::Sin(Vec.z);
-		resultZ.M[1][0] =  (float)MathUtil::Sin(Vec.z);
-		resultZ.M[1][1] =  (float)MathUtil::Cos(Vec.z);
+		resultZ[0][0] =  (float)MathUtil::Cos(Angles.z);
+		resultZ[0][1] = -(float)MathUtil::Sin(Angles.z);
+		resultZ[1][0] =  (float)MathUtil::Sin(Angles.z);
+		resultZ[1][1] =  (float)MathUtil::Cos(Angles.z);
 
-		return resultZ * resultY * resultX;
+		*this = resultZ * resultY * resultX;
 	}
 
-	Matrix4 Rotation::GetRotationMatrix(const Vector3& Angles, const Vector3& Axis)
+	//TODO:: Complete this
+	Rotation::Rotation(const Vector3& Angles, const Vector3& Axis)
 	{
-		Matrix4 T = Translation::GetTranslationMatrix(Axis);
-		Matrix4 R = GetRotationMatrix(Angles);
 
-		return T * R * T.Inverse();
 	}
 
-	Matrix3 Rotation::GetRotationMatrix(float Value)
+	const Rotation& Rotation::operator=(const Matrix4& OtherMat)
 	{
-		Matrix3 result;
-		result.M[0][0] =  (float)MathUtil::Cos(Value);
-		result.M[0][1] = -(float)MathUtil::Sin(Value);
-		result.M[1][0] =  (float)MathUtil::Sin(Value);
-		result.M[1][1] =  (float)MathUtil::Cos(Value);
+		Matrix4::operator=(OtherMat);
+		return *this;
+	}
 
-		return result;
+	Matrix4 Rotation::Inverse() const
+	{
+		// For rotation the inverse is the transpose of the matrix
+		return Transpose();
+	}
+
+	/* Static Members */
+	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles)
+	{
+		Rotation result(Angles);
+
+		return Mat * result;
+	}
+
+	// TODO: To Be implemented
+	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles, const Vector3& Axis)
+	{
+		return Matrix4();
+	}
+
+	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Value)
+	{
+		Rotation result(Value);
+
+		return Mat * result;
 	}
 }

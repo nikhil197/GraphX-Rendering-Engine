@@ -1,7 +1,7 @@
 #include "View.h"
 
+#include "Translation.h"
 #include "../matrices/Matrix4.h"
-
 #include "../vectors/Vector3.h"
 
 namespace gm
@@ -10,28 +10,32 @@ namespace gm
 	{
 		Matrix4 result;
 		
-		// New z - axis after the camera transformations
-		Vector3 newZ = (CameraPosition - LookAtPoint).Normal();
+		// New z - axis after the camera transformations (View Vector i.e. from target to camera)
+		Vector3 ViewVector = (CameraPosition - LookAtPoint);
+		ViewVector = ViewVector.Normal();
 
-		// New x - axis after the camera transformations
-		Vector3 newX = Vector3::CrossProduct(UpVector, newZ);
-		newX = newX.Normal();
+		// New x - axis after the camera transformations (Right vector)
+		Vector3 RightVector = Vector3::CrossProduct(UpVector, ViewVector);
+		RightVector = RightVector.Normal();
 
-		// UpVector is the newY
-		Vector3 newY = UpVector.Normal();
+		// New y - axis (Final Up Vector)
+		Vector3 NewUpVector = Vector3::CrossProduct(ViewVector, RightVector);
+		NewUpVector = NewUpVector.Normal();
 
-		result[0][0] = newX.x;
-		result[1][0] = newX.y;
-		result[2][0] = newX.z;
+		result[0][0] = RightVector.x;
+		result[0][1] = RightVector.y;
+		result[0][2] = RightVector.z;
 
-		result[0][1] = newY.x;
-		result[1][1] = newY.y;
-		result[2][1] = newY.z;
+		result[1][0] = NewUpVector.x;
+		result[1][1] = NewUpVector.y;
+		result[1][2] = NewUpVector.z;
 
-		result[0][2] = newZ.x;
-		result[1][2] = newZ.y;
-		result[2][2] = newZ.z;
+		result[2][0] = ViewVector.x;
+		result[2][1] = ViewVector.y;
+		result[2][2] = ViewVector.z;
 
-		return result.Inverse();
+		Translation trans(-CameraPosition);
+
+		return result * trans;
 	}
 }

@@ -162,12 +162,21 @@ namespace gm
 		return *this;
 	}
 
-	void Vector2::operator-()
+	Vector2 Vector2::operator-() const
 	{
-		*this = Vector2::ZeroVector - *this;
+		return (Vector2::ZeroVector - *this);
 	}
 
 	/* Member functions */
+	Vector2 Vector2::Reciprocal() const
+	{
+		Vector2 result;
+		result.x = x != 0 ? 1 / x : FLT_MAX;
+		result.y = y != 0 ? 1 / y : FLT_MAX;
+
+		return result;
+	}
+
 	Vector2 Vector2::Normal() const
 	{
 		Vector2 result;

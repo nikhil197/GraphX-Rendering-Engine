@@ -97,7 +97,7 @@ namespace gm
 		Matrix4 Adjoint() const;
 
 		/* Returns an inverse matrix of this matrix */
-		Matrix4 Inverse() const;
+		virtual Matrix4 Inverse() const;
 
 	private:
 		/* Initialise the matrix with Value */

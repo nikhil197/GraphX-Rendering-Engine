@@ -1,20 +1,38 @@
 #pragma once
 
+#include "../matrices/Matrix4.h"
+#include "../vectors/Vector3.h"
+
 namespace gm
 {
-	// Forward declaration
-	struct Vector2;
-	struct Vector3;
-
-	class Matrix3;
-	class Matrix4;
-
 	class Rotation
+		: public Matrix4
 	{
 	private:
-		Rotation();
+		/* Vector to store the angles */
+		Vector3 m_Angles;
 
 	public:
+		/* Construct a Rotation matrix using the value as Angles for rotation about z-axis */
+		explicit Rotation(float Value);
+
+		/* Construct a Rotation matrix to rotate specified angles using the Angles */
+		explicit Rotation(const Vector3& Angles);
+
+		/* Construct a Rotation Matrix to rotate specified Angles about an axis using the Angles */
+		Rotation(const Vector3& Angles, const Vector3& Axis);
+
+	public:
+		/* Assignment operator */
+		const Rotation& operator=(const Matrix4& OtherMat);
+
+		/* Member functions */
+		Matrix4 Inverse() const override;
+
+		/* Returns the angles */
+		inline const Vector3& GetAngles() const { return m_Angles; }
+
+		/* Static Members */
 		/* Returns a 4x4 matrix obtained after rotation mat with given angles vector */
 		static Matrix4 Rotate(const Matrix4& Mat, const Vector3& Angles);
 
@@ -23,17 +41,5 @@ namespace gm
 
 		/* Returns a 4x4 matrix obtained after rotation mat with given angle */
 		static Matrix4 Rotate(const Matrix4& Mat, float Angle);
-
-		/* Returns a 3x3 matrix obtained after rotation mat with given angle about the z-axis */
-		static Matrix3 Rotate(const Matrix3& Mat, float Angle);
-
-		/* Returns a 4x4 matrix representing the rotation linear transformation with angles */
-		static Matrix4 GetRotationMatrix(const Vector3& Angles);
-
-		/* Returns a 4x4 matrix representing the rotation about the given axis */
-		static Matrix4 GetRotationMatrix(const Vector3& Angles, const Vector3& Axis);
-
-		/* Returns a 3x3 matrix representing the rotation linear transformation with angle (In 2D, rotation is about z-axis only) */
-		static Matrix3 GetRotationMatrix(float Value);
 	};
 }

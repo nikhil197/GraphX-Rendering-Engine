@@ -184,12 +184,23 @@ namespace gm
 		return *this;
 	}
 
-	void Vector4::operator-()
+	Vector4 Vector4::operator-() const
 	{
-		*this = Vector4::ZeroVector - *this;
+		return Vector4::ZeroVector - *this;
 	}
 
 	// Member Functions
+	Vector4 Vector4::Reciprocal() const
+	{
+		Vector4 result;
+		result.x = x != 0 ? 1 / x : FLT_MAX;
+		result.y = y != 0 ? 1 / y : FLT_MAX;
+		result.z = z != 0 ? 1 / z : FLT_MAX;
+		result.w = w != 0 ? 1 / w : FLT_MAX;
+
+		return result;
+	}
+
 	float Vector4::Magnitude() const
 	{
 		return MathUtil::Sqrt(MagnitudeSquare());
