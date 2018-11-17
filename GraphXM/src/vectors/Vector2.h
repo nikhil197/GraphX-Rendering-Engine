@@ -96,6 +96,9 @@ namespace gm
 		/* Returns a normal vector(unit vector) of this vector */
 		Vector2 Normal() const;
 
+		/* Converts this vector into normalized vector */
+		void Normalize();
+
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;
 

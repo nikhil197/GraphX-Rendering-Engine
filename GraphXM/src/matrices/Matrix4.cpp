@@ -1,7 +1,6 @@
 #include "Matrix4.h"
 
 #include <iostream>
-#include "../vectors/Vector3.h"
 #include "../vectors/Vector4.h"
 
 namespace gm
@@ -298,7 +297,7 @@ namespace gm
 			);
 	}
 
-	Matrix4 Matrix4::Adjoint() const
+	Matrix4 Matrix4::AdjointTranspose() const
 	{
 		Matrix4 mat;
 
@@ -370,8 +369,16 @@ namespace gm
 						 - M[0][1] * (M[1][0] * M[2][2] - M[2][0] * M[1][2])
 						 + M[0][2] * (M[1][0] * M[2][1] - M[2][0] * M[1][1]));
 
-		mat = mat.Transpose();
 		return mat;
+	}
+
+	Matrix4 Matrix4::Adjoint() const
+	{
+		Matrix4 result(AdjointTranspose());
+
+		result = result.Transpose();
+
+		return result;
 	}
 
 	Matrix4 Matrix4::Inverse() const

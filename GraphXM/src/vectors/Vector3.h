@@ -23,6 +23,15 @@ namespace gm
 		/* 3D Unit Vector constant (1, 1, 1)*/
 		static const Vector3 UnitVector;
 
+		/* Unit Vector Along x-axis */
+		static const Vector3 XAxis;
+
+		/* Unit Vector Along y-axis */
+		static const Vector3 YAxis;
+
+		/* Unit Vector Along z-axis */
+		static const Vector3 ZAxis;
+
 		/* Number of components in the vector */
 		static const int Components;
 
@@ -39,6 +48,8 @@ namespace gm
 		Vector3(float x, const Vector2& Vec);
 
 		Vector3(const Vector3& OtherVector);
+
+		Vector3(const Vector4& Vec);
 
 		/* Operators */
 	public:
@@ -89,8 +100,11 @@ namespace gm
 		/* Returns the reciprocal of the vector (reciprocal of each component) */
 		Vector3 Reciprocal() const;
 
-		/* Returns a normal vector(unit vector) of this vector */
+		/* Returns a normal vector of this vector */
 		Vector3 Normal() const;
+
+		/* Converts this vector into a normalized vector */
+		void Normalize();
 
 		/* Returns the magnitude of the vector */
 		float Magnitude() const;

@@ -93,8 +93,11 @@ namespace gm
 		/* Returns the determinant of this matrix */
 		float Determinant() const;
 
-		/* Returns a matrix that is the adjoint of this matrix */
+		/* Returns a matrix that is adjoint of this matrix */
 		Matrix4 Adjoint() const;
+
+		/* Returns a matrix that is the transpose of the adjoint of this matrix */
+		Matrix4 AdjointTranspose() const;
 
 		/* Returns an inverse matrix of this matrix */
 		virtual Matrix4 Inverse() const;

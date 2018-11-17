@@ -188,6 +188,13 @@ namespace gm
 		return result;
 	}
 
+	void Vector2::Normalize()
+	{
+		float magnitude = this->Magnitude();
+		x /= magnitude;
+		y /= magnitude;
+	}
+
 	float Vector2::Magnitude() const
 	{
 		return MathUtil::Sqrt(MagnitudeSquare());

@@ -1,5 +1,6 @@
 #include "Vector3.h"
 #include "Vector2.h"
+#include "Vector4.h"
 
 #include "../MathUtil.h"
 
@@ -11,9 +12,18 @@ namespace gm
 	// Define the Unit Vector
 	const Vector3 Vector3::UnitVector(1, 1, 1);
 
+	// Define the X - Axis
+	const Vector3 Vector3::XAxis(1, 0, 0);
+
+	// Define the Y - Axis
+	const Vector3 Vector3::YAxis(0, 1, 0);
+	
+	// Define the Z - Axis
+	const Vector3 Vector3::ZAxis(0, 0, 1);
+
 	// Define the number of components in the vector
 	const int Vector3::Components = 3;
-
+	
 	Vector3::Vector3()
 		:x(0), y(0), z(0)
 	{}
@@ -36,6 +46,10 @@ namespace gm
 
 	Vector3::Vector3(const Vector3& OtherVector)
 		: x(OtherVector.x), y(OtherVector.y), z(OtherVector.z)
+	{}
+
+	Vector3::Vector3(const Vector4& Vec)
+		:x(Vec.x / Vec.w), y(Vec.y / Vec.w), z(Vec.z / Vec.w)
 	{}
 
 	/* Operators */
@@ -198,6 +212,14 @@ namespace gm
 		result.z = z / magnitude;
 
 		return result;
+	}
+
+	void Vector3::Normalize()
+	{
+		float magnitude = this->Magnitude();
+		x /= magnitude;
+		y /= magnitude;
+		z /= magnitude;
 	}
 
 	float Vector3::Magnitude() const

@@ -229,6 +229,15 @@ namespace gm
 		return result;
 	}
 
+	void Vector4::Normalize()
+	{
+		float magnitude = this->Magnitude();
+		x /= magnitude;
+		y /= magnitude;
+		z /= magnitude;
+		w /= magnitude;
+	}
+
 	float Vector4::DotProduct(const Vector4& V1, const Vector4& V2)
 	{
 		return (V1.x * V2.x + V1.y * V2.y + V1.z * V2.z + V1.w * V2.w);

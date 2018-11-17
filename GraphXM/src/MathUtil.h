@@ -1,7 +1,7 @@
 #pragma once
 
-// Define the value of PI
-const double PI = 3.14159265;
+// Define the value of PI (static to make it private to this translation unit i.e. the translation unit in which this header file will be included)
+static const double PI = 3.14159265;
 
 namespace gm
 {
@@ -37,6 +37,13 @@ namespace gm
 		static T Max(const T A, const T B)
 		{
 			return A > B ? A : B;
+		}
+
+		/** Returns the absolute value */
+		template <typename T>
+		static T Abs(const T A)
+		{
+			return A > 0 ? A : -A;
 		}
 
 		/************ Trignometric functions  **************/

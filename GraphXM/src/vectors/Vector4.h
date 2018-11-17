@@ -107,6 +107,9 @@ namespace gm
 		/* Get a normal vector (unit vector) for this vector */
 		Vector4 Normal() const;
 
+		/* Converts the vector into a normalized vector */
+		void Normalize();
+
 		/*********** Static Member functions ***********/
 		/* Dot product of the two vectors */
 		static float DotProduct(const Vector4& V1, const Vector4& V2);

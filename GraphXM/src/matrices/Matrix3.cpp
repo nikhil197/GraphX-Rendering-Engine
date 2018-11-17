@@ -1,5 +1,6 @@
 #include "Matrix3.h"
 
+#include "Matrix4.h"
 #include "../vectors/Vector3.h"
 
 namespace gm
@@ -17,6 +18,17 @@ namespace gm
 	Matrix3::Matrix3(const float(*arr)[3])
 	{
 		Init(arr);
+	}
+
+	Matrix3::Matrix3(const Matrix4& OtherMat)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				M[i][j] = OtherMat[i][j];
+			}
+		}
 	}
 
 	Matrix3::Matrix3(const Matrix3& OtherMat)
@@ -277,7 +289,7 @@ namespace gm
 			);
 	}
 
-	Matrix3 Matrix3::Adjoint() const
+	Matrix3 Matrix3::AdjointTranspose() const
 	{
 		Matrix3 mat;
 
@@ -296,9 +308,16 @@ namespace gm
 		mat[2][1] = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
 		mat[2][2] = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
 
-		// Transposing the Matrix
-		mat = mat.Transpose();
 		return mat;
+	}
+
+	Matrix3 Matrix3::Adjoint() const
+	{
+		Matrix3 result(AdjointTranspose());
+
+		result = result.Transpose();
+
+		return result;
 	}
 
 	Matrix3 Matrix3::Inverse() const

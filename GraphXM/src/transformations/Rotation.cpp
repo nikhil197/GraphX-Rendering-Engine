@@ -4,7 +4,6 @@
 #include "../vectors/Vector2.h"
 #include "../vectors/Vector3.h"
 
-#include "../matrices/Matrix3.h"
 #include "../matrices/Matrix4.h"
 
 #include "../MathUtil.h"
@@ -50,10 +49,30 @@ namespace gm
 		*this = resultZ * resultY * resultX;
 	}
 
-	//TODO:: Complete this
-	Rotation::Rotation(const Vector3& Angles, const Vector3& Axis)
+	Rotation::Rotation(float Angle, const Vector3& Axis)
 	{
+		// Get the normalized Axis
+		Vector3 l_Axis = Axis.Normal();
 
+		// Get the projection of Axis on the XZ - plane and the XY - plane
+		Vector3 ProjXZ = l_Axis * Vector3(1, 0, 1);
+		Vector3 ProjXY = l_Axis * Vector3(1, 1, 0);
+
+		// Calculate the Pitch and the Yaw
+		float Pitch = MathUtil::CosInverse(Vector3::DotProduct(ProjXZ, Vector3(1, 0, 0)) / ProjXZ.Magnitude());
+		float Yaw = MathUtil::CosInverse(Vector3::DotProduct(ProjXY, Vector3(1, 0, 0)) / ProjXY.Magnitude());
+
+		// Rotate the axes to make the given axis as the new X - axis
+		Rotation rotate(Vector3(0, Pitch, Yaw));
+
+		// Rotate the matrix about this new X - Axis;
+		M[1][1] =  (float)MathUtil::Cos(Angle);
+		M[2][2] =  (float)MathUtil::Cos(Angle);
+		M[1][2] = -(float)MathUtil::Sin(Angle);
+		M[2][1] =  (float)MathUtil::Sin(Angle);
+
+		// Rotate the axes back to the original orientation
+		*this = rotate.Inverse() * (*this) * rotate;
 	}
 
 	const Rotation& Rotation::operator=(const Matrix4& OtherMat)
@@ -76,10 +95,9 @@ namespace gm
 		return Mat * result;
 	}
 
-	// TODO: To Be implemented
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles, const Vector3& Axis)
+	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Angle, const Vector3& Axis)
 	{
-		return Matrix4();
+		return Mat * Rotation(Angle, Axis);
 	}
 
 	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Value)

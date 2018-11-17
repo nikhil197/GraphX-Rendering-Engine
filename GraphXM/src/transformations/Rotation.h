@@ -19,8 +19,8 @@ namespace gm
 		/* Construct a Rotation matrix to rotate specified angles using the Angles */
 		explicit Rotation(const Vector3& Angles);
 
-		/* Construct a Rotation Matrix to rotate specified Angles about an axis using the Angles */
-		Rotation(const Vector3& Angles, const Vector3& Axis);
+		/* Construct a Rotation matrix to rotate specified angle about an axis */
+		Rotation(float Angle, const Vector3& Axis);
 
 	public:
 		/* Assignment operator */
@@ -37,7 +37,7 @@ namespace gm
 		static Matrix4 Rotate(const Matrix4& Mat, const Vector3& Angles);
 
 		/* Returns a 4x4 matrix obtained after rotating mat with given angles vector about the given axis */
-		static Matrix4 Rotate(const Matrix4& Mat, const Vector3& Angles, const Vector3& Axis);
+		static Matrix4 Rotate(const Matrix4& Mat, float Angle, const Vector3& Axis);
 
 		/* Returns a 4x4 matrix obtained after rotation mat with given angle */
 		static Matrix4 Rotate(const Matrix4& Mat, float Angle);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace gm
 {
 	struct Vector3;
@@ -18,6 +20,9 @@ namespace gm
 
 		/* Initialise the matrix with an array */
 		explicit Matrix3(const float(*arr)[3]);
+
+		/* Create the Matrix3 from the upper 3x3 matrix from the given matrix4 */
+		explicit Matrix3(const class Matrix4& OtherMat);
 
 		/* Copy constructor */
 		Matrix3(const Matrix3& OtherMat);
@@ -93,8 +98,11 @@ namespace gm
 		/* Returns the determinant of this matrix */
 		float Determinant() const;
 
-		/* Returns a matrix that is the adjoint of this matrix */
+		/* Returns the matrix that is the adjoint of this matrix */
 		Matrix3 Adjoint() const;
+
+		/* Returns a matrix that is the transpose of the adjoint of this matrix */
+		Matrix3 AdjointTranspose() const;
 
 		/* Returns an inverse matrix of this matrix */
 		Matrix3 Inverse() const;
@@ -105,6 +113,8 @@ namespace gm
 
 		/* Initialise the matrix with the contents of an array */
 		void Init(const float(*arr)[3]);
-
 	};
+
+	/* Non Member functions */
+	std::ostream& operator<<(std::ostream& Out, const Matrix3& Mat);
 }

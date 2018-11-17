@@ -86,5 +86,17 @@
     <ClInclude Include="src\transformations\Projection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GraphX_Vectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphX_Maths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphX_Matrices.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphX_Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

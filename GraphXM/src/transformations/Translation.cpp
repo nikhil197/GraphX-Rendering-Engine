@@ -1,8 +1,7 @@
 #include "Translation.h"
 
-#include "../matrices/Matrix3.h"
 #include "../matrices/Matrix4.h"
-#include "../vectors/Vector2.h"
+
 #include "../vectors/Vector3.h"
 
 namespace gm
