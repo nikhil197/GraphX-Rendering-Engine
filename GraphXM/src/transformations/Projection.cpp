@@ -70,7 +70,7 @@ namespace gm
 	Matrix4 Projection::Perspective(float FieldOfView, float AspectRatio, float near, float far)
 	{
 		// Calculate the dimensions of the bounding frustum
-		float top = MathUtil::Tan(FieldOfView / 2) * near;
+		float top = (float)MathUtil::Tan(FieldOfView / 2) * near;
 		float right = top * AspectRatio;
 		float left = -right;
 		float bottom = -top;

@@ -12,15 +12,14 @@ namespace gm
 		
 		// New z - axis after the camera transformations (View Vector i.e. from target to camera)
 		Vector3 ViewVector = (CameraPosition - LookAtPoint);
-		ViewVector = ViewVector.Normal();
+		ViewVector.Normalize();
 
 		// New x - axis after the camera transformations (Right vector)
 		Vector3 RightVector = Vector3::CrossProduct(UpVector, ViewVector);
-		RightVector = RightVector.Normal();
+		RightVector.Normalize();
 
 		// New y - axis (Final Up Vector)
 		Vector3 NewUpVector = Vector3::CrossProduct(ViewVector, RightVector);
-		NewUpVector = NewUpVector.Normal();
 
 		result[0][0] = RightVector.x;
 		result[0][1] = RightVector.y;
@@ -34,8 +33,12 @@ namespace gm
 		result[2][1] = ViewVector.y;
 		result[2][2] = ViewVector.z;
 
-		Translation trans(-CameraPosition);
+		// Get the projection of the translation vector onto the new axes
+		result[0][3] = -Vector3::DotProduct(RightVector, CameraPosition);
+		result[1][3] = -Vector3::DotProduct(NewUpVector, CameraPosition);
+		result[2][3] =  Vector3::DotProduct(ViewVector, CameraPosition);
+		//Translation trans(-CameraPosition);
 
-		return result * trans;
+		return result;
 	}
 }

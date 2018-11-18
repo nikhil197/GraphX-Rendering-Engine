@@ -59,8 +59,8 @@ namespace gm
 		Vector3 ProjXY = l_Axis * Vector3(1, 1, 0);
 
 		// Calculate the Pitch and the Yaw
-		float Pitch = MathUtil::CosInverse(Vector3::DotProduct(ProjXZ, Vector3(1, 0, 0)) / ProjXZ.Magnitude());
-		float Yaw = MathUtil::CosInverse(Vector3::DotProduct(ProjXY, Vector3(1, 0, 0)) / ProjXY.Magnitude());
+		float Pitch = (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXZ, Vector3(1, 0, 0)) / ProjXZ.Magnitude());
+		float Yaw = (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXY, Vector3(1, 0, 0)) / ProjXY.Magnitude());
 
 		// Rotate the axes to make the given axis as the new X - axis
 		Rotation rotate(Vector3(0, Pitch, Yaw));
