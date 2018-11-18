@@ -2,23 +2,26 @@
 
 #include <iostream>
 
-void GLClearError()
+namespace engine
 {
-	while (glGetError() != GL_NO_ERROR);
-}
-
-bool GLLogCall(const char* function, const char* file, int line)
-{
-	while (GLenum error = glGetError())
+	void GLClearError()
 	{
-		std::cout << "[OpenGL Error] ( " << error << " )" << function << " " << file << " " << line << std::endl;
-		return false;
+		while (glGetError() != GL_NO_ERROR);
 	}
 
-	return true;
-}
+	bool GLLogCall(const char* function, const char* file, int line)
+	{
+		while (GLenum error = glGetError())
+		{
+			std::cout << "[OpenGL Error] ( " << error << " )" << function << " " << file << " " << line << std::endl;
+			return false;
+		}
 
-void GlfwErrorCallback(int error, const char* description)
-{
-	std::cout << "[Error] : " << error << ", " << description << std::endl;
+		return true;
+	}
+
+	void GlfwErrorCallback(int error, const char* description)
+	{
+		std::cout << "[GFLW Error] : " << error << ", " << description << std::endl;
+	}
 }
