@@ -1,19 +1,18 @@
 #include <iostream>
 
-#include "vectors/Vector2.h"
-#include "vectors/Vector3.h"
-#include "matrices/Matrix4.h"
-#include "transformations/Translation.h"
-
+#include "GraphX_Maths.h"
 #include "VertexArray.h"
 #include "Renderer.h"
 #include "shaders/Shader.h"
 #include "buffers/VertexBuffer.h"
 #include "buffers/VertexBufferLayout.h"
 #include "buffers/IndexBuffer.h"
+#include "model/Vertex.h"
 
+#include "timer/Clock.h"
 #include "ErrorHandler.h"
 #include "Window.h"
+#include "Log.h"
 
 int main()
 {
@@ -23,6 +22,9 @@ int main()
 	//Title of the window
 	std::string title = "Real Time Rendering Engine";
 	Window *window = new Window(title, 640, 480);
+
+	Clock::Init();
+	Log::Init();
 
 	// Initialise GLEW
 	if (glewInit() != GLEW_OK)
@@ -34,23 +36,62 @@ int main()
 	// Print the gl version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	Vector2 vertices[] = {
-		{-0.5f, -0.5f}, //0
-		{ 0.5f, -0.5f}, //1
-		{ 0.5f,  0.5f}, //2
-		{-0.5f,  0.5f}  //3
+	// Vertices of the cube to be rendered
+	Vertex vertices[] = {
+		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
+		// Back face
+		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
+		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
+		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
+		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
+								  
+		// Front face			  
+		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
+		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
+		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
+		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 1.0f, 1.0f) }	//7
 	};
 
+	// Indices into the vertex buffer
 	unsigned int indices[] = {
+		// Back face
 		0, 1, 2,
-		0, 2, 3
+		0, 2, 3,
+
+		// Top Face
+		7, 6, 2,
+		7, 2, 3,
+
+		// Front Face
+		4, 5, 6,
+		4, 6, 7,
+
+		// Left Face
+		0, 4, 7,
+		0, 7, 3,
+
+		// Right face
+		5, 1, 2,
+		5, 2, 6,
+
+		// Bottom Face
+		4, 5, 1,
+		4, 5, 0
 	};
 
 	VertexArray vao;
-	VertexBuffer vbo(vertices, 4 * sizeof(Vector2));
+	VertexBuffer vbo(vertices, 8 * sizeof(Vertex));
 	VertexBufferLayout layout;
-	IndexBuffer ibo(indices, 6);
-	layout.Push<float>(Vector2::Components);
+	IndexBuffer ibo(indices, 36);
+	
+	// Layout for the vertex positions
+	layout.Push<float>(Vector3::Components);
+
+	// Layout for the vertex normals
+	layout.Push<float>(Vector3::Components);
+
+	// Layout for the vertex colors
+	layout.Push<float>(Vector4::Components);
 
 	vao.AddBuffer(vbo, layout);
 	ibo.UnBind();
@@ -61,12 +102,42 @@ int main()
 
 	Renderer renderer;
 
+	// Model Matrix
+	Translation trans(Vector3(0));
+	Rotation rotate(Vector3(0));
+	Scaling scale(Vector3(1));
+	Matrix4 model = trans * rotate * scale;
+	shader.SetUniformMat4f("u_Model", model);
+
+	// View Matrix
+	Matrix4 view = View::LookAt(Vector3(2, 5, 3), Vector3(0, 0, 0), Vector3::YAxis);
+	shader.SetUniformMat4f("u_View", view);
+
+	// Projection Matrix
+	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 0.1f, -10.0f);
+	shader.SetUniformMat4f("u_Projection", proj);
+
 	float r = 0.0f;
 	float increment = 0.01f;
+
+	int times = 0;
+	float then = Clock::GetClock()->GetTime();
 
 	// Draw while the window doesn't close
 	while (!window->IsClosed())
 	{
+		// Tick the clock every frame to get the delta time
+		Clock::GetClock()->Tick();
+
+		times++;
+		float now = Clock::GetClock()->GetTime();
+		if ((now - then) > 1.0f)
+		{
+			GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
+			then = now;
+			times = 0;
+		}
+
 		// Clear the window 
 		window->Clear();
 

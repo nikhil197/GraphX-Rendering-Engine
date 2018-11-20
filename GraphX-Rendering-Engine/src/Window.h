@@ -42,6 +42,12 @@ namespace engine
 		/* Update the window */
 		void Update();
 
+		/* Returns the width of the window */
+		inline int GetWidth() const { return m_Width; }
+
+		/* Returns the height of the window */
+		inline int GetHeight() const { return m_Height; }
+
 		/* Destruct the window */
 		~Window();
 	};

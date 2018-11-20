@@ -167,6 +167,7 @@
     <ClInclude Include="src\buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\ErrorHandler.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\model\Vertex.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\timer\Clock.h" />
