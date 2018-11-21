@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-#include <iostream>
+#include "../Log.h"
 
 namespace engine
 {
@@ -28,6 +28,6 @@ namespace engine
 	Timer::~Timer()
 	{
 		std::chrono::duration<float> duration = std::chrono::high_resolution_clock::now() - m_StartTimePoint;
-		std::cout << "Timer " << m_Name << " took " << duration.count() * 1000.f << " ms." << std::endl;
+		GX_ENGINE_INFO("Timer {0} took {1} ms.", m_Name, duration.count() * 1000.0f);
 	}
 }

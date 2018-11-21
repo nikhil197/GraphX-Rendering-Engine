@@ -1,6 +1,5 @@
 #include "Matrix4.h"
 
-#include <iostream>
 #include "../vectors/Vector4.h"
 
 namespace gm

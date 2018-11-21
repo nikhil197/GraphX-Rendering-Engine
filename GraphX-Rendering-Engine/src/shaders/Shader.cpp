@@ -2,9 +2,9 @@
 
 #include <sstream>
 #include <fstream>
-#include <iostream>
 
 #include "../ErrorHandler.h"
+#include "../Log.h"
 
 namespace engine
 {
@@ -53,7 +53,7 @@ namespace engine
 			//If the name is invalid
 			if (location == -1)
 			{
-				std::cout << "Warning!!! " << Name << " uniform not present in the current bound shader." << std::endl;
+				GX_ENGINE_WARN("Shader: {0} uniform not present in the current bound shader", Name);
 			}
 			// Cache the location
 			else

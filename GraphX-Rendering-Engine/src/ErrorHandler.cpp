@@ -1,6 +1,6 @@
 #include "ErrorHandler.h"
 
-#include <iostream>
+#include "Log.h"
 
 namespace engine
 {
@@ -13,7 +13,7 @@ namespace engine
 	{
 		while (GLenum error = glGetError())
 		{
-			std::cout << "[OpenGL Error] ( " << error << " )" << function << " " << file << " " << line << std::endl;
+			GX_ENGINE_ERROR("[OpenGL Error] : ( {0} ), fn {1}, file {2}, line {3}", error, function, file, line);
 			return false;
 		}
 
@@ -22,6 +22,6 @@ namespace engine
 
 	void GlfwErrorCallback(int error, const char* description)
 	{
-		std::cout << "[GFLW Error] : " << error << ", " << description << std::endl;
+		GX_ENGINE_ERROR("[GFLW Error] : {0}, {1}", error, description);
 	}
 }

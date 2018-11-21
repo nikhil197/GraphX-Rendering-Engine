@@ -1,8 +1,6 @@
 #include "Clock.h"
 #include "Timer.h"
 
-#include <iostream>
-
 namespace engine
 {
 	std::shared_ptr<Clock> Clock::s_Clock;

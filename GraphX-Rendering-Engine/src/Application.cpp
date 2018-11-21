@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "GraphX_Maths.h"
 #include "VertexArray.h"
 #include "Renderer.h"
@@ -29,7 +27,7 @@ int main()
 	// Initialise GLEW
 	if (glewInit() != GLEW_OK)
 	{
-		std::cout << "Error!! Couldn't initialize glew." << std::endl;
+		GX_ENGINE_ERROR("Application: Error while initializing glew");
 		return -1;
 	}
 

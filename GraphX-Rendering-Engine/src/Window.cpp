@@ -2,7 +2,7 @@
 
 #include "ErrorHandler.h"
 #include "GLFW/glfw3.h"
-#include <iostream>
+#include "Log.h"
 
 namespace engine
 {
@@ -12,7 +12,7 @@ namespace engine
 		bool res = Init();
 		if (!res)
 		{
-			std::cout << "Error while creating the window" << std::endl;
+			GX_ENGINE_ERROR("Window: Error While creating window");
 		}
 	}
 
