@@ -95,7 +95,7 @@ int main()
 	ibo.UnBind();
 	vao.UnBind();
 
-	Shader shader("res/shaders/Basic.shader");
+	Shader shader("res/shaders/BasicLightingShader.shader");
 	shader.Bind();
 
 	Renderer renderer;
