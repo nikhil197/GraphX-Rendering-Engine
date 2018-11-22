@@ -90,5 +90,6 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
+    <None Include="res\shaders\BasicLightingShader.shader" />
   </ItemGroup>
 </Project>
