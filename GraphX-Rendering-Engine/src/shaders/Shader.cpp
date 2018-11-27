@@ -5,6 +5,7 @@
 
 #include "../ErrorHandler.h"
 #include "../Log.h"
+#include "../timer/Timer.h"
 
 namespace engine
 {
@@ -67,6 +68,9 @@ namespace engine
 
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 	{
+		GX_ENGINE_INFO("Parsing Shader source");
+		Timer time("Parsing Shader Source");
+
 		enum class ShaderType
 		{
 			NONE = -1, VERTEX = 0, FRAGMENT = 1
@@ -97,6 +101,9 @@ namespace engine
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
+		GX_ENGINE_INFO("Compiling Shaders");
+		Timer time("Compiling Shaders");
+
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
 		GLCall(glShaderSource(shaderID, 1, &src, nullptr));
@@ -113,8 +120,8 @@ namespace engine
 			char* infoLog = (char*)alloca(length * sizeof(char));
 			GLCall(glGetShaderInfoLog(shaderID, length, &length, infoLog));
 
-			std::cout << "Failed to compile " << ((type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ") << " shader" << std::endl;
-			std::cout << infoLog << std::endl;
+			GX_ENGINE_ERROR("Shader: Failed to compile {0} shader", (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
+			GX_ENGINE_ERROR(infoLog);
 
 			GLCall(glDeleteShader(shaderID));
 			return 0;

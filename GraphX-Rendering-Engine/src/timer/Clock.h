@@ -36,5 +36,8 @@ namespace engine
 
 		/* Set a new timer */
 		void SetTimer(Timer* timer);
+
+		/* Release resources */
+		~Clock();
 	};
 }

@@ -17,12 +17,13 @@ int main()
 	using namespace engine;
 	using namespace gm;
 
+	// Initialise the clock and the logging
+	Log::Init();
+	Clock::Init();
+	
 	//Title of the window
 	std::string title = "Real Time Rendering Engine";
 	Window *window = new Window(title, 640, 480);
-
-	Clock::Init();
-	Log::Init();
 
 	// Initialise GLEW
 	if (glewInit() != GLEW_OK)
@@ -32,7 +33,7 @@ int main()
 	}
 
 	// Print the gl version
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	GX_ENGINE_INFO(glGetString(GL_VERSION));
 
 	// Vertices of the cube to be rendered
 	Vertex vertices[] = {
@@ -102,21 +103,19 @@ int main()
 
 	// Model Matrix
 	Translation trans(Vector3(0));
-	Rotation rotate(Vector3(0));
+	Rotation rotate(10, Vector3(1, 0, 0));
 	Scaling scale(Vector3(1));
 	Matrix4 model = trans * rotate * scale;
 	shader.SetUniformMat4f("u_Model", model);
 
 	// View Matrix
-	Matrix4 view = View::LookAt(Vector3(2, 5, 3), Vector3(0, 0, 0), Vector3::YAxis);
+	Vector3 CameraPos(2, 3, 5);
+	Matrix4 view = View::LookAt(CameraPos, Vector3(0, 0, 0), Vector3::YAxis);
 	shader.SetUniformMat4f("u_View", view);
 
 	// Projection Matrix
 	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 0.1f, -10.0f);
 	shader.SetUniformMat4f("u_Projection", proj);
-
-	float r = 0.0f;
-	float increment = 0.01f;
 
 	int times = 0;
 	float then = Clock::GetClock()->GetTime();
@@ -127,6 +126,7 @@ int main()
 		// Tick the clock every frame to get the delta time
 		Clock::GetClock()->Tick();
 
+		// Calculate the fps
 		times++;
 		float now = Clock::GetClock()->GetTime();
 		if ((now - then) > 1.0f)
@@ -143,18 +143,7 @@ int main()
 		window->Resize();
 
 		shader.Bind();
-		shader.SetUniform4f("u_Color", r, 1.0f, r, 1.0);
 		renderer.Draw(vao, ibo, shader);
-
-		if (r > 1.0f)
-		{
-			increment = -0.05f;
-		}
-		else if (r < 0.0f)
-		{
-			increment = 0.05f;
-		}
-		r += increment;
 
 		//Poll events and swap buffers
 		window->Update();

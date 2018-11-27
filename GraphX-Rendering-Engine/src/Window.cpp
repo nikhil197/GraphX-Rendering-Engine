@@ -3,6 +3,7 @@
 #include "ErrorHandler.h"
 #include "GLFW/glfw3.h"
 #include "Log.h"
+#include "timer/Timer.h"
 
 namespace engine
 {
@@ -14,12 +15,18 @@ namespace engine
 		{
 			GX_ENGINE_ERROR("Window: Error While creating window");
 		}
+
+		GX_ENGINE_INFO("Window: Successfully Created window");
 	}
 
 	bool Window::Init()
 	{
+		// To time the intialising sequence
+		Timer windowInit("Window Intialising");
+		
 		if (!glfwInit())
 		{
+			GX_ENGINE_ERROR("Couldn't Initialise GLFW");
 			return false;
 		}
 
@@ -33,6 +40,7 @@ namespace engine
 
 		if (!m_Window)
 		{
+			GX_ENGINE_ERROR("Window: Couldn't Create the GLFW window");
 			glfwTerminate();
 			return false;
 		}
@@ -98,11 +106,12 @@ namespace engine
 
 	Window::~Window()
 	{
+		GX_ENGINE_INFO("Window: Destroying window");
+
 		/* Destroy the window */
 		glfwDestroyWindow(m_Window);
 
 		/* Terminate */
 		glfwTerminate();
 	}
-
 }

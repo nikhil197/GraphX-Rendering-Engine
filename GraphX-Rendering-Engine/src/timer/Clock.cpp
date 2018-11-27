@@ -1,5 +1,6 @@
 #include "Clock.h"
 #include "Timer.h"
+#include <iostream>
 
 namespace engine
 {
@@ -33,5 +34,11 @@ namespace engine
 	void Clock::SetTimer(Timer* timer)
 	{
 		m_Timer = timer;
+	}
+
+	Clock::~Clock()
+	{
+		std::cout << "destroy" << std::endl;
+		delete m_Timer;
 	}
 }
