@@ -6,6 +6,7 @@
 #include "buffers/VertexBufferLayout.h"
 #include "buffers/IndexBuffer.h"
 #include "model/Vertex.h"
+#include "entities/Light.h"
 
 #include "timer/Clock.h"
 #include "ErrorHandler.h"
@@ -117,6 +118,10 @@ int main()
 	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 0.1f, -10.0f);
 	shader.SetUniformMat4f("u_Projection", proj);
 
+	Light light(Vector3(0, 0, -20), Vector4(1, 1, 1, 1));
+	shader.SetUniform3f("u_LightPos", light.Position);
+	shader.SetUniform4f("u_LightColor", light.Color);
+
 	int times = 0;
 	float then = Clock::GetClock()->GetTime();
 
@@ -142,6 +147,7 @@ int main()
 		// Resize the window before rendering
 		window->Resize();
 
+		// Bind the shader and draw the objects
 		shader.Bind();
 		renderer.Draw(vao, ibo, shader);
 

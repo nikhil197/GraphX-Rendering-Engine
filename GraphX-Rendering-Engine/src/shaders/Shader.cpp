@@ -31,9 +31,29 @@ namespace engine
 		GLCall(glUseProgram(0));
 	}
 
+	void Shader::SetUniform1f(const char* Name, float Val)
+	{
+		GLCall(glUniform1f(GetLocation(Name), Val));
+	}
+
+	void Shader::SetUniform3f(const char* Name, float r, float g, float b)
+	{
+		GLCall(glUniform3f(GetLocation(Name), r, g, b));
+	}
+
+	void Shader::SetUniform3f(const char* Name, const gm::Vector3& Vec)
+	{
+		GLCall(glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z));
+	}
+
 	void Shader::SetUniform4f(const char* Name, float r, float g, float b, float a)
 	{
 		GLCall(glUniform4f(GetLocation(Name), r, g, b, a));
+	}
+
+	void Shader::SetUniform4f(const char* Name, const gm::Vector4& Vec)
+	{
+		GLCall(glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w));
 	}
 
 	void Shader::SetUniformMat4f(const char* Name, const gm::Matrix4& Mat)

@@ -2,7 +2,8 @@
 
 #include <string>
 #include <unordered_map>
-#include "matrices/Matrix4.h"
+#include "GraphX_Matrices.h"
+#include "GraphX_Vectors.h"
 
 namespace engine
 {
@@ -38,7 +39,15 @@ namespace engine
 		void UnBind() const;
 
 		/* Set uniforms */
+		void SetUniform1f(const char* Name, float val);
+
+		void SetUniform3f(const char* Name, float r, float g, float b);
+
+		void SetUniform3f(const char* Name, const gm::Vector3& Vec);
+
 		void SetUniform4f(const char* Name, float r, float g, float b, float a);
+
+		void SetUniform4f(const char* Name, const gm::Vector4& Vec);
 
 		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
 
