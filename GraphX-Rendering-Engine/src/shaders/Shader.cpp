@@ -1,10 +1,6 @@
+#include "pch.h"
 #include "Shader.h"
 
-#include <sstream>
-#include <fstream>
-
-#include "../ErrorHandler.h"
-#include "../Log.h"
 #include "../timer/Timer.h"
 
 namespace engine

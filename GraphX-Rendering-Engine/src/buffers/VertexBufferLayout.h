@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-
-#include "../ErrorHandler.h"
-
 namespace engine
 {
 	struct BufferLayoutElement

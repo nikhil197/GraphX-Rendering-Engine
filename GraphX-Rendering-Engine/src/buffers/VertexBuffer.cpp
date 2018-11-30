@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "VertexBuffer.h"
-#include "../ErrorHandler.h"
 
 namespace engine
 {

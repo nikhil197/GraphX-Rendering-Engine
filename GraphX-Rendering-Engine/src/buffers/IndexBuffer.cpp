@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "IndexBuffer.h"
-
-#include "../ErrorHandler.h"
 
 namespace engine
 {

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "buffers/VertexBuffer.h"
-#include "buffers/VertexBufferLayout.h"
-
 namespace engine
 {
+	class VertexBuffer;
+	class VertexBufferLayout;
+
 	class VertexArray
 	{
 	private:

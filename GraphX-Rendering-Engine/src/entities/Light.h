@@ -1,7 +1,5 @@
 #pragma once
 
-#include "GraphX_Vectors.h"
-
 namespace engine
 {
 	class Light

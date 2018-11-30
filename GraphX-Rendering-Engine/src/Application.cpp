@@ -1,4 +1,4 @@
-#include "GraphX_Maths.h"
+#include "pch.h"
 #include "VertexArray.h"
 #include "Renderer.h"
 #include "shaders/Shader.h"
@@ -9,9 +9,7 @@
 #include "entities/Light.h"
 
 #include "timer/Clock.h"
-#include "ErrorHandler.h"
 #include "Window.h"
-#include "Log.h"
 
 int main()
 {
@@ -40,43 +38,43 @@ int main()
 	Vertex vertices[] = {
 		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
 		// Back face
-		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
-		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
-		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
-		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
+		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
+		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
+		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
+		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
 								  
 		// Front face			  
-		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
-		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
-		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
-		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 1.0f, 1.0f) }	//7
+		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
+		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
+		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
+		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 1.0f, 1.0f, 1.0f) }	//7
 	};
 
 	// Indices into the vertex buffer
 	unsigned int indices[] = {
-		// Back face
-		0, 1, 2,
-		0, 2, 3,
+		// Front face
+		3, 0, 2,
+		2, 0, 1,
 
 		// Top Face
-		7, 6, 2,
-		7, 2, 3,
+		7, 3, 6,
+		6, 3, 2,
 
-		// Front Face
-		4, 5, 6,
-		4, 6, 7,
-
-		// Left Face
-		0, 4, 7,
-		0, 7, 3,
-
-		// Right face
-		5, 1, 2,
-		5, 2, 6,
+		// Back Face
+		6, 5, 7,
+		7, 5, 4,
 
 		// Bottom Face
-		4, 5, 1,
-		4, 5, 0
+		0, 4, 1,
+		1, 4, 5,
+
+		// Right face
+		2, 1, 6,
+		6, 1, 5,
+
+		// Left Face
+		7, 4, 3,
+		3, 4, 0
 	};
 
 	VertexArray vao;
@@ -104,26 +102,28 @@ int main()
 
 	// Model Matrix
 	Translation trans(Vector3(0));
-	Rotation rotate(10, Vector3(1, 0, 0));
+	Rotation rotate(180, Vector3(1, 0, 0));
 	Scaling scale(Vector3(1));
 	Matrix4 model = trans * rotate * scale;
 	shader.SetUniformMat4f("u_Model", model);
 
 	// View Matrix
-	Vector3 CameraPos(2, 3, 5);
+	Vector3 CameraPos(0, 0, 5);
 	Matrix4 view = View::LookAt(CameraPos, Vector3(0, 0, 0), Vector3::YAxis);
 	shader.SetUniformMat4f("u_View", view);
 
 	// Projection Matrix
-	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 0.1f, -10.0f);
+	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 10.0f, -10.0f);
 	shader.SetUniformMat4f("u_Projection", proj);
 
-	Light light(Vector3(0, 0, -20), Vector4(1, 1, 1, 1));
+	Light light(Vector3(0, 10, -20), Vector4(1, 1, 1, 1));
 	shader.SetUniform3f("u_LightPos", light.Position);
 	shader.SetUniform4f("u_LightColor", light.Color);
 
 	int times = 0;
 	float then = Clock::GetClock()->GetTime();
+
+	float angle = 0;
 
 	// Draw while the window doesn't close
 	while (!window->IsClosed())
@@ -149,6 +149,7 @@ int main()
 
 		// Bind the shader and draw the objects
 		shader.Bind();
+
 		renderer.Draw(vao, ibo, shader);
 
 		//Poll events and swap buffers

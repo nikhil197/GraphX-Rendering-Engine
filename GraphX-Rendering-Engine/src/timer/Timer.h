@@ -1,8 +1,5 @@
 #pragma once
 
-#include <chrono>
-#include <string>
-
 namespace engine
 {
 	class Timer

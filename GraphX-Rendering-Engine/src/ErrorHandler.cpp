@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "ErrorHandler.h"
-
-#include "Log.h"
 
 namespace engine
 {

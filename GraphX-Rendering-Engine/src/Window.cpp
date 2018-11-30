@@ -1,8 +1,7 @@
+#include "pch.h"
 #include "Window.h"
 
-#include "ErrorHandler.h"
 #include "GLFW/glfw3.h"
-#include "Log.h"
 #include "timer/Timer.h"
 
 namespace engine

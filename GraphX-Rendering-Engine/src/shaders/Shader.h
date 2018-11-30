@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include "GraphX_Matrices.h"
-#include "GraphX_Vectors.h"
-
 namespace engine
 {
 	// Struct to hold the both the shaders' source

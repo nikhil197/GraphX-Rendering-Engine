@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "Clock.h"
 #include "Timer.h"
-#include <iostream>
 
 namespace engine
 {
