@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)GraphXM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)GraphXM\src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -167,10 +167,23 @@
     <ClCompile Include="src\shaders\Shader.cpp" />
     <ClCompile Include="src\timer\Clock.cpp" />
     <ClCompile Include="src\timer\Timer.cpp" />
+    <ClCompile Include="src\gui\GraphXGui.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="vendor\ImGui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGui\imgui_impl_glfw_gl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\buffers\VertexBufferLayout.h" />
@@ -183,10 +196,18 @@
     <ClInclude Include="src\shaders\Shader.h" />
     <ClInclude Include="src\timer\Clock.h" />
     <ClInclude Include="src\timer\Timer.h" />
+    <ClInclude Include="src\gui\GraphXGui.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\buffers\IndexBuffer.h" />
     <ClInclude Include="src\buffers\VertexBuffer.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="vendor\ImGui\imconfig.h" />
+    <ClInclude Include="vendor\ImGui\imgui.h" />
+    <ClInclude Include="vendor\ImGui\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="vendor\ImGui\imgui_internal.h" />
+    <ClInclude Include="vendor\ImGui\stb_rect_pack.h" />
+    <ClInclude Include="vendor\ImGui\stb_textedit.h" />
+    <ClInclude Include="vendor\ImGui\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />

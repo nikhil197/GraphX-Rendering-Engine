@@ -3,6 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "timer/Timer.h"
+#include "gui/GraphXGui.h"
 
 namespace engine
 {
@@ -15,6 +16,8 @@ namespace engine
 			GX_ENGINE_ERROR("Window: Error While creating window");
 		}
 
+		/* Intialise the ImGui */
+		GraphXGui::Init(m_Window);
 		GX_ENGINE_INFO("Window: Successfully Created window");
 	}
 
@@ -106,6 +109,9 @@ namespace engine
 	Window::~Window()
 	{
 		GX_ENGINE_INFO("Window: Destroying window");
+
+		/* Cleanup the ImGui */
+		GraphXGui::Cleanup();
 
 		/* Destroy the window */
 		glfwDestroyWindow(m_Window);

@@ -44,6 +44,8 @@ namespace engine
 
 		void SetUniform4f(const char* Name, const gm::Vector4& Vec);
 
+		void SetUniformMat3f(const char* Name, const gm::Matrix3& Mat);
+
 		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
 
 	private:

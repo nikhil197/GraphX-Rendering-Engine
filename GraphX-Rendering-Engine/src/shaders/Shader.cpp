@@ -52,6 +52,11 @@ namespace engine
 		GLCall(glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w));
 	}
 
+	void Shader::SetUniformMat3f(const char* Name, const gm::Matrix3& Mat)
+	{
+		GLCall(glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
+	}
+
 	void Shader::SetUniformMat4f(const char* Name, const gm::Matrix4& Mat)
 	{
 		GLCall(glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));

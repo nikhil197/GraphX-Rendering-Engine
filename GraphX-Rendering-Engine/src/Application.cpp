@@ -10,6 +10,7 @@
 
 #include "timer/Clock.h"
 #include "Window.h"
+#include "gui/GraphXGui.h"
 
 int main()
 {
@@ -34,20 +35,23 @@ int main()
 	// Print the gl version
 	GX_ENGINE_INFO(glGetString(GL_VERSION));
 
+	// To enable the depth test
+	GLCall(glEnable(GL_DEPTH_TEST));
+
 	// Vertices of the cube to be rendered
 	Vertex vertices[] = {
 		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
-		// Back face
+		// Front face
 		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
-		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
-		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
-		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
+		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//1
+		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//2
+		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//3
 								  
-		// Front face			  
-		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
-		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
-		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
-		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 1.0f, 1.0f, 1.0f) }	//7
+		// Back face			  
+		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//4
+		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//5
+		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//6
+		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) }	//7
 	};
 
 	// Indices into the vertex buffer
@@ -91,45 +95,49 @@ int main()
 	// Layout for the vertex colors
 	layout.Push<float>(Vector4::Components);
 
+	// Add the layout to the vertex array
 	vao.AddBuffer(vbo, layout);
 	ibo.UnBind();
 	vao.UnBind();
 
+	// Basic Lighting Shader 
 	Shader shader("res/shaders/BasicLightingShader.shader");
 	shader.Bind();
 
+	// Simple Renderer to render the objects
 	Renderer renderer;
 
-	// Model Matrix
-	Translation trans(Vector3(0));
-	Rotation rotate(180, Vector3(1, 0, 0));
-	Scaling scale(Vector3(1));
-	Matrix4 model = trans * rotate * scale;
-	shader.SetUniformMat4f("u_Model", model);
-
 	// View Matrix
-	Vector3 CameraPos(0, 0, 5);
+	Vector3 CameraPos(0, 0, 3.0f);
 	Matrix4 view = View::LookAt(CameraPos, Vector3(0, 0, 0), Vector3::YAxis);
 	shader.SetUniformMat4f("u_View", view);
 
 	// Projection Matrix
-	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, 10.0f, -10.0f);
+	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
 	shader.SetUniformMat4f("u_Projection", proj);
 
-	Light light(Vector3(0, 10, -20), Vector4(1, 1, 1, 1));
+	Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
 	shader.SetUniform3f("u_LightPos", light.Position);
 	shader.SetUniform4f("u_LightColor", light.Color);
 
 	int times = 0;
 	float then = Clock::GetClock()->GetTime();
 
-	float angle = 0;
+	float rotation = 0.0f;
+	Vector3 translation(0);
+	Vector3 scaleVec(1);
+	Vector3 axis(1, 0, 0);
+
+	bool bShowMenu = true;
 
 	// Draw while the window doesn't close
 	while (!window->IsClosed())
 	{
 		// Tick the clock every frame to get the delta time
 		Clock::GetClock()->Tick();
+
+		// Update the Gui
+		GraphXGui::Update();
 
 		// Calculate the fps
 		times++;
@@ -150,8 +158,26 @@ int main()
 		// Bind the shader and draw the objects
 		shader.Bind();
 
-		renderer.Draw(vao, ibo, shader);
+		// Get a new transform window for the cube
+		GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
 
+		// Render the GUI
+		GraphXGui::Render();
+
+		// Model Matrix
+		Translation trans(translation);
+		Rotation rotate(rotation * Clock::GetClock()->GetTime(), axis);
+		Scaling scale(scaleVec);
+		Matrix4 model = trans * rotate * scale;
+		shader.SetUniformMat4f("u_Model", model);
+
+		// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
+		Matrix3 normal = Matrix3(view * model);
+		shader.SetUniformMat3f("u_Normal", normal);
+
+		// Render the Cube
+		renderer.Draw(vao, ibo, shader);
+		
 		//Poll events and swap buffers
 		window->Update();
 	}
