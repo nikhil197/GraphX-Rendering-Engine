@@ -15,7 +15,7 @@ namespace gm
 		static Matrix4 Ortho(float left, float right, float bottom, float top, float near, float far);
 
 		/* Creates a perspective projection matrix which converts the frustum with formed by the dimensions (parameters) into a unit cube centered at origin */
-		static Matrix4 Perspective(float left, float right, float bottom, float top, float near, float far);
+		static Matrix4 Frustum(float left, float right, float bottom, float top, float near, float far);
 
 		/* Creates a perspective projection matrix which projects the objects in the frustum specified by the field of view, the given screen dimensions, the near plane and the far plane */
 		static Matrix4 Perspective(float FieldOfView, float width, float height, float near, float far);

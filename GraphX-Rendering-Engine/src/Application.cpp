@@ -24,6 +24,7 @@ int main()
 	//Title of the window
 	std::string title = "Real Time Rendering Engine";
 	Window *window = new Window(title, 640, 480);
+	window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Initialise GLEW
 	if (glewInit() != GLEW_OK)
@@ -43,15 +44,15 @@ int main()
 		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
 		// Front face
 		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
-		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//1
-		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//2
-		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//3
+		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
+		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
+		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
 								  
 		// Back face			  
-		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//4
-		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//5
-		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//6
-		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) }	//7
+		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
+		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
+		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
+		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) }	//7
 	};
 
 	// Indices into the vertex buffer
@@ -113,7 +114,8 @@ int main()
 	shader.SetUniformMat4f("u_View", view);
 
 	// Projection Matrix
-	Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
+	//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
+	Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	shader.SetUniformMat4f("u_Projection", proj);
 
 	Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
