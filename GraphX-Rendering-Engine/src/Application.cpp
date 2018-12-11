@@ -40,7 +40,7 @@ int main()
 	GLCall(glEnable(GL_DEPTH_TEST));
 
 	// Vertices of the cube to be rendered
-	Vertex vertices[] = {
+	VertexC vertices[] = {
 		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
 		// Front face
 		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
@@ -83,7 +83,7 @@ int main()
 	};
 
 	VertexArray vao;
-	VertexBuffer vbo(vertices, 8 * sizeof(Vertex));
+	VertexBuffer vbo(vertices, 8 * sizeof(VertexC));
 	VertexBufferLayout layout;
 	IndexBuffer ibo(indices, 36);
 	
@@ -104,6 +104,9 @@ int main()
 	// Basic Lighting Shader 
 	Shader shader("res/shaders/BasicLightingShader.shader");
 	shader.Bind();
+	shader.SetUniform1f("u_AmbientStrength", 0.01f);
+	shader.SetUniform1f("u_Shininess", 32.0f);
+	shader.SetUniform1f("u_Reflectivity", 1.0f);
 
 	// Simple Renderer to render the objects
 	Renderer renderer;
@@ -112,6 +115,7 @@ int main()
 	Vector3 CameraPos(0, 0, 3.0f);
 	Matrix4 view = View::LookAt(CameraPos, Vector3(0, 0, 0), Vector3::YAxis);
 	shader.SetUniformMat4f("u_View", view);
+	shader.SetUniform3f("u_CameraPos", CameraPos);
 
 	// Projection Matrix
 	//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
@@ -174,7 +178,7 @@ int main()
 		shader.SetUniformMat4f("u_Model", model);
 
 		// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
-		Matrix3 normal = Matrix3(view * model);
+		Matrix3 normal = Matrix3(model);
 		shader.SetUniformMat3f("u_Normal", normal);
 
 		// Render the Cube
