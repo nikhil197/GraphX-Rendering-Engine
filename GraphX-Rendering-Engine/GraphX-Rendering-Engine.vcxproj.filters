@@ -69,6 +69,12 @@
     <ClCompile Include="src\gui\GraphXGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb\stb_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -137,10 +143,17 @@
     <ClInclude Include="src\gui\GraphXGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\stb\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
     <None Include="res\shaders\BasicLightingShader.shader" />
+    <None Include="res\shaders\BasicTexture.shader" />
   </ItemGroup>
 </Project>

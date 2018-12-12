@@ -4,6 +4,22 @@
 
 namespace engine
 {
+	/* A Structure to represent a vertex with all the attributes including both color and texture coordinates */
+	struct Vertex
+	{
+		// The Position of the vertex
+		gm::Vector3 Position;
+
+		// The normal vector of the vertex
+		gm::Vector3 Normal;
+
+		// The color for the vertex
+		gm::Vector4 Color;
+
+		// The texture coordinate for the vertex
+		gm::Vector2 TexCoord;
+	};
+
 	/* A Structure to represent a vertex with all the attributes including color */
 	struct VertexC
 	{

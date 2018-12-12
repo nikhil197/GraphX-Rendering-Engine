@@ -34,6 +34,8 @@ namespace engine
 		void UnBind() const;
 
 		/* Set uniforms */
+		void SetUniform1i(const char* Name, int val);
+
 		void SetUniform1f(const char* Name, float val);
 
 		void SetUniform3f(const char* Name, float r, float g, float b);

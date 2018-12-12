@@ -27,6 +27,11 @@ namespace engine
 		GLCall(glUseProgram(0));
 	}
 
+	void Shader::SetUniform1i(const char* Name, int Val)
+	{
+		GLCall(glUniform1i(GetLocation(Name), Val));
+	}
+
 	void Shader::SetUniform1f(const char* Name, float Val)
 	{
 		GLCall(glUniform1f(GetLocation(Name), Val));

@@ -6,6 +6,7 @@
 #include "buffers/VertexBufferLayout.h"
 #include "buffers/IndexBuffer.h"
 #include "model/Vertex.h"
+#include "Texture.h"
 #include "entities/Light.h"
 
 #include "timer/Clock.h"
@@ -22,7 +23,7 @@ int main()
 	Clock::Init();
 	
 	//Title of the window
-	std::string title = "Real Time Rendering Engine";
+	std::string title = "GraphX Rendering Engine";
 	Window *window = new Window(title, 640, 480);
 	window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -39,20 +40,49 @@ int main()
 	// To enable the depth test
 	GLCall(glEnable(GL_DEPTH_TEST));
 
+	// To enable blending
+	GLCall(glEnable(GL_BLEND));
+
+	// Blend function
+	// src is the alpha of the current pixel
+	// dest is the alpha of that is already in the buffer
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	
+	// Blend Equation
+	// Add the src and dest values to get the result (can be changed to subtract, inverse, etc.)
+	GLCall(glBlendEquation(GL_FUNC_ADD));
+
+	// Vertices for the cube including texture coordinates
+	// Vertices of the cube to be rendered
+	//VertexT vertices[] = {
+	//		/*Vertex Positions*/			/* Normal Coordinates */		/* Texture Coordinates */
+	//	// Front face
+	//	{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//0
+	//	{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//1
+	//	{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//2
+	//	{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//3
+
+	//	// Back face			  
+	//	{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//4
+	//	{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
+	//	{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
+	//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
+	//};
+
 	// Vertices of the cube to be rendered
 	VertexC vertices[] = {
-		/*Vertex Positions*/	/* Normal Coordinates */	/* Colors */
+			/*Vertex Positions*/			  /* Normal Coordinates */				/* Colors */
 		// Front face
-		{ Vector3(-1, -1,  1),	  Vector3(-1, -1,  1),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
-		{ Vector3( 1, -1,  1),	  Vector3( 1, -1,  1),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
-		{ Vector3( 1,  1,  1),	  Vector3( 1,  1,  1),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
-		{ Vector3(-1,  1,  1),	  Vector3(-1,  1,  1),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
+		{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
+		{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
+		{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
+		{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
 								  
 		// Back face			  
-		{ Vector3(-1, -1, -1),	  Vector3(-1, -1, -1),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
-		{ Vector3( 1, -1, -1),	  Vector3( 1, -1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
-		{ Vector3( 1,  1, -1),	  Vector3( 1,  1, -1),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
-		{ Vector3(-1,  1, -1),	  Vector3(-1,  1, -1),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) }	//7
+		{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
+		{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
+		{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
+		{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) }	//7
 	};
 
 	// Indices into the vertex buffer
@@ -84,6 +114,7 @@ int main()
 
 	VertexArray vao;
 	VertexBuffer vbo(vertices, 8 * sizeof(VertexC));
+	//VertexBuffer vbo(vertices, 8 * sizeof(VertexT));	// For Using Textures
 	VertexBufferLayout layout;
 	IndexBuffer ibo(indices, 36);
 	
@@ -96,17 +127,26 @@ int main()
 	// Layout for the vertex colors
 	layout.Push<float>(Vector4::Components);
 
+	// Layout for texture coordinates
+	//layout.Push<float>(Vector2::Components);
+
 	// Add the layout to the vertex array
 	vao.AddBuffer(vbo, layout);
 	ibo.UnBind();
 	vao.UnBind();
 
+	// Create a Texture object
+	//Texture tex("res/textures/Rendering Pipeline.png");
+	//tex.Bind();
+
 	// Basic Lighting Shader 
 	Shader shader("res/shaders/BasicLightingShader.shader");
+	//Shader shader("res/shaders/BasicTexture.shader");
 	shader.Bind();
 	shader.SetUniform1f("u_AmbientStrength", 0.01f);
-	shader.SetUniform1f("u_Shininess", 32.0f);
+	shader.SetUniform1f("u_Shininess", 256.0f);
 	shader.SetUniform1f("u_Reflectivity", 1.0f);
+	//shader.SetUniform1i("u_Texture", 0 /* Slot number*/);
 
 	// Simple Renderer to render the objects
 	Renderer renderer;

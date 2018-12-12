@@ -96,6 +96,7 @@
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\Release\Win32\;$(SolutionDir)Dependencies\GLFW\lib-vc2015</AdditionalLibraryDirectories>
@@ -165,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\shaders\Shader.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\timer\Clock.cpp" />
     <ClCompile Include="src\timer\Timer.cpp" />
     <ClCompile Include="src\gui\GraphXGui.cpp" />
@@ -184,6 +186,9 @@
     <ClCompile Include="vendor\ImGui\imgui_impl_glfw_gl3.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vendor\stb\stb_image.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\buffers\VertexBufferLayout.h" />
@@ -194,6 +199,7 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\shaders\Shader.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\timer\Clock.h" />
     <ClInclude Include="src\timer\Timer.h" />
     <ClInclude Include="src\gui\GraphXGui.h" />
@@ -208,10 +214,12 @@
     <ClInclude Include="vendor\ImGui\stb_rect_pack.h" />
     <ClInclude Include="vendor\ImGui\stb_textedit.h" />
     <ClInclude Include="vendor\ImGui\stb_truetype.h" />
+    <ClInclude Include="vendor\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
     <None Include="res\shaders\BasicLightingShader.shader" />
+    <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
   </ItemGroup>
   <ItemGroup>
