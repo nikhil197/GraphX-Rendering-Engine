@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\entities\Camera.cpp" />
     <ClCompile Include="src\entities\Light.cpp" />
     <ClCompile Include="src\ErrorHandler.cpp" />
     <ClCompile Include="src\Log.cpp">
@@ -192,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\buffers\VertexBufferLayout.h" />
+    <ClInclude Include="src\entities\Camera.h" />
     <ClInclude Include="src\entities\Light.h" />
     <ClInclude Include="src\ErrorHandler.h" />
     <ClInclude Include="src\Log.h" />

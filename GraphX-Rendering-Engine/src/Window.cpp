@@ -90,11 +90,8 @@ namespace engine
 
 	void Window::Clear()
 	{
-		/* Clear the color buffer */
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* Clear the depth buffer */
-		glClear(GL_DEPTH_BUFFER_BIT);
+		/* Clear both color and depth buffer */
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// More efficient to do in one function call
 	}
 
 	void Window::Update()

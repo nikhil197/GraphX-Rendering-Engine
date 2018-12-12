@@ -7,7 +7,10 @@
 #include "buffers/IndexBuffer.h"
 #include "model/Vertex.h"
 #include "Texture.h"
+
+/* Entities */
 #include "entities/Light.h"
+#include "entities/Camera.h"
 
 #include "timer/Clock.h"
 #include "Window.h"
@@ -151,11 +154,11 @@ int main()
 	// Simple Renderer to render the objects
 	Renderer renderer;
 
-	// View Matrix
-	Vector3 CameraPos(0, 0, 3.0f);
-	Matrix4 view = View::LookAt(CameraPos, Vector3(0, 0, 0), Vector3::YAxis);
+	// Camera
+	Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
+	Matrix4 view = camera.GetViewMatrix();
 	shader.SetUniformMat4f("u_View", view);
-	shader.SetUniform3f("u_CameraPos", CameraPos);
+	shader.SetUniform3f("u_CameraPos", camera.CameraPosition);
 
 	// Projection Matrix
 	//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
