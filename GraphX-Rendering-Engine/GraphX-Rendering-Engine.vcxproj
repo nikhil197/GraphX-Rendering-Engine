@@ -196,6 +196,7 @@
     <ClInclude Include="src\entities\Camera.h" />
     <ClInclude Include="src\entities\Light.h" />
     <ClInclude Include="src\ErrorHandler.h" />
+    <ClInclude Include="src\events\Event.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\model\Vertex.h" />
     <ClInclude Include="src\pch.h" />

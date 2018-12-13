@@ -17,3 +17,4 @@
 #include <unordered_map>
 #include <sstream>
 #include <fstream>
+#include <functional>
