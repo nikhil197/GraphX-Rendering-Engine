@@ -6,7 +6,6 @@ int main()
 {
 	//Title of the application
 	std::string title = "GraphX Rendering Engine";
-	
 	std::unique_ptr<engine::Application> app = std::make_unique<engine::Application>(title, 640, 480);
 
 	// Run the application

@@ -4,11 +4,12 @@
 #include "GLFW/glfw3.h"
 #include "timer/Timer.h"
 #include "gui/GraphXGui.h"
+#include "events/WindowEvent.h"
 
 namespace engine
 {
 	Window::Window(std::string title, int width, int height)
-		: m_Title(title), m_Width(width), m_Height(height)
+		: m_Title(title), m_Width(width), m_Height(height), m_EventCallback(nullptr)
 	{
 		bool res = Init();
 		if (!res)
@@ -25,7 +26,7 @@ namespace engine
 	{
 		// To time the intialising sequence
 		Timer windowInit("Window Intialising");
-		
+
 		if (!glfwInit())
 		{
 			GX_ENGINE_ERROR("Couldn't Initialise GLFW");
@@ -56,7 +57,82 @@ namespace engine
 		// Set the error callback for glfw
 		glfwSetErrorCallback(&GlfwErrorCallback);
 
+		// Set the user window pointer to this
+		glfwSetWindowUserPointer(m_Window, this);
+
+		// Here, for the time being static cast (not good) is being used to retrieve the window object from the GLFW,
+		// since the capturing lambdas cannot be converted to function pointers
+		// Need to find a better way!!!!!!
+
+		// Frame Buffer resize callback
+		glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->FrameBufferSizeCallback(window, width, height);
+		});
+
+		// Window Move callback
+		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int xpos, int ypos) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->WindowPositionCallback(window, xpos, ypos);
+		});
+
+		// Window focus callback
+		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->WindowFocusCallback(window, focused);
+		});
+
+		// Window close callback
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->WindowCloseCallback(window);
+		});
+
+		// Key callback
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int keyCode, int scanCode, int action, int mods) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->KeyCallback(window, keyCode, scanCode, action, mods);
+		});
+
+		// Cursor callback
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->CursorPositionCallback(window, xpos, ypos);
+		});
+
+		// Mouse button callback
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->MouseButtonCallback(window, button, action, mods);
+		});
+
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->ScrollCallback(window, xOffset, yOffset);
+		});
+
 		return true;
+	}
+
+	void Window::OnEvent(Event& e)
+	{
+		bool handled = false;
+		EventDispatcher dispatcher(e);
+		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
+		{
+			// handle the window events
+		}
+		else
+		{
+			// Dispatch the event to the application
+			handled = m_EventCallback(e);
+		}
+
+		// Raise an error
+		if (!handled)
+		{
+			GX_ENGINE_ERROR("\"{0}\"  could not be handled properly", e);
+		}
 	}
 
 	bool Window::IsClosed() const
@@ -77,10 +153,15 @@ namespace engine
 		glClearColor(r, g, b, a);
 	}
 
+	void Window::SetEventCallback(std::function<bool(Event&)>& func)
+	{
+		m_EventCallback = func;
+	}
+
 	void Window::Resize()
 	{
 		int width, height;
-	
+
 		// Get the new width and height of the window
 		glfwGetFramebufferSize(m_Window, &width, &height);
 
@@ -116,4 +197,80 @@ namespace engine
 		/* Terminate */
 		glfwTerminate();
 	}
+
+#pragma region callbacks
+
+	/************* Window Callbacks **************/
+	void Window::FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
+	{
+
+	}
+
+	void Window::WindowPositionCallback(GLFWwindow* window, int xpos, int ypos)
+	{
+
+	}
+
+	void Window::WindowFocusCallback(GLFWwindow* window, int focused)
+	{
+
+	}
+
+	void Window::WindowCloseCallback(GLFWwindow* window)
+	{
+
+	}
+
+	/************* Input Callbacks **************/
+	void Window::KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods)
+	{
+
+	}
+
+	void Window::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+
+	}
+
+	void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+	{
+
+	}
+
+	void Window::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+	{
+
+	}
+
+#pragma endregion
+
+#pragma region eventHandlers
+
+	bool Window::OnWindowResize(WindowResizedEvent& e)
+	{
+		return false;
+	}
+
+	bool Window::OnWindowMoved(WindowMovedEvent& e)
+	{
+		return false;
+	}
+
+	bool Window::OnWindowFocus(WindowFocusEvent& e)
+	{
+		return false;
+	}
+
+	bool Window::OnWindowLostFocus(WindowLostFocusEvent& e)
+	{
+		return false;
+	}
+
+	bool Window::OnWindowClose(WindowCloseEvent& e)
+	{
+		return false;
+	}
+
+#pragma endregion
+
 }

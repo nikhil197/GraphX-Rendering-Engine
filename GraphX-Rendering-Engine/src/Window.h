@@ -5,6 +5,8 @@ struct GLFWwindow;
 
 namespace engine
 {
+	class Event;
+
 	class Window
 	{
 	private:
@@ -17,9 +19,30 @@ namespace engine
 		/* GLFW Window */
 		GLFWwindow* m_Window;
 
+		/* Function pointer to the Application Event callback*/
+		std::function<bool(Event&)> m_EventCallback;
+
 	private:
 		/* Initialise the window */
 		bool Init();
+
+		// To handle all the events
+		void OnEvent(Event& e);
+
+#pragma region eventHandlers
+
+		/* Event Handlers for window events */
+		bool OnWindowResize(class WindowResizedEvent& e);
+
+		bool OnWindowMoved(class WindowMovedEvent& e);
+
+		bool OnWindowFocus(class WindowFocusEvent& e);
+
+		bool OnWindowLostFocus(class WindowLostFocusEvent& e);
+
+		bool OnWindowClose(class WindowCloseEvent& e);
+
+#pragma endregion
 
 	public:
 		/* Constructor */
@@ -27,6 +50,31 @@ namespace engine
 
 		/* Set the clear color */
 		void SetClearColor(float r, float g, float b, float a);
+
+		/* Set the event callback for the application */
+		void SetEventCallback(std::function<bool(Event&)>& func);
+
+#pragma region callbacks
+
+		/************* Window Callbacks **************/
+		void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
+
+		void WindowPositionCallback(GLFWwindow* window, int xpos, int ypos);
+
+		void WindowFocusCallback(GLFWwindow* window, int focused);
+
+		void WindowCloseCallback(GLFWwindow* window);
+
+		/************* Input Callbacks **************/
+		void KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods);
+
+		void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+
+		void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
+		void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+
+#pragma endregion
 
 		/* Returns whether the window has been closed */
 		bool IsClosed() const;
