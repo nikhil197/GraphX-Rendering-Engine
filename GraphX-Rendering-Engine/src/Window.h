@@ -16,11 +16,14 @@ namespace engine
 		/* Width and height of the window */
 		int m_Width, m_Height;
 
+		/* Whether the window is closed */
+		bool m_Closed;
+
 		/* GLFW Window */
 		GLFWwindow* m_Window;
 
 		/* Function pointer to the Application Event callback*/
-		std::function<bool(Event&)> m_EventCallback;
+		std::function<void(Event&)> m_EventCallback;
 
 	private:
 		/* Initialise the window */
@@ -28,6 +31,28 @@ namespace engine
 
 		// To handle all the events
 		void OnEvent(Event& e);
+
+#pragma region callbacks
+
+		/************* Window Callbacks **************/
+		void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
+
+		void WindowPositionCallback(GLFWwindow* window, int xpos, int ypos);
+
+		void WindowFocusCallback(GLFWwindow* window, int focused);
+
+		void WindowCloseCallback(GLFWwindow* window);
+
+		/************* Input Callbacks **************/
+		void KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods);
+
+		void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+
+		void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
+		void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+
+#pragma endregion
 
 #pragma region eventHandlers
 
@@ -52,35 +77,10 @@ namespace engine
 		void SetClearColor(float r, float g, float b, float a);
 
 		/* Set the event callback for the application */
-		void SetEventCallback(std::function<bool(Event&)>& func);
-
-#pragma region callbacks
-
-		/************* Window Callbacks **************/
-		void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
-
-		void WindowPositionCallback(GLFWwindow* window, int xpos, int ypos);
-
-		void WindowFocusCallback(GLFWwindow* window, int focused);
-
-		void WindowCloseCallback(GLFWwindow* window);
-
-		/************* Input Callbacks **************/
-		void KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods);
-
-		void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
-
-		void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-
-		void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
-#pragma endregion
+		void SetEventCallback(const std::function<void(Event&)>& func);
 
 		/* Returns whether the window has been closed */
-		bool IsClosed() const;
-
-		/* Resize the window */
-		void Resize();
+		inline bool IsClosed() const { return m_Closed; }
 
 		/* Clear the screen before each frame */
 		void Clear();

@@ -62,7 +62,7 @@ namespace engine
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "WindowResizeEvent: " << m_XPos << ", " << m_YPos;
+			ss << "WindowMovedEvent: " << m_XPos << ", " << m_YPos;
 			return ss.str();
 		}
 

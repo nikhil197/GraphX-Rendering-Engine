@@ -33,9 +33,12 @@ namespace engine
 		m_Window = new Window(m_Title, width, height);
 		m_Window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		if (!InitializeOpenGL())
+		bool success = InitializeOpenGL();
+
+		if (!success)
 		{
 			GX_ENGINE_ERROR("Application: Failed to intialize OpenGL");
+			ASSERT(success);
 		}
 	}
 
@@ -224,9 +227,6 @@ namespace engine
 
 			// Clear the window 
 			m_Window->Clear();
-
-			// Resize the window before rendering
-			m_Window->Resize();
 
 			// Bind the shader and draw the objects
 			shader.Bind();

@@ -5,16 +5,19 @@
 #include "timer/Timer.h"
 #include "gui/GraphXGui.h"
 #include "events/WindowEvent.h"
+#include "events/KeyboardEvent.h"
+#include "events/MouseEvent.h"
 
 namespace engine
 {
 	Window::Window(std::string title, int width, int height)
-		: m_Title(title), m_Width(width), m_Height(height), m_EventCallback(nullptr)
+		: m_Title(title), m_Width(width), m_Height(height), m_Closed(false), m_EventCallback(nullptr)
 	{
 		bool res = Init();
 		if (!res)
 		{
 			GX_ENGINE_ERROR("Window: Error While creating window");
+			ASSERT(res);
 		}
 
 		/* Intialise the ImGui */
@@ -116,36 +119,57 @@ namespace engine
 
 	void Window::OnEvent(Event& e)
 	{
-		bool handled = false;
-		EventDispatcher dispatcher(e);
+		// If the event belongs to the window category
 		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
 		{
+			bool handled = false;
+			EventDispatcher dispatcher(e);
+			
 			// handle the window events
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowResizedEvent>([this](Event& e) {
+					return this->OnWindowResize(*dynamic_cast<WindowResizedEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowMovedEvent>([this](Event& e) {
+					return this->OnWindowMoved(*dynamic_cast<WindowMovedEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowFocusEvent>([this](Event& e) {
+					return this->OnWindowFocus(*dynamic_cast<WindowFocusEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e) {
+					return this->OnWindowLostFocus(*dynamic_cast<WindowLostFocusEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowCloseEvent>([this](Event& e) {
+					return this->OnWindowClose(*dynamic_cast<WindowCloseEvent*>(&e));
+				});
+			}
+
+			// Raise an error
+			if (!handled)
+			{
+				GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
+			}
 		}
 		else
 		{
 			// Dispatch the event to the application
-			handled = m_EventCallback(e);
+			// Unhandled event error will be raised by the event handler
+			if(m_EventCallback)
+				m_EventCallback(e);
 		}
-
-		// Raise an error
-		if (!handled)
-		{
-			GX_ENGINE_ERROR("\"{0}\"  could not be handled properly", e);
-		}
-	}
-
-	bool Window::IsClosed() const
-	{
-		if (m_Window)
-		{
-			if (!glfwWindowShouldClose(m_Window))
-			{
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	void Window::SetClearColor(float r, float g, float b, float a)
@@ -153,20 +177,9 @@ namespace engine
 		glClearColor(r, g, b, a);
 	}
 
-	void Window::SetEventCallback(std::function<bool(Event&)>& func)
+	void Window::SetEventCallback(const std::function<void(Event&)>& func)
 	{
 		m_EventCallback = func;
-	}
-
-	void Window::Resize()
-	{
-		int width, height;
-
-		// Get the new width and height of the window
-		glfwGetFramebufferSize(m_Window, &width, &height);
-
-		// Set the new size of the window
-		glViewport(0, 0, width, height);
 	}
 
 	void Window::Clear()
@@ -203,43 +216,85 @@ namespace engine
 	/************* Window Callbacks **************/
 	void Window::FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 	{
-
+		WindowResizedEvent e(width, height);
+		OnEvent(e);
 	}
 
 	void Window::WindowPositionCallback(GLFWwindow* window, int xpos, int ypos)
 	{
-
+		WindowMovedEvent e(xpos, ypos);
+		OnEvent(e);
 	}
 
 	void Window::WindowFocusCallback(GLFWwindow* window, int focused)
 	{
-
+		if (focused)
+		{
+			WindowFocusEvent e;
+			OnEvent(e);
+		}
+		else
+		{
+			WindowLostFocusEvent e;
+			OnEvent(e);
+		}
 	}
 
 	void Window::WindowCloseCallback(GLFWwindow* window)
 	{
-
+		WindowCloseEvent e;
+		OnEvent(e);
 	}
 
 	/************* Input Callbacks **************/
 	void Window::KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods)
 	{
+		static int repeatCount = 0;
 
+		if (action == GLFW_PRESS)
+		{
+			repeatCount = 1;
+			KeyPressedEvent e(keyCode, repeatCount);
+			OnEvent(e);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			repeatCount = 0;
+			KeyReleasedEvent e(keyCode);
+			OnEvent(e);
+		}
+		else if (action == GLFW_REPEAT)
+		{
+			repeatCount++;
+			KeyPressedEvent e(keyCode, repeatCount);
+			OnEvent(e);
+		}
 	}
 
 	void Window::CursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 	{
-
+		MouseMovedEvent e((float)xpos, (float)ypos);
+		OnEvent(e);
 	}
 
 	void Window::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
-
+		if (action == GLFW_PRESS)
+		{
+			MouseButtonPressedEvent e(button);
+			OnEvent(e);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			MouseButtonReleasedEvent e(button);
+			OnEvent(e);
+		}
 	}
 
 	void Window::ScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 	{
-
+		MouseScrolledEvent e((float)xOffset, (float)yOffset);
+		OnEvent(e);
 	}
 
 #pragma endregion
@@ -248,27 +303,39 @@ namespace engine
 
 	bool Window::OnWindowResize(WindowResizedEvent& e)
 	{
-		return false;
+		// Set the new size of the window
+		glViewport(0, 0, e.GetWidth(), e.GetHeight());
+		return true;
 	}
 
 	bool Window::OnWindowMoved(WindowMovedEvent& e)
 	{
-		return false;
+		// Stuff to be added later
+		return true;
 	}
 
 	bool Window::OnWindowFocus(WindowFocusEvent& e)
 	{
-		return false;
+		// Stuff to be added later
+		return true;
 	}
 
 	bool Window::OnWindowLostFocus(WindowLostFocusEvent& e)
 	{
-		return false;
+		// Stuff to be added later
+		return true;
 	}
 
 	bool Window::OnWindowClose(WindowCloseEvent& e)
 	{
-		return false;
+		if (m_Window)
+		{
+			if (!glfwWindowShouldClose(m_Window))
+			{
+				m_Closed = true;
+			}
+		}
+		return true;
 	}
 
 #pragma endregion
