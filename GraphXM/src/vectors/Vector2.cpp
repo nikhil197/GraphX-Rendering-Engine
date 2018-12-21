@@ -1,5 +1,6 @@
 #include "Vector2.h"
 
+#include "Vector3.h"
 #include "../MathUtil.h"
 
 namespace gm
@@ -216,9 +217,10 @@ namespace gm
 		return (V1.x * V2.x + V1.y * V2.y);
 	}
 
-	float Vector2::CrossProduct(const Vector2& V1, const Vector2& V2)
+	const Vector3 Vector2::CrossProduct(const Vector2& V1, const Vector2& V2)
 	{
-		return (V1.x * V2.y - V1.y * V2.x);
+		return gm::Vector3::CrossProduct(Vector3(V1, 0), Vector3(V2, 0));
+		//return (V1.x * V2.y - V1.y * V2.x);
 	}
 
 	float Vector2::Distance(const Vector2& V1, const Vector2& V2)

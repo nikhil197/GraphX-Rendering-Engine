@@ -78,7 +78,7 @@ namespace gm
 		static float DotProduct(const Vector2& V1, const Vector2& V2);
 
 		/* Cross product of the two vectors */
-		static float CrossProduct(const Vector2& V1, const Vector2& V2);
+		static const struct Vector3 CrossProduct(const Vector2& V1, const Vector2& V2);
 
 		/* Return the distance between two vectors */
 		static float Distance(const Vector2& V1, const Vector2& V2);
