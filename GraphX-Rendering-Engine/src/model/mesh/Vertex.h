@@ -5,26 +5,14 @@
 
 namespace engine
 {
-	struct Vertex
-	{
-		static VertexBufferLayout GetVertexLayout()
-		{
-			return VertexBufferLayout();
-		}
-	};
-
-	/* A Structure to represent a 2D vertex with all the attributes including color */
-	struct Vertex2DC : public Vertex
+	/* A Structure to represent a 2D vertex with all the attributes including color (Keeping this for the testing purposes */
+	struct Vertex2DC
 	{
 		// The Position of the vertex
 		gm::Vector2 Position;
 
 		// The color for the vertex
 		gm::Vector4 Color;
-
-		Vertex2DC(const gm::Vector2& position, const gm::Vector4& color)
-			: Position(position), Color(color)
-		{}
 
 		// Returns the vertexbufferlayout for this struct
 		static VertexBufferLayout GetVertexLayout()
@@ -38,17 +26,13 @@ namespace engine
 	};
 
 	/* A Structure to represent a vertex 2D with all the attributes including texture coordinates */
-	struct Vertex2DT : public Vertex
+	struct Vertex2D
 	{
 		// The Position of the vertex
 		gm::Vector2 Position;
 
 		// The texture coordinate for the vertex
 		gm::Vector2 TexCoord;
-
-		Vertex2DT(const gm::Vector2& position, const gm::Vector2& texCoord)
-			: Position(position), TexCoord(texCoord)
-		{}
 
 		// Returns the vertexbufferlayout for this struct
 		static VertexBufferLayout GetVertexLayout()
@@ -61,8 +45,8 @@ namespace engine
 		}
 	};
 
-	/* A Structure to represent a vertex with all the attributes including color */
-	struct VertexC : public Vertex
+	/* A Structure to represent a vertex with all the attributes including color (Only keeping this for the testing purposes) */
+	struct VertexC
 	{
 		// The Position of the vertex
 		gm::Vector3 Position;
@@ -72,10 +56,6 @@ namespace engine
 		
 		// The color for the vertex
 		gm::Vector4 Color;
-
-		VertexC(const gm::Vector3& pos, const gm::Vector3& normal, const gm::Vector4& color)
-			: Position(pos), Normal(normal), Color(color)
-		{ }
 
 		// Returns the vertexbufferlayout for this struct
 		static VertexBufferLayout GetVertexLayout()
@@ -90,7 +70,7 @@ namespace engine
 	};
 
 	/* A Structure to represent a vertex with all the attributes including texture coordinates */
-	struct VertexT : public Vertex
+	struct Vertex3D
 	{
 		// The Position of the vertex
 		gm::Vector3 Position;
@@ -100,10 +80,6 @@ namespace engine
 
 		// The texture coordinate for the vertex
 		gm::Vector2 TexCoord;
-
-		VertexT(const gm::Vector3& pos, const gm::Vector3& normal, const gm::Vector2& texCoord)
-			: Position(pos), Normal(normal), TexCoord(texCoord)
-		{ }
 
 		// Returns the vertexbufferlayout for this struct
 		static VertexBufferLayout GetVertexLayout()

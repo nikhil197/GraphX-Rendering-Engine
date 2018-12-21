@@ -1,10 +1,7 @@
 #pragma once
 
-#include "pch.h"
-
 namespace engine
 {
-	template<typename T>
 	class Mesh3D
 	{
 	public:
@@ -17,6 +14,9 @@ namespace engine
 		/* Scale of the object */
 		gm::Vector3 Scale;
 
+		/* Whether to show the details UI window (ImGUI) or not */
+		bool bShowDetails : 1;
+
 	private:
 		/* Vertex Array Object for the Mesh */
 		class VertexArray* m_VAO;
@@ -27,22 +27,31 @@ namespace engine
 		/* Index Buffer for the Mesh */
 		class IndexBuffer* m_IBO;
 
-		// Multiple textures can be used to texture the object
-		// GX currently supports only single texture rendering
-		/* Texture used by the mesh */
-		const class Texture* m_Texture;
-
 		/* Shader used to render the object */
 		class Shader& m_Shader;
 
+		// Multiple textures can be used to texture the object
+		// GX currently supports only single texture rendering
+		/* Texture used by the mesh */
+		std::vector<const class Texture*> m_Textures;
+
 		/* Vertex data */
-		std::vector<T>& m_Vertices;
+		std::vector<struct Vector3D> m_Vertices;
 
 		/* Indices into the vertex buffer */
-		std::vector<unsigned int>& m_Indices;
+		std::vector<unsigned int> m_Indices;
 
 	public:
-		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Texture* texture, class Shader& shader, std::vector<T>& vertices, std::vector<unsigned int>& indices);
+		/**
+		@param Pos Position of the mesh in the world
+		@param Rotation Rotation of the mesh in the world
+		@param Scale Scale of the mesh
+		@param Shader shader used for shading (rendering) the mesh
+		@param Textures textures used for the mesh
+		@param Vertices vertices of the mesh (counter clockwise order)
+		@param Indices indices into the vertices vector
+		*/
+		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*> Textures, const std::vector<struct Vector3D>& Vertices, const std::vector<unsigned int>& Indices);
 
 		/* Returns the vao for the object */
 		inline class VertexArray* GetVAO() const { return m_VAO; }
@@ -59,6 +68,3 @@ namespace engine
 		~Mesh3D();
 	};
 }
-
-// Implementation of the template
-#include "Mesh3D.inl"

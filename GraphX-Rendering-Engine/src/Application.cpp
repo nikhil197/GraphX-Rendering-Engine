@@ -8,7 +8,7 @@
 #include "buffers/VertexBuffer.h"
 #include "buffers/VertexBufferLayout.h"
 #include "buffers/IndexBuffer.h"
-#include "model/Vertex.h"
+#include "model/mesh/Vertex.h"
 #include "Texture.h"
 
 /* Entities */

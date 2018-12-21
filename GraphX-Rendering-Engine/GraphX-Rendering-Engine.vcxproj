@@ -203,9 +203,9 @@
     <ClInclude Include="src\events\MouseEvent.h" />
     <ClInclude Include="src\events\WindowEvent.h" />
     <ClInclude Include="src\Log.h" />
-    <ClInclude Include="src\model\Mesh2D.h" />
-    <ClInclude Include="src\model\Mesh3D.h" />
-    <ClInclude Include="src\model\Vertex.h" />
+    <ClInclude Include="src\model\mesh\Mesh2D.h" />
+    <ClInclude Include="src\model\mesh\Mesh3D.h" />
+    <ClInclude Include="src\model\mesh\Vertex.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\shaders\Shader.h" />
@@ -231,6 +231,8 @@
     <None Include="res\shaders\BasicLightingShader.shader" />
     <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
+    <None Include="src\model\mesh\Mesh2D.cpp" />
+    <None Include="src\model\mesh\Mesh3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">

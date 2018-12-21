@@ -116,9 +116,6 @@
     <ClInclude Include="src\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\model\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\entities\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,10 +170,13 @@
     <ClInclude Include="src\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\model\Mesh2D.h">
+    <ClInclude Include="src\model\mesh\Mesh2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\model\Mesh3D.h">
+    <ClInclude Include="src\model\mesh\Mesh3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\mesh\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -185,5 +185,11 @@
     <None Include="res\shaders\MVP_Color.shader" />
     <None Include="res\shaders\BasicLightingShader.shader" />
     <None Include="res\shaders\BasicTexture.shader" />
+    <None Include="src\model\mesh\Mesh2D.cpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\model\mesh\Mesh3D.cpp">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
