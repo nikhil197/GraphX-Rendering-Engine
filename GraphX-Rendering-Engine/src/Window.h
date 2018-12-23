@@ -54,21 +54,6 @@ namespace engine
 
 #pragma endregion
 
-#pragma region eventHandlers
-
-		/* Event Handlers for window events */
-		bool OnWindowResize(class WindowResizedEvent& e);
-
-		bool OnWindowMoved(class WindowMovedEvent& e);
-
-		bool OnWindowFocus(class WindowFocusEvent& e);
-
-		bool OnWindowLostFocus(class WindowLostFocusEvent& e);
-
-		bool OnWindowClose(class WindowCloseEvent& e);
-
-#pragma endregion
-
 	public:
 		/* Constructor */
 		Window(std::string title, int width, int height);
@@ -86,7 +71,10 @@ namespace engine
 		void Clear();
 
 		/* Update the window */
-		void Update();
+		void OnUpdate();
+
+		/* Resize the window */
+		void OnResize();
 
 		/* Returns the width of the window */
 		inline int GetWidth() const { return m_Width; }

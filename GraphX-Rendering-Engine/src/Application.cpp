@@ -19,12 +19,17 @@
 #include "timer/Clock.h"
 #include "gui/GraphXGui.h"
 
+/* Events */
+#include "events/WindowEvent.h"
+#include "events/KeyboardEvent.h"
+#include "events/MouseEvent.h"
+
 namespace engine
 {
 	using namespace gm;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true)
 	{
 		// Initialise the clock and the logging
 		Log::Init();
@@ -34,9 +39,7 @@ namespace engine
 		m_Window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// Set the event callback with the window
-		m_Window->SetEventCallback([this](Event& e) {
-			this->OnEvent(e);
-		});
+		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 		bool success = InitializeOpenGL();
 		if (!success)
@@ -82,11 +85,6 @@ namespace engine
 		GLCall(glBlendEquation(GL_FUNC_ADD));
 
 		return true;
-	}
-
-	void Application::OnEvent(Event& e)
-	{
-		
 	}
 
 	void Application::Run()
@@ -216,7 +214,7 @@ namespace engine
 		bool bShowMenu = true;
 
 		// Draw while the window doesn't close
-		while (!m_Window->IsClosed())
+		while (m_IsRunning)
 		{
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
@@ -261,7 +259,96 @@ namespace engine
 			renderer.Draw(vao, ibo, shader);
 
 			//Poll events and swap buffers
-			m_Window->Update();
+			m_Window->OnUpdate();
 		}
 	}
+
+	void Application::OnEvent(Event& e)
+	{
+		bool handled = false;
+		EventDispatcher dispatcher(e);
+
+		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
+		{
+			// handle the window events
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowResizedEvent>([this](Event& e) {
+					return this->OnWindowResize(*dynamic_cast<WindowResizedEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowMovedEvent>([this](Event& e) {
+					return this->OnWindowMoved(*dynamic_cast<WindowMovedEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowFocusEvent>([this](Event& e) {
+					return this->OnWindowFocus(*dynamic_cast<WindowFocusEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e) {
+					return this->OnWindowLostFocus(*dynamic_cast<WindowLostFocusEvent*>(&e));
+				});
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<WindowCloseEvent>([this](Event& e) {
+					return this->OnWindowClose(*dynamic_cast<WindowCloseEvent*>(&e));
+				});
+			}
+		}
+		else
+		{
+
+		}
+		// Raise an error
+		if (!handled)
+		{
+			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
+		}
+		else
+			GX_ENGINE_TRACE("{0}", e);
+	}
+
+
+#pragma region eventHandlers
+
+	bool Application::OnWindowResize(WindowResizedEvent& e)
+	{
+		// Set the new size of the window
+		m_Window->OnResize();
+		return true;
+	}
+
+	bool Application::OnWindowMoved(WindowMovedEvent& e)
+	{
+		// Stuff to be added later
+		return true;
+	}
+
+	bool Application::OnWindowFocus(WindowFocusEvent& e)
+	{
+		// Stuff to be added later
+		return true;
+	}
+
+	bool Application::OnWindowLostFocus(WindowLostFocusEvent& e)
+	{
+		// Stuff to be added later
+		return true;
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		m_IsRunning = false;
+		return true;
+	}
+
+#pragma endregion
+
 }

@@ -103,7 +103,7 @@ namespace engine
 		}
 	};
 
-	std::ostream& operator<<(std::ostream& out, const Event& event)
+	static std::ostream& operator<<(std::ostream& out, const Event& event)
 	{
 		return out << event.ToString();
 	}

@@ -119,57 +119,10 @@ namespace engine
 
 	void Window::OnEvent(Event& e)
 	{
-		// If the event belongs to the window category
-		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
-		{
-			bool handled = false;
-			EventDispatcher dispatcher(e);
-			
-			// handle the window events
-			if (!handled)
-			{
-				handled = dispatcher.Dispatch<WindowResizedEvent>([this](Event& e) {
-					return this->OnWindowResize(*dynamic_cast<WindowResizedEvent*>(&e));
-				});
-			}
-			if (!handled)
-			{
-				handled = dispatcher.Dispatch<WindowMovedEvent>([this](Event& e) {
-					return this->OnWindowMoved(*dynamic_cast<WindowMovedEvent*>(&e));
-				});
-			}
-			if (!handled)
-			{
-				handled = dispatcher.Dispatch<WindowFocusEvent>([this](Event& e) {
-					return this->OnWindowFocus(*dynamic_cast<WindowFocusEvent*>(&e));
-				});
-			}
-			if (!handled)
-			{
-				handled = dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e) {
-					return this->OnWindowLostFocus(*dynamic_cast<WindowLostFocusEvent*>(&e));
-				});
-			}
-			if (!handled)
-			{
-				handled = dispatcher.Dispatch<WindowCloseEvent>([this](Event& e) {
-					return this->OnWindowClose(*dynamic_cast<WindowCloseEvent*>(&e));
-				});
-			}
-
-			// Raise an error
-			if (!handled)
-			{
-				GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
-			}
-		}
-		else
-		{
-			// Dispatch the event to the application
-			// Unhandled event error will be raised by the event handler
-			if(m_EventCallback)
-				m_EventCallback(e);
-		}
+		// Dispatch the event to the application
+		// Unhandled event error will be raised by the event handler
+		if(m_EventCallback)
+			m_EventCallback(e);
 	}
 
 	void Window::SetClearColor(float r, float g, float b, float a)
@@ -188,13 +141,18 @@ namespace engine
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// More efficient to do in one function call
 	}
 
-	void Window::Update()
+	void Window::OnUpdate()
 	{
 		/* Swap the front and back buffers */
 		glfwSwapBuffers(m_Window);
 
 		/* Poll for events */
 		glfwPollEvents();
+	}
+
+	void Window::OnResize()
+	{
+		glViewport(0, 0, m_Width, m_Height);
 	}
 
 	Window::~Window()
@@ -216,6 +174,10 @@ namespace engine
 	/************* Window Callbacks **************/
 	void Window::FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 	{
+		// Set the width and height of the window
+		m_Width = width;
+		m_Height = height;
+
 		WindowResizedEvent e(width, height);
 		OnEvent(e);
 	}
@@ -242,6 +204,8 @@ namespace engine
 
 	void Window::WindowCloseCallback(GLFWwindow* window)
 	{
+		m_Closed = true;
+
 		WindowCloseEvent e;
 		OnEvent(e);
 	}
@@ -298,46 +262,4 @@ namespace engine
 	}
 
 #pragma endregion
-
-#pragma region eventHandlers
-
-	bool Window::OnWindowResize(WindowResizedEvent& e)
-	{
-		// Set the new size of the window
-		glViewport(0, 0, e.GetWidth(), e.GetHeight());
-		return true;
-	}
-
-	bool Window::OnWindowMoved(WindowMovedEvent& e)
-	{
-		// Stuff to be added later
-		return true;
-	}
-
-	bool Window::OnWindowFocus(WindowFocusEvent& e)
-	{
-		// Stuff to be added later
-		return true;
-	}
-
-	bool Window::OnWindowLostFocus(WindowLostFocusEvent& e)
-	{
-		// Stuff to be added later
-		return true;
-	}
-
-	bool Window::OnWindowClose(WindowCloseEvent& e)
-	{
-		if (m_Window)
-		{
-			if (!glfwWindowShouldClose(m_Window))
-			{
-				m_Closed = true;
-			}
-		}
-		return true;
-	}
-
-#pragma endregion
-
 }
