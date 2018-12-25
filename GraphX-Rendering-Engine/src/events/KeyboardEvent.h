@@ -13,7 +13,14 @@ namespace engine
 		int m_KeyCode;
 
 		KeyEvent(int keyCode)
-			: m_KeyCode(keyCode) {}
+		{
+			if (keyCode < 100)
+				m_KeyCode = keyCode;
+			else if (keyCode > 250 && keyCode < 320)
+				m_KeyCode = keyCode - 150;
+			else if (keyCode >= 320)
+				m_KeyCode = keyCode - 320;
+		}
 
 	public:
 		/* Returns the key code */

@@ -13,9 +13,12 @@ namespace engine
 		/* Static clock */
 		static std::shared_ptr<Clock> s_Clock;
 
+		/* To use as a constructor argument to make it private */
+		struct ConstructorHelper {};
+
 	public:
-		/* Constructor */
-		Clock();
+		/* Constructor cannot be invoked since the ConstructorHelper is a private type, clock is supposed to be static class */
+		Clock(ConstructorHelper&& ch);
 
 		/* Returns the static instance of the clock */
 		inline static std::shared_ptr<Clock>& GetClock() { return s_Clock; }

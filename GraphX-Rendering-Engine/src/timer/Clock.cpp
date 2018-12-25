@@ -6,14 +6,14 @@ namespace engine
 {
 	std::shared_ptr<Clock> Clock::s_Clock;
 
-	Clock::Clock()
+	Clock::Clock(ConstructorHelper&& ch)
 	{
 		m_Timer = new Timer("GraphX");
 	}
 
 	void Clock::Init()
 	{
-		s_Clock = std::make_shared<Clock>();
+		s_Clock = std::make_shared<Clock>(ConstructorHelper());
 	}
 
 	void Clock::Tick()
