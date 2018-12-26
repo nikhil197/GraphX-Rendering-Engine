@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "Keyboard.h"
-#include "events/KeyboardEvent.h"
+#include "Events/KeyboardEvent.h"
 
 namespace engine
 {

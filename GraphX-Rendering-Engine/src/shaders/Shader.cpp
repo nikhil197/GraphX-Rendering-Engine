@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Shader.h"
 
-#include "../timer/Timer.h"
+#include "../Timer/Timer.h"
 
 namespace engine
 {

@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "Mouse.h"
-#include "events/MouseEvent.h"
+#include "Events/MouseEvent.h"
 
 namespace engine
 {

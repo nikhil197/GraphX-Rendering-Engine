@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Renderer.h"
 
-#include "buffers/IndexBuffer.h"
+#include "Buffers/IndexBuffer.h"
 #include "VertexArray.h"
-#include "shaders/Shader.h"
+#include "Shaders/Shader.h"
 
 namespace engine
 {

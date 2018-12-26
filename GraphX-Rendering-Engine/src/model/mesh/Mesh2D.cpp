@@ -4,9 +4,9 @@
 #include "VertexArray.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "buffers/VertexBuffer.h"
-#include "buffers/VertexBufferLayout.h"
-#include "buffers/IndexBuffer.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/VertexBufferLayout.h"
+#include "Buffers/IndexBuffer.h"
 
 namespace engine
 {

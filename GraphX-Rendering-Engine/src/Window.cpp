@@ -2,11 +2,11 @@
 #include "Window.h"
 
 #include "GLFW/glfw3.h"
-#include "timer/Timer.h"
-#include "gui/GraphXGui.h"
-#include "events/WindowEvent.h"
-#include "events/KeyboardEvent.h"
-#include "events/MouseEvent.h"
+#include "Timer/Timer.h"
+#include "Gui/GraphXGui.h"
+#include "Events/WindowEvent.h"
+#include "Events/KeyboardEvent.h"
+#include "Events/MouseEvent.h"
 
 namespace engine
 {

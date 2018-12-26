@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "VertexArray.h"
 
-#include "buffers/VertexBuffer.h"
-#include "buffers/VertexBufferLayout.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/VertexBufferLayout.h"
 
 namespace engine
 {

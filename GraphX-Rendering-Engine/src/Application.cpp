@@ -4,25 +4,25 @@
 
 #include "VertexArray.h"
 #include "Renderer.h"
-#include "shaders/Shader.h"
-#include "buffers/VertexBuffer.h"
-#include "buffers/VertexBufferLayout.h"
-#include "buffers/IndexBuffer.h"
-#include "model/mesh/Vertex.h"
+#include "Shaders/Shader.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/VertexBufferLayout.h"
+#include "Buffers/IndexBuffer.h"
+#include "Model/Mesh/Vertex.h"
 #include "Texture.h"
 
 /* Entities */
-#include "entities/Light.h"
-#include "entities/Camera.h"
+#include "Entities/Light.h"
+#include "Entities/Camera.h"
 
 #include "Window.h"
-#include "timer/Clock.h"
-#include "gui/GraphXGui.h"
+#include "Timer/Clock.h"
+#include "Gui/GraphXGui.h"
 
 /* Events */
-#include "events/WindowEvent.h"
-#include "events/KeyboardEvent.h"
-#include "events/MouseEvent.h"
+#include "Events/WindowEvent.h"
+#include "Events/KeyboardEvent.h"
+#include "Events/MouseEvent.h"
 
 /* Input */
 #include "Input/Keyboard.h"

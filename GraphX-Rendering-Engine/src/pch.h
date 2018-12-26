@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "ErrorHandler.h"
 #include "GraphX_Maths.h"
-#include "timer/Timer.h"
+#include "Timer/Timer.h"
 
 /* Standard Libraries */
 #include <iostream>
