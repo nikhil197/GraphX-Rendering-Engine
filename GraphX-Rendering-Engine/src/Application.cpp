@@ -24,6 +24,10 @@
 #include "events/KeyboardEvent.h"
 #include "events/MouseEvent.h"
 
+/* Input */
+#include "Input/Keyboard.h"
+#include "Input/Mouse.h"
+
 namespace engine
 {
 	using namespace gm;
@@ -34,6 +38,8 @@ namespace engine
 		// Initialise the clock and the logging
 		Log::Init();
 		Clock::Init();
+		Mouse::Init();
+		Keyboard::Init();
 
 		m_Window = new Window(m_Title, width, height);
 		m_Window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
