@@ -33,8 +33,21 @@ namespace engine
 
 		bool OnWindowClose(class WindowCloseEvent& e);
 
-#pragma endregion
+		/* Event Handlers for Mouse Input */
+		bool OnMouseButtonPressed(class MouseButtonPressedEvent& e);
 
+		bool OnMouseButtonReleased(class MouseButtonReleasedEvent& e);
+
+		bool OnMouseMoved(class MouseMovedEvent& e);
+
+		bool OnMouseScrolled(class MouseScrolledEvent& e);
+
+		/* Event handlers for keyboard Input */
+		bool OnKeyPressed(class KeyPressedEvent& e);
+
+		bool OnKeyReleased(class KeyReleasedEvent& e);
+
+#pragma endregion
 
 	public:
 		Application(std::string& title, int width, int height);

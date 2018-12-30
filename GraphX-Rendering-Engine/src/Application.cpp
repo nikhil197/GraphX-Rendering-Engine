@@ -32,10 +32,13 @@ namespace engine
 {
 	using namespace gm;
 
+	// Macro to bind the class event functions
+#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
+
 	Application::Application(std::string& title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true)
 	{
-		// Initialise the clock and the logging
+		// Initialise the clock and the logging, and the input devices
 		Log::Init();
 		Clock::Init();
 		Mouse::Init();
@@ -45,7 +48,7 @@ namespace engine
 		m_Window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		// Set the event callback with the window
-		m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
 		bool success = InitializeOpenGL();
 		if (!success)
@@ -279,38 +282,54 @@ namespace engine
 			// handle the window events
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<WindowResizedEvent>([this](Event& e) {
-					return this->OnWindowResize(*dynamic_cast<WindowResizedEvent*>(&e));
-				});
+				handled = dispatcher.Dispatch<WindowResizedEvent>(BIND_EVENT_FUNC(Application::OnWindowResize));
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<WindowMovedEvent>([this](Event& e) {
-					return this->OnWindowMoved(*dynamic_cast<WindowMovedEvent*>(&e));
-				});
+				handled = dispatcher.Dispatch<WindowMovedEvent>(BIND_EVENT_FUNC(Application::OnWindowMoved));
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<WindowFocusEvent>([this](Event& e) {
-					return this->OnWindowFocus(*dynamic_cast<WindowFocusEvent*>(&e));
-				});
+				handled = dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT_FUNC(Application::OnWindowFocus));
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<WindowLostFocusEvent>([this](Event& e) {
-					return this->OnWindowLostFocus(*dynamic_cast<WindowLostFocusEvent*>(&e));
-				});
+				handled = dispatcher.Dispatch<WindowLostFocusEvent>(BIND_EVENT_FUNC(Application::OnWindowLostFocus));
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<WindowCloseEvent>([this](Event& e) {
-					return this->OnWindowClose(*dynamic_cast<WindowCloseEvent*>(&e));
-				});
+				handled = dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 			}
 		}
-		else
+		else if(e.IsInCategory(GX_EVENT_CATEGORY_KEYBOARD))
 		{
-
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(Application::OnKeyPressed));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FUNC(Application::OnKeyReleased));
+			}
+		}
+		else if (e.IsInCategory(GX_EVENT_CATEGORY_MOUSE))
+		{
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(Application::OnMouseButtonPressed));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FUNC(Application::OnMouseButtonReleased));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<MouseMovedEvent>(BIND_EVENT_FUNC(Application::OnMouseMoved));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(Application::OnMouseScrolled));
+			}
 		}
 		// Raise an error
 		if (!handled)
@@ -352,6 +371,41 @@ namespace engine
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_IsRunning = false;
+		return true;
+	}
+
+	bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		Mouse::GetMouse()->OnEvent(e);
+		return true;
+	}
+
+	bool Application::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+	{
+		Mouse::GetMouse()->OnEvent(e);
+		return true;
+	}
+
+	bool Application::OnMouseMoved(MouseMovedEvent& e)
+	{
+		Mouse::GetMouse()->OnEvent(e);
+		return true;
+	}
+
+	bool Application::OnMouseScrolled(MouseScrolledEvent& e)
+	{
+		return true;
+	}
+
+	bool Application::OnKeyPressed(KeyPressedEvent& e)
+	{
+		Keyboard::GetKeyboard()->OnEvent(e);
+		return true;
+	}
+
+	bool Application::OnKeyReleased(KeyReleasedEvent& e)
+	{
+		Keyboard::GetKeyboard()->OnEvent(e);
 		return true;
 	}
 
