@@ -9,7 +9,7 @@
 #include "Buffers/VertexBufferLayout.h"
 #include "Buffers/IndexBuffer.h"
 #include "Model/Mesh/Vertex.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 
 /* Entities */
 #include "Entities/Light.h"

@@ -164,6 +164,8 @@
     <ClCompile Include="src\Log.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Model\Mesh\Mesh2D.cpp" />
+    <ClCompile Include="src\Model\Mesh\Mesh3D.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
@@ -172,7 +174,7 @@
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Renderer\Renderer3D.cpp" />
     <ClCompile Include="src\Shaders\Shader.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Textures\Texture.cpp" />
     <ClCompile Include="src\Timer\Clock.cpp" />
     <ClCompile Include="src\Timer\Timer.cpp" />
     <ClCompile Include="src\Gui\GraphXGui.cpp" />
@@ -219,7 +221,7 @@
     <ClInclude Include="src\Renderer\Renderer3D.h" />
     <ClInclude Include="src\Renderer\Renderer3DCore.h" />
     <ClInclude Include="src\Shaders\Shader.h" />
-    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\Textures\Texture.h" />
     <ClInclude Include="src\Timer\Clock.h" />
     <ClInclude Include="src\Timer\Timer.h" />
     <ClInclude Include="src\Gui\GraphXGui.h" />
@@ -241,8 +243,6 @@
     <None Include="res\shaders\BasicLightingShader.shader" />
     <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
-    <None Include="src\Model\Mesh\Mesh2D.cpp" />
-    <None Include="src\Model\Mesh\Mesh3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">

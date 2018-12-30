@@ -2,7 +2,7 @@
 
 #include "Mesh3D.h"
 #include "VertexArray.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 #include "Vertex.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
@@ -11,7 +11,7 @@
 
 namespace engine
 {
-	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*> Textures, const std::vector<Vector3D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect, float Shine)
+	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*> Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect, float Shine)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
 	{
 		m_VAO = new VertexArray();
@@ -46,7 +46,7 @@ namespace engine
 		{
 			const Texture* texture = m_Textures[i];
 			texture->Bind(i);
-			m_Shader.SetUniform1f("u_Texture" + i, i);
+			m_Shader.SetUniform1i("u_Texture" + i, i);
 		}
 	}
 
@@ -54,7 +54,7 @@ namespace engine
 	{
 		m_VAO->UnBind();
 		m_IBO->UnBind();
-		
+
 		// UnBind the textures
 		int NumTex = m_Textures.size();
 		for (int i = 0; i < NumTex; i++)

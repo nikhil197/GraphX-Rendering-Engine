@@ -42,7 +42,7 @@ namespace engine
 		std::vector<const class Texture*> m_Textures;
 
 		/* Vertex data */
-		std::vector<struct Vector3D> m_Vertices;
+		std::vector<struct Vertex3D> m_Vertices;
 
 		/* Indices into the vertex buffer */
 		std::vector<unsigned int> m_Indices;
@@ -57,7 +57,7 @@ namespace engine
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*> Textures, const std::vector<struct Vector3D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*> Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect = 0.5f, float Shine = 32.0f);
 
 		/* Prepares the object to be rendered */
 		void Enable() const;

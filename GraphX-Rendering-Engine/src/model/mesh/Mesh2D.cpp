@@ -2,7 +2,7 @@
 
 #include "Mesh2D.h"
 #include "VertexArray.h"
-#include "Texture.h"
+#include "Textures/Texture.h"
 #include "Vertex.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
@@ -36,7 +36,7 @@ namespace engine
 		{
 			const Texture* texture = m_Textures[i];
 			texture->Bind(i);
-			m_Shader.SetUniform1f("u_Texture" + i, i);
+			m_Shader.SetUniform1i("u_Texture" + i, i);
 		}
 	}
 
