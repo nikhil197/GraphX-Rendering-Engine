@@ -169,6 +169,8 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Renderer\Renderer3D.cpp" />
     <ClCompile Include="src\Shaders\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Timer\Clock.cpp" />
@@ -212,6 +214,10 @@
     <ClInclude Include="src\Model\Mesh\Vertex.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Renderer\Renderer2DCore.h" />
+    <ClInclude Include="src\Renderer\Renderer3D.h" />
+    <ClInclude Include="src\Renderer\Renderer3DCore.h" />
     <ClInclude Include="src\Shaders\Shader.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Timer\Clock.h" />

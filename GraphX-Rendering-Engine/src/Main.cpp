@@ -11,6 +11,5 @@ int main()
 	// Run the application
 	app->Run();
 
-	std::cin.get();
 	return 0;
 }
