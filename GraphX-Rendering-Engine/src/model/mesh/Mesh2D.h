@@ -17,6 +17,12 @@ namespace engine
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
 
+		/* Reflectivity of the object */
+		float Reflectivity;
+
+		/* Shininess of the object */
+		float Shininess;
+
 	protected:
 		/* Vertex Array Object for the Mesh */
 		class VertexArray* m_VAO;
@@ -49,20 +55,35 @@ namespace engine
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices);
+		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect = 0.5f, float Shine = 32.0f);
+
+		/* Prepares the object to be rendered */
+		void Enable() const;
+
+		/* Unbinds all the buffers for the object */
+		void Disable() const;
 
 		/* Returns the vao for the object */
-		inline class VertexArray* GetVAO() const { return m_VAO; }
+		inline const class VertexArray* GetVAO() const { return m_VAO; }
 
 		/* Returns the ibo for the object */
-		inline class IndexBuffer* GetIBO() const { return m_IBO; }
+		inline const class IndexBuffer* GetIBO() const { return m_IBO; }
 
 		/* Returns the vbo for the object */
-		inline class VertexBuffer* GetVBO() const { return m_VBO; }
+		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
+
+		/* Returns the shader for the object */
+		inline class Shader& GetShader() const { return m_Shader; }
+
+		/* Returns the vertices of the object */
+		inline const std::vector<Vertex2D>& GetVertices() const { return m_Vertices; }
+
+		/* Returns the indices of the object */
+		inline const std::vector<unsigned int>& GetIndices() const { return m_Indices; }
 
 		/* Returns a 4x4 transformation matrix for the object */
 		gm::Matrix4 GetTransformationMatrix() const;
 
-		~Mesh2D();
+		virtual ~Mesh2D();
 	};
 }

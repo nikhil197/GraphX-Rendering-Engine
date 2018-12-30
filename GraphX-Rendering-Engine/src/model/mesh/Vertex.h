@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphX_Vectors.h"
-#include "buffers/VertexBufferLayout.h"
+#include "Buffers/VertexBufferLayout.h"
 
 namespace engine
 {
