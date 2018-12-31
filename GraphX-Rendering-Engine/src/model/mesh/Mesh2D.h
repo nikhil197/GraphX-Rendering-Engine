@@ -14,6 +14,9 @@ namespace engine
 		/* Scale of the object */
 		gm::Vector2 Scale;
 
+		/* Base color of the object */
+		gm::Vector4 BaseColor;
+
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
 
@@ -55,13 +58,13 @@ namespace engine
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color = gm::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
 		/* Prepares the object to be rendered */
-		void Enable() const;
+		virtual void Enable() const;
 
 		/* Unbinds all the buffers for the object */
-		void Disable() const;
+		virtual void Disable() const;
 
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }

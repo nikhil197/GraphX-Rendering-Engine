@@ -46,7 +46,7 @@ namespace engine
 	};
 
 	/* A Structure to represent a vertex with all the attributes including color (Only keeping this for the testing purposes) */
-	struct VertexC
+	struct Vertex3DC
 	{
 		// The Position of the vertex
 		gm::Vector3 Position;

@@ -116,7 +116,7 @@ namespace engine
 		//};
 
 		// Vertices of the cube to be rendered
-		VertexC vertices[] = {
+		Vertex3DC vertices[] = {
 			/*Vertex Positions*/			  /* Normal Coordinates */				/* Colors */
 			// Front face
 			{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
@@ -159,7 +159,7 @@ namespace engine
 		};
 
 		VertexArray vao;
-		VertexBuffer vbo(vertices, 8 * sizeof(VertexC));
+		VertexBuffer vbo(vertices, 8 * sizeof(Vertex3DC));
 		//VertexBuffer vbo(vertices, 8 * sizeof(VertexT));	// For Using Textures
 		VertexBufferLayout layout;
 		IndexBuffer ibo(indices, 36);

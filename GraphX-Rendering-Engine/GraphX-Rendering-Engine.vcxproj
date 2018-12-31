@@ -164,6 +164,7 @@
     <ClCompile Include="src\Log.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Model\Cube.cpp" />
     <ClCompile Include="src\Model\Mesh\Mesh2D.cpp" />
     <ClCompile Include="src\Model\Mesh\Mesh3D.cpp" />
     <ClCompile Include="src\pch.cpp">
@@ -212,6 +213,7 @@
     <ClInclude Include="src\Input\Keyboard.h" />
     <ClInclude Include="src\Input\Mouse.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\Model\Cube.h" />
     <ClInclude Include="src\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Model\Mesh\Mesh3D.h" />
     <ClInclude Include="src\Model\Mesh\Vertex.h" />

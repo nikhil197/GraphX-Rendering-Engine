@@ -11,8 +11,8 @@
 
 namespace engine
 {
-	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*> Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, float Reflect, float Shine)
-		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
+	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color, float Reflect, float Shine)
+		: Position(Pos), Rotation(Rotation), Scale(Scale), BaseColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
 	{
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex3D));
@@ -39,6 +39,9 @@ namespace engine
 		m_Shader.Bind();
 		m_Shader.SetUniform1f("u_Reflectivity", Reflectivity);
 		m_Shader.SetUniform1f("u_Shininess", Shininess);
+
+		// Set the base color of the object
+		m_Shader.SetUniform4f("u_Color", BaseColor);
 
 		// Bind the textures
 		int NumTex = m_Textures.size();
