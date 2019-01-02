@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Entities\Skybox.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Input\Mouse.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -171,9 +172,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Renderer\Renderer3D.cpp" />
+    <ClCompile Include="src\Renderer\SimpleRenderer.cpp" />
     <ClCompile Include="src\Shaders\Shader.cpp" />
     <ClCompile Include="src\Textures\CubeMap.cpp" />
     <ClCompile Include="src\Textures\Texture.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="src\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Entities\Camera.h" />
     <ClInclude Include="src\Entities\Light.h" />
+    <ClInclude Include="src\Entities\Skybox.h" />
     <ClInclude Include="src\ErrorHandler.h" />
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\Events\KeyboardEvent.h" />
@@ -218,11 +220,11 @@
     <ClInclude Include="src\Model\Mesh\Mesh3D.h" />
     <ClInclude Include="src\Model\Mesh\Vertex.h" />
     <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Renderer\Renderer2DCore.h" />
     <ClInclude Include="src\Renderer\Renderer3D.h" />
     <ClInclude Include="src\Renderer\Renderer3DCore.h" />
+    <ClInclude Include="src\Renderer\SimpleRenderer.h" />
     <ClInclude Include="src\Shaders\Shader.h" />
     <ClInclude Include="src\Textures\CubeMap.h" />
     <ClInclude Include="src\Textures\Texture.h" />
@@ -247,6 +249,7 @@
     <None Include="res\shaders\BasicLightingShader.shader" />
     <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\MVP_Color.shader" />
+    <None Include="res\shaders\Skybox.shader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">

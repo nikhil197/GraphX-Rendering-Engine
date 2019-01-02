@@ -42,7 +42,7 @@ namespace engine
 
 	public:
 		/* Constructor */
-		Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis);
+		Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
 
 		/* Updates the camera axis */
 		void UpdateCameraAxes();

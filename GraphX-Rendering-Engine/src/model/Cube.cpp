@@ -7,32 +7,45 @@ namespace engine
 {
 	using namespace gm;
 
+	std::vector<gm::Vector3> Cube::s_VertexPositions = 
+	{
+		Vector3(-1.0f, -1.0f,  1.0f),
+		Vector3( 1.0f, -1.0f,  1.0f),
+		Vector3( 1.0f,  1.0f,  1.0f),
+		Vector3(-1.0f,  1.0f,  1.0f),
+
+		Vector3(-1.0f, -1.0f, -1.0f),
+		Vector3( 1.0f, -1.0f, -1.0f),
+		Vector3( 1.0f,  1.0f, -1.0f),
+		Vector3(-1.0f,  1.0f, -1.0f)
+	};
+
 	/* Initialise the vertices */
 	std::vector<Vertex3D> Cube::s_Vertices = {
 			/*Vertex Positions*/			/* Normal Coordinates */		/* Texture Coordinates */
 		// Front face
-		{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//0
-		{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(1.0f, 0.0f) },	//1
-		{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//2
-		{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//3
+		{ s_VertexPositions[0],	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//0
+		{ s_VertexPositions[1],	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(1.0f, 0.0f) },	//1
+		{ s_VertexPositions[2],	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//2
+		{ s_VertexPositions[3],	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//3
 
 		// Back face			
-		{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//4
-		{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
-		{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
-		{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) },	//7
+		{ s_VertexPositions[4],	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//4
+		{ s_VertexPositions[5],	  Vector3(1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
+		{ s_VertexPositions[6],	  Vector3(1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
+		{ s_VertexPositions[7],	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) },	//7
 
 		// Top face (Needed because of the different texture coordinates)
-		{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//8
-		{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 0.0f) },	//9
-		{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) },	//10
-		{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//11
+		{ s_VertexPositions[3],	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//8
+		{ s_VertexPositions[2],	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 0.0f) },	//9
+		{ s_VertexPositions[6],	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) },	//10
+		{ s_VertexPositions[7],	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//11
 
 		// Bottom Face (Needed because of the different texture coordinates)
-		{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//12
-		{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//13
-		{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//14
-		{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) }	//15
+		{ s_VertexPositions[0],	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//12
+		{ s_VertexPositions[1],	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//13
+		{ s_VertexPositions[5],	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//14
+		{ s_VertexPositions[4],	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) }	//15
 
 		// If the above vertices for top and bottom face are not provided, the texture will not be drawn on these surface
 		// The texture will be flipped horizontally for the adjacent faces of the cube (Front, left, right, back)

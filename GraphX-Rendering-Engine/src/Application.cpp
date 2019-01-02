@@ -3,13 +3,15 @@
 #include "Application.h"
 
 #include "VertexArray.h"
-#include "Renderer.h"
 #include "Shaders/Shader.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
 #include "Buffers/IndexBuffer.h"
 #include "Model/Mesh/Vertex.h"
 #include "Textures/Texture.h"
+
+/* Renderer */
+#include "Renderer/SimpleRenderer.h"
 
 /* Entities */
 #include "Entities/Light.h"
@@ -195,7 +197,7 @@ namespace engine
 		//shader.SetUniform1i("u_Texture", 0 /* Slot number*/);
 
 		// Simple Renderer to render the objects
-		Renderer renderer;
+		SimpleRenderer renderer;
 
 		// Camera
 		Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
@@ -205,7 +207,8 @@ namespace engine
 
 		// Projection Matrix
 		//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
-		Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		//Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		Matrix4 proj = camera.GetPerspectiveProjectionMatrix();
 		shader.SetUniformMat4f("u_Projection", proj);
 
 		Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
@@ -265,7 +268,9 @@ namespace engine
 			shader.SetUniformMat3f("u_Normal", normal);
 
 			// Render the Cube
-			renderer.Draw(vao, ibo, shader);
+			vao.Bind();
+			ibo.Bind();
+			renderer.Draw(ibo);
 
 			//Poll events and swap buffers
 			m_Window->OnUpdate();

@@ -10,6 +10,8 @@ namespace engine
 	{
 		GLCall(glGenVertexArrays(1, &m_RendererID));
 		GLCall(glBindVertexArray(m_RendererID));
+
+		UnBind();
 	}
 
 	void VertexArray::AddBuffer(VertexBuffer& vbo, VertexBufferLayout& layout)
@@ -34,6 +36,9 @@ namespace engine
 			//increase the offset
 			offset += element.count * BufferLayoutElement::GetSizeOfType(element.type);
 		}
+
+		// Unbind the vertex array
+		UnBind();
 	}
 
 	void VertexArray::Bind() const
