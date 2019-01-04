@@ -265,13 +265,13 @@ namespace gm
 		return Out << "X: " << Vec.x << " Y: " << Vec.y << " Z: " << Vec.z << " W: " << Vec.w << std::endl;
 	}
 
-	const Vector4 operator+(int Value, const Vector4& Vec)
+	const Vector4 operator+(float Value, const Vector4& Vec)
 	{
 		Vector4 result(Value + Vec.x, Value + Vec.y, Value + Vec.z, Value + Vec.w);
 		return result;
 	}
 
-	const Vector4 operator*(int Value, const Vector4& Vec)
+	const Vector4 operator*(float Value, const Vector4& Vec)
 	{
 		Vector4 result(Value * Vec.x, Value * Vec.y, Value * Vec.z, Value * Vec.w);
 		return result;

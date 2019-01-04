@@ -135,7 +135,7 @@ namespace gm
 	/* Non - Member functions */
 	std::ostream& operator<<(std::ostream& out, const Vector3& Vec);
 
-	const Vector3 operator+(int Value, const Vector3& Vec);
+	const Vector3 operator+(float Value, const Vector3& Vec);
 
-	const Vector3 operator*(int Value, const Vector3& Vec);
+	const Vector3 operator*(float Value, const Vector3& Vec);
 }

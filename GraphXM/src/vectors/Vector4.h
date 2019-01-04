@@ -127,7 +127,7 @@ namespace gm
 	/* Non - Member functions */
 	std::ostream& operator<<(std::ostream& Out, const Vector4& Vec);
 
-	const Vector4 operator+(int Value, const Vector4& Vec);
+	const Vector4 operator+(float Value, const Vector4& Vec);
 
-	const Vector4 operator*(int Value, const Vector4& Vec);
+	const Vector4 operator*(float Value, const Vector4& Vec);
 }
