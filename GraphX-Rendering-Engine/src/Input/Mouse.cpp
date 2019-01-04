@@ -8,7 +8,7 @@ namespace engine
 	std::shared_ptr<Mouse> Mouse::s_Mouse;
 
 	Mouse::Mouse(ConstructorHelper&& ch)
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_Position(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_Position(0), m_LastFramePosition(0)
 	{}
 
 	void Mouse::Init()
@@ -38,10 +38,14 @@ namespace engine
 
 	void Mouse::OnEvent(MouseMovedEvent& e)
 	{
+		m_LastFramePosition = m_Position;
 		float xOffset = e.GetX() - m_Position.x;
 		float yOffset = e.GetY() - m_Position.y;
 
 		xOffset *= m_Senstivity;
 		yOffset *= m_Senstivity;
+
+		m_Position.x += xOffset;
+		m_Position.y += yOffset;
 	}
 }

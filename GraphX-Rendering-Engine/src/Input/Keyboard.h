@@ -136,7 +136,7 @@ namespace engine
 		static void Init();
 
 		/* Returns the static instance of the keyboard */
-		static inline std::shared_ptr<Keyboard>& GetKeyboard() { return s_Keyboard; }
+		static const std::shared_ptr<Keyboard>& GetKeyboard() { return s_Keyboard; }
 
 		/* Key event handlers */
 		void OnEvent(class KeyPressedEvent& e);

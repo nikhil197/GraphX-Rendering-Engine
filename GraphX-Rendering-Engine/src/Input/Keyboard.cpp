@@ -25,7 +25,7 @@ namespace engine
 
 	void Keyboard::OnEvent(KeyReleasedEvent& e)
 	{
-		(*m_Keys)[e.GetKeyCode()] = true;
+		(*m_Keys)[e.GetKeyCode()] = false;
 	}
 
 	Keyboard::~Keyboard()

@@ -201,15 +201,10 @@ namespace engine
 
 		// Camera
 		Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
-		Matrix4 view = camera.GetViewMatrix();
-		shader.SetUniformMat4f("u_View", view);
-		shader.SetUniform3f("u_CameraPos", camera.CameraPosition);
 
 		// Projection Matrix
 		//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
 		//Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-		Matrix4 proj = camera.GetPerspectiveProjectionMatrix();
-		shader.SetUniformMat4f("u_Projection", proj);
 
 		Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
 		shader.SetUniform3f("u_LightPos", light.Position);
@@ -231,6 +226,8 @@ namespace engine
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
 
+			float DeltaTime = Clock::GetClock()->GetDeltaTime();
+
 			// Update the Gui
 			GraphXGui::Update();
 
@@ -242,6 +239,21 @@ namespace engine
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
+			}
+
+			// Update the camera
+			camera.Update(DeltaTime * 1000);
+
+			if (camera.IsRenderStateDirty())
+			{
+				shader.SetUniform3f("u_CameraPos", camera.CameraPosition);
+				Matrix4 view = camera.GetViewMatrix();
+				shader.SetUniformMat4f("u_View", view);
+				Matrix4 proj = camera.GetPerspectiveProjectionMatrix();
+				shader.SetUniformMat4f("u_Projection", proj);
+
+				// Set the state back to rendered
+				camera.SetRenderState(false);
 			}
 
 			// Clear the window 
