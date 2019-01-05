@@ -9,7 +9,7 @@ namespace engine
 		: m_FilePath(FilePath), m_FileNames(FileNames), m_LocalBuffer(nullptr)
 	{
 		// To flip the textures on load
-		stbi_set_flip_vertically_on_load(1);
+		stbi_set_flip_vertically_on_load(0);
 
 		GLCall(glGenTextures(1, &m_RendererID));
 		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID));

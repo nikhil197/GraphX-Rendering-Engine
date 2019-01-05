@@ -6,7 +6,7 @@ layout(location = 0) in vec3 vPosition;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
-out v_TexCoord;
+out vec3 v_TexCoord;
 
 void main()
 {
@@ -17,13 +17,13 @@ void main()
 #shader fragment
 #version 330 core
 
-uniform samplerCube skybox;
+uniform samplerCube u_Skybox;
 
-in v_TexCoord;
+in vec3 v_TexCoord;
 
-out fColor;
+out vec4 fColor;
 
 void main()
 {
-	fColor = texture(skybox, v_TexCoord);
+	fColor = texture(u_Skybox, v_TexCoord);
 }

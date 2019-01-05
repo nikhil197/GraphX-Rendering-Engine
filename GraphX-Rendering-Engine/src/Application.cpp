@@ -16,6 +16,7 @@
 /* Entities */
 #include "Entities/Light.h"
 #include "Entities/Camera.h"
+#include "Entities/Skybox.h"
 
 #include "Window.h"
 #include "Timer/Clock.h"
@@ -184,11 +185,11 @@ namespace engine
 		vao.UnBind();
 
 		// Create a Texture object
-		//Texture tex("res/textures/Rendering Pipeline.png");
+		//Texture tex("res/Textures/Rendering Pipeline.png");
 		//tex.Bind();
 
 		// Basic Lighting Shader 
-		Shader shader("res/shaders/BasicLightingShader.shader");
+		Shader shader("res/Shaders/BasicLightingShader.shader");
 		//Shader shader("res/shaders/BasicTexture.shader");
 		shader.Bind();
 		shader.SetUniform1f("u_AmbientStrength", 0.01f);
@@ -201,6 +202,7 @@ namespace engine
 
 		// Camera
 		Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
+		camera.SetAspectRatio(16.0f / 9.0f);
 
 		// Projection Matrix
 		//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
@@ -219,6 +221,12 @@ namespace engine
 		Vector3 axis(1, 0, 0);
 
 		bool bShowMenu = true;
+
+		// Skybox
+		std::vector<std::string> SkyboxNames = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "front.jpg" , "back.jpg" };
+		Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Landscape/", SkyboxNames, camera);
+		//std::vector<std::string> SkyboxNames = { "nuke_rt.tga", "nuke_lf.tga", "nuke_up.tga", "nuke_dn.tga", "nuke_ft.tga", "nuke_bk.tga" };
+		//Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Nuke Town/", SkyboxNames, camera);
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)
@@ -258,6 +266,11 @@ namespace engine
 
 			// Clear the window 
 			m_Window->Clear();
+
+			// Render the skybox
+			skybox.Enable();
+			renderer.Draw(skybox.GetIBO());
+			skybox.Disable();
 
 			// Bind the shader and draw the objects
 			shader.Bind();

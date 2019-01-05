@@ -46,11 +46,11 @@ namespace engine
 
 	void Skybox::Enable() const
 	{
+		GLCall(glDepthMask(GL_FALSE));
 		gm::Matrix4 view = m_Camera.GetViewMatrix();
 		view[0][3] = 0.0f;
 		view[1][3] = 0.0f;
 		view[2][3] = 0.0f;
-		view[3][3] = 0.0f;
 
 		m_VAO->Bind();
 		m_IBO->Bind();
@@ -65,6 +65,7 @@ namespace engine
 
 	void Skybox::Disable() const
 	{
+		GLCall(glDepthMask(GL_TRUE));
 		m_VAO->UnBind();
 		m_IBO->UnBind();
 		m_Shader->UnBind();

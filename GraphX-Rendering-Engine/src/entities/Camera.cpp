@@ -44,10 +44,12 @@ namespace engine
 			if (keyboard->GetKey(Keys::GX_W))
 			{
 				CameraPosition += CurrentCameraSpeed * m_ViewAxis;
+				m_CameraLookAtPoint += CurrentCameraSpeed * m_ViewAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_S))
 			{
 				CameraPosition -= CurrentCameraSpeed * m_ViewAxis;
+				m_CameraLookAtPoint -= CurrentCameraSpeed * m_ViewAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_A))
 			{
@@ -58,6 +60,16 @@ namespace engine
 			{
 				CameraPosition += CurrentCameraSpeed * m_RightAxis;
 				m_CameraLookAtPoint += CurrentCameraSpeed * m_RightAxis;
+			}
+			else if (keyboard->GetKey(Keys::GX_E))
+			{
+				CameraPosition += CurrentCameraSpeed * m_UpAxis;
+				m_CameraLookAtPoint += CurrentCameraSpeed * m_UpAxis;
+			}
+			else if (keyboard->GetKey(Keys::GX_Q))
+			{
+				CameraPosition -= CurrentCameraSpeed * m_UpAxis;
+				m_CameraLookAtPoint -= CurrentCameraSpeed * m_UpAxis;
 			}
 			else
 			{
