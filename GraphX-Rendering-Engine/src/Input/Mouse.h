@@ -29,7 +29,7 @@ namespace engine
 		gm::Vector2 m_Position;
 
 		/* Position of the mouse in the last frame */
-		gm::Vector2 m_LastFramePosition;
+		gm::Vector2 m_LastPosition;
 
 		/* Static instance of the Mouse */
 		static std::shared_ptr<Mouse> s_Mouse;
@@ -54,11 +54,14 @@ namespace engine
 		
 		void OnEvent(class MouseMovedEvent& e);
 
+		/* Update the mouse */
+		void Update();
+
 		/* Returns the mouse position */
 		inline const gm::Vector2& GetPosition() const { return m_Position; }
 
 		/* Returns the last frame mouse position */
-		inline const gm::Vector2& GetLastFramePosition() const { return m_LastFramePosition; }
+		inline const gm::Vector2& GetLastPosition() const { return m_LastPosition; }
 
 		/* Returns if the left mouse button is pressed */
 		inline bool IsLeftButtonPressed() const { return m_LeftButtonPressed; }

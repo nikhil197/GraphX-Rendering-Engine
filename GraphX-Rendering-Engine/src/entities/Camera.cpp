@@ -10,7 +10,7 @@
 namespace engine
 {
 	Camera::Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
-		:m_CameraLookAtPoint(LookAtPoint), m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), m_CameraSpeed(2.5f), CameraPosition(CameraPos), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), FieldOfView(FOV)
+		:m_CameraLookAtPoint(LookAtPoint), m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), m_CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), FieldOfView(FOV)
 	{
 		UpdateCameraAxes();
 	}
@@ -80,6 +80,35 @@ namespace engine
 
 	void Camera::ProcessMouseInput(float DeltaTime)
 	{
+		if (Mouse::GetMouse()->IsRightButtonPressed())
+		{
+			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
+			const gm::Vector2 LastPosition = mouse->GetLastPosition();
+			const gm::Vector2 CurrentPosition = mouse->GetPosition();
 
+			// Calculate the Yaw and the Pitch offset
+			float xOffset = CurrentPosition.x - LastPosition.x;
+			float yOffset = CurrentPosition.y - LastPosition.y;
+			
+			if (xOffset > 0 || yOffset > 0)
+			{
+				m_RenderStateDirty = true;
+
+				gm::Vector3 Angles(-yOffset, -xOffset, 0);
+				EulerAngles += Angles;
+				gm::MathUtil::ClampAngle(EulerAngles.y);
+				gm::MathUtil::ClampAngle(EulerAngles.z);
+				gm::MathUtil::Clamp(EulerAngles.x, -90.0f, 90.0f);
+				GX_ENGINE_INFO("{0}", EulerAngles);
+
+				gm::Translation trans(-CameraPosition);
+				gm::Matrix4 rotation = gm::Rotation(Angles);
+
+				m_CameraLookAtPoint = gm::Vector3(trans.Inverse() * rotation * trans * gm::Vector4(m_CameraLookAtPoint, 1.0f));
+
+				// Update the axes
+				UpdateCameraAxes();
+			}
+		}
 	}
 }

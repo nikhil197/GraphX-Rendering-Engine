@@ -40,7 +40,7 @@ namespace engine
 		/* Position of the camera */
 		gm::Vector3 CameraPosition;
 
-		/* Pitch, Yaw and Roll of the camera */
+		/* Pitch, Yaw and Roll of the camera (Euler angles should not be modified directly) */
 		gm::Vector3 EulerAngles;
 
 		/* Field of view of the camera (in degrees) */

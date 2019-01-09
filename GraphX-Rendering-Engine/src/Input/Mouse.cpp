@@ -8,7 +8,7 @@ namespace engine
 	std::shared_ptr<Mouse> Mouse::s_Mouse;
 
 	Mouse::Mouse(ConstructorHelper&& ch)
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_Position(0), m_LastFramePosition(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_Position(0), m_LastPosition(0)
 	{}
 
 	void Mouse::Init()
@@ -38,7 +38,7 @@ namespace engine
 
 	void Mouse::OnEvent(MouseMovedEvent& e)
 	{
-		m_LastFramePosition = m_Position;
+		m_LastPosition = m_Position;
 		float xOffset = e.GetX() - m_Position.x;
 		float yOffset = e.GetY() - m_Position.y;
 
@@ -47,5 +47,11 @@ namespace engine
 
 		m_Position.x += xOffset;
 		m_Position.y += yOffset;
+	}
+
+	void Mouse::Update()
+	{
+		// Update the last mouse position to the current at the end of every frame
+		m_LastPosition = m_Position;
 	}
 }

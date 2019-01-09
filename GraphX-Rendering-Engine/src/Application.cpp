@@ -297,6 +297,9 @@ namespace engine
 			ibo.Bind();
 			renderer.Draw(ibo);
 
+			//Update the mouse
+			Mouse::GetMouse()->Update();
+
 			//Poll events and swap buffers
 			m_Window->OnUpdate();
 		}
@@ -367,7 +370,7 @@ namespace engine
 			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
 		}
 		else
-			GX_ENGINE_TRACE("{0}", e);
+			;// GX_ENGINE_TRACE("{0}", e);
 	}
 
 

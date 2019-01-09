@@ -35,6 +35,15 @@ namespace gm
 				Val = Max;
 		}
 
+		template<typename T>
+		static void ClampAngle(T& Val)
+		{
+			if (Val > 360)
+				Val = Val - 360;
+			else if (Val < 0)
+				Val = Val + 360;
+		}
+
 		/* Returns min of the two values */
 		template<typename T>
 		static T Min(const T A, const T B)
