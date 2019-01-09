@@ -54,19 +54,19 @@ namespace gm
 		// Get the normalized Axis
 		Vector3 l_Axis = Axis.Normal();
 
-		// Get the projection of Axis on the XZ - plane and the XY - plane
-		Vector3 ProjXZ = l_Axis * Vector3(1, 0, 1);
+		// Get the projection of Axis on the XZ - plane and the YZ - plane
 		Vector3 ProjXY = l_Axis * Vector3(1, 1, 0);
+		Vector3 ProjXZ = l_Axis * Vector3(1, 0, 1);
 
-		float MagXZ = ProjXZ.Magnitude();
 		float MagXY = ProjXY.Magnitude();
+		float MagXZ = ProjXZ.Magnitude();
 
-		// Calculate the Pitch (Rotation about x-axis) and the Yaw (Rotation about y-axis) for the axis
-		float Pitch = MagXZ == 0 ? 90.0f : (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXZ, Vector3::XAxis) / MagXZ);
-		float Yaw   = MagXY == 0 ? 90.0f : (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXY, Vector3::XAxis) / MagXY);
+		// Calculate the Roll (Rotation about z-axis) and the Yaw (Rotation about y-axis) for the axis
+		float Roll = MagXY == 0 ? 0.0f : (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXY, Vector3::XAxis) / MagXY);
+		float Yaw  = MagXZ == 0 ? 0.0f : (float)MathUtil::CosInverse(Vector3::DotProduct(ProjXZ, Vector3::XAxis) / MagXZ);
 
 		// Rotate the axes to make the given axis as the new X - axis
-		Rotation rotate(Vector3(Pitch, Yaw, 0));
+		Rotation rotate(Vector3(0, Yaw, Roll));
 
 		// Rotate the matrix about this new X - Axis;
 		M[1][1] =  (float)MathUtil::Cos(Angle);

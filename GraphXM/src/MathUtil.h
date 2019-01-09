@@ -25,6 +25,16 @@ namespace gm
 				return 0;
 		}
 
+		/* Clamps the value between the specified range */
+		template<typename T>
+		static void Clamp(T& Val, const T& Min, const T& Max)
+		{
+			if (Val < Min)
+				Val = Min;
+			else if (Val > Max)
+				Val = Max;
+		}
+
 		/* Returns min of the two values */
 		template<typename T>
 		static T Min(const T A, const T B)

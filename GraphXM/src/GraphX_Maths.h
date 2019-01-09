@@ -10,3 +10,6 @@
 
 // ---------- Transforms ---------------
 #include "GraphX_Transform.h"
+
+// ---------- Maths Util ---------------
+#include "MathUtil.h"
