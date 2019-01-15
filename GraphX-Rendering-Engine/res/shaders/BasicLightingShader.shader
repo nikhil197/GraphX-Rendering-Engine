@@ -40,6 +40,8 @@ uniform float u_AmbientStrength;
 uniform float u_Shininess;
 uniform float u_Reflectivity;
 
+uniform vec3 u_AttenuationFactors
+
 out vec4 fColor;
 
 void main()
@@ -61,5 +63,12 @@ void main()
 	float shine = pow(max(dot(ReflectedLightDir, ViewDir), 0.0), u_Shininess);
 	vec4 specularColor = shine * u_Reflectivity * u_LightColor;
 
-	fColor = (ambientColor + diffuseColor + specularColor) * v_Color;
+	// Calculate the distance of the fragment from the light source
+	float distance = length(u_LightPos - v_WorldPosition);
+
+	// Calculate the attenuation factor based on the distance of the fragment from the light source
+	float AttenuationFactor = (u_AttenuationFactors.x + (u_AttenuationFactors.y * distance) + (u_AttenuationFactors.z * distance * distance));
+
+	// Divide the diffuse and specular components of the light color (ambient is the property of the environment, probably due to the directional light source - most probably sun)
+	fColor = (ambientColor + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor)) * v_Color;
 }

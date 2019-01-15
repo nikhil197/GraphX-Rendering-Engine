@@ -14,7 +14,7 @@
 #include "Renderer/SimpleRenderer.h"
 
 /* Entities */
-#include "Entities/Light.h"
+#include "Entities/Lights/Light.h"
 #include "Entities/Camera.h"
 #include "Entities/Skybox.h"
 
@@ -255,10 +255,8 @@ namespace engine
 			if (camera.IsRenderStateDirty())
 			{
 				shader.SetUniform3f("u_CameraPos", camera.CameraPosition);
-				Matrix4 view = camera.GetViewMatrix();
-				shader.SetUniformMat4f("u_View", view);
-				Matrix4 proj = camera.GetPerspectiveProjectionMatrix();
-				shader.SetUniformMat4f("u_Projection", proj);
+				shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
+				shader.SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
 
 				// Set the state back to rendered
 				camera.SetRenderState(false);
