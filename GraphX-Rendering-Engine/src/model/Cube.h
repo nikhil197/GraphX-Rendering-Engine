@@ -6,7 +6,7 @@
 namespace engine
 {
 	class Cube
-		: Mesh3D
+		: public Mesh3D
 	{
 	private:
 		/* Vertex Positions of the Cube */

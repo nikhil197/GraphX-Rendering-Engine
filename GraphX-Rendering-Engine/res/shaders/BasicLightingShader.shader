@@ -40,7 +40,7 @@ uniform float u_AmbientStrength;
 uniform float u_Shininess;
 uniform float u_Reflectivity;
 
-uniform vec3 u_AttenuationFactors
+uniform vec3 u_AttenuationFactors = vec3(1.0, 0.0, 0.0);
 
 out vec4 fColor;
 
