@@ -90,7 +90,7 @@ namespace engine
 			float xOffset = CurrentPosition.x - LastPosition.x;
 			float yOffset = CurrentPosition.y - LastPosition.y;
 			
-			if (xOffset > 0 || yOffset > 0)
+			if (xOffset != 0 || yOffset != 0)
 			{
 				m_RenderStateDirty = true;
 
@@ -99,13 +99,12 @@ namespace engine
 				gm::MathUtil::ClampAngle(EulerAngles.y);
 				gm::MathUtil::ClampAngle(EulerAngles.z);
 				gm::MathUtil::Clamp(EulerAngles.x, -90.0f, 90.0f);
-				GX_ENGINE_INFO("{0}", EulerAngles);
 
 				gm::Translation trans(-CameraPosition);
 				gm::Matrix4 rotation = gm::Rotation(Angles);
 
 				m_CameraLookAtPoint = gm::Vector3(trans.Inverse() * rotation * trans * gm::Vector4(m_CameraLookAtPoint, 1.0f));
-
+				
 				// Update the axes
 				UpdateCameraAxes();
 			}
