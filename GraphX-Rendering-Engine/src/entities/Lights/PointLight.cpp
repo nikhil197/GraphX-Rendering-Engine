@@ -10,12 +10,12 @@ namespace engine
 	{
 	}
 
-	void PointLight::Enable(Shader& shader) const
+	void PointLight::Enable(Shader& shader, const std::string& LightName) const
 	{
-		Light::Enable(shader);
+		Light::Enable(shader, LightName);
 		
 		// Set the attenuation factors for the light
-		shader.SetUniform3f("u_AttenuationFactors", m_AttenuationFactors);
+		shader.SetUniform3f((LightName + ".AttenuationFactors").c_str(), m_AttenuationFactors);
 	}
 
 	void PointLight::Disable() const

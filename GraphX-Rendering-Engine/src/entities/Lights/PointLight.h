@@ -19,7 +19,7 @@ namespace engine
 		/* Constructor */
 		PointLight(const gm::Vector3& Pos, const gm::Vector4& Col, float Intensity, const gm::Vector3& AttenuationFactors = gm::Vector3(1.0f, 0.0f, 0.0f));
 
-		virtual void Enable(class Shader& shader) const override;
+		virtual void Enable(class Shader& shader, const std::string& LightName = "u_PointLight") const override;
 
 		virtual void Disable() const override;
 

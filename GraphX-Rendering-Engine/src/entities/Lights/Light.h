@@ -17,8 +17,8 @@ namespace engine
 		/* Constructor */
 		Light(const gm::Vector3& Pos, const gm::Vector4& Color, float Intensity = 1.0f);
 
-		/* Enable the light for rendering */
-		virtual void Enable(class Shader& shader) const;
+		/* Enable the light for rendering (Light Name is the name of the light used in shader) */
+		virtual void Enable(class Shader& shader, const std::string& LightName = "u_Light") const;
 
 		/* Disable the light after rendering is done */
 		virtual void Disable() const;

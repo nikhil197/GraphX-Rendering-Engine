@@ -111,6 +111,9 @@
     <ClCompile Include="src\Entities\Lights\PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entities\Lights\DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -239,6 +242,9 @@
     <ClInclude Include="src\Entities\Lights\PointLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Entities\Lights\DirectionalLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -246,5 +252,6 @@
     <None Include="res\shaders\BasicLightingShader.shader" />
     <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\Skybox.shader" />
+    <None Include="res\Shaders\GeneralShader.shader" />
   </ItemGroup>
 </Project>

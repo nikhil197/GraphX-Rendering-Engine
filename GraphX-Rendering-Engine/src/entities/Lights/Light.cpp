@@ -10,20 +10,18 @@ namespace engine
 	{
 	}
 
-	void Light::Enable(Shader& shader) const
+	void Light::Enable(Shader& shader, const std::string& LightName) const
 	{
-		shader.SetUniform3f("u_LightPos", Position);
-		shader.SetUniform3f("u_LightColor", Color);
-		shader.SetUniform1f("u_LightIntensity", Intensity);
+		shader.SetUniform3f((LightName + ".Position").c_str(), Position);
+		shader.SetUniform3f((LightName + ".Color").c_str(), Color);
+		shader.SetUniform1f((LightName + ".Intensity").c_str(), Intensity);
 	}
 
 	void Light::Disable() const
 	{
-
 	}
 
 	Light::~Light()
 	{
-
 	}
 }
