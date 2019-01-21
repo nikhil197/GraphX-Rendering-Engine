@@ -425,6 +425,7 @@ namespace engine
 
 	bool Application::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		Mouse::GetMouse()->OnEvent(e);
 		return true;
 	}
 

@@ -22,14 +22,20 @@ namespace engine
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
 
-		/* Senstivity of the mouse i.e. how much the in application units will be changed with a unit change in device position */
+		/* Senstivity of the mouse i.e. how much the pointer position in application units will be changed with a unit change in device position */
 		float m_Senstivity;
+
+		/* Senstivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
+		float m_ScrollSenstivity;
 
 		/* Position of the mouse */
 		gm::Vector2 m_Position;
 
 		/* Position of the mouse in the last frame */
 		gm::Vector2 m_LastPosition;
+
+		/* Current frame offset of the mouse scroll */
+		gm::Vector2 m_ScrollOffset;
 
 		/* Static instance of the Mouse */
 		static std::shared_ptr<Mouse> s_Mouse;
@@ -54,6 +60,8 @@ namespace engine
 		
 		void OnEvent(class MouseMovedEvent& e);
 
+		void OnEvent(class MouseScrolledEvent& e);
+
 		/* Update the mouse */
 		void Update();
 
@@ -62,6 +70,9 @@ namespace engine
 
 		/* Returns the last frame mouse position */
 		inline const gm::Vector2& GetLastPosition() const { return m_LastPosition; }
+
+		/* Returns the current scroll offset */
+		inline const gm::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
 
 		/* Returns if the left mouse button is pressed */
 		inline bool IsLeftButtonPressed() const { return m_LeftButtonPressed; }

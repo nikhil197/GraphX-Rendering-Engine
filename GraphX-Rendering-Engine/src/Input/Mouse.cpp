@@ -8,7 +8,7 @@ namespace engine
 	std::shared_ptr<Mouse> Mouse::s_Mouse;
 
 	Mouse::Mouse(ConstructorHelper&& ch)
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_Position(0), m_LastPosition(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_Senstivity(0.1f), m_ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
 	{}
 
 	void Mouse::Init()
@@ -49,9 +49,20 @@ namespace engine
 		m_Position.y += yOffset;
 	}
 
+	void Mouse::OnEvent(MouseScrolledEvent& e)
+	{
+		float xOffset = e.GetXOffset() * m_ScrollSenstivity;
+		float yOffset = e.GetYOffset() * m_ScrollSenstivity;
+
+		m_ScrollOffset = gm::Vector2(xOffset, yOffset);
+	}
+
 	void Mouse::Update()
 	{
 		// Update the last mouse position to the current at the end of every frame
 		m_LastPosition = m_Position;
+
+		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
+		m_ScrollOffset = gm::Vector2::ZeroVector;
 	}
 }

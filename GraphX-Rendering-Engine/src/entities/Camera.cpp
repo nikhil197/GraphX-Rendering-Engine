@@ -109,5 +109,14 @@ namespace engine
 				UpdateCameraAxes();
 			}
 		}
+
+		// Check for the mouse scroll
+		if (Mouse::GetMouse()->GetScrollOffset() != gm::Vector2::ZeroVector)
+		{
+			gm::Vector2 Offset = Mouse::GetMouse()->GetScrollOffset();
+			FieldOfView -= Offset.y;
+
+			m_RenderStateDirty = true;
+		}
 	}
 }
