@@ -92,15 +92,15 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)GraphXM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\Release\Win32\;$(SolutionDir)Dependencies\GLFW\lib-vc2015</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\Release\Win32\;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib;assimp-vc140-mt.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -170,6 +170,7 @@
     <ClCompile Include="src\Model\Cube.cpp" />
     <ClCompile Include="src\Model\Mesh\Mesh2D.cpp" />
     <ClCompile Include="src\Model\Mesh\Mesh3D.cpp" />
+    <ClCompile Include="src\Model\Model3D.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
@@ -223,6 +224,7 @@
     <ClInclude Include="src\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Model\Mesh\Mesh3D.h" />
     <ClInclude Include="src\Model\Mesh\Vertex.h" />
+    <ClInclude Include="src\Model\Model3D.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Renderer\Renderer2DCore.h" />

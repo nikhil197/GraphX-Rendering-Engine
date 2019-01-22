@@ -15,6 +15,9 @@ namespace engine
 		/* Submit the object to be rendered */
 		virtual void Submit(const class Mesh3D* mesh) override;
 
+		/* Submit the model to be rendered */
+		virtual void Submit(const class Model3D* model) override;
+
 		/* Renders the objects submitted to the rendered*/
 		virtual void Render() override;
 	};

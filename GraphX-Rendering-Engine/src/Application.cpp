@@ -31,6 +31,9 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
+/* Model */
+#include "Model/Model3D.h"
+
 namespace engine
 {
 	using namespace gm;
@@ -117,6 +120,8 @@ namespace engine
 		//	{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
 		//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
 		//};
+
+		Model3D model("Crate1.obj");
 
 		// Vertices of the cube to be rendered
 		Vertex3DC vertices[] = {
