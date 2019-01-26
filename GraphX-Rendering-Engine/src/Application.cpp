@@ -121,7 +121,6 @@ namespace engine
 		//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
 		//};
 
-		Model3D model("Crate1.obj");
 
 		// Vertices of the cube to be rendered
 		Vertex3DC vertices[] = {
@@ -193,6 +192,7 @@ namespace engine
 		//Texture tex("res/Textures/Rendering Pipeline.png");
 		//tex.Bind();
 
+
 		// Basic Lighting Shader 
 		Shader shader("res/Shaders/BasicLightingShader.shader");
 		//Shader shader("res/shaders/BasicTexture.shader");
@@ -202,12 +202,13 @@ namespace engine
 		shader.SetUniform1f("u_Reflectivity", 1.0f);
 		//shader.SetUniform1i("u_Texture", 0 /* Slot number*/);
 
+		Model3D model("", shader);
 		// Simple Renderer to render the objects
 		SimpleRenderer renderer;
 
 		// Camera
 		Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
-		camera.SetAspectRatio(16.0f / 9.0f);
+		camera.SetAspectRatio((float)m_Window->GetWidth() / (float)m_Window->GetHeight());
 
 		// Projection Matrix
 		//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);

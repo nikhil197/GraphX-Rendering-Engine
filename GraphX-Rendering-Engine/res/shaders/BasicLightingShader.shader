@@ -35,6 +35,7 @@ in vec4 v_Color;
 uniform vec4 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
+uniform vec4 u_Color = vec4(0.0f);
 
 uniform float u_AmbientStrength;
 uniform float u_Shininess;
@@ -70,5 +71,5 @@ void main()
 	float AttenuationFactor = (u_AttenuationFactors.x + (u_AttenuationFactors.y * distance) + (u_AttenuationFactors.z * distance * distance));
 
 	// Divide the diffuse and specular components of the light color (ambient is the property of the environment, probably due to the directional light source - most probably sun)
-	fColor = (ambientColor + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor)) * v_Color;
+	fColor = (ambientColor + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor)) * (v_Color + u_Color);
 }

@@ -68,6 +68,9 @@ uniform float u_AmbientStrength = 0.01f;
 
 uniform vec3 u_CameraPos;
 
+// Base Color of the object
+uniform vec4 u_Color = vec4(0.0f);
+
 /* Ambient Light (Represents Sun) */
 uniform DirectionalLight u_LightSource = DirectionalLight(vec3(0.0f, 100.f, -50.f), vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), 1.0f);
 
@@ -116,5 +119,5 @@ void main()
 	vec4 SpecularColor_Point = (u_PointLight.Color * Shine * u_Material.Reflectivity) / AttenuationFactor;
 
 	// Calculate the final color
-	fColor = (AmbientColor + (SpecularColor_Global + SpecularColor_Point) + (DiffuseColor_Global + DiffuseColor_Point)) * v_Data.Color;
+	fColor = (AmbientColor + (SpecularColor_Global + SpecularColor_Point) + (DiffuseColor_Global + DiffuseColor_Point)) * (v_Data.Color + u_Color);
 }

@@ -15,11 +15,11 @@ namespace engine
 
 	void Renderer3D::Submit(const Model3D* model)
 	{
-		const std::vector<Mesh3D>& meshes = model->GetMeshes();
+		const std::vector<Mesh3D*>& meshes = model->GetMeshes();
 		
 		for (unsigned int i = 0; i < meshes.size(); i++)
 		{
-			const Mesh3D* mesh = &meshes[i];
+			const Mesh3D* mesh = meshes[i];
 			m_RenderQueue.emplace_back(mesh);
 		}
 	}
