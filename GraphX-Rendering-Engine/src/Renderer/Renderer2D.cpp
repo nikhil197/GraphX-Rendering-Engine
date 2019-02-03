@@ -27,13 +27,19 @@ namespace engine
 			Shader& shader = mesh->GetShader();
 
 			// Set the transformation matrix
-			shader.SetUniformMat4f("u_Model", mesh->GetTransformationMatrix());
+			gm::Matrix4 Model = mesh->GetTransformationMatrix();
+			shader.SetUniformMat4f("u_Model", Model);
+
+			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
+			gm::Matrix3 Normal = gm::Matrix3(Model);
+			shader.SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
 			GLCall(glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
 
 			// Reset the transformation matrix
 			shader.SetUniformMat4f("u_Model", gm::Matrix4());
+			shader.SetUniformMat3f("u_Normal", gm::Matrix3());
 
 			// Disable the mesh after drawing
 			mesh->Disable();

@@ -57,8 +57,8 @@ namespace engine
 		}
 
 		// Reset the uniforms
-		m_Shader.SetUniform1f("u_Reflectivity", 0.0f);
-		m_Shader.SetUniform1f("u_Shininess", 0.0f);
+		m_Shader.SetUniform1f("u_Reflectivity", 1.0f);
+		m_Shader.SetUniform1f("u_Shininess", 32.0f);
 
 		m_Shader.SetUniform4f("u_Color", gm::Vector4::ZeroVector);
 	}
