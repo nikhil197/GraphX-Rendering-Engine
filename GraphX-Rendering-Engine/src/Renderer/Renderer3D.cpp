@@ -43,6 +43,9 @@ namespace engine
 			// Draw the object
 			GLCall(glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
 
+			// Reset the transformation matrix
+			shader.SetUniformMat4f("u_Model", gm::Matrix4());
+
 			// Disable the mesh after drawing
 			mesh->Disable();
 		}

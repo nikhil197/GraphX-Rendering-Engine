@@ -202,7 +202,6 @@ namespace engine
 		shader.SetUniform1f("u_Reflectivity", 1.0f);
 		//shader.SetUniform1i("u_Texture", 0 /* Slot number*/);
 
-		Model3D model("", shader);
 		// Simple Renderer to render the objects
 		SimpleRenderer renderer;
 

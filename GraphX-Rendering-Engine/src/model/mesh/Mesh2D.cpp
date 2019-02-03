@@ -55,6 +55,12 @@ namespace engine
 			const Texture* texture = m_Textures[i];
 			texture->UnBind();
 		}
+
+		// Reset the uniforms
+		m_Shader.SetUniform1f("u_Reflectivity", 0.0f);
+		m_Shader.SetUniform1f("u_Shininess", 0.0f);
+
+		m_Shader.SetUniform4f("u_Color", gm::Vector4::ZeroVector);
 	}
 
 	gm::Matrix4 Mesh2D::GetTransformationMatrix() const
