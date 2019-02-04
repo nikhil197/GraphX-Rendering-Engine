@@ -10,7 +10,7 @@
 namespace engine
 {
 	Camera::Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
-		:m_CameraLookAtPoint(LookAtPoint), m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), m_CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), FieldOfView(FOV)
+		:m_CameraLookAtPoint(LookAtPoint), m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), FieldOfView(FOV)
 	{
 		UpdateCameraAxes();
 	}
@@ -37,7 +37,7 @@ namespace engine
 		// Update the camera position
 		if (Mouse::GetMouse()->IsRightButtonPressed())
 		{
-			float CurrentCameraSpeed = m_CameraSpeed * DeltaTime;
+			float CurrentCameraSpeed = CameraSpeed * DeltaTime;
 			const std::shared_ptr<Keyboard>& keyboard = Keyboard::GetKeyboard();
 			m_RenderStateDirty = true;
 			

@@ -22,9 +22,6 @@ namespace engine
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
 
-		/* Senstivity of the mouse i.e. how much the pointer position in application units will be changed with a unit change in device position */
-		float m_Senstivity;
-
 		/* Senstivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
 		float m_ScrollSenstivity;
 
@@ -46,6 +43,9 @@ namespace engine
 	public:
 		/* Mouse Constructor is private (Constructor Helper is private) */
 		Mouse(ConstructorHelper&& ch);
+
+		/* Sensitivity of the mouse i.e. how much the pointer position in application units will be changed with a unit change in device position */
+		float Sensitivity;
 
 		/* Initialise the mouse */
 		static void Init();

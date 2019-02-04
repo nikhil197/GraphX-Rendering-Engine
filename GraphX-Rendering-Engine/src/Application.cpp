@@ -292,6 +292,7 @@ namespace engine
 			//GraphXGui::ColorAndPropertiesWindow(cube);
 			GraphXGui::DetailsWindow(cube);
 			GraphXGui::LightProperties(light);
+			GraphXGui::CameraProperties(camera);
 
 			// Render the GUI
 			GraphXGui::Render();

@@ -23,9 +23,6 @@ namespace engine
 		/* Whether the camera has been updated and the matrices need to be set again */
 		bool m_RenderStateDirty;
 
-		/* Camera settings for control */
-		float m_CameraSpeed;
-
 		/* Camera view axis */
 		gm::Vector3 m_ViewAxis;
 
@@ -45,6 +42,9 @@ namespace engine
 
 		/* Field of view of the camera (in degrees) */
 		float FieldOfView;
+
+		/* Camera settings for control */
+		float CameraSpeed;
 
 	private:
 		/* Updates the camera axis */
