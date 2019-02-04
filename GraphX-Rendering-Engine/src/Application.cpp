@@ -12,6 +12,7 @@
 
 /* Renderer */
 #include "Renderer/SimpleRenderer.h"
+#include "Renderer/Renderer3D.h"
 
 /* Entities */
 #include "Entities/Lights/Light.h"
@@ -33,6 +34,7 @@
 
 /* Model */
 #include "Model/Model3D.h"
+#include "model/Cube.h"
 
 namespace engine
 {
@@ -88,7 +90,7 @@ namespace engine
 		GLCall(glEnable(GL_DEPTH_TEST));
 
 		// To enable blending
-		GLCall(glEnable(GL_BLEND));
+		//GLCall(glEnable(GL_BLEND));
 
 		// Blend function
 		// src is the alpha of the current pixel
@@ -233,9 +235,15 @@ namespace engine
 		//std::vector<std::string> SkyboxNames = { "nuke_rt.tga", "nuke_lf.tga", "nuke_up.tga", "nuke_dn.tga", "nuke_ft.tga", "nuke_bk.tga" };
 		//Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Nuke Town/", SkyboxNames, camera);
 
+		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, shader, std::vector<const Texture*>());
+		cube.bShowDetails = true;
+		Renderer3D renderer3D;
+
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
+			renderer3D.Submit(&cube);
+
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
 
@@ -280,9 +288,16 @@ namespace engine
 
 			// Get a new transform window for the cube
 			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
+			//GraphXGui::TransformWindow(cube);
+			//GraphXGui::ColorAndPropertiesWindow(cube);
+			GraphXGui::DetailsWindow(cube);
+			GraphXGui::LightProperties(light);
 
 			// Render the GUI
 			GraphXGui::Render();
+
+			shader.SetUniform3f("u_LightPos", light.Position);
+			shader.SetUniform4f("u_LightColor", light.Color);
 
 			// Model Matrix
 			Translation trans(translation);
@@ -300,8 +315,12 @@ namespace engine
 			ibo.Bind();
 			renderer.Draw(ibo);
 
+			renderer3D.Render();
+
 			//Update the mouse
 			Mouse::GetMouse()->Update();
+
+			light.Disable();
 
 			//Poll events and swap buffers
 			m_Window->OnUpdate();
@@ -337,7 +356,7 @@ namespace engine
 				handled = dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 			}
 		}
-		else if(e.IsInCategory(GX_EVENT_CATEGORY_KEYBOARD))
+		else if (e.IsInCategory(GX_EVENT_CATEGORY_KEYBOARD))
 		{
 			if (!handled)
 			{
