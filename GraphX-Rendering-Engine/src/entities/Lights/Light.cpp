@@ -6,7 +6,7 @@
 namespace engine
 {
 	Light::Light(const gm::Vector3& Pos, const gm::Vector4& Color, float Intensity)
-		: Position(Pos), Color(Color), Intensity(Intensity)
+		: Position(Pos), Color(Color), Intensity(Intensity), bShowDetails(true)
 	{
 	}
 

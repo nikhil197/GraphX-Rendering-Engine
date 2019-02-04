@@ -14,6 +14,9 @@ namespace engine
 		/* Intensity of the light (total energy emitted by the light) */
 		float Intensity;
 
+		/* Whether to show the details UI window (ImGUI) or not */
+		bool bShowDetails : 1;
+
 		/* Constructor */
 		Light(const gm::Vector3& Pos, const gm::Vector4& Color, float Intensity = 1.0f);
 
