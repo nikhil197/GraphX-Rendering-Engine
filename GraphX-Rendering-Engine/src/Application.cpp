@@ -89,6 +89,10 @@ namespace engine
 		// To enable the depth test
 		GLCall(glEnable(GL_DEPTH_TEST));
 
+		// Enable back face culling
+		GLCall(glEnable(GL_CULL_FACE));
+		GLCall(glCullFace(GL_BACK));
+
 		// To enable blending
 		//GLCall(glEnable(GL_BLEND));
 
