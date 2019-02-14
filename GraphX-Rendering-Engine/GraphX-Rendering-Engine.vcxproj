@@ -184,6 +184,7 @@
     <ClCompile Include="src\Timer\Clock.cpp" />
     <ClCompile Include="src\Timer\Timer.cpp" />
     <ClCompile Include="src\Gui\GraphXGui.cpp" />
+    <ClCompile Include="src\Utilities\MousePicker.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffers\VertexBuffer.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="src\Timer\Clock.h" />
     <ClInclude Include="src\Timer\Timer.h" />
     <ClInclude Include="src\Gui\GraphXGui.h" />
+    <ClInclude Include="src\Utilities\MousePicker.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Buffers\VertexBuffer.h" />
