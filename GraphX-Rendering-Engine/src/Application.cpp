@@ -36,6 +36,10 @@
 #include "Model/Model3D.h"
 #include "model/Cube.h"
 
+/* Utils */
+#include "Utilities/FileOpenDialog.h"
+#include "Utilities/EngineUtil.h"
+
 namespace engine
 {
 	using namespace gm;
@@ -126,7 +130,6 @@ namespace engine
 		//	{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
 		//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
 		//};
-
 
 		// Vertices of the cube to be rendered
 		Vertex3DC vertices[] = {

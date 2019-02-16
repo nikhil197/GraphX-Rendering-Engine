@@ -16,6 +16,12 @@ namespace engine
 		/* Whether the application is running or not */
 		bool m_IsRunning;
 
+		/* Collections of 2D objects in the scene */
+		std::vector<class Mesh2D*> m_Objects2D;
+
+		/* Collection of 3D objects in the scene */
+		std::vector<class Mesh3D*> m_Objects3D;
+
 	private:
 		/* Callback for events */
 		void OnEvent(class Event& e);

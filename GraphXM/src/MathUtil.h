@@ -6,8 +6,9 @@ static const double PI = 3.14159265;
 namespace gm
 {
 	/* Maths utility for the maths library */
-	struct MathUtil
+	class MathUtil
 	{
+	public:
 		/* Returns the square of the value */
 		template<typename T>
 		static float Square(const T Value)
