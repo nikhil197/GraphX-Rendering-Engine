@@ -94,7 +94,11 @@ namespace engine
 			{
 				m_RenderStateDirty = true;
 
-				gm::Vector3 Angles(-yOffset, -xOffset, 0);
+				float distance = (CameraPosition - gm::Vector3(LastPosition, (CameraPosition.z == 0.0f ? -1.0f : 0.0f))).Magnitude();
+				float Yaw = (float) gm::MathUtil::TanInverse(xOffset / distance);
+				float Pitch = (float) gm::MathUtil::TanInverse(yOffset / distance);
+
+				gm::Vector3 Angles(-Pitch, -Yaw, 0);
 				EulerAngles += Angles;
 				gm::MathUtil::ClampAngle(EulerAngles.y);
 				gm::MathUtil::ClampAngle(EulerAngles.z);
