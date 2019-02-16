@@ -35,6 +35,9 @@ namespace engine
 		/* Returns the height of the texture */
 		inline int GetHeight() const { return m_Height; }
 
+		/* Returns the file path of the texture */
+		inline const std::string& GetFilePath() const { return m_FilePath; }
+
 		/* Destroy the texture */
 		~Texture();
 	};

@@ -23,11 +23,20 @@ namespace engine
 		/* Create a window showing the tranformation details of the mesh */
 		static void TransformWindow(class Mesh3D& mesh);
 
-		/* Create a window showing the details of the mesh */
+		/* Create a window showing the details of the Mesh3D*/
 		static void DetailsWindow(class Mesh3D& mesh);
 
 		/* Create a window showing the light properties */
 		static void LightProperties(class Light& light);
+
+		/* Create a window showing the Camera properties */
+		static void CameraProperties(class Camera& camera);
+
+		/* Create a window showing the details of the Mesh2D*/
+		static void DetailsWindow(class Mesh2D& mesh);
+
+		/* Create a window for loading a model from directory */
+		static void LoadModel();
 
 		/* Render the UI */
 		static void Render();

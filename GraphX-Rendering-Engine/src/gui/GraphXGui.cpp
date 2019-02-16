@@ -5,8 +5,14 @@
 #include "ImGui/imgui_impl_glfw_gl3.h"
 
 #include "model/mesh/Mesh3D.h"
+#include "model/mesh/Mesh2D.h"
+
+#include "Textures/Texture.h"
 
 #include "entities/Lights/Light.h"
+#include "entities/Camera.h"
+
+#include "Input/Mouse.h"
 
 namespace engine
 {
@@ -62,17 +68,29 @@ namespace engine
 		if (mesh.bShowDetails)
 		{
 			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
-
+			ImGui::Spacing();
 			ImGui::Text("Transformations");
 			ImGui::SliderFloat3("Translation", (float*)&mesh.Position.x, -1000.0f, 1000.0f);
 			ImGui::SliderFloat3("Rotation", (float*)(&mesh.Rotation), 0.0f, 359.f);
 			ImGui::SliderFloat3("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
-			
+			ImGui::Spacing();
 			ImGui::Text("Color and Properties");
 			ImGui::SliderFloat("Shininess", (float*)&mesh.Shininess, 2.0f, 256.0f);
 			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
 			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
-			
+			ImGui::Spacing();
+
+			ImGui::Text("Texture Properties");
+			ImGui::BeginChild("Textures in current model");
+			int size = mesh.GetTextures().size();
+			for (int n = 0; n < size; n++)
+			{
+				ImGui::Text("%s", mesh.GetTextures().at(n)->GetFilePath().c_str());
+				ImGui::Spacing();
+			}
+			ImGui::EndChild();
+			if(ImGui::Button("Add New Texture"))
+			{ }
 			ImGui::End();
 		}
 	}
@@ -87,6 +105,45 @@ namespace engine
 			ImGui::ColorEdit4("Color", (float*)&light.Color);
 			ImGui::End();
 		}
+	}
+
+	void GraphXGui::CameraProperties(Camera& camera)
+	{
+		ImGui::Begin("Camera Properties", (bool*)true);
+		ImGui::SliderFloat("Camera Speed", (float*)&camera.CameraSpeed, 0.0f, 100.0f);
+		ImGui::SliderFloat("Field Of View", (float*)&camera.FieldOfView, 10.0f, 100.0f);
+		ImGui::SliderFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.1f, 1.0f);
+		ImGui::End();
+	}
+
+	void GraphXGui::DetailsWindow(Mesh2D& mesh)
+	{
+		if (mesh.bShowDetails)
+		{
+			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
+
+			ImGui::Text("Transformations");
+			ImGui::SliderFloat3("Translation", (float*)&mesh.Position.x, -1000.0f, 1000.0f);
+			ImGui::SliderFloat3("Rotation", (float*)(&mesh.Rotation), 0.0f, 359.f);
+			ImGui::SliderFloat2("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
+
+			ImGui::Text("Color and Properties");
+			ImGui::SliderFloat("Shininess", (float*)&mesh.Shininess, 2.0f, 256.0f);
+			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
+			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
+
+			ImGui::End();
+		}
+	}
+
+	void GraphXGui::LoadModel()
+	{
+		ImGui::Begin("Model Properties", (bool*)true);
+		if(ImGui::Button("Cube"))
+		{ }
+		if (ImGui::Button("Add Model"))
+		{ }
+		ImGui::End();
 	}
 
 		void GraphXGui::Render()
