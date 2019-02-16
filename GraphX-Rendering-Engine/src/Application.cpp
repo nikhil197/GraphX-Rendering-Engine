@@ -198,8 +198,8 @@ namespace engine
 		vao.UnBind();
 
 		// Create a Texture object
-		//Texture tex("res/Textures/Rendering Pipeline.png");
-		//tex.Bind();
+		Texture tex("res/Textures/Rendering Pipeline.png");
+		tex.Bind();
 
 
 		// Basic Lighting Shader 
@@ -242,7 +242,9 @@ namespace engine
 		//std::vector<std::string> SkyboxNames = { "nuke_rt.tga", "nuke_lf.tga", "nuke_up.tga", "nuke_dn.tga", "nuke_ft.tga", "nuke_bk.tga" };
 		//Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Nuke Town/", SkyboxNames, camera);
 
-		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, shader, std::vector<const Texture*>());
+		std::vector<const Texture*> textures(0);
+		textures.push_back(&tex);
+		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, shader, textures);
 		cube.bShowDetails = true;
 		Renderer3D renderer3D;
 
@@ -300,6 +302,7 @@ namespace engine
 			GraphXGui::DetailsWindow(cube);
 			GraphXGui::LightProperties(light);
 			GraphXGui::CameraProperties(camera);
+			GraphXGui::LoadModel();
 
 			// Render the GUI
 			GraphXGui::Render();

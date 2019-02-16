@@ -35,6 +35,9 @@ namespace engine
 		/* Create a window showing the details of the Mesh2D*/
 		static void DetailsWindow(class Mesh2D& mesh);
 
+		/* Create a window for loading a model from directory */
+		static void LoadModel();
+
 		/* Render the UI */
 		static void Render();
 

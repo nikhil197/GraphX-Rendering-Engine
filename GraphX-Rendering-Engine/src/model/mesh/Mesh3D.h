@@ -68,6 +68,9 @@ namespace engine
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
 
+		/* Returns the textures of the mesh3D */
+		inline const std::vector<const class Texture*> GetTextures() const { return m_Textures; }
+
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }
 
