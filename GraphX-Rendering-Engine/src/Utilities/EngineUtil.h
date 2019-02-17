@@ -2,6 +2,9 @@
 
 namespace engine
 {
+	// Macro to bind the class event functions
+#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
+
 	class EngineUtil
 	{
 		/* Convertor to convert between normal and wide strings */

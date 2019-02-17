@@ -28,7 +28,11 @@ namespace engine
 		GX_WINDOW_RESIZED,
 		GX_WINDOW_MOVED,
 		GX_WINDOW_FOCUS,
-		GX_WINDOW_LOST_FOCUS
+		GX_WINDOW_LOST_FOCUS,
+
+		/* GUI Events */
+		GX_ADD_TEXTURE,
+		GX_LOAD_MODEL
 	};
 
 	// Not a scoped enum because it doesn't represent any actual thing in the event, unlike event type
@@ -39,7 +43,8 @@ namespace engine
 		GX_EVENT_CATEGORY_MOUSE			= BIT(1),
 		GX_EVENT_CATEGORY_MOUSE_BUTTON  = BIT(2),
 		GX_EVENT_CATEGORY_KEYBOARD		= BIT(3),
-		GX_EVENT_CATEGORY_WINDOW		= BIT(4)
+		GX_EVENT_CATEGORY_WINDOW		= BIT(4),
+		GX_EVENT_CATEGORY_GUI			= BIT(5)
 	};
 
 	// Macros to override the base event class methods

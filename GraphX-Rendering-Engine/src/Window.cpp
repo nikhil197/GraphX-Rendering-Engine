@@ -8,6 +8,7 @@
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
 
+#include "Utilities/EngineUtil.h"
 namespace engine
 {
 	Window::Window(std::string title, int width, int height)
@@ -21,7 +22,7 @@ namespace engine
 		}
 
 		/* Intialise the ImGui */
-		GraphXGui::Init(m_Window);
+		GraphXGui::Init(m_Window, BIND_EVENT_FUNC(Window::OnEvent));
 		GX_ENGINE_INFO("Window: Successfully Created window");
 	}
 

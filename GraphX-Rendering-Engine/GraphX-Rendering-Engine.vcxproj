@@ -217,6 +217,7 @@
     <ClInclude Include="src\Entities\Skybox.h" />
     <ClInclude Include="src\ErrorHandler.h" />
     <ClInclude Include="src\Events\Event.h" />
+    <ClInclude Include="src\Events\GUIEvent.h" />
     <ClInclude Include="src\Events\KeyboardEvent.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\Events\WindowEvent.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="src\Model\Mesh\Mesh3D.h" />
     <ClInclude Include="src\Model\Mesh\Vertex.h" />
     <ClInclude Include="src\Model\Model3D.h" />
+    <ClInclude Include="src\Model\ModelTypes.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Renderer\Renderer2DCore.h" />
