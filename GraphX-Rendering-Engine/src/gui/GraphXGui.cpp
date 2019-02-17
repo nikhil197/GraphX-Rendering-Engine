@@ -13,10 +13,13 @@
 #include "entities/Camera.h"
 
 #include "Input/Mouse.h"
+#include "Events/GUIEvent.h"
 
 namespace engine
 {
-	void GraphXGui::Init(GLFWwindow* window, bool bSetupCallbacks)
+	std::function<void(Event&)> GraphXGui::s_GuiEventCallback = nullptr;
+
+	void GraphXGui::Init(GLFWwindow* window, const std::function<void(Event&)>& callback, bool bSetupCallbacks)
 	{
 		Timer timer("Initialising ImGui");
 
@@ -24,6 +27,8 @@ namespace engine
 		ImGui_ImplGlfwGL3_Init(window, bSetupCallbacks);
 
 		ImGui::StyleColorsDark();
+
+		s_GuiEventCallback = callback;
 	}
 
 	void GraphXGui::Update()
@@ -90,7 +95,14 @@ namespace engine
 			}
 			ImGui::EndChild();
 			if(ImGui::Button("Add New Texture"))
-			{ }
+			{
+				// Add a new texture to the mesh
+				if (s_GuiEventCallback)
+				{
+					static AddTextureEvent e;
+					s_GuiEventCallback(e);
+				}
+			}
 			ImGui::End();
 		}
 	}
@@ -136,17 +148,31 @@ namespace engine
 		}
 	}
 
-	void GraphXGui::LoadModel()
+	void GraphXGui::Models()
 	{
-		ImGui::Begin("Model Properties", (bool*)true);
+		ImGui::Begin("Models", (bool*)true);
 		if(ImGui::Button("Cube"))
-		{ }
+		{
+			// Add Cube to the scene
+			if (s_GuiEventCallback)
+			{
+				AddModelEvent e(ModelType::CUBE);
+				s_GuiEventCallback(e);
+			}
+		}
 		if (ImGui::Button("Add Model"))
-		{ }
+		{
+			// Load a new, custom Model from the file system
+			if (s_GuiEventCallback)
+			{
+				AddModelEvent e(ModelType::CUSTOM);
+				s_GuiEventCallback(e);
+			}
+		}
 		ImGui::End();
 	}
 
-		void GraphXGui::Render()
+	void GraphXGui::Render()
 	{
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

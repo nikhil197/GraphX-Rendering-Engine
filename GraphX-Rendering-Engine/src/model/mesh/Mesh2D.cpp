@@ -63,6 +63,14 @@ namespace engine
 		m_Shader.SetUniform4f("u_Color", gm::Vector4::ZeroVector);
 	}
 
+	void Mesh2D::AddTexture(const Texture* texture)
+	{
+		if (texture != nullptr)
+		{
+			m_Textures.push_back(texture);
+		}
+	}
+
 	gm::Matrix4 Mesh2D::GetTransformationMatrix() const
 	{
 		gm::Translation translation(Position);

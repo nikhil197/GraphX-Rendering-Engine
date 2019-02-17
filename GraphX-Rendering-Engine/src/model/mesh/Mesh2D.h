@@ -66,6 +66,9 @@ namespace engine
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
 
+		/* Adds a texture to the mesh */
+		void AddTexture(const class Texture* texture);
+
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }
 

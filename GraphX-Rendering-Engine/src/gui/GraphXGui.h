@@ -10,9 +10,12 @@ namespace engine
 	private:
 		GraphXGui();
 
+		/* Callback*/
+		static std::function<void(class Event&)> s_GuiEventCallback;
+
 	public:
 		/* Initialize the GUI */
-		static void Init(GLFWwindow* window, bool bSetupCallbacks = false);
+		static void Init(GLFWwindow* window, const std::function<void(class Event&)>& callback, bool bSetupCallbacks = false);
 
 		/* Update the UI frame */
 		static void Update();
@@ -36,7 +39,7 @@ namespace engine
 		static void DetailsWindow(class Mesh2D& mesh);
 
 		/* Create a window for loading a model from directory */
-		static void LoadModel();
+		static void Models();
 
 		/* Render the UI */
 		static void Render();

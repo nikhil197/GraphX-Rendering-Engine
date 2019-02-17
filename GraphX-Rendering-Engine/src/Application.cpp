@@ -27,25 +27,26 @@
 #include "Events/WindowEvent.h"
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
+#include "Events/GUIEvent.h"
 
 /* Input */
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
 /* Model */
+#include "Model/ModelTypes.h"
 #include "Model/Model3D.h"
+#include "Model/Mesh/Mesh2D.h"
+#include "Model/Mesh/Mesh3D.h"
 #include "model/Cube.h"
 
 /* Utils */
-#include "Utilities/FileOpenDialog.h"
 #include "Utilities/EngineUtil.h"
+#include "Utilities/FileOpenDialog.h"
 
 namespace engine
 {
 	using namespace gm;
-
-	// Macro to bind the class event functions
-#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
 
 	Application::Application(std::string& title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true)
@@ -130,7 +131,7 @@ namespace engine
 		//	{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
 		//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
 		//};
-
+		
 		// Vertices of the cube to be rendered
 		Vertex3DC vertices[] = {
 			/*Vertex Positions*/			  /* Normal Coordinates */				/* Colors */
@@ -203,13 +204,13 @@ namespace engine
 
 
 		// Basic Lighting Shader 
-		Shader shader("res/Shaders/BasicLightingShader.shader");
-		//Shader shader("res/shaders/BasicTexture.shader");
-		shader.Bind();
-		shader.SetUniform1f("u_AmbientStrength", 0.01f);
-		shader.SetUniform1f("u_Shininess", 256.0f);
-		shader.SetUniform1f("u_Reflectivity", 1.0f);
-		//shader.SetUniform1i("u_Texture", 0 /* Slot number*/);
+		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
+		//Shader m_Shader("res/shaders/BasicTexture.shader");
+		m_Shader->Bind();
+		m_Shader->SetUniform1f("u_AmbientStrength", 0.01f);
+		m_Shader->SetUniform1f("u_Shininess", 256.0f);
+		m_Shader->SetUniform1f("u_Reflectivity", 1.0f);
+		//m_Shader->SetUniform1i("u_Texture", 0 /* Slot number*/);
 
 		// Simple Renderer to render the objects
 		SimpleRenderer renderer;
@@ -223,8 +224,8 @@ namespace engine
 		//Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
 		Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
-		shader.SetUniform3f("u_LightPos", light.Position);
-		shader.SetUniform4f("u_LightColor", light.Color);
+		m_Shader->SetUniform3f("u_LightPos", light.Position);
+		m_Shader->SetUniform4f("u_LightColor", light.Color);
 
 		int times = 0;
 		float then = Clock::GetClock()->GetTime();
@@ -244,7 +245,8 @@ namespace engine
 
 		std::vector<const Texture*> textures(0);
 		textures.push_back(&tex);
-		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, shader, textures);
+
+		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		cube.bShowDetails = true;
 		Renderer3D renderer3D;
 
@@ -276,9 +278,9 @@ namespace engine
 
 			if (camera.IsRenderStateDirty())
 			{
-				shader.SetUniform3f("u_CameraPos", camera.CameraPosition);
-				shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
-				shader.SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
+				m_Shader->SetUniform3f("u_CameraPos", camera.CameraPosition);
+				m_Shader->SetUniformMat4f("u_View", camera.GetViewMatrix());
+				m_Shader->SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
 
 				// Set the state back to rendered
 				camera.SetRenderState(false);
@@ -293,33 +295,31 @@ namespace engine
 			skybox.Disable();
 
 			// Bind the shader and draw the objects
-			shader.Bind();
+			m_Shader->Bind();
 
 			// Get a new transform window for the cube
 			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
-			//GraphXGui::TransformWindow(cube);
-			//GraphXGui::ColorAndPropertiesWindow(cube);
 			GraphXGui::DetailsWindow(cube);
 			GraphXGui::LightProperties(light);
 			GraphXGui::CameraProperties(camera);
-			GraphXGui::LoadModel();
+			GraphXGui::Models();
 
 			// Render the GUI
 			GraphXGui::Render();
 
-			shader.SetUniform3f("u_LightPos", light.Position);
-			shader.SetUniform4f("u_LightColor", light.Color);
+			m_Shader->SetUniform3f("u_LightPos", light.Position);
+			m_Shader->SetUniform4f("u_LightColor", light.Color);
 
 			// Model Matrix
 			Translation trans(translation);
 			Rotation rotate(rotation * Clock::GetClock()->GetTime(), axis);
 			Scaling scale(scaleVec);
 			Matrix4 model = trans * rotate * scale;
-			shader.SetUniformMat4f("u_Model", model);
+			m_Shader->SetUniformMat4f("u_Model", model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
 			Matrix3 normal = Matrix3(model);
-			shader.SetUniformMat3f("u_Normal", normal);
+			m_Shader->SetUniformMat3f("u_Normal", normal);
 
 			// Render the Cube
 			vao.Bind();
@@ -397,13 +397,23 @@ namespace engine
 				handled = dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(Application::OnMouseScrolled));
 			}
 		}
-		// Raise an error
+		else if (e.IsInCategory(GX_EVENT_CATEGORY_GUI))
+		{
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<AddTextureEvent>(BIND_EVENT_FUNC(Application::OnAddTexture));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<AddModelEvent>(BIND_EVENT_FUNC(Application::OnAddModel));
+			}
+		}
+		
+		// Raise an error if the event is not handled
 		if (!handled)
 		{
 			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
 		}
-		else
-			;// GX_ENGINE_TRACE("{0}", e);
 	}
 
 
@@ -473,6 +483,46 @@ namespace engine
 	bool Application::OnKeyReleased(KeyReleasedEvent& e)
 	{
 		Keyboard::GetKeyboard()->OnEvent(e);
+		return true;
+	}
+
+	bool Application::OnAddTexture(AddTextureEvent& e)
+	{
+		FileOpenDialog dialog(ResourceType::TEXTURES);
+		dialog.Show();
+
+		std::string TexName = EngineUtil::ToByteString(dialog.GetAbsolutePath());
+		Texture texture(TexName);
+
+		if (m_SelectedObject3D)
+		{
+			m_SelectedObject3D->AddTexture(&texture);
+		}
+		else if (m_SelectedObject2D)
+		{
+			m_SelectedObject2D->AddTexture(&texture);
+		}
+
+		return true;
+	}
+
+	bool Application::OnAddModel(AddModelEvent& e)
+	{
+		if (e.GetModelType() == ModelType::CUBE)
+		{
+			Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, std::vector<const Texture*>());
+			m_Objects3D.push_back(&cube);
+		}
+		else if (e.GetModelType() == ModelType::CUSTOM)
+		{
+			FileOpenDialog dialog(ResourceType::MODELS);
+			dialog.Show();
+			
+			std::string ModelName = EngineUtil::ToByteString(dialog.GetAbsolutePath());
+			Model3D model(ModelName, *m_Shader);
+		}
+		// Add more model types once added
+
 		return true;
 	}
 

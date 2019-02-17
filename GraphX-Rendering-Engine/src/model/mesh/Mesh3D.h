@@ -68,6 +68,9 @@ namespace engine
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
 
+		/* Adds a new texture to the mesh */
+		void AddTexture(const class Texture* texture);
+
 		/* Returns the textures of the mesh3D */
 		inline const std::vector<const class Texture*> GetTextures() const { return m_Textures; }
 

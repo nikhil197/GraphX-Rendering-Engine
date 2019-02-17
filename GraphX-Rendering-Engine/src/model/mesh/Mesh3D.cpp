@@ -49,7 +49,7 @@ namespace engine
 		{
 			const Texture* texture = m_Textures[i];
 			texture->Bind(i);
-			m_Shader.SetUniform1i("u_Texture" + i, i);
+			m_Shader.SetUniform1i((std::string("u_Texture") + std::to_string(i)).c_str(), i);
 		}
 	}
 
@@ -71,6 +71,14 @@ namespace engine
 		m_Shader.SetUniform1f("u_Shininess", 32.0f);
 
 		m_Shader.SetUniform4f("u_Color", gm::Vector4::ZeroVector);
+	}
+
+	void Mesh3D::AddTexture(const Texture* texture)
+	{
+		if (texture != nullptr)
+		{
+			m_Textures.push_back(texture);
+		}
 	}
 
 	Mesh3D::~Mesh3D()

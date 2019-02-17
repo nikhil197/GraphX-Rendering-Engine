@@ -16,11 +16,19 @@ namespace engine
 		/* Whether the application is running or not */
 		bool m_IsRunning;
 
-		/* Collections of 2D objects in the scene */
+		/* Collection of all the 2D objects in the scene */
 		std::vector<class Mesh2D*> m_Objects2D;
 
-		/* Collection of 3D objects in the scene */
+		/* Collection of all the 3D objects in the scene */
 		std::vector<class Mesh3D*> m_Objects3D;
+
+		/* Current selected 2D object */
+		class Mesh2D* m_SelectedObject2D;
+
+		/* Currently selected 3D object */
+		class Mesh3D* m_SelectedObject3D;
+
+		class Shader* m_Shader;
 
 	private:
 		/* Callback for events */
@@ -52,6 +60,11 @@ namespace engine
 		bool OnKeyPressed(class KeyPressedEvent& e);
 
 		bool OnKeyReleased(class KeyReleasedEvent& e);
+
+		/* Gui Events */
+		bool OnAddTexture(class AddTextureEvent& e);
+
+		bool OnAddModel(class AddModelEvent& e);
 
 #pragma endregion
 
