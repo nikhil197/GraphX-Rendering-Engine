@@ -10,7 +10,8 @@ namespace engine
 {
 	const COMDLG_FILTERSPEC FileOpenDialog::TextureFileTypes[] = {
 		{L"PNG (*.png)", L"*.png"},
-		{L"JPEG (*.jpeg)", L"*.jpeg"}
+		{L"JPEG (*.jpg)", L"*.jpg"},
+		{L"TGA (*.tga)", L"*.tga"}
 	};
 
 	const COMDLG_FILTERSPEC FileOpenDialog::ModelFileTypes[] = {
@@ -59,7 +60,7 @@ namespace engine
 			}
 			else if (RSType == ResourceType::MODELS)
 			{
-				m_Result = m_FileDialog->SetFileTypes(ARRAYSIZE(TextureFileTypes), ModelFileTypes);
+				m_Result = m_FileDialog->SetFileTypes(ARRAYSIZE(ModelFileTypes), ModelFileTypes);
 				if (SUCCEEDED(m_Result))
 				{
 					// Set the default extension
