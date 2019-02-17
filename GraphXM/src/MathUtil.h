@@ -131,6 +131,8 @@ namespace gm
 		template <typename T>
 		static double CosInverse(T Val)
 		{
+			// Make sure that the Val lies within the valid Domain for the inverse operation
+			Clamp(Val, -1.0f, 1.0f);
 			return acos(Val) * 180 / PI;
 		}
 
@@ -138,6 +140,8 @@ namespace gm
 		template <typename T>
 		static double SinInverse(T Val)
 		{
+			// Make sure that the Val lies within the valid Domain for the inverse operation
+			Clamp(Val, -1.0f, 1.0f);
 			return asin(Val) * 180 / PI;
 		}
 
