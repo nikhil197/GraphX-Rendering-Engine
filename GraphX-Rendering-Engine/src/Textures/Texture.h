@@ -20,8 +20,13 @@ namespace engine
 		/* Bits Per Pixel */
 		int m_BPP;
 
+		/* Whether the texture will be used for tilling or not */
+		bool m_TileTexture;
+
 	public:
-		Texture(const std::string& filePath);
+		/* Constructor */
+		/* @Param TileTexture - Whether the texture will be used for tilling or not */
+		Texture(const std::string& filePath, bool TileTexture = false);
 
 		/* Bind the texture to the indicated slot */
 		void Bind(unsigned int slot = 0) const;
@@ -37,6 +42,8 @@ namespace engine
 
 		/* Returns the file path of the texture */
 		inline const std::string& GetFilePath() const { return m_FilePath; }
+
+		inline bool IsTileTexture() const { return m_TileTexture; }
 
 		/* Destroy the texture */
 		~Texture();
