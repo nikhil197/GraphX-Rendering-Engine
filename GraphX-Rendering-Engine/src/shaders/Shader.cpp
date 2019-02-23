@@ -6,10 +6,15 @@
 namespace engine
 {
 	Shader::Shader(const std::string& filePath)
-		:m_FilePath(filePath), m_RendererID(0)
+		:m_FileName(std::string()), m_RendererID(0)
 	{
+		ParseFileName(filePath);
 		ShaderSource source = ParseShaderSource(filePath);
-		m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
+		
+		if (source.FragmentShaderSource.length() > 0 && source.VertexShaderSource.length() > 0)
+			m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
+		else
+			GX_ENGINE_ERROR("Error while creating the shader {0}, Source not found", m_FileName);
 	}
 
 	Shader::~Shader()
@@ -19,7 +24,10 @@ namespace engine
 
 	void Shader::Bind() const
 	{
-		GLCall(glUseProgram(m_RendererID));
+		if (m_RendererID == 0)
+			GX_ENGINE_ERROR("{0} could not be bound", m_FileName);
+		else
+			GLCall(glUseProgram(m_RendererID));
 	}
 
 	void Shader::UnBind() const
@@ -80,7 +88,7 @@ namespace engine
 			//If the name is invalid
 			if (location == -1)
 			{
-				GX_ENGINE_WARN("Shader: {0} uniform not present in the current bound shader", Name);
+				GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_FileName, Name);
 			}
 			// Cache the location
 			else
@@ -92,10 +100,24 @@ namespace engine
 		}
 	}
 
+	void Shader::ParseFileName(const std::string& FilePath)
+	{
+		int length = FilePath.length();
+		for (int i = length - 1; i >= 0; i--)
+		{
+			if (FilePath[i] != '/')
+				m_FileName.push_back(FilePath[i]);
+			else
+				break;
+		}
+
+		std::reverse(m_FileName.begin(), m_FileName.end());
+	}
+
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 	{
-		GX_ENGINE_INFO("Parsing Shader source");
-		Timer time("Parsing Shader Source");
+		GX_ENGINE_INFO("{0} : Parsing Shader source", m_FileName);
+		Timer time(m_FileName +" : Parsing Shader Source");
 
 		enum class ShaderType
 		{
@@ -127,8 +149,8 @@ namespace engine
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
-		GX_ENGINE_INFO("Compiling Shaders");
-		Timer time("Compiling Shaders");
+		GX_ENGINE_INFO("{0} : Compiling Shaders", m_FileName);
+		Timer time(m_FileName + " : Compiling Shaders");
 
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
@@ -146,7 +168,7 @@ namespace engine
 			char* infoLog = (char*)alloca(length * sizeof(char));
 			GLCall(glGetShaderInfoLog(shaderID, length, &length, infoLog));
 
-			GX_ENGINE_ERROR("Shader: Failed to compile {0} shader", (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
+			GX_ENGINE_ERROR("{0} : Failed to compile {1} shader",m_FileName, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
 			GX_ENGINE_ERROR(infoLog);
 
 			GLCall(glDeleteShader(shaderID));
