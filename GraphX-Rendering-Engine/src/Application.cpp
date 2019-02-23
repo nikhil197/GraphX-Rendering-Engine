@@ -205,6 +205,7 @@ namespace engine
 
 		// Basic Lighting Shader 
 		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
+		m_Shaders.push_back(m_Shader);
 		//Shader m_Shader("res/shaders/BasicTexture.shader");
 		m_Shader->Bind();
 		m_Shader->SetUniform1f("u_AmbientStrength", 0.01f);
@@ -278,9 +279,19 @@ namespace engine
 
 			if (camera.IsRenderStateDirty())
 			{
-				m_Shader->SetUniform3f("u_CameraPos", camera.CameraPosition);
-				m_Shader->SetUniformMat4f("u_View", camera.GetViewMatrix());
-				m_Shader->SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
+				for (unsigned int i = 0; i < m_Shaders.size(); i++)
+				{
+					Shader* shader = m_Shaders.at(i);
+					if (!shader)
+					{
+						m_Shaders.erase(m_Shaders.begin() + i);
+						continue;
+					}
+					shader->Bind();
+					shader->SetUniform3f("u_CameraPos", camera.CameraPosition);
+					shader->SetUniformMat4f("u_View", camera.GetViewMatrix());
+					shader->SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
+				}
 
 				// Set the state back to rendered
 				camera.SetRenderState(false);

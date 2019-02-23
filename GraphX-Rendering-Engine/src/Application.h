@@ -22,6 +22,9 @@ namespace engine
 		/* Collection of all the 3D objects in the scene */
 		std::vector<class Mesh3D*> m_Objects3D;
 
+		/* All the shaders used in the scene */
+		std::vector<class Shader*> m_Shaders;
+
 		/* Current selected 2D object */
 		class Mesh2D* m_SelectedObject2D;
 
