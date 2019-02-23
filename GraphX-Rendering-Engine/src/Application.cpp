@@ -18,6 +18,7 @@
 #include "Entities/Lights/Light.h"
 #include "Entities/Camera.h"
 #include "Entities/Skybox.h"
+#include "Entities/Terrain.h"
 
 #include "Window.h"
 #include "Timer/Clock.h"
@@ -247,6 +248,8 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(&tex);
 
+		Terrain ter(250, 250, 1.0f, {"res/Textures/Rendering Pipeline.PNG"});
+		m_Shaders.emplace_back(ter.GetShader());
 		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		cube.bShowDetails = true;
 		Renderer3D renderer3D;
@@ -255,6 +258,7 @@ namespace engine
 		while (m_IsRunning)
 		{
 			renderer3D.Submit(&cube);
+			renderer3D.Submit(&ter.GetMesh());
 
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();

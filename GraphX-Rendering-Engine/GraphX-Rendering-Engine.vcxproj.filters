@@ -126,6 +126,9 @@
     <ClCompile Include="src\Utilities\EngineUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entities\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Window.h">
@@ -275,6 +278,9 @@
     <ClInclude Include="src\Model\ModelTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Entities\Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -283,5 +289,6 @@
     <None Include="res\shaders\BasicTexture.shader" />
     <None Include="res\shaders\Skybox.shader" />
     <None Include="res\Shaders\GeneralShader.shader" />
+    <None Include="res\Shaders\Terrain.shader" />
   </ItemGroup>
 </Project>
