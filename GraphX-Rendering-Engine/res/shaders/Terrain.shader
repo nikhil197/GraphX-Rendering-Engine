@@ -39,7 +39,7 @@ in struct Data
 
 uniform sampler2D u_Texture0;
 
-uniform vec4 u_Color = vec4(1.0f, 0.0f, 0.0f, 0.0f);
+uniform vec4 u_Color = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 /* Final color */
 out vec4 fColor;

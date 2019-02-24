@@ -248,7 +248,7 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(&tex);
 
-		Terrain ter(250, 250, 1.0f, {"res/Textures/Rendering Pipeline.PNG"});
+		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"});
 		m_Shaders.emplace_back(ter.GetShader());
 		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		cube.bShowDetails = true;

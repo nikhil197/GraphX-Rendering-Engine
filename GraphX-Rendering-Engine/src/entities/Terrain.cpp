@@ -30,7 +30,7 @@ namespace engine
 		}
 		
 		if (m_Textures && m_Vertices && m_Indices)
-			m_Mesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, *m_Textures, *m_Vertices, *m_Indices);
+			m_Mesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, *m_Textures, *m_Vertices, *m_Indices, gm::Vector4::ZeroVector, -1.0f, -1.0f);
 		else
 			GX_ENGINE_ERROR("Error while building the terrain");
 	}
@@ -40,12 +40,12 @@ namespace engine
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
 
+		Vertex3D vertex;
 		for (int z = 0; z < m_Depth; z++)
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
 				// Calculate the vertices of the terrain
-				Vertex3D vertex;
 				vertex.Position = gm::Vector3(x * m_TileSize, -10.0f, -z * m_TileSize);	// TODO: Add the height for the terrain
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
 				vertex.TexCoord = gm::Vector2(x, z);

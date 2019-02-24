@@ -37,11 +37,14 @@ namespace engine
 		m_IBO->Bind();
 
 		m_Shader.Bind();
-		m_Shader.SetUniform1f("u_Reflectivity", Reflectivity);
-		m_Shader.SetUniform1f("u_Shininess", Shininess);
+		if(Reflectivity > 0)
+			m_Shader.SetUniform1f("u_Reflectivity", Reflectivity);
+		if(Shininess > 0)
+			m_Shader.SetUniform1f("u_Shininess", Shininess);
 
 		// Set the base color of the object
-		m_Shader.SetUniform4f("u_Color", BaseColor);
+		if(BaseColor != gm::Vector4::ZeroVector)
+			m_Shader.SetUniform4f("u_Color", BaseColor);
 
 		// Bind the textures
 		int NumTex = m_Textures.size();
@@ -65,12 +68,6 @@ namespace engine
 			const Texture* texture = m_Textures[i];
 			texture->UnBind();
 		}
-
-		// Reset the uniforms
-		m_Shader.SetUniform1f("u_Reflectivity", 1.0f);
-		m_Shader.SetUniform1f("u_Shininess", 32.0f);
-
-		m_Shader.SetUniform4f("u_Color", gm::Vector4::ZeroVector);
 	}
 
 	void Mesh3D::AddTexture(const Texture* texture)
