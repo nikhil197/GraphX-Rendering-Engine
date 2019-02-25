@@ -2,8 +2,19 @@
 
 namespace engine
 {
+	/* Type of the texture used for the frame buffer */
+	enum FramebufferAttachmentType
+	{
+		GX_TEX_NONE = 0,	/* Normal Texture */
+		GX_TEX_COLOR,		/* Texture is used as a color buffer for a framebuffer */
+		GX_TEX_DEPTH		/* Texture is used as a depth buffer for a framebuffer */
+	};
+
 	class Texture
 	{
+		/* Required to access the rendererID for the texture to bind to the framebuffer */
+		friend class FrameBuffer;
+
 	private:
 		/* ID For the texture */
 		unsigned int m_RendererID;
@@ -20,13 +31,16 @@ namespace engine
 		/* Bits Per Pixel */
 		int m_BPP;
 
-		/* Whether the texture will be used for tilling or not */
+		/* Whether the texture will be used for tiling or not */
 		bool m_TileTexture;
 
 	public:
 		/* Constructor */
 		/* @Param TileTexture - Whether the texture will be used for tilling or not */
 		Texture(const std::string& filePath, bool TileTexture = false);
+
+		/* Constructor for the framebuffer textures */
+		Texture(int width, int height, FramebufferAttachmentType texType);
 
 		/* Bind the texture to the indicated slot */
 		void Bind(unsigned int slot = 0) const;
@@ -43,6 +57,7 @@ namespace engine
 		/* Returns the file path of the texture */
 		inline const std::string& GetFilePath() const { return m_FilePath; }
 
+		/* Returns whether the texture will be used for tiling */
 		inline bool IsTileTexture() const { return m_TileTexture; }
 
 		/* Destroy the texture */
