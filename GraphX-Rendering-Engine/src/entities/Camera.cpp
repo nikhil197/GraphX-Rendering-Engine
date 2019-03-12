@@ -94,9 +94,20 @@ namespace engine
 			{
 				m_RenderStateDirty = true;
 
+				/*static float zValue = m_CameraLookAtPoint.z - CameraPosition.z;
+				gm::Vector3 CameraToLastPos(gm::Vector3(LastPosition, zValue) - CameraPosition);
+				CameraToLastPos.Normalize();
+				gm::Vector3 CameraToLastPosXOffset(gm::Vector3(LastPosition.x + xOffset, LastPosition.y, zValue) - CameraPosition);
+				CameraToLastPosXOffset.Normalize();
+				gm::Vector3 CameraToCurrentPos(gm::Vector3(CurrentPosition, zValue) - CameraPosition);
+				CameraToCurrentPos.Normalize();
+				
+				float Yaw = (float)gm::MathUtil::CosInverse(gm::Vector3::DotProduct(CameraToLastPos, CameraToLastPosXOffset));
+				float Pitch = (float)gm::MathUtil::CosInverse(gm::Vector3::DotProduct(CameraToLastPosXOffset, CameraToCurrentPos));*/
+
 				float distance = (CameraPosition - gm::Vector3(LastPosition, (CameraPosition.z == 0.0f ? -1.0f : 0.0f))).Magnitude();
-				float Yaw = (float) gm::MathUtil::TanInverse(xOffset / distance);
-				float Pitch = (float) gm::MathUtil::TanInverse(yOffset / distance);
+				float Yaw = (float)gm::MathUtil::TanInverse(xOffset / distance);
+				float Pitch = (float)gm::MathUtil::TanInverse(yOffset / distance);
 
 				gm::Vector3 Angles(-Pitch, -Yaw, 0);
 				EulerAngles += Angles;
@@ -122,5 +133,13 @@ namespace engine
 
 			m_RenderStateDirty = true;
 		}
+	}
+
+	void Camera::Enable(class Shader& shader, const std::string& Name) const
+	{
+	}
+
+	void Camera::Disable() const
+	{
 	}
 }

@@ -17,5 +17,8 @@ namespace engine
 
 		/* Renders the objects submitted to the renderer */
 		virtual void Render() override;
+
+		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
+		virtual void Render(class Shader& DepthShader) override;
 	};
 }

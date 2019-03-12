@@ -25,13 +25,48 @@ namespace engine
 		/* All the shaders used in the scene */
 		std::vector<class Shader*> m_Shaders;
 
+		/* All the lights in the scene */
+		std::vector<class Light*> m_Lights;
+
+		/* All the terrain in the scene */
+		std::vector<class Terrain*> m_Terrain;
+
 		/* Current selected 2D object */
 		class Mesh2D* m_SelectedObject2D;
 
 		/* Currently selected 3D object */
 		class Mesh3D* m_SelectedObject3D;
 
+		/* Main light source for the scene */
+		class DirectionalLight* m_LightSource;
+
+		/* Depth Frame buffer for shadow calculation */
+		class FrameBuffer* m_ShadowBuffer;
+
+		/* Shader used for rendering to depth buffer */
+		class Shader* m_DepthShader;
+
+		/* Main Camera for the application */
+		class Camera* m_Camera;
+
+		/* SKybox for the day time */
+		class Skybox* m_DaySkybox;
+
+		/* Skybox for the night time */
+		class Skybox* m_NightSkybox;
+
+		/* Current active skybox */
+		class Skybox* m_CurrentSkybox;
+
+		/* 3D renderer to render 3d objects */
+		class Renderer3D* m_Renderer3D;
+
+		/* Simple renderer to render objects like skybox */
+		class SimpleRenderer* m_Renderer;
+
 		class Shader* m_Shader;
+
+		class PointLight* m_Light;
 
 	private:
 		/* Callback for events */
@@ -71,11 +106,31 @@ namespace engine
 
 #pragma endregion
 
+		/* Updates the scene */
+		void Update();
+
+		/* Configure the shader for rendering by setting the proper uniforms */
+		void ConfigureShaderForRendering(class Shader& shader);
+
+		/* Calculates the shadows */
+		void CalculateShadows();
+
+		/* Renders the scene */
+		void RenderScene(bool IsShadowPhase = false);
+
+		/* Renders the GUI */
+		void RenderGui();
+
+		/* Renders a quad for debugging shadow map */
+		void RenderShadowDebugQuad();
 	public:
 		Application(std::string& title, int width, int height);
 
 		/* Initializes the OpenGL elements, Returns whether initialization was successful */
 		bool InitializeOpenGL();
+
+		/* Initializes all the components of the application */
+		void InitializeApplication();
 
 		/* Application main method */
 		void Run();

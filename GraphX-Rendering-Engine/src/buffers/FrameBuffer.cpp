@@ -9,10 +9,11 @@ namespace engine
 		: m_RendererID(0), m_Width(width), m_Height(height)
 	{
 		GLCall(glGenFramebuffers(1, &m_RendererID));
-		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID));
 		if (Type == FramebufferType::GX_FRAME_DEPTH)
 		{
+			GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID));
 			m_DepthMap = new Texture(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
+			m_DepthMap->Bind();
 			GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMap->m_RendererID, 0));
 			GLCall(glDrawBuffer(GL_NONE));
 			GLCall(glReadBuffer(GL_NONE));
@@ -20,14 +21,13 @@ namespace engine
 		else
 			m_DepthMap = nullptr;
 
-		if (m_DepthMap == nullptr || glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			GX_ENGINE_ERROR("Framebuffer: Error while creating the frame buffer");
+		ASSERT(m_DepthMap != nullptr && glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+		UnBind();
 	}
 
 	void FrameBuffer::Bind() const
 	{	
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID));
-		GLCall(glClear(GL_DEPTH_BUFFER_BIT));
 	}
 
 	void FrameBuffer::UnBind() const

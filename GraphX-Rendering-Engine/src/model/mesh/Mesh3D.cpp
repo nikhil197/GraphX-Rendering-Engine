@@ -22,19 +22,24 @@ namespace engine
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
 	}
 
-	gm::Matrix4 Mesh3D::GetTransformationMatrix() const
+	Mesh3D::Mesh3D(const Mesh3D& Mesh)
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), BaseColor(Mesh.BaseColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()) 
+	{
+
+	}
+
+	void Mesh3D::Update(float DeltaTime)
 	{
 		gm::Translation translation(Position);
 		gm::Rotation rotation(Rotation);
 		gm::Scaling scale(Scale);
 
-		return translation * rotation * scale;
+		m_Model = translation * rotation * scale;
 	}
 
 	void Mesh3D::Enable() const
 	{
-		m_VAO->Bind();
-		m_IBO->Bind();
+		BindBuffers();
 
 		m_Shader.Bind();
 		if(Reflectivity > 0)
@@ -58,8 +63,7 @@ namespace engine
 
 	void Mesh3D::Disable() const
 	{
-		m_VAO->UnBind();
-		m_IBO->UnBind();
+		UnBindBuffers();
 
 		// UnBind the textures
 		int NumTex = m_Textures.size();
@@ -68,6 +72,18 @@ namespace engine
 			const Texture* texture = m_Textures[i];
 			texture->UnBind();
 		}
+	}
+
+	void Mesh3D::BindBuffers() const
+	{
+		m_VAO->Bind();
+		m_IBO->Bind();
+	}
+
+	void Mesh3D::UnBindBuffers() const
+	{
+		m_VAO->UnBind();
+		m_IBO->UnBind();
 	}
 
 	void Mesh3D::AddTexture(const Texture* texture)

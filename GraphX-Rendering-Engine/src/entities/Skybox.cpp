@@ -44,6 +44,14 @@ namespace engine
 		m_VAO->AddBuffer(*m_VBO, layout);
 	}
 
+	void Skybox::Update(float DeltaTime)
+	{
+	}
+
+	void Skybox::Enable(class Shader& shader, const std::string& Name) const
+	{
+	}
+
 	void Skybox::Enable() const
 	{
 		GLCall(glDepthMask(GL_FALSE));

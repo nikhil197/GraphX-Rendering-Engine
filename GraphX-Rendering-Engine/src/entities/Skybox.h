@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Entity.h"
+
 namespace engine
 {
 	class Skybox
+		: public Entity
 	{
 	private:
 		/* Vertex Array for the skybox */
@@ -33,15 +36,20 @@ namespace engine
 		*/
 		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const class Camera& Camera);
 
+		void Update(float DeltaTime) override;
+
 		/* Prepare the skybox to be rendered */
 		void Enable() const;
 
 		/* Unbind the skybox buffers and shader to */
-		void Disable() const;
+		void Disable() const override;
 
 		/* Returns the index buffer of the skybox */
 		const class IndexBuffer& GetIBO() const { return *m_IBO; }
 
 		~Skybox();
+
+	private:
+		void Enable(class Shader& shader, const std::string& Name) const override;
 	};
 }

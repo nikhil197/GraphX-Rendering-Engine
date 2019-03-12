@@ -14,6 +14,8 @@ namespace engine
 		/* Constructor */
 		DirectionalLight(const gm::Vector3& Pos, const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity = 1.0f);
 
+		virtual void Update(float DeltaTime) override;
+
 		virtual void Enable(class Shader& shader, const std::string& LightName = "u_DirectionalLight") const override;
 
 		virtual void Disable() const override;

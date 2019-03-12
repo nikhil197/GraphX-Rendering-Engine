@@ -2,12 +2,18 @@
 
 #include "PointLight.h"
 #include "Shaders/Shader.h"
+#include "Entities/Camera.h"
 
 namespace engine
 {
 	PointLight::PointLight(const gm::Vector3& Pos, const gm::Vector4& Col, float Intensity, const gm::Vector3& AttenuationFactors)
-		: Light(Pos, Col, Intensity), m_AttenuationFactors(AttenuationFactors)
+		: Light(Pos, Col, gm::Projection::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 1000.0f), Intensity), m_AttenuationFactors(AttenuationFactors)
 	{
+	}
+
+	void PointLight::Update(float DeltaTime)
+	{
+		Light::Update(DeltaTime);
 	}
 
 	void PointLight::Enable(Shader& shader, const std::string& LightName) const

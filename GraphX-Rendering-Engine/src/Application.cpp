@@ -4,18 +4,24 @@
 
 #include "VertexArray.h"
 #include "Shaders/Shader.h"
+
+/* Buffers */
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
 #include "Buffers/IndexBuffer.h"
+#include "Buffers/FrameBuffer.h"
+
 #include "Model/Mesh/Vertex.h"
 #include "Textures/Texture.h"
 
 /* Renderer */
 #include "Renderer/SimpleRenderer.h"
 #include "Renderer/Renderer3D.h"
+#include "Renderer/Renderer2D.h"
 
 /* Entities */
-#include "Entities/Lights/Light.h"
+#include "Entities/Lights/PointLight.h"
+#include "Entities/Lights/DirectionalLight.h"
 #include "Entities/Camera.h"
 #include "Entities/Skybox.h"
 #include "Entities/Terrain.h"
@@ -59,10 +65,6 @@ namespace engine
 		Keyboard::Init();
 
 		m_Window = new Window(m_Title, width, height);
-		m_Window->SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-		// Set the event callback with the window
-		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
 		bool success = InitializeOpenGL();
 		if (!success)
@@ -70,12 +72,8 @@ namespace engine
 			GX_ENGINE_ERROR("Application: Failed to intialize OpenGL");
 			ASSERT(success);
 		}
-	}
 
-	Application::~Application()
-	{
-		GX_ENGINE_INFO("Application: Closing Application.");
-		delete m_Window;
+		InitializeApplication();
 	}
 
 	bool Application::InitializeOpenGL()
@@ -112,6 +110,32 @@ namespace engine
 		GLCall(glBlendEquation(GL_FUNC_ADD));
 
 		return true;
+	}
+
+	void Application::InitializeApplication()
+	{
+		// Set the event callback with the window
+		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
+
+		m_Camera = new Camera(gm::Vector3(0.0f, 0.0f, 3.0f), gm::Vector3::ZeroVector, gm::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight());
+
+		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
+		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera);
+		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera);
+
+		m_CurrentSkybox = m_DaySkybox;
+
+		m_LightSource = new DirectionalLight(Vector3(0, 10.0f, 20.0f), gm::Vector4(1.0f, 1.0f, 0.0f, 1.0f), gm::Vector3(-1.0f, -1.0f, 1.0f));
+		m_Lights.emplace_back(m_LightSource);
+
+		m_Light = new PointLight(Vector3(0, 10.0f, 20.0f), Vector4(1, 1, 1, 1));
+		m_Lights.emplace_back(m_Light);
+
+		m_ShadowBuffer = new FrameBuffer(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
+		m_DepthShader = new Shader("res/Shaders/Depth.shader");
+
+		m_Renderer3D = new Renderer3D();
+		m_Renderer = new SimpleRenderer();
 	}
 
 	void Application::Run()
@@ -201,8 +225,7 @@ namespace engine
 
 		// Create a Texture object
 		Texture tex("res/Textures/Rendering Pipeline.png");
-		tex.Bind();
-
+		//tex.Bind();
 
 		// Basic Lighting Shader 
 		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
@@ -214,60 +237,39 @@ namespace engine
 		m_Shader->SetUniform1f("u_Reflectivity", 1.0f);
 		//m_Shader->SetUniform1i("u_Texture", 0 /* Slot number*/);
 
-		// Simple Renderer to render the objects
-		SimpleRenderer renderer;
-
-		// Camera
-		Camera camera(Vector3(0, 0, 3.0f), Vector3(0, 0, 0), Vector3::YAxis);
-		camera.SetAspectRatio((float)m_Window->GetWidth() / (float)m_Window->GetHeight());
-
-		// Projection Matrix
-		//Matrix4 proj = Projection::Ortho(-6.0f, 6.0f, -4.5f, 4.5f, -10.0f, 10.0f);
-		//Matrix4 proj = Projection::Perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-		Light light(Vector3(0, 0, 20.0f), Vector4(1, 1, 1, 1));
-		m_Shader->SetUniform3f("u_LightPos", light.Position);
-		m_Shader->SetUniform4f("u_LightColor", light.Color);
+		m_Shader->SetUniform3f("u_LightPos", m_Light->Position);
+		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 
 		int times = 0;
 		float then = Clock::GetClock()->GetTime();
 
 		float rotation = 0.0f;
-		Vector3 translation(0);
-		Vector3 scaleVec(1);
+		Vector3 translation(10.0f, 10.0f, -10.0f);
+		Vector3 scaleVec(4);
 		Vector3 axis(1, 0, 0);
 
 		bool bShowMenu = true;
-
-		// Skybox
-		std::vector<std::string> SkyboxNames = { "right.jpg", "left.jpg" , "top.jpg" , "bottom.jpg" , "front.jpg" , "back.jpg" };
-		Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Landscape/", SkyboxNames, camera);
-		//std::vector<std::string> SkyboxNames = { "nuke_rt.tga", "nuke_lf.tga", "nuke_up.tga", "nuke_dn.tga", "nuke_ft.tga", "nuke_bk.tga" };
-		//Skybox skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Nuke Town/", SkyboxNames, camera);
 
 		std::vector<const Texture*> textures(0);
 		textures.push_back(&tex);
 
 		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"});
 		m_Shaders.emplace_back(ter.GetShader());
-		Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
+		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
+		m_Objects3D.emplace_back(&cube);
 		cube.bShowDetails = true;
-		Renderer3D renderer3D;
+		m_Shader->UnBind();
+
+		ter.GetShader()->Bind();
+		ter.GetShader()->SetUniform1f("u_AmbientStrength", 0.01f);
+		ter.GetShader()->SetUniform1f("u_Shininess", 256.0f);
+		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
-			renderer3D.Submit(&cube);
-			renderer3D.Submit(&ter.GetMesh());
-
-			// Tick the clock every frame to get the delta time
-			Clock::GetClock()->Tick();
-
-			float DeltaTime = Clock::GetClock()->GetDeltaTime();
-
-			// Update the Gui
-			GraphXGui::Update();
-
+			m_Renderer3D->Submit(&cube);
+			m_Renderer3D->Submit(&ter);
 			// Calculate the fps
 			times++;
 			float now = Clock::GetClock()->GetTime();
@@ -278,58 +280,42 @@ namespace engine
 				times = 0;
 			}
 
-			// Update the camera
-			camera.Update(DeltaTime * 1000);
-
-			if (camera.IsRenderStateDirty())
-			{
-				for (unsigned int i = 0; i < m_Shaders.size(); i++)
-				{
-					Shader* shader = m_Shaders.at(i);
-					if (!shader)
-					{
-						m_Shaders.erase(m_Shaders.begin() + i);
-						continue;
-					}
-					shader->Bind();
-					shader->SetUniform3f("u_CameraPos", camera.CameraPosition);
-					shader->SetUniformMat4f("u_View", camera.GetViewMatrix());
-					shader->SetUniformMat4f("u_Projection", camera.GetPerspectiveProjectionMatrix());
-				}
-
-				// Set the state back to rendered
-				camera.SetRenderState(false);
-			}
-
-			// Clear the window 
-			m_Window->Clear();
-
-			// Render the skybox
-			skybox.Enable();
-			renderer.Draw(skybox.GetIBO());
-			skybox.Disable();
-
-			// Bind the shader and draw the objects
-			m_Shader->Bind();
-
-			// Get a new transform window for the cube
-			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
-			GraphXGui::DetailsWindow(cube);
-			GraphXGui::LightProperties(light);
-			GraphXGui::CameraProperties(camera);
-			GraphXGui::Models();
-
-			// Render the GUI
-			GraphXGui::Render();
-
-			m_Shader->SetUniform3f("u_LightPos", light.Position);
-			m_Shader->SetUniform4f("u_LightColor", light.Color);
+			// Update all the elements of the scene
+			Update();
 
 			// Model Matrix
 			Translation trans(translation);
 			Rotation rotate(rotation * Clock::GetClock()->GetTime(), axis);
 			Scaling scale(scaleVec);
 			Matrix4 model = trans * rotate * scale;
+
+			// Calculate the shadow maps
+			CalculateShadows();
+
+			/****** Normally render the scene *****/
+			// Clear the window 
+			m_Window->Clear();
+
+			// Draw the debug quad to show the depth map
+			//RenderShadowDebugQuad();
+
+			// Render the skybox
+			m_CurrentSkybox->Enable();
+			m_Renderer->Draw(m_CurrentSkybox->GetIBO());
+			m_CurrentSkybox->Disable();
+
+			// Get a new transform window for the cube
+			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
+
+			// Bind the shader and draw the objects
+			m_Shader->Bind();
+			m_ShadowBuffer->BindDepthMap(2);		/* NOTE: Create a constants file and set a predefined slot for the shadow map */
+			ConfigureShaderForRendering(*m_Shader);
+
+			ter.GetShader()->Bind();
+			ConfigureShaderForRendering(*ter.GetShader());
+
+			m_Shader->Bind();
 			m_Shader->SetUniformMat4f("u_Model", model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
@@ -339,18 +325,134 @@ namespace engine
 			// Render the Cube
 			vao.Bind();
 			ibo.Bind();
-			renderer.Draw(ibo);
+			m_Renderer->Draw(ibo);
+			vao.UnBind();
+			ibo.UnBind();
 
-			renderer3D.Render();
+			RenderScene();
+
+			RenderGui();
 
 			//Update the mouse
 			Mouse::GetMouse()->Update();
 
-			light.Disable();
-
 			//Poll events and swap buffers
 			m_Window->OnUpdate();
 		}
+	}
+
+	void Application::Update()
+	{
+		// Tick the clock every frame to get the delta time
+		Clock::GetClock()->Tick();
+
+		float DeltaTime = Clock::GetClock()->GetDeltaTime();
+
+		// Update the Gui
+		GraphXGui::Update();
+
+		// Update the camera
+		m_Camera->Update(DeltaTime * 1000 * 100);
+
+		if (m_Camera->IsRenderStateDirty())
+		{
+			for (unsigned int i = 0; i < m_Shaders.size(); i++)
+			{
+				Shader* shader = m_Shaders.at(i);
+				if (!shader)
+				{
+					m_Shaders.erase(m_Shaders.begin() + i);
+					continue;
+				}
+				shader->Bind();
+				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
+				shader->SetUniformMat4f("u_View", m_Camera->GetViewMatrix());
+				shader->SetUniformMat4f("u_Projection", m_Camera->GetPerspectiveProjectionMatrix());
+			}
+
+			// Set the state back to rendered
+			m_Camera->SetRenderState(false);
+		}
+		
+		// Update the lights
+		for (unsigned int i = 0; i < m_Lights.size(); i++)
+			m_Lights[i]->Update(DeltaTime);
+
+		// Update the meshes
+		for (unsigned int i = 0; i < m_Objects2D.size(); i++)
+			m_Objects2D[i]->Update(DeltaTime);
+		
+		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+			m_Objects3D[i]->Update(DeltaTime);
+	}
+
+	void Application::CalculateShadows()
+	{
+		// Render the shadow maps
+		m_DepthShader->Bind();
+		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_Lights[1]->GetLightSpaceMatrix());
+		m_ShadowBuffer->Bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		RenderScene(true);
+
+		m_ShadowBuffer->UnBind();
+	}
+
+	void Application::RenderScene(bool IsShadowPhase)
+	{
+		if (IsShadowPhase)
+		{
+			m_Renderer3D->Render(*m_DepthShader);
+		}
+		else
+			m_Renderer3D->Render();
+	}
+
+	void Application::RenderGui()
+	{
+		GraphXGui::DetailsWindow(*m_Objects3D[0]);
+		GraphXGui::LightProperties(*m_Light);
+		GraphXGui::CameraProperties(*m_Camera);
+		GraphXGui::Models();
+
+		GraphXGui::Render();
+	}
+
+	void Application::RenderShadowDebugQuad()
+	{
+		static std::vector<Vertex2D> quadVertices = {
+			{ Vector2(-0.5f, -0.5f), Vector2(0.0f, 0.0f) },	//0
+			{ Vector2( 0.5f, -0.5f), Vector2(1.0f, 0.0f) },	//1
+			{ Vector2( 0.5f,  0.5f), Vector2(1.0f, 1.0f) },	//2
+			{ Vector2(-0.5f,  0.5f), Vector2(0.0f, 1.0f) }	//3
+		};
+
+		static std::vector<unsigned int> quadIndices = {
+			0, 1, 2,
+			0, 2, 3
+		};
+
+		static Shader shader("res/shaders/Basic.shader");
+
+		static Mesh2D QuadMesh(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector2::UnitVector, shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
+
+		static Renderer2D renderer;
+
+		shader.Bind();
+		m_ShadowBuffer->BindDepthMap();
+		shader.SetUniform1i("u_Tex", 0);
+		renderer.Submit(QuadMesh);
+		renderer.Render();
+		shader.UnBind();
+	}
+
+	void Application::ConfigureShaderForRendering(Shader& shader)
+	{
+		shader.SetUniform1i("u_ShadowMap", 2);
+		shader.SetUniform3f("u_LightPos", m_Light->Position);
+		shader.SetUniform4f("u_LightColor", m_Light->Color);
+		shader.SetUniformMat4f("u_LightSpaceMatrix", m_Light->GetLightSpaceMatrix());
 	}
 
 	void Application::OnEvent(Event& e)
@@ -430,7 +532,6 @@ namespace engine
 			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
 		}
 	}
-
 
 #pragma region eventHandlers
 
@@ -542,5 +643,33 @@ namespace engine
 	}
 
 #pragma endregion
+
+	Application::~Application()
+	{
+		GX_ENGINE_INFO("Application: Closing Application.");
+
+		delete m_DaySkybox;
+		delete m_NightSkybox;
+		delete m_ShadowBuffer;
+		delete m_DepthShader;
+
+		for (unsigned int i = 0; i < m_Lights.size(); i++)
+			delete m_Lights[i];
+
+		for (unsigned int i = 0; i < m_Terrain.size(); i++)
+			delete m_Terrain[i];
+
+		for (unsigned int i = 0; i < m_Objects2D.size(); i++)
+			delete m_Objects2D[i];
+
+		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+			delete m_Objects3D[i];
+
+		for (unsigned int i = 0; i < m_Shaders.size(); i++)
+			delete m_Shaders[i];
+
+		delete m_Camera;
+		delete m_Window;
+	}
 
 }

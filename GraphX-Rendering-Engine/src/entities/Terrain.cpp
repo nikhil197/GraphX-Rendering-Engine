@@ -13,8 +13,8 @@
 
 namespace engine
 {
-	Terrain::Terrain(int Width, int Height, float TileSize, const std::vector<std::string>& TexNames)
-		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Height), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames)
+		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
 	{
 		BuildTerrain();
 	
@@ -48,7 +48,7 @@ namespace engine
 				// Calculate the vertices of the terrain
 				vertex.Position = gm::Vector3(x * m_TileSize, -10.0f, -z * m_TileSize);	// TODO: Add the height for the terrain
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
-				vertex.TexCoord = gm::Vector2(x, z);
+				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 
 				// Calculate the indices for the vertices of the terrain
@@ -66,6 +66,15 @@ namespace engine
 				}
 			}
 		}
+	}
+
+	void Terrain::Update(float DeltaTime)
+	{
+
+	}
+
+	void Terrain::Enable(class Shader& shader, const std::string& Name) const
+	{
 	}
 
 	void Terrain::Enable() const
@@ -93,7 +102,6 @@ namespace engine
 			delete m_Textures->at(i);
 		}
 
-		delete m_Shader;
 		delete m_Vertices;
 		delete m_Indices;
 	}

@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Entity.h"
+
 namespace engine
 {
 	class Terrain
+		: public Entity
 	{
 	private:
 		/* 2D Mesh to represent the terrain */
@@ -28,15 +31,19 @@ namespace engine
 
 	public:
 		/* Constructs a new terrain */
-		/* @Param width  - # of tiles in the x - direction */
-		/* @Param height - # of tiles in the negative z - direction */
-		Terrain(int Width, int Height, float TileSize, const std::vector<std::string>& TexNames);
+		/* @Param Width  - # of tiles in the x - direction */
+		/* @Param Depth - # of tiles in the negative z - direction */
+		/* @Param TexNames - Names of the textures to be used for the terrain */
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames);
+
+		/** Entity Interface **/
+		void Update(float DeltaTime) override;
 
 		/* Prepares the terrain for rendering */
 		void Enable() const;
 
 		/* Unbinds the terrain after the rendering */
-		void Disable() const;
+		void Disable() const override;
 
 		/* Returns the mesh of the terrain */
 		const class Mesh3D& GetMesh() const { return *m_Mesh; }
@@ -49,5 +56,7 @@ namespace engine
 	private:
 		/* Builds the terrain */
 		void BuildTerrain();
+		
+		void Enable(class Shader& shader, const std::string& Name = "u_Terrain") const override;
 	};
 }

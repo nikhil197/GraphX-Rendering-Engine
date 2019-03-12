@@ -22,10 +22,19 @@ namespace engine
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
 	}
 
+	void Mesh2D::Update(float DeltaTime)
+	{
+		// Update the model matrix
+		gm::Translation translation(Position);
+		gm::Rotation rotation(Rotation);
+		gm::Scaling scale(gm::Vector3(Scale, 1.0f));
+
+		m_Model = translation * rotation * scale;
+	}
+
 	void Mesh2D::Enable() const
 	{
-		m_VAO->Bind();
-		m_IBO->Bind();
+		BindBuffers();
 
 		m_Shader.Bind();
 		if(Reflectivity > 0)
@@ -48,8 +57,7 @@ namespace engine
 
 	void Mesh2D::Disable() const
 	{
-		m_VAO->UnBind();
-		m_IBO->UnBind();
+		UnBindBuffers();
 
 		// Bind the textures
 		int NumTex = m_Textures.size();
@@ -60,21 +68,24 @@ namespace engine
 		}
 	}
 
+	void Mesh2D::BindBuffers() const
+	{
+		m_VAO->Bind();
+		m_IBO->Bind();
+	}
+
+	void Mesh2D::UnBindBuffers() const
+	{
+		m_VAO->UnBind();
+		m_IBO->UnBind();
+	}
+
 	void Mesh2D::AddTexture(const Texture* texture)
 	{
 		if (texture != nullptr)
 		{
 			m_Textures.push_back(texture);
 		}
-	}
-
-	gm::Matrix4 Mesh2D::GetTransformationMatrix() const
-	{
-		gm::Translation translation(Position);
-		gm::Rotation rotation(Rotation);
-		gm::Scaling scale(gm::Vector3(Scale, 1.0f));
-
-		return translation * rotation * scale;
 	}
 
 	Mesh2D::~Mesh2D()

@@ -39,6 +39,12 @@ namespace engine
 		/* Un binds the depth map of the frame buffer */
 		void UnBindDepthMap() const;
 
+		/* Returns the width of the buffer used for the framebuffer */
+		inline int GetWidth() const { return m_Width; }
+
+		/* Returns the height of the buffer used for the framebuffer */
+		inline int GetHeight() const { return m_Height; }
+
 		~FrameBuffer();
 	};
 }

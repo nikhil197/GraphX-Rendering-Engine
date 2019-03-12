@@ -17,6 +17,8 @@ namespace engine
 
 		// Update the ray
 		m_PickerRay = (WorldCoords - m_Camera.CameraPosition).Normal();
+
+
 	}
 
 	gm::Vector2 MousePicker::ToNormalisedScreenCoordinates(const gm::Vector2& ScreenCoords)

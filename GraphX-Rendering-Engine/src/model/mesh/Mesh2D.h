@@ -48,6 +48,9 @@ namespace engine
 		/* Indices into the vertex buffer */
 		std::vector<unsigned int> m_Indices;
 
+		/* Model matrix for the mesh */
+		gm::Matrix4 m_Model;
+
 	public:
 		/**
 		@param Pos Position of the mesh in the world
@@ -60,11 +63,20 @@ namespace engine
 		*/
 		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color = gm::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
+		/* Updates the status of the Mesh */
+		virtual void Update(float DeltaTime);
+
 		/* Prepares the object to be rendered */
 		virtual void Enable() const;
 
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
+
+		/* Binds the vertex buffer and the index buffer of the mesh */
+		virtual void BindBuffers() const;
+
+		/* UnBinds the vertex buffer and the index buffer of the mesh */
+		virtual void UnBindBuffers() const;
 
 		/* Adds a texture to the mesh */
 		void AddTexture(const class Texture* texture);
@@ -87,8 +99,8 @@ namespace engine
 		/* Returns the indices of the object */
 		inline const std::vector<unsigned int>& GetIndices() const { return m_Indices; }
 
-		/* Returns a 4x4 transformation matrix for the object */
-		gm::Matrix4 GetTransformationMatrix() const;
+		/* Returns the model matrix for the mesh */
+		inline const gm::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		virtual ~Mesh2D();
 	};
