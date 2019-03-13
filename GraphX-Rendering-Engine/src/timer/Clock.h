@@ -32,8 +32,8 @@ namespace engine
 		/* Get the delta time */
 		float GetDeltaTime();
 
-		/* Get time since the start of the timer */
-		float GetTime();
+		/* Get time since the start of the application */
+		float GetEngineTime();
 
 		/* Set a new timer */
 		void SetTimer(Timer* timer);

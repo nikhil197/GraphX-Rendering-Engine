@@ -5,6 +5,19 @@ namespace engine
 	// Macro to bind the class event functions
 #define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
 
+	// Time of the day and Coresponding hours
+	enum DayTime
+	{
+		GX_START = 0,
+		GX_EARLY_MORNING = 3,
+		GX_SUNRISE = 6,
+		GX_MORNING = 9,
+		GX_NOON = 12,
+		GX_AFTERNOON = 15,
+		GX_EVENING = 18,
+		GX_NIGHT = 21
+	};
+
 	class EngineUtil
 	{
 		/* Convertor to convert between normal and wide strings */

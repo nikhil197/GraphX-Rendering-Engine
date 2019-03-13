@@ -26,6 +26,25 @@ namespace engine
 		/* Reference to the player camera */
 		const class Camera& m_Camera;
 
+		/* Binding slot for the cubemap */
+		unsigned int m_BindingSlot;
+
+		/* Current Rotation of the skybox */
+		float m_Rotation;
+
+		/* View matrix required for the skybox */
+		gm::Matrix4 m_View;
+
+		/* Color to blend with */
+		gm::Vector4 m_BlendColor;
+
+	public:
+		/* Speed at which the skybox will rotate */
+		float RotationSpeed;
+
+		/* Blend factor used to blend the cubemap and blend color */
+		float BlendFactor;
+
 	public:
 		/*
 		*	Creates a skybox
@@ -34,7 +53,7 @@ namespace engine
 		* @param FileNames names of the files to be used as textures for the six faces of the skybox. Order of the names should be right, left, top, bottom, front, back faces
 		* @param Camera Reference to the player camera
 		*/
-		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const class Camera& Camera);
+		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const class Camera& Camera, const gm::Vector4& color, float factor = 0.0f, unsigned int slot = 0, float Speed = 1.0f);
 
 		void Update(float DeltaTime) override;
 

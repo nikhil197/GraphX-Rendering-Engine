@@ -21,9 +21,12 @@ uniform samplerCube u_Skybox;
 
 in vec3 v_TexCoord;
 
+uniform vec4 u_BlendColor;
+uniform float u_BlendFactor;
+
 out vec4 fColor;
 
 void main()
 {
-	fColor = texture(u_Skybox, v_TexCoord);
+	fColor = mix(texture(u_Skybox, v_TexCoord), u_BlendColor, u_BlendFactor);
 }

@@ -88,7 +88,7 @@ namespace engine
 			//If the name is invalid
 			if (location == -1)
 			{
-				GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_FileName, Name);
+				//GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_FileName, Name);
 			}
 			// Cache the location
 			else

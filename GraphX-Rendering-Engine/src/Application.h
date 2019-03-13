@@ -16,6 +16,9 @@ namespace engine
 		/* Whether the application is running or not */
 		bool m_IsRunning;
 
+		/* How long will a day last in the engine (in hours) */
+		float m_EngineDayTime;
+
 		/* Collection of all the 2D objects in the scene */
 		std::vector<class Mesh2D*> m_Objects2D;
 
@@ -107,13 +110,16 @@ namespace engine
 #pragma endregion
 
 		/* Updates the scene */
-		void Update();
+		void Update(float DeltaTime);
 
 		/* Configure the shader for rendering by setting the proper uniforms */
 		void ConfigureShaderForRendering(class Shader& shader);
 
 		/* Calculates the shadows */
 		void CalculateShadows();
+
+		/* Renderes the skybox */
+		void RenderSkybox();
 
 		/* Renders the scene */
 		void RenderScene(bool IsShadowPhase = false);
@@ -123,6 +129,10 @@ namespace engine
 
 		/* Renders a quad for debugging shadow map */
 		void RenderShadowDebugQuad();
+
+		/* All the calculations related to the day night cycle */
+		void DayNightCycleCalculations();
+
 	public:
 		Application(std::string& title, int width, int height);
 

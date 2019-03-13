@@ -26,7 +26,7 @@ namespace engine
 		return m_Timer->GetDeltaTime();
 	}
 
-	float Clock::GetTime()
+	float Clock::GetEngineTime()
 	{
 		return m_Timer->GetTime();
 	}

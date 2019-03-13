@@ -56,7 +56,7 @@ namespace engine
 	using namespace gm;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f)
 	{
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
@@ -120,10 +120,10 @@ namespace engine
 		m_Camera = new Camera(gm::Vector3(0.0f, 0.0f, 3.0f), gm::Vector3::ZeroVector, gm::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight());
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera);
-		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera);
+		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera, Vector4(0.5f, 0.5f, 0.5f, 1.0f));
 
-		m_CurrentSkybox = m_DaySkybox;
+		m_CurrentSkybox = m_NightSkybox;
 
 		m_LightSource = new DirectionalLight(Vector3(0, 10.0f, 20.0f), gm::Vector4(1.0f, 1.0f, 0.0f, 1.0f), gm::Vector3(-1.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_LightSource);
@@ -241,7 +241,7 @@ namespace engine
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 
 		int times = 0;
-		float then = Clock::GetClock()->GetTime();
+		float then = Clock::GetClock()->GetEngineTime();
 
 		float rotation = 0.0f;
 		Vector3 translation(10.0f, 10.0f, -10.0f);
@@ -270,9 +270,15 @@ namespace engine
 		{
 			m_Renderer3D->Submit(&cube);
 			m_Renderer3D->Submit(&ter);
+
+			// Tick the clock every frame to get the delta time
+			Clock::GetClock()->Tick();
+
+			float DeltaTime = Clock::GetClock()->GetDeltaTime();
+
 			// Calculate the fps
 			times++;
-			float now = Clock::GetClock()->GetTime();
+			float now = Clock::GetClock()->GetEngineTime();
 			if ((now - then) > 1.0f)
 			{
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
@@ -281,11 +287,11 @@ namespace engine
 			}
 
 			// Update all the elements of the scene
-			Update();
+			Update(DeltaTime * 1000);
 
 			// Model Matrix
 			Translation trans(translation);
-			Rotation rotate(rotation * Clock::GetClock()->GetTime(), axis);
+			Rotation rotate(rotation * Clock::GetClock()->GetEngineTime(), axis);
 			Scaling scale(scaleVec);
 			Matrix4 model = trans * rotate * scale;
 
@@ -299,10 +305,7 @@ namespace engine
 			// Draw the debug quad to show the depth map
 			//RenderShadowDebugQuad();
 
-			// Render the skybox
-			m_CurrentSkybox->Enable();
-			m_Renderer->Draw(m_CurrentSkybox->GetIBO());
-			m_CurrentSkybox->Disable();
+			RenderSkybox();
 
 			// Get a new transform window for the cube
 			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
@@ -341,18 +344,13 @@ namespace engine
 		}
 	}
 
-	void Application::Update()
+	void Application::Update(float DeltaTime)
 	{
-		// Tick the clock every frame to get the delta time
-		Clock::GetClock()->Tick();
-
-		float DeltaTime = Clock::GetClock()->GetDeltaTime();
-
 		// Update the Gui
 		GraphXGui::Update();
 
 		// Update the camera
-		m_Camera->Update(DeltaTime * 1000 * 100);
+		m_Camera->Update(DeltaTime * 100);
 
 		if (m_Camera->IsRenderStateDirty())
 		{
@@ -384,6 +382,10 @@ namespace engine
 		
 		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 			m_Objects3D[i]->Update(DeltaTime);
+
+		DayNightCycleCalculations();
+
+		m_CurrentSkybox->Update(DeltaTime);
 	}
 
 	void Application::CalculateShadows()
@@ -397,6 +399,14 @@ namespace engine
 		RenderScene(true);
 
 		m_ShadowBuffer->UnBind();
+	}
+
+	void Application::RenderSkybox()
+	{
+		// Render the skybox
+		m_CurrentSkybox->Enable();
+		m_Renderer->Draw(m_CurrentSkybox->GetIBO());
+		m_CurrentSkybox->Disable();
 	}
 
 	void Application::RenderScene(bool IsShadowPhase)
@@ -530,6 +540,46 @@ namespace engine
 		if (!handled)
 		{
 			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
+		}
+	}
+
+	void Application::DayNightCycleCalculations()
+	{
+		// Convert the time into hours
+		float EngineTime = Clock::GetClock()->GetEngineTime() / (60.0f * 60.0f);
+		int Days = (int)(EngineTime / m_EngineDayTime);
+		float DayTime = EngineTime - m_EngineDayTime * Days;
+		float TimeOfDay = DayTime * 24.0f / m_EngineDayTime;
+
+		if (TimeOfDay >= DayTime::GX_START && TimeOfDay < DayTime::GX_EARLY_MORNING)
+		{
+			m_CurrentSkybox->BlendFactor = 0.0f;
+		}
+		else if (TimeOfDay >= DayTime::GX_EARLY_MORNING && TimeOfDay < DayTime::GX_SUNRISE)
+		{
+			m_CurrentSkybox->BlendFactor = 0.7f;
+		}
+		else if (TimeOfDay >= DayTime::GX_SUNRISE && TimeOfDay < DayTime::GX_MORNING)
+		{
+			m_CurrentSkybox = m_DaySkybox;
+			m_CurrentSkybox->BlendFactor = 0.6f;
+		}
+		else if (TimeOfDay >= DayTime::GX_MORNING && TimeOfDay < DayTime::GX_AFTERNOON)
+		{
+			m_CurrentSkybox->BlendFactor = 0.0f;
+		}
+		else if (TimeOfDay >= DayTime::GX_AFTERNOON && TimeOfDay < DayTime::GX_EVENING)
+		{
+			m_CurrentSkybox->BlendFactor = 0.3f;
+		}
+		else if (TimeOfDay >= DayTime::GX_EVENING && TimeOfDay < DayTime::GX_NIGHT)
+		{
+			m_CurrentSkybox->BlendFactor = 0.7f;
+		}
+		else
+		{
+			m_CurrentSkybox = m_NightSkybox;
+			m_CurrentSkybox->BlendFactor = 0.2f;
 		}
 	}
 
@@ -671,5 +721,4 @@ namespace engine
 		delete m_Camera;
 		delete m_Window;
 	}
-
 }

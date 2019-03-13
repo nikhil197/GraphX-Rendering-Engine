@@ -14,8 +14,8 @@
 
 namespace engine
 {
-	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Camera& Camera)
-		: m_VAO(new VertexArray()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(new Shader(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Camera(Camera)
+	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Camera& Camera, const gm::Vector4& color, float factor, unsigned int slot, float Speed)
+		: m_VAO(new VertexArray()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(new Shader(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Camera(Camera), m_BindingSlot(slot), m_Rotation(0.0f), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
 	{
 		std::vector<unsigned int> indices = Cube::GetIndices();
 		// Top face
@@ -42,10 +42,22 @@ namespace engine
 		layout.Push<float>(gm::Vector3::Components);
 		
 		m_VAO->AddBuffer(*m_VBO, layout);
+
+		m_View = m_Camera.GetViewMatrix();
+		m_View[0][3] = 0.0f;
+		m_View[1][3] = 0.0f;
+		m_View[2][3] = 0.0f;
+
+		m_Shader->Bind();
+		m_Shader->SetUniform4f("u_BlendColor", m_BlendColor);
 	}
 
 	void Skybox::Update(float DeltaTime)
 	{
+		m_Rotation += RotationSpeed * DeltaTime;
+		gm::MathUtil::ClampAngle(m_Rotation);
+		m_View = m_View * gm::Rotation(m_Rotation, gm::Vector3::YAxis);
+		m_Shader->SetUniform4f("u_BlendColor", m_BlendColor);
 	}
 
 	void Skybox::Enable(class Shader& shader, const std::string& Name) const
@@ -57,20 +69,16 @@ namespace engine
 		GLCall(glDepthMask(GL_FALSE));
 		GLCall(glDisable(GL_CULL_FACE));
 
-		gm::Matrix4 view = m_Camera.GetViewMatrix();
-		view[0][3] = 0.0f;
-		view[1][3] = 0.0f;
-		view[2][3] = 0.0f;
-
 		m_VAO->Bind();
 		m_IBO->Bind();
 		m_Shader->Bind();
-		m_CubeMap->Bind();
+		m_CubeMap->Bind(m_BindingSlot);
 
 		// Set the uniforms
-		m_Shader->SetUniformMat4f("u_View", view);
+		m_Shader->SetUniformMat4f("u_View", m_View);
 		m_Shader->SetUniformMat4f("u_Projection", m_Camera.GetPerspectiveProjectionMatrix());
-		m_Shader->SetUniform1i("u_Skybox", 0);
+		m_Shader->SetUniform1i("u_Skybox", m_BindingSlot);
+		m_Shader->SetUniform1f("u_BlendFactor", BlendFactor);
 	}
 
 	void Skybox::Disable() const
