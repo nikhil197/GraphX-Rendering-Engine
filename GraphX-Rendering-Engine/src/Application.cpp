@@ -121,14 +121,14 @@ namespace engine
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera, Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
 
-		m_LightSource = new DirectionalLight(Vector3(0, 10.0f, 20.0f), gm::Vector4(1.0f, 1.0f, 0.0f, 1.0f), gm::Vector3(-1.0f, -1.0f, 1.0f));
-		m_Lights.emplace_back(m_LightSource);
+		m_SunLight = new DirectionalLight(Vector3(0, 10.0f, 20.0f), gm::Vector4::UnitVector, gm::Vector3(-1.0f, -1.0f, 1.0f));
+		m_Lights.emplace_back(m_SunLight);
 
-		m_Light = new PointLight(Vector3(0, 10.0f, 20.0f), Vector4(1, 1, 1, 1));
+		m_Light = new PointLight(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
 		m_ShadowBuffer = new FrameBuffer(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
@@ -224,7 +224,7 @@ namespace engine
 		vao.UnBind();
 
 		// Create a Texture object
-		Texture tex("res/Textures/Rendering Pipeline.png");
+		Texture tex("res/Textures/stone.jpg");
 		//tex.Bind();
 
 		// Basic Lighting Shader 
@@ -253,8 +253,10 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(&tex);
 
-		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"});
+		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"}, Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
 		m_Shaders.emplace_back(ter.GetShader());
+		m_Objects3D.emplace_back((Mesh3D*)&ter.GetMesh());
+
 		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		m_Objects3D.emplace_back(&cube);
 		cube.bShowDetails = true;
@@ -268,8 +270,8 @@ namespace engine
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
-			m_Renderer3D->Submit(&cube);
-			m_Renderer3D->Submit(&ter);
+			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+				m_Renderer3D->Submit(m_Objects3D[i]);
 
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
@@ -326,11 +328,11 @@ namespace engine
 			m_Shader->SetUniformMat3f("u_Normal", normal);
 
 			// Render the Cube
-			vao.Bind();
+			/*vao.Bind();
 			ibo.Bind();
 			m_Renderer->Draw(ibo);
 			vao.UnBind();
-			ibo.UnBind();
+			ibo.UnBind();*/
 
 			RenderScene();
 
@@ -383,9 +385,9 @@ namespace engine
 		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 			m_Objects3D[i]->Update(DeltaTime);
 
-		DayNightCycleCalculations();
+		DayNightCycleCalculations(DeltaTime);
 
-		m_CurrentSkybox->Update(DeltaTime);
+		m_CurrentSkybox->Update(DeltaTime * 10);
 	}
 
 	void Application::CalculateShadows()
@@ -421,7 +423,7 @@ namespace engine
 
 	void Application::RenderGui()
 	{
-		GraphXGui::DetailsWindow(*m_Objects3D[0]);
+		GraphXGui::DetailsWindow(*m_Objects3D[1]);
 		GraphXGui::LightProperties(*m_Light);
 		GraphXGui::CameraProperties(*m_Camera);
 		GraphXGui::Models();
@@ -463,6 +465,8 @@ namespace engine
 		shader.SetUniform3f("u_LightPos", m_Light->Position);
 		shader.SetUniform4f("u_LightColor", m_Light->Color);
 		shader.SetUniformMat4f("u_LightSpaceMatrix", m_Light->GetLightSpaceMatrix());
+
+		m_SunLight->Enable(shader, "u_LightSource");
 	}
 
 	void Application::OnEvent(Event& e)
@@ -543,7 +547,7 @@ namespace engine
 		}
 	}
 
-	void Application::DayNightCycleCalculations()
+	void Application::DayNightCycleCalculations(float DeltaTime)
 	{
 		// Convert the time into hours
 		float EngineTime = Clock::GetClock()->GetEngineTime() / (60.0f * 60.0f);
@@ -557,30 +561,47 @@ namespace engine
 		}
 		else if (TimeOfDay >= DayTime::GX_EARLY_MORNING && TimeOfDay < DayTime::GX_SUNRISE)
 		{
-			m_CurrentSkybox->BlendFactor = 0.7f;
+			TimeOfDay -= DayTime::GX_EARLY_MORNING;
+			m_CurrentSkybox->BlendFactor = 0.5f;
 		}
 		else if (TimeOfDay >= DayTime::GX_SUNRISE && TimeOfDay < DayTime::GX_MORNING)
 		{
+			TimeOfDay = DayTime::GX_MORNING - TimeOfDay;
 			m_CurrentSkybox = m_DaySkybox;
+			m_SunLight->Color = gm::Vector4(0.5f, 0.5f, 0.0f, 1.0f);
 			m_CurrentSkybox->BlendFactor = 0.6f;
 		}
 		else if (TimeOfDay >= DayTime::GX_MORNING && TimeOfDay < DayTime::GX_AFTERNOON)
 		{
+			TimeOfDay = DayTime::GX_AFTERNOON - TimeOfDay;
 			m_CurrentSkybox->BlendFactor = 0.0f;
 		}
 		else if (TimeOfDay >= DayTime::GX_AFTERNOON && TimeOfDay < DayTime::GX_EVENING)
 		{
+			TimeOfDay -= DayTime::GX_AFTERNOON;
 			m_CurrentSkybox->BlendFactor = 0.3f;
 		}
 		else if (TimeOfDay >= DayTime::GX_EVENING && TimeOfDay < DayTime::GX_NIGHT)
 		{
+			TimeOfDay -= DayTime::GX_EVENING;
 			m_CurrentSkybox->BlendFactor = 0.7f;
 		}
 		else
 		{
+			TimeOfDay = DayTime::GX_NIGHT - TimeOfDay;
 			m_CurrentSkybox = m_NightSkybox;
+			m_SunLight->Color = gm::Vector4::UnitVector;
 			m_CurrentSkybox->BlendFactor = 0.2f;
 		}
+
+		if (TimeOfDay > 0.0f)
+		{
+			m_CurrentSkybox->BlendFactor *= (TimeOfDay / 3.0f);
+		}
+
+		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
+		gm::Rotation rotation(angle, gm::Vector3::YAxis);
+		m_SunLight->Direction = gm::Vector3(rotation * gm::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
 #pragma region eventHandlers

@@ -41,7 +41,7 @@ namespace engine
 		class Mesh3D* m_SelectedObject3D;
 
 		/* Main light source for the scene */
-		class DirectionalLight* m_LightSource;
+		class DirectionalLight* m_SunLight;
 
 		/* Depth Frame buffer for shadow calculation */
 		class FrameBuffer* m_ShadowBuffer;
@@ -131,7 +131,7 @@ namespace engine
 		void RenderShadowDebugQuad();
 
 		/* All the calculations related to the day night cycle */
-		void DayNightCycleCalculations();
+		void DayNightCycleCalculations(float DeltaTime);
 
 	public:
 		Application(std::string& title, int width, int height);

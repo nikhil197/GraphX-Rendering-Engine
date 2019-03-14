@@ -13,8 +13,8 @@
 
 namespace engine
 {
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames)
-		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl)
+		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr), Position(Pos), Scale(Scl)
 	{
 		BuildTerrain();
 	
@@ -30,7 +30,7 @@ namespace engine
 		}
 		
 		if (m_Textures && m_Vertices && m_Indices)
-			m_Mesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, *m_Textures, *m_Vertices, *m_Indices, gm::Vector4::ZeroVector, -1.0f, -1.0f);
+			m_Mesh = new Mesh3D(Position, gm::Vector3::ZeroVector, gm::Vector3(Scale.x, 1.0f, Scale.y), *m_Shader, *m_Textures, *m_Vertices, *m_Indices, gm::Vector4::ZeroVector, -1.0f, -1.0f);
 		else
 			GX_ENGINE_ERROR("Error while building the terrain");
 	}
@@ -46,7 +46,7 @@ namespace engine
 			for (int x = 0; x < m_Width; x++)
 			{
 				// Calculate the vertices of the terrain
-				vertex.Position = gm::Vector3(x * m_TileSize, -10.0f, -z * m_TileSize);	// TODO: Add the height for the terrain
+				vertex.Position = gm::Vector3(x * m_TileSize, Position.y, -z * m_TileSize);	// TODO: Add the height for the terrain
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);

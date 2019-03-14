@@ -56,8 +56,7 @@ namespace engine
 	{
 		m_Rotation += RotationSpeed * DeltaTime;
 		gm::MathUtil::ClampAngle(m_Rotation);
-		m_View = m_View * gm::Rotation(m_Rotation, gm::Vector3::YAxis);
-		m_Shader->SetUniform4f("u_BlendColor", m_BlendColor);
+		m_View = m_View * gm::Rotation(RotationSpeed * DeltaTime, gm::Vector3::YAxis);
 	}
 
 	void Skybox::Enable(class Shader& shader, const std::string& Name) const

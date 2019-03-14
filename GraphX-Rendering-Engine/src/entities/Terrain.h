@@ -30,11 +30,17 @@ namespace engine
 		std::vector<const class Texture*> *m_Textures;
 
 	public:
+		/* Position of the terrain */
+		gm::Vector3 Position;
+
+		/* Scale of the terrain (x & z direction) */
+		gm::Vector2 Scale;
+
 		/* Constructs a new terrain */
 		/* @Param Width  - # of tiles in the x - direction */
 		/* @Param Depth - # of tiles in the negative z - direction */
 		/* @Param TexNames - Names of the textures to be used for the terrain */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames);
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;

@@ -18,7 +18,7 @@ namespace engine
 	void Light::Enable(Shader& shader, const std::string& LightName) const
 	{
 		shader.SetUniform3f((LightName + ".Position").c_str(), Position);
-		shader.SetUniform3f((LightName + ".Color").c_str(), Color);
+		shader.SetUniform4f((LightName + ".Color").c_str(), Color);
 		shader.SetUniform1f((LightName + ".Intensity").c_str(), Intensity);
 
 		SetLightSpaceMatrix(shader, LightName);

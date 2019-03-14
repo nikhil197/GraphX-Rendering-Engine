@@ -45,6 +45,17 @@ uniform vec4 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
 
+/* Structure for the ambient light source */
+struct DirectionalLight
+{
+	vec4 Color;
+	vec3 Direction;
+	float Intensity;
+};
+
+/* Ambient Light (Represents Sun) */
+uniform DirectionalLight u_LightSource = DirectionalLight(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), 1.0f);
+
 uniform float u_AmbientStrength;
 uniform float u_Shininess;
 uniform float u_Reflectivity;
@@ -70,16 +81,30 @@ void main()
 	// Normalize the light vector and the normal vector
 	vec3 UnitNormal = normalize(v_Data.Normal);
 
-	// Ambient Light Color
-	vec4 ambientColor = u_AmbientStrength * u_LightColor;
+	// Calculate Ambient Color
+	vec4 AmbientColor = u_AmbientStrength * u_LightSource.Color;
 
+	/**** Color due to the Global Light Source ****/
+	// Calculate Diffuse Color
+	vec3 LightDir = normalize(-u_LightSource.Direction);
+	float brightness = max(0.0f, dot(UnitNormal, LightDir));
+	vec4 DiffuseColor_Global = u_LightSource.Color * brightness;
+
+	// Calculate the specular color
+	vec3 ViewDir = normalize(u_CameraPos - v_Data.WorldPosition);
+	vec3 ReflectedDir = reflect(-LightDir, UnitNormal);
+	float Shine = pow(max(dot(ReflectedDir, ViewDir), 0.0f), u_Shininess);
+	vec4 SpecularColor_Global = u_LightSource.Color * Shine * u_Reflectivity;
+
+
+	/**** Color due to the Point Lights ****/
 	// Diffuse Light Color
 	vec3 UnitLightVec = normalize(u_LightPos - v_Data.WorldPosition);
-	float brightness = max(0.0f, dot(UnitNormal, UnitLightVec));
+	brightness = max(0.0f, dot(UnitNormal, UnitLightVec));
 	vec4 diffuseColor = u_LightColor * brightness;
 
 	// Specular Light Color
-	vec3 ViewDir = normalize(u_CameraPos - v_Data.WorldPosition);
+	ViewDir = normalize(u_CameraPos - v_Data.WorldPosition);
 	vec3 ReflectedLightDir = reflect(-UnitLightVec, UnitNormal);
 	float shine = pow(max(dot(ReflectedLightDir, ViewDir), 0.0), u_Shininess);
 	vec4 specularColor = shine * u_Reflectivity * u_LightColor;
@@ -88,5 +113,5 @@ void main()
 	float Shadow = ShadowCalculation(v_Data.LightSpacePos);
 
 	vec4 texColor = texture(u_Texture0, v_Data.TexCoord);
-	fColor = (ambientColor + (1.0f - Shadow) * (diffuseColor + specularColor)) * texColor;
+	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + diffuseColor + specularColor)) * texColor;
 }
