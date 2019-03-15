@@ -20,6 +20,14 @@ namespace engine
 
 	class EngineUtil
 	{
+
+	private:
+		/* Random device used to generate random values */
+		static std::random_device s_RandDevice;
+
+		/* Random value generator */
+		static std::mt19937 s_RandNumGenerator;
+
 		/* Convertor to convert between normal and wide strings */
 		static std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>> s_StringConvertor;
 
@@ -29,5 +37,8 @@ namespace engine
 
 		/* Returns a wide string from the ByteString */
 		static std::wstring ToWideString(const std::string& ByteString);
+
+		/* Returns a random float value */
+		static double GetRandomValue();
 	};
 }

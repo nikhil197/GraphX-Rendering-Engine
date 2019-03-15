@@ -10,6 +10,7 @@
 #include <iostream>
 #include <chrono>
 #include <memory>
+#include <random>
 
 /* STL */
 #include <vector>

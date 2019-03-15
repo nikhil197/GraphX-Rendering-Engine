@@ -67,6 +67,9 @@ namespace engine
 		/* Simple renderer to render objects like skybox */
 		class SimpleRenderer* m_Renderer;
 
+		/* To handle all the particles generated */
+		class ParticleManager* m_ParticlesManager;
+
 		class Shader* m_Shader;
 
 		class PointLight* m_Light;

@@ -25,6 +25,9 @@
 #include "Entities/Camera.h"
 #include "Entities/Skybox.h"
 #include "Entities/Terrain.h"
+#include "Entities/Particles/Particle.h"
+#include "Entities/Particles/ParticleManager.h"
+#include "Entities/Particles/ParticleSystem.h"
 
 #include "Window.h"
 #include "Timer/Clock.h"
@@ -136,6 +139,8 @@ namespace engine
 
 		m_Renderer3D = new Renderer3D();
 		m_Renderer = new SimpleRenderer();
+
+		m_ParticlesManager = new ParticleManager(*m_Camera);
 	}
 
 	void Application::Run()
@@ -267,6 +272,8 @@ namespace engine
 		ter.GetShader()->SetUniform1f("u_Shininess", 256.0f);
 		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
+		ParticleSystem particleSys(*m_ParticlesManager, 50.0f, 2.0f, 0.5f, 4.0f, 1.0f);
+
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
@@ -287,6 +294,8 @@ namespace engine
 				then = now;
 				times = 0;
 			}
+
+			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime * 10000.0f);
 
 			// Update all the elements of the scene
 			Update(DeltaTime * 1000);
@@ -336,6 +345,8 @@ namespace engine
 
 			RenderScene();
 
+			m_ParticlesManager->RenderParticles();
+
 			RenderGui();
 
 			//Update the mouse
@@ -384,6 +395,8 @@ namespace engine
 		
 		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 			m_Objects3D[i]->Update(DeltaTime);
+
+		m_ParticlesManager->Update(DeltaTime);
 
 		DayNightCycleCalculations(DeltaTime);
 

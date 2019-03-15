@@ -1,0 +1,38 @@
+#include "pch.h"
+#include "ParticleSystem.h"
+
+#include "ParticleManager.h"
+#include "Utilities/EngineUtil.h"
+
+namespace engine
+{
+	ParticleSystem::ParticleSystem(ParticleManager& Manager, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
+		: m_Manager(Manager), m_ParticlesPerSec(ParticlesPerSec), m_Speed(Speed), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Scale(Scale), m_SpeedDeviation(SpeedDeviation), m_ScaleDeviation(ScaleDeviation), m_LifeSpanDeviation(LifeSpanDeviation), m_GravityEffectDeviation(GravityEffectDeviation)
+	{
+	}
+
+	void ParticleSystem::SpawnParticles(const gm::Vector3& SpawnLocation, float DeltaTime)
+	{
+		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
+		for (int i = 0; i < ParticlesCount; i++)
+		{
+			Particle particle = EmitParticle(SpawnLocation);
+			m_Manager.AddParticle(particle);
+		}
+	}
+
+	Particle ParticleSystem::EmitParticle(const gm::Vector3& SpawnLocation)
+	{
+		float LifeSpan = GenerateRandomValue(m_LifeSpan, m_LifeSpanDeviation);
+		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
+		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
+		gm::Vector3 Velocity = gm::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		return Particle(SpawnLocation, Velocity, LifeSpan, 0, Scale, GravityEffect);
+	}
+
+	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)
+	{
+		float Offset = 0.0f;
+		return Average + Offset;
+	}
+}
