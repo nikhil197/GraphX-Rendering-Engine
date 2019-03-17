@@ -27,11 +27,7 @@ namespace engine
 
 	double EngineUtil::GetRandomValue(unsigned int x, unsigned int y, unsigned int SeedValue)
 	{
-		if (SeedValue == 0)
-			s_RandNumGenerator.seed(x * y);
-		else
-			s_RandNumGenerator.seed(SeedValue);
-
+		s_RandNumGenerator.seed(x * 65655 + y * 43434 + SeedValue);
 		return std::generate_canonical<double, 10>(s_RandNumGenerator);
 	}
 }
