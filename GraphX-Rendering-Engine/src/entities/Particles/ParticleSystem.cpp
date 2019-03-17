@@ -3,11 +3,12 @@
 
 #include "ParticleManager.h"
 #include "Utilities/EngineUtil.h"
+#include "Textures/Texture.h"
 
 namespace engine
 {
-	ParticleSystem::ParticleSystem(ParticleManager& Manager, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
-		: m_Manager(Manager), m_ParticlesPerSec(ParticlesPerSec), m_Speed(Speed), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Scale(Scale), m_SpeedDeviation(SpeedDeviation), m_ScaleDeviation(ScaleDeviation), m_LifeSpanDeviation(LifeSpanDeviation), m_GravityEffectDeviation(GravityEffectDeviation)
+	ParticleSystem::ParticleSystem(ParticleManager& Manager, const class Texture& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
+		: m_Manager(Manager), m_Texture(ParticleTexture), m_ParticlesPerSec(ParticlesPerSec), m_Speed(Speed), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Scale(Scale), m_SpeedDeviation(SpeedDeviation), m_ScaleDeviation(ScaleDeviation), m_LifeSpanDeviation(LifeSpanDeviation), m_GravityEffectDeviation(GravityEffectDeviation)
 	{
 	}
 
@@ -16,7 +17,7 @@ namespace engine
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
 		for (int i = 0; i < ParticlesCount; i++)
 		{
-			Particle particle = EmitParticle(SpawnLocation);
+			Particle particle(EmitParticle(SpawnLocation));
 			m_Manager.AddParticle(particle);
 		}
 	}
@@ -27,7 +28,7 @@ namespace engine
 		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
 		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
 		gm::Vector3 Velocity = gm::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
-		return Particle(SpawnLocation, Velocity, LifeSpan, 0, Scale, GravityEffect);
+		return Particle(SpawnLocation, Velocity, LifeSpan, 0.0f, m_Texture, Scale, GravityEffect);
 	}
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)

@@ -9,6 +9,9 @@ namespace engine
 		/* To handle all the generated particles */
 		class ParticleManager& m_Manager;
 
+		/* Texture used for the particles of this particle system */
+		const class Texture& m_Texture;
+
 		/* Particles emitted per second */
 		float m_ParticlesPerSec;
 
@@ -37,7 +40,7 @@ namespace engine
 		float m_GravityEffectDeviation;
 
 	public:
-		ParticleSystem(class ParticleManager& Manager, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale,
+		ParticleSystem(class ParticleManager& Manager, const class Texture& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale,
 			float SpeedDeviation = 0.0f, float LifeSpanDeviation = 0.0f, float ScaleDeviation = 0.0f, float GravityEffectDeviation = 0.0f);
 
 		/* Spawn Particles at the specified location */

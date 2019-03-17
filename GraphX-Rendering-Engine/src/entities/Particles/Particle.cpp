@@ -3,6 +3,7 @@
 
 #include "Utilities/EngineConstants.h"
 #include "Shaders/Shader.h"
+#include "Textures/Texture.h"
 
 namespace engine
 {
@@ -12,8 +13,8 @@ namespace engine
 		return s_Quad;
 	}
 
-	Particle::Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, float Scale, float GravityEffect)
-		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f)
+	Particle::Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Tex, float Scale, float GravityEffect)
+		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f), m_Texture(&Tex)
 	{
 	}
 
@@ -28,12 +29,15 @@ namespace engine
 
 	void Particle::Enable(Shader& shader, const gm::Matrix4& ViewMatrix)
 	{
+		m_Texture->Bind();
+		shader.SetUniform1i("u_ParticleTexture", 0);
 		m_Model = gm::Translation(m_Position);
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
 				m_Model[i][j] = ViewMatrix[j][i];
 		m_Model = gm::Scaling(m_Scale) * gm::Rotation(m_Rotation, gm::Vector3::ZAxis) * m_Model;
 		shader.SetUniformMat4f("u_Model", m_Model);
+		
 	}
 
 	void Particle::Disable() const
