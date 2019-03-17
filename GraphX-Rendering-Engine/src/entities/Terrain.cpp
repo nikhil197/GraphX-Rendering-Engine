@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "Terrain.h"
-
+#include "Utilities/EngineUtil.h"
 #include "Model/Mesh/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
-
 #include "Shaders/Shader.h"
 #include "Textures/Texture.h"
 
@@ -11,8 +10,10 @@
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
 
+
 namespace engine
-{
+{   
+	double Terrain::s_Amplitude = 5.0;
 	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl)
 		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr), Position(Pos), Scale(Scl)
 	{
@@ -36,17 +37,18 @@ namespace engine
 	}
 
 	void Terrain::BuildTerrain()
-	{
+	{  
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
-
 		Vertex3D vertex;
 		for (int z = 0; z < m_Depth; z++)
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
+				
 				// Calculate the vertices of the terrain
-				vertex.Position = gm::Vector3(x * m_TileSize, Position.y, -z * m_TileSize);	// TODO: Add the height for the terrain
+				double yCoord = GetYCoords(x, z);
+				vertex.Position = gm::Vector3(x * m_TileSize, yCoord, -z * m_TileSize);	// TODO: Add the height for the terrain
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
@@ -67,6 +69,50 @@ namespace engine
 			}
 		}
 	}
+	
+
+	double Terrain::GetYCoords(int x, int z)
+	{
+		float total = InterpolatedNoise(x/8.0 , z/ 8.0 )*s_Amplitude;
+		total += InterpolatedNoise(x / 4.0 , z / 4.0 )*s_Amplitude/ 3.0 ;
+		total += InterpolatedNoise(x / 2.0 , z / 2.0 )*s_Amplitude / 9.0 ;
+		return total;
+	}
+
+	double Terrain::SmoothNoise(int x, int z)
+	{
+		unsigned int seed = 7436767332;
+		double corners = EngineUtil::GetRandomValue(x - 1, z - 1, seed) + EngineUtil::GetRandomValue(x + 1, z - 1, seed) + EngineUtil::GetRandomValue(x - 1, z + 1, seed) + EngineUtil::GetRandomValue(x + 1, z + 1, seed) / 16.0;
+	    double sides = EngineUtil::GetRandomValue(x - 1, z , seed) + EngineUtil::GetRandomValue(x + 1, z , seed) + EngineUtil::GetRandomValue(x , z + 1, seed) + EngineUtil::GetRandomValue(x , z - 1, seed) / 8.0;
+		double center = EngineUtil::GetRandomValue(x, z, seed)/4.0;
+		return corners + sides + center;
+	}
+	double Terrain::Interpolate(double a, double b, double blend)
+	{
+		double theta = blend * PI;
+		double f = (1.0 - std::cos(theta)) * 0.5;
+		return a * (1.0 - f) + b * f;
+	}
+
+	double Terrain::InterpolatedNoise(double x, double z)
+	{
+		int intX = (int)x;
+		int intZ = (int)z;
+		double fracX = x - intX;
+		double fracZ = z - intZ; 
+
+		double v1 = SmoothNoise(intX, intZ);
+		double v2 = SmoothNoise(intX + 1, intZ);
+		double v3 = SmoothNoise(intX, intZ + 1);
+		double v4 = SmoothNoise(intX + 1 , intZ + 1);
+
+		double i1 = Interpolate(v1, v2, fracX);
+		double i2 = Interpolate(v3, v4, fracX);
+		return Interpolate(i1, i2, fracZ);
+
+	}
+
+
 
 	void Terrain::Update(float DeltaTime)
 	{
