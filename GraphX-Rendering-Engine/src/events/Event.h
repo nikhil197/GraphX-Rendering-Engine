@@ -32,7 +32,9 @@ namespace engine
 
 		/* GUI Events */
 		GX_ADD_TEXTURE,
-		GX_LOAD_MODEL
+		GX_LOAD_MODEL,
+		GX_CREATE_TERRAIN,
+		GX_ENTITY_CHANGED
 	};
 
 	// Not a scoped enum because it doesn't represent any actual thing in the event, unlike event type

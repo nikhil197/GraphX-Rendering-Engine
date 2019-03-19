@@ -33,4 +33,52 @@ namespace engine
 		EVENT_CLASS_TYPE(GX_LOAD_MODEL)
 		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
 	};
+
+	class CreateTerrainEvent
+		: public Event
+	{
+	private:
+		/* Terrain Object */
+		class Terrain* m_Terrain;
+	public:
+		CreateTerrainEvent(Terrain* terrain)
+			: m_Terrain(terrain)
+		{}
+
+		/* Returns the terrain */
+		inline class Terrain* GetTerrain() const { return m_Terrain; }
+
+		EVENT_CLASS_TYPE(GX_CREATE_TERRAIN)
+		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+	};
+
+	/* Entity changed events */
+	class EntityChangedEvent
+		: public Event
+	{
+	protected:
+		const class Entity& m_Entity;
+
+	public:
+		EntityChangedEvent(const Entity& e)
+			: m_Entity(e)
+		{}
+
+		/* Returns the entity */
+		virtual const class Entity& GetEntity() const = 0;
+
+		EVENT_CLASS_TYPE(GX_ENTITY_CHANGED)
+		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+	};
+
+	class CameraFOVChangedEvent
+		: public EntityChangedEvent
+	{
+	public:
+		CameraFOVChangedEvent(const Camera& cam)
+			: EntityChangedEvent(cam)
+		{}
+
+		virtual const class Camera& GetEntity() const override { return *((Camera*)&m_Entity); }
+	};
 }

@@ -141,6 +141,8 @@ namespace engine
 		m_Renderer = new SimpleRenderer();
 
 		m_ParticlesManager = new ParticleManager(*m_Camera);
+
+		m_DefaultTexture  = new Texture("res/Textures/stone.jpg");
 	}
 
 	void Application::Run()
@@ -228,10 +230,6 @@ namespace engine
 		ibo.UnBind();
 		vao.UnBind();
 
-		// Create a Texture object
-		Texture tex("res/Textures/stone.jpg");
-		//tex.Bind();
-
 		// Basic Lighting Shader 
 		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
 		m_Shaders.push_back(m_Shader);
@@ -256,7 +254,7 @@ namespace engine
 		bool bShowMenu = true;
 
 		std::vector<const Texture*> textures(0);
-		textures.push_back(&tex);
+		textures.push_back(m_DefaultTexture);
 
 		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"}, Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
 		m_Shaders.emplace_back(ter.GetShader());
@@ -385,7 +383,7 @@ namespace engine
 			}
 
 			// Set the state back to rendered
-			m_Camera->SetRenderState(false);
+			m_Camera->SetRenderStateDirty(false);
 		}
 		
 		// Update the lights
@@ -559,6 +557,10 @@ namespace engine
 			{
 				handled = dispatcher.Dispatch<AddModelEvent>(BIND_EVENT_FUNC(Application::OnAddModel));
 			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<CameraFOVChangedEvent>(BIND_EVENT_FUNC(Application::OnCameraFOVChanged));
+			}
 		}
 		
 		// Raise an error if the event is not handled
@@ -718,19 +720,27 @@ namespace engine
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			Cube cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, std::vector<const Texture*>());
-			m_Objects3D.push_back(&cube);
+			m_Objects3D.emplace_back(new Cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, {m_DefaultTexture}));
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)
 		{
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			std::string ModelName = EngineUtil::ToByteString(dialog.GetAbsolutePath());
-			Model3D model(ModelName, *m_Shader);
+			Model3D *model = new Model3D(EngineUtil::ToByteString(dialog.GetAbsolutePath()), *m_Shader);
+			std::vector<Mesh3D*> meshes = model->GetMeshes();
+			
+			for(unsigned int i = 0; i < meshes.size(); i++)
+				m_Objects3D.emplace_back(meshes[i]);
 		}
 		// Add more model types once added
 
+		return true;
+	}
+
+	bool Application::OnCameraFOVChanged(class CameraFOVChangedEvent& e)
+	{
+		m_Camera->SetRenderStateDirty(true);
 		return true;
 	}
 

@@ -82,7 +82,14 @@ namespace engine
 
 			if (ImGui::Button("Create Terrain", ImVec2(120, 0))) 
 			{
-				//Terrain terrain(x, z, tileSize, textures, postion, scale);
+				if (x > 0 && z > 0 && tileSize > 0.0f)
+				{
+					if (s_GuiEventCallback)
+					{
+						CreateTerrainEvent e(new Terrain(x, z, tileSize, textures, postion, scale));
+						s_GuiEventCallback(e);
+					}
+				}
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -95,38 +102,6 @@ namespace engine
 
 			ImGui::EndPopup();
 		}
-
-
-		//if (ImGui::Button("Add Terrain"))
-		//{
-		//	ImGui::BeginPopupModal("Terrain Modal", (bool*)true);
-		//	//ImGui::Begin("Terrain", (bool*)true);
-		//	gm::Vector3 postion;
-		//	gm::Vector2 scale(1);
-		//	int x = 0, z = 0;
-		//	float tileSize = 0.0f;
-		//	ImGui::Text("Terrain Attributes");
-		//	ImGui::InputInt("No. of Tiles in X", &x);
-		//	ImGui::InputInt("No. of Tiles in Z", &z);
-		//	ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
-		//	if (ImGui::Button("Add Texture"))
-		//	{
-
-		//	}
-		//	ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
-		//	ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
-		//	if (ImGui::Button("Create Terrain"))
-		//	{
-
-		//	}
-		//	ImGui::SameLine();
-		//	if (ImGui::Button("Cancel"))
-		//	{
-
-		//	}
-
-		//	ImGui::End();
-		//}
 	}
 
 	void GraphXGui::TransformWindow(std::string Name, gm::Vector3& translation, gm::Vector3& scale, float& rotation, const gm::Vector3& axis, bool& bShowMenu)
@@ -168,7 +143,6 @@ namespace engine
 			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
 			ImGui::Spacing();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Transformations");
-			//ImGui::Text("Transformations");
 			ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f);
 			ImGui::DragFloat3("Rotation", (float*)&mesh.Rotation, 1.0f, 0.0f, 359.f);
 			ImGui::DragFloat3("Scaling", (float*)&mesh.Scale.x, 1.0f, 0.0001f, 10.f);
@@ -220,7 +194,14 @@ namespace engine
 	{
 		ImGui::Begin("Camera Properties", (bool*)true);
 		ImGui::DragFloat("Camera Speed", (float*)&camera.CameraSpeed, 1.0f, 0.0f, 100.0f);
-		ImGui::DragFloat("Field Of View", (float*)&camera.FieldOfView, 1.0f, 10.0f, 100.0f);
+		if (ImGui::DragFloat("Field Of View", (float*)&camera.FieldOfView, 1.0f, 10.0f, 100.0f))
+		{
+			if (s_GuiEventCallback)
+			{
+				CameraFOVChangedEvent e(camera);
+				s_GuiEventCallback(e);
+			}
+		}
 		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 1.0f, 0.1f, 1.0f);
 		ImGui::End();
 	}
@@ -250,8 +231,9 @@ namespace engine
 		if (true)
 		{
 			ImGui::Begin("Terrain Details", (bool*)true);
-			ImGui::DragFloat3("Position", &terrain.Position.x, 1.0f, -1000.0f, 1000.0f);
-			ImGui::DragFloat2("Scale in X & Z", &terrain.Scale.x, 1.0f, 0.0001f, 10.f);
+			ImGui::DragFloat3("Position", (float*)&terrain.GetMesh().Position.x, 1.0f, -1000.0f, 1000.0f);
+			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain.GetMesh().Scale.x, 1.0f, 0.0001f, 10.f);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Note: Scaling in y - direction is not advised ");
 			ImGui::End();
 		}
 	}

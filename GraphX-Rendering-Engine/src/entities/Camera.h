@@ -78,7 +78,7 @@ namespace engine
 		/* Returns whether the camera has been updated or not */
 		inline bool IsRenderStateDirty() const { return m_RenderStateDirty; }
 
-		inline void SetRenderState(bool bNewRenderState) { m_RenderStateDirty = bNewRenderState; }
+		inline void SetRenderStateDirty(bool bNewRenderState) { m_RenderStateDirty = bNewRenderState; }
 
 		/* Returns a view matrix for the camera */
 		inline gm::Matrix4 GetViewMatrix() const { return gm::View::LookAt(CameraPosition, m_CameraLookAtPoint, m_WorldUpAxis); }

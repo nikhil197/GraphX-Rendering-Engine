@@ -74,6 +74,8 @@ namespace engine
 
 		class PointLight* m_Light;
 
+		class Texture* m_DefaultTexture;
+
 	private:
 		/* Callback for events */
 		void OnEvent(class Event& e);
@@ -109,6 +111,8 @@ namespace engine
 		bool OnAddTexture(class AddTextureEvent& e);
 
 		bool OnAddModel(class AddModelEvent& e);
+
+		bool OnCameraFOVChanged(class CameraFOVChangedEvent& e);
 
 #pragma endregion
 
