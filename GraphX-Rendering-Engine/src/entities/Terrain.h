@@ -29,6 +29,8 @@ namespace engine
 		/* Textures used for the terrain */
 		std::vector<const class Texture*> *m_Textures;
 
+		double static s_Amplitude;
+
 	public:
 		/* Position of the terrain */
 		gm::Vector3 Position;
@@ -64,5 +66,13 @@ namespace engine
 		void BuildTerrain();
 		
 		void Enable(class Shader& shader, const std::string& Name = "u_Terrain") const override;
+
+		double GetYCoords(int x, int y);
+	    
+		double SmoothNoise(int x, int y);
+
+		double Interpolate(double a, double b, double blend);
+
+		double InterpolatedNoise(double x, double y);
 	};
 }

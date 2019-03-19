@@ -34,10 +34,13 @@ namespace engine
 		/* Whether the texture will be used for tiling or not */
 		bool m_TileTexture;
 
+		/* Number of rows in texture atlas */
+		unsigned int m_RowsInTexAtlas;
+
 	public:
 		/* Constructor */
 		/* @Param TileTexture - Whether the texture will be used for tilling or not */
-		Texture(const std::string& filePath, bool TileTexture = false);
+		Texture(const std::string& filePath, bool TileTexture = false, unsigned int RowsInTexAtlas = 1);
 
 		/* Constructor for the framebuffer textures */
 		Texture(int width, int height, FramebufferAttachmentType texType);
@@ -59,6 +62,9 @@ namespace engine
 
 		/* Returns whether the texture will be used for tiling */
 		inline bool IsTileTexture() const { return m_TileTexture; }
+
+		/* Returns the number of rows in the texture atlas */
+		inline unsigned int GetRowsInTexAtlas() const { return m_RowsInTexAtlas; }
 
 		/* Destroy the texture */
 		~Texture();

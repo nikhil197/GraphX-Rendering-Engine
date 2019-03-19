@@ -5,8 +5,8 @@
 
 namespace engine
 {
-	Texture::Texture(const std::string& filePath, bool TileTexture)
-		: m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0), m_TileTexture(TileTexture)
+	Texture::Texture(const std::string& filePath, bool TileTexture, unsigned int RowsInTexAtlas)
+		: m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
 	{
 		// To flip the texture
 		stbi_set_flip_vertically_on_load(1);
@@ -29,7 +29,7 @@ namespace engine
 	}
 
 	Texture::Texture(int width, int height, FramebufferAttachmentType texType)
-		: m_RendererID(0), m_FilePath(std::string()), m_LocalBuffer(nullptr), m_Width(width), m_Height(height), m_BPP(0), m_TileTexture(false)
+		: m_RendererID(0), m_FilePath(std::string()), m_LocalBuffer(nullptr), m_Width(width), m_Height(height), m_BPP(0), m_TileTexture(false), m_RowsInTexAtlas(1)
 	{
 		GLCall(glGenTextures(1, &m_RendererID));
 		GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));

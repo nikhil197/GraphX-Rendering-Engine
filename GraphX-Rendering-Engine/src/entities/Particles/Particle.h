@@ -36,13 +36,17 @@ namespace engine
 
 		/* Model matrix for the particle */
 		gm::Matrix4 m_Model;
+
+		/* Texture (Atlas) used for the particle */
+		const class Texture* m_Texture;
+
 	public:
-		Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, float Scale = 1.0f, float GravityEffect = 1.0f);
+		Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Entity Interface */
 		void Update(float DeltaTime) override;
 
-		void Enable(Shader& shader, const gm::Matrix4& ViewMatrix);
+		void Enable(class Shader& shader, const gm::Matrix4& ViewMatrix);
 
 		virtual void Disable() const override;
 
@@ -55,7 +59,10 @@ namespace engine
 		/* Returns the scale of the particle */
 		inline float GetScale() const { return m_Scale; }
 
+		/* Returns the texture(atlas) of the particle */
+		inline const class Texture& GetTexture() const { return *m_Texture; }
+
 	private:
-		void Enable(class Shader& shader, const std::string& EntityNameInShader) const override;
+		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader) const override;
 	};
 }

@@ -53,6 +53,11 @@ namespace engine
 		GLCall(glDepthMask(false));	// Don't render the particles to the depth buffer
 		m_ParticleShader->SetUniformMat4f("u_View", m_Camera.GetViewMatrix());
 		m_ParticleShader->SetUniformMat4f("u_Projection", m_Camera.GetPerspectiveProjectionMatrix());
+
+		// To enable blending
+		GLCall(glEnable(GL_BLEND));
+
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
 	}
 
 	void ParticleManager::PostRender()
@@ -60,5 +65,7 @@ namespace engine
 		GLCall(glDepthMask(true));
 		Particle::GetQuad().Disable();
 		m_ParticleShader->UnBind();
+
+		GLCall(glDisable(GL_BLEND));
 	}
 }

@@ -273,7 +273,8 @@ namespace engine
 		ter.GetShader()->SetUniform1f("u_Shininess", 256.0f);
 		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
-		ParticleSystem particleSys(*m_ParticlesManager, 50.0f, 2.0f, 0.5f, 4.0f, 1.0f);
+		Texture particleTex("res/Textures/Particles/Star.png");
+		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 100.0f, 2.0f, 0.5f, 4.0f, 1.0f);
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)
@@ -281,10 +282,11 @@ namespace engine
 			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 				m_Renderer3D->Submit(m_Objects3D[i]);
 
+			// Frame Time in seconds
+			float DeltaTime = Clock::GetClock()->GetDeltaTime();
+			
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
-
-			float DeltaTime = Clock::GetClock()->GetDeltaTime();
 
 			// Calculate the fps
 			times++;
@@ -296,10 +298,10 @@ namespace engine
 				times = 0;
 			}
 
-			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime * 10000.0f);
+			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
 
 			// Update all the elements of the scene
-			Update(DeltaTime * 1000);
+			Update(DeltaTime);
 
 			// Model Matrix
 			Translation trans(translation);
@@ -364,7 +366,7 @@ namespace engine
 		GraphXGui::Update();
 
 		// Update the camera
-		m_Camera->Update(DeltaTime * 100);
+		m_Camera->Update(DeltaTime);
 
 		if (m_Camera->IsRenderStateDirty())
 		{
@@ -401,7 +403,7 @@ namespace engine
 
 		DayNightCycleCalculations(DeltaTime);
 
-		m_CurrentSkybox->Update(DeltaTime * 10);
+		m_CurrentSkybox->Update(DeltaTime);
 	}
 
 	void Application::CalculateShadows()
