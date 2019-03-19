@@ -20,6 +20,12 @@ namespace engine
 		/* Update the UI frame */
 		static void Update();
 
+		/* Create a window showing Global Settings like Day Time and Skybox */
+		static void GlobalSettings(class Skybox& skybox, float& daytime);
+
+		/* Create a window showing Add Terrain Button */
+		static void AddTerrain();
+
 		/* Create a window showing the details of the cube */
 		static void TransformWindow(std::string Name, gm::Vector3& translation, gm::Vector3& scale, float& rotation, const gm::Vector3& axis, bool& bShowMenu);
 
@@ -35,8 +41,11 @@ namespace engine
 		/* Create a window showing the Camera properties */
 		static void CameraProperties(class Camera& camera);
 
-		/* Create a window showing the details of the Mesh2D*/
+		/* Create a window showing the details of the Mesh2D */
 		static void DetailsWindow(class Mesh2D& mesh);
+
+		/* Create a window showing the details of the Terrain */
+		static void TerrainDetails(class Terrain& terrain);
 
 		/* Create a window for loading a model from directory */
 		static void Models();

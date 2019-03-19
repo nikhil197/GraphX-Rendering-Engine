@@ -261,6 +261,7 @@ namespace engine
 		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"}, Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
 		m_Shaders.emplace_back(ter.GetShader());
 		m_Objects3D.emplace_back((Mesh3D*)&ter.GetMesh());
+		m_Terrain.push_back(&ter);
 
 		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		m_Objects3D.emplace_back(&cube);
@@ -319,7 +320,7 @@ namespace engine
 			RenderSkybox();
 
 			// Get a new transform window for the cube
-			GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
+			//GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
 
 			// Bind the shader and draw the objects
 			m_Shader->Bind();
@@ -440,7 +441,12 @@ namespace engine
 		GraphXGui::LightProperties(*m_Light);
 		GraphXGui::CameraProperties(*m_Camera);
 		GraphXGui::Models();
-
+		if (m_Terrain[0] != nullptr)
+		{
+			GraphXGui::TerrainDetails(*m_Terrain[0]);
+		}
+		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime);
+		//GraphXGui::AddTerrain();
 		GraphXGui::Render();
 	}
 
