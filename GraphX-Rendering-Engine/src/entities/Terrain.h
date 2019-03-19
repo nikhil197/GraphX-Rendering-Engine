@@ -33,17 +33,13 @@ namespace engine
 		static double s_Amplitude;
 
 	public:
-		/* Position of the terrain */
-		gm::Vector3 Position;
-
-		/* Scale of the terrain (x & z direction) */
-		gm::Vector2 Scale;
-
 		/* Constructs a new terrain */
 		/* @Param Width  - # of tiles in the x - direction */
 		/* @Param Depth - # of tiles in the negative z - direction */
 		/* @Param TexNames - Names of the textures to be used for the terrain */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl);
+		/* @Param Pos - Position of the terrain in the world */
+		/* @Param Scale - Scale of the mesh in the x and z direction */
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scale);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;

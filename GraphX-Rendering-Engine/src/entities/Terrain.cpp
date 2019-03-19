@@ -16,8 +16,8 @@ namespace engine
 {   
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl)
-		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr), Position(Pos), Scale(Scl)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Position, const gm::Vector2& Scale)
+		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
 	{
 		BuildTerrain();
 	
@@ -79,15 +79,15 @@ namespace engine
 
 	double Terrain::GetYCoords(int x, int z)
 	{
-		float total = InterpolatedNoise(x/8.0 , z/ 8.0 )*s_Amplitude;
-		total += InterpolatedNoise(x / 4.0 , z / 4.0 )*s_Amplitude/ 3.0 ;
-		total += InterpolatedNoise(x / 2.0 , z / 2.0 )*s_Amplitude / 9.0 ;
+		double total = InterpolatedNoise(x / 8.0 , z / 8.0 )*s_Amplitude;
+		total += InterpolatedNoise(x / 4.0 , z / 4.0 ) * s_Amplitude / 3.0 ;
+		total += InterpolatedNoise(x / 2.0 , z / 2.0 ) * s_Amplitude / 9.0 ;
 		return total;
 	}
 
 	double Terrain::SmoothNoise(int x, int z)
 	{
-		unsigned int seed = 7436767332;
+		unsigned long long seed = 7436767332u;
 		double corners = EngineUtil::GetRandomValue(x - 1, z - 1, seed) + EngineUtil::GetRandomValue(x + 1, z - 1, seed) + EngineUtil::GetRandomValue(x - 1, z + 1, seed) + EngineUtil::GetRandomValue(x + 1, z + 1, seed) / 16.0;
 	    double sides = EngineUtil::GetRandomValue(x - 1, z , seed) + EngineUtil::GetRandomValue(x + 1, z , seed) + EngineUtil::GetRandomValue(x , z + 1, seed) + EngineUtil::GetRandomValue(x , z - 1, seed) / 8.0;
 		double center = EngineUtil::GetRandomValue(x, z, seed) / 4.0;

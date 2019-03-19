@@ -26,7 +26,7 @@ namespace engine
 		static std::random_device s_RandDevice;
 
 		/* Random value generator */
-		static std::mt19937 s_RandNumGenerator;
+		static std::mt19937_64 s_RandNumGenerator;
 
 		/* Convertor to convert between normal and wide strings */
 		static std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>> s_StringConvertor;
@@ -44,7 +44,6 @@ namespace engine
 		static void ResetSeed();
 
 		/* Returns a random value between 0 and 1 for a particular x and y */
-		/* NOTE: Default Seed Value is 0. So, if no seed value is provided, the default seed value implmentation will be used (x * y) */
-		static double GetRandomValue(unsigned int x, unsigned int y, unsigned int SeedValue = 0);
+		static double GetRandomValue(unsigned int x, unsigned int y, unsigned long long SeedValue = 0);
 	};
 }
