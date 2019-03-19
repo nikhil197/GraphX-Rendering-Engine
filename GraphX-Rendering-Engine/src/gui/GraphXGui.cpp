@@ -11,6 +11,8 @@
 
 #include "entities/Lights/Light.h"
 #include "entities/Camera.h"
+#include "entities/Terrain.h"
+#include "entities/Skybox.h"
 
 #include "Input/Mouse.h"
 #include "Events/GUIEvent.h"
@@ -34,6 +36,97 @@ namespace engine
 	void GraphXGui::Update()
 	{
 		ImGui_ImplGlfwGL3_NewFrame();
+	}
+
+	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime)
+	{
+		ImGui::Begin("Global Settings", (bool*)true);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Skybox Details");
+		ImGui::DragFloat("Rotation Speed", &skybox.RotationSpeed, 0.1f, 0.0f, 2.0f);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Day Time Details");
+		ImGui::DragFloat("Day Time Hours", &daytime, 0.1f, 0.0f, 2.0f);
+		ImGui::End();
+	}
+
+	void GraphXGui::AddTerrain()
+	{
+		if (ImGui::Button("Add Terrain"))
+		{
+			ImGui::OpenPopup("Terrain");
+		}
+
+		if (ImGui::BeginPopupModal("Terrain", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Separator();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::PopStyleVar();
+
+			static gm::Vector3 postion;
+			static gm::Vector2 scale(1);
+			static int x = 0, z = 0;
+			static float tileSize = 0.0f;
+			static std::vector<std::string> textures;
+			ImGui::Text("Terrain Attributes");
+			ImGui::InputInt("No. of Tiles in X", &x);
+			ImGui::InputInt("No. of Tiles in Z", &z);
+			ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
+			if (ImGui::Button("Add Texture"))
+			{
+				
+			}
+			ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
+			ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
+
+			if (ImGui::Button("Create Terrain", ImVec2(120, 0))) 
+			{
+				//Terrain terrain(x, z, tileSize, textures, postion, scale);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{ 
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+
+		//if (ImGui::Button("Add Terrain"))
+		//{
+		//	ImGui::BeginPopupModal("Terrain Modal", (bool*)true);
+		//	//ImGui::Begin("Terrain", (bool*)true);
+		//	gm::Vector3 postion;
+		//	gm::Vector2 scale(1);
+		//	int x = 0, z = 0;
+		//	float tileSize = 0.0f;
+		//	ImGui::Text("Terrain Attributes");
+		//	ImGui::InputInt("No. of Tiles in X", &x);
+		//	ImGui::InputInt("No. of Tiles in Z", &z);
+		//	ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
+		//	if (ImGui::Button("Add Texture"))
+		//	{
+
+		//	}
+		//	ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
+		//	ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
+		//	if (ImGui::Button("Create Terrain"))
+		//	{
+
+		//	}
+		//	ImGui::SameLine();
+		//	if (ImGui::Button("Cancel"))
+		//	{
+
+		//	}
+
+		//	ImGui::End();
+		//}
 	}
 
 	void GraphXGui::TransformWindow(std::string Name, gm::Vector3& translation, gm::Vector3& scale, float& rotation, const gm::Vector3& axis, bool& bShowMenu)
@@ -74,26 +167,29 @@ namespace engine
 		{
 			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
 			ImGui::Spacing();
-			ImGui::Text("Transformations");
-			ImGui::SliderFloat3("Translation", (float*)&mesh.Position.x, -1000.0f, 1000.0f);
-			ImGui::SliderFloat3("Rotation", (float*)(&mesh.Rotation), 0.0f, 359.f);
-			ImGui::SliderFloat3("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Transformations");
+			//ImGui::Text("Transformations");
+			ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f);
+			ImGui::DragFloat3("Rotation", (float*)&mesh.Rotation, 1.0f, 0.0f, 359.f);
+			ImGui::DragFloat3("Scaling", (float*)&mesh.Scale.x, 1.0f, 0.0001f, 10.f);
+
 			ImGui::Spacing();
-			ImGui::Text("Color and Properties");
-			ImGui::SliderFloat("Shininess", (float*)&mesh.Shininess, 2.0f, 256.0f);
-			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Color and Properties");
+			ImGui::DragFloat("Shininess", (float*)&mesh.Shininess, 1.0f, 2.0f, 256.0f);
+			ImGui::DragFloat("Reflectivity", (float*)&mesh.Reflectivity, 1.0f, 0.0f, 1.0f);
+
 			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
 			ImGui::Spacing();
 
-			ImGui::Text("Texture Properties");
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Texture Properties");
+
 			ImGui::BeginChild("Textures in current model");
 			int size = mesh.GetTextures().size();
 			for (int n = 0; n < size; n++)
 			{
 				ImGui::Text("%s", mesh.GetTextures().at(n)->GetFilePath().c_str());
-				ImGui::Spacing();
 			}
-			ImGui::EndChild();
 			if(ImGui::Button("Add New Texture"))
 			{
 				// Add a new texture to the mesh
@@ -103,6 +199,7 @@ namespace engine
 					s_GuiEventCallback(e);
 				}
 			}
+			ImGui::EndChild();
 			ImGui::End();
 		}
 	}
@@ -112,8 +209,8 @@ namespace engine
 		if (light.bShowDetails)
 		{
 			ImGui::Begin("Lighting", (bool*)light.bShowDetails);
-			ImGui::SliderFloat3("Position", (float*)&light.Position.x, -500.0f, 500.0f);
-			ImGui::SliderFloat("Intensity", (float*)&light.Intensity, 0.0f, 100.0f);
+			ImGui::DragFloat3("Position", (float*)&light.Position.x, 1.0f, -500.0f, 500.0f);
+			ImGui::DragFloat("Intensity", (float*)&light.Intensity, 1.0f, 0.0f, 100.0f);
 			ImGui::ColorEdit4("Color", (float*)&light.Color);
 			ImGui::End();
 		}
@@ -122,9 +219,9 @@ namespace engine
 	void GraphXGui::CameraProperties(Camera& camera)
 	{
 		ImGui::Begin("Camera Properties", (bool*)true);
-		ImGui::SliderFloat("Camera Speed", (float*)&camera.CameraSpeed, 0.0f, 100.0f);
-		ImGui::SliderFloat("Field Of View", (float*)&camera.FieldOfView, 10.0f, 100.0f);
-		ImGui::SliderFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.1f, 1.0f);
+		ImGui::DragFloat("Camera Speed", (float*)&camera.CameraSpeed, 1.0f, 0.0f, 100.0f);
+		ImGui::DragFloat("Field Of View", (float*)&camera.FieldOfView, 1.0f, 10.0f, 100.0f);
+		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 1.0f, 0.1f, 1.0f);
 		ImGui::End();
 	}
 
@@ -144,6 +241,17 @@ namespace engine
 			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
 			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
 
+			ImGui::End();
+		}
+	}
+
+	void GraphXGui::TerrainDetails(Terrain& terrain)
+	{
+		if (true)
+		{
+			ImGui::Begin("Terrain Details", (bool*)true);
+			ImGui::DragFloat3("Position", &terrain.Position.x, 1.0f, -1000.0f, 1000.0f);
+			ImGui::DragFloat2("Scale in X & Z", &terrain.Scale.x, 1.0f, 0.0001f, 10.f);
 			ImGui::End();
 		}
 	}
@@ -169,6 +277,8 @@ namespace engine
 				s_GuiEventCallback(e);
 			}
 		}
+		AddTerrain();
+
 		ImGui::End();
 	}
 
