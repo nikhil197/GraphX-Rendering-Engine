@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Terrain.h"
+
 #include "Utilities/EngineUtil.h"
 #include "Model/Mesh/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
@@ -14,6 +15,7 @@
 namespace engine
 {   
 	double Terrain::s_Amplitude = 5.0;
+
 	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scl)
 		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr), Position(Pos), Scale(Scl)
 	{
@@ -37,7 +39,9 @@ namespace engine
 	}
 
 	void Terrain::BuildTerrain()
-	{  
+	{
+		Timer timer("Building Terrain");
+
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
 		Vertex3D vertex;
@@ -45,10 +49,9 @@ namespace engine
 		{
 			for (int x = 0; x < m_Width; x++)
 			{
-				
 				// Calculate the vertices of the terrain
-				double yCoord = GetYCoords(x, z);
-				vertex.Position = gm::Vector3(x * m_TileSize, yCoord, -z * m_TileSize);	// TODO: Add the height for the terrain
+				//double yCoord = GetYCoords(x, z);
+				vertex.Position = gm::Vector3(x * m_TileSize, -20.0f, -z * m_TileSize);	// TODO: Add the height for the terrain
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
@@ -68,6 +71,9 @@ namespace engine
 				}
 			}
 		}
+
+		// Reset the seed back to default
+		EngineUtil::ResetSeed();
 	}
 	
 
@@ -84,7 +90,7 @@ namespace engine
 		unsigned int seed = 7436767332;
 		double corners = EngineUtil::GetRandomValue(x - 1, z - 1, seed) + EngineUtil::GetRandomValue(x + 1, z - 1, seed) + EngineUtil::GetRandomValue(x - 1, z + 1, seed) + EngineUtil::GetRandomValue(x + 1, z + 1, seed) / 16.0;
 	    double sides = EngineUtil::GetRandomValue(x - 1, z , seed) + EngineUtil::GetRandomValue(x + 1, z , seed) + EngineUtil::GetRandomValue(x , z + 1, seed) + EngineUtil::GetRandomValue(x , z - 1, seed) / 8.0;
-		double center = EngineUtil::GetRandomValue(x, z, seed)/4.0;
+		double center = EngineUtil::GetRandomValue(x, z, seed) / 4.0;
 		return corners + sides + center;
 	}
 	double Terrain::Interpolate(double a, double b, double blend)
@@ -109,11 +115,8 @@ namespace engine
 		double i1 = Interpolate(v1, v2, fracX);
 		double i2 = Interpolate(v3, v4, fracX);
 		return Interpolate(i1, i2, fracZ);
-
 	}
-
-
-
+	
 	void Terrain::Update(float DeltaTime)
 	{
 

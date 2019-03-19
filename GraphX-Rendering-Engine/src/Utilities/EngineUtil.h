@@ -41,6 +41,8 @@ namespace engine
 		/* Returns a random float value */
 		static double GetRandomValue();
 
+		static void ResetSeed();
+
 		/* Returns a random value between 0 and 1 for a particular x and y */
 		/* NOTE: Default Seed Value is 0. So, if no seed value is provided, the default seed value implmentation will be used (x * y) */
 		static double GetRandomValue(unsigned int x, unsigned int y, unsigned int SeedValue = 0);

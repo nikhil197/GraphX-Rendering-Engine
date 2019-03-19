@@ -19,9 +19,13 @@ namespace engine
 		return s_StringConvertor.from_bytes(ByteString);
 	}
 
-	double EngineUtil::GetRandomValue()
+	void EngineUtil::ResetSeed()
 	{
 		s_RandNumGenerator.seed(s_RandNumGenerator.default_seed);
+	}
+
+	double EngineUtil::GetRandomValue()
+	{
 		return std::generate_canonical<double, 10>(s_RandNumGenerator);
 	}
 

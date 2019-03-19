@@ -29,7 +29,8 @@ namespace engine
 		/* Textures used for the terrain */
 		std::vector<const class Texture*> *m_Textures;
 
-		double static s_Amplitude;
+		/* Amplitude of the height map for the terrain */
+		static double s_Amplitude;
 
 	public:
 		/* Position of the terrain */
