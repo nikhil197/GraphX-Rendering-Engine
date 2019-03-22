@@ -6,6 +6,7 @@
 #include "Renderer/Renderer3D.h"
 #include "Shaders/Shader.h"
 #include "Textures/Texture.h"
+#include "Utilities/EngineUtil.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -14,20 +15,20 @@
 namespace engine
 {
 	Model3D::Model3D(const std::string& FilePath, Shader& shader)
-		: m_Meshes(new std::vector<Mesh3D*>()), m_Shader(shader)
+		: m_Meshes(new std::vector<Mesh3D*>()), m_Shader(shader), m_FilePath(FilePath)
 	{
-		LoadModel(FilePath);
+		LoadModel();
 	}
 
-	void Model3D::LoadModel(const std::string& FilePath)
+	void Model3D::LoadModel()
 	{
-		Timer timer("Loading Model \"" + FilePath + "\"");
+		Timer timer("Loading Model \"" + m_FilePath + "\"");
 		Assimp::Importer Importer;
-		const aiScene* Scene = Importer.ReadFile(FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene* Scene = Importer.ReadFile(m_FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 		if (Scene == nullptr || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || Scene->mRootNode == nullptr)
 		{
-			GX_ENGINE_ERROR("Failed to load Model {0}", FilePath);
+			GX_ENGINE_ERROR("Failed to load Model {0}", m_FilePath);
 			return;
 		}
 
@@ -95,6 +96,23 @@ namespace engine
 
 			// TODO: Add for vertex colors
 
+			// Textures
+			std::vector<const Texture*>* textures = nullptr;
+			if (Scene->HasMaterials())
+			{
+				textures = new std::vector<const Texture*>();
+				aiMaterial* mat = Scene->mMaterials[Mesh->mMaterialIndex];
+				unsigned int TexCount = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE);
+				aiString *Path = new aiString();
+				std::string FileLocation = EngineUtil::ExtractFileLocation(m_FilePath);
+				for (unsigned int i = 0; i < TexCount; i++)
+				{
+					mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, i, Path);
+					std::string FileName = EngineUtil::ExtractFileName(Path->C_Str());
+					textures->emplace_back(new Texture(FileLocation + '\\' + FileName));
+				}
+			}
+
 			// Combine all the attributes into vertex array
 			std::vector<Vertex3D>* vertices = nullptr;
 			if (vertexPositions != nullptr && normals != nullptr)
@@ -112,9 +130,9 @@ namespace engine
 
 			// Create the mesh
 			Mesh3D* mMesh = nullptr;
-			if (vertices != nullptr)
+			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3(0.01f, 0.01f, 0.01f), m_Shader, std::vector<const Texture*>(), *vertices, *indices);
+				mMesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3(0.01f, 0.01f, 0.01f), m_Shader, *textures, *vertices, *indices);
 			}
 			
 			if (mMesh == nullptr)

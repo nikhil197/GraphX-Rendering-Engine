@@ -34,4 +34,25 @@ namespace engine
 		s_RandNumGenerator.seed(x * 65655 + y * 43434 + SeedValue);
 		return std::generate_canonical<double, 10>(s_RandNumGenerator);
 	}
+
+	std::string EngineUtil::ExtractFileName(const std::string& AbsoluteFilePath)
+	{
+		std::string Result;
+		int i = AbsoluteFilePath.length() - 1;
+		while (i >= 0 && AbsoluteFilePath[i] != '/' && AbsoluteFilePath[i] != '\\')
+		{
+			Result.push_back(AbsoluteFilePath[i]);
+			i--;
+		}
+
+		std::reverse(Result.begin(), Result.end());
+		return Result;
+	}
+
+	std::string EngineUtil::ExtractFileLocation(const std::string& AbsoluteFilePath)
+	{
+		std::string Result = ExtractFileName(AbsoluteFilePath);
+		
+		return std::string(AbsoluteFilePath, 0, AbsoluteFilePath.length() - Result.length() - 1);
+	}
 }

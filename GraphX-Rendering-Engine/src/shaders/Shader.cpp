@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Shader.h"
 
+#include "Utilities/EngineUtil.h"
 #include "../Timer/Timer.h"
 
 namespace engine
@@ -8,7 +9,7 @@ namespace engine
 	Shader::Shader(const std::string& filePath)
 		:m_FileName(std::string()), m_RendererID(0)
 	{
-		ParseFileName(filePath);
+		m_FileName = EngineUtil::ExtractFileName(filePath);
 		ShaderSource source = ParseShaderSource(filePath);
 		
 		if (source.FragmentShaderSource.length() > 0 && source.VertexShaderSource.length() > 0)
@@ -98,20 +99,6 @@ namespace engine
 
 			return location;
 		}
-	}
-
-	void Shader::ParseFileName(const std::string& FilePath)
-	{
-		int length = FilePath.length();
-		for (int i = length - 1; i >= 0; i--)
-		{
-			if (FilePath[i] != '/')
-				m_FileName.push_back(FilePath[i]);
-			else
-				break;
-		}
-
-		std::reverse(m_FileName.begin(), m_FileName.end());
 	}
 
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)

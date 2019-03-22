@@ -41,9 +41,16 @@ namespace engine
 		/* Returns a random float value */
 		static double GetRandomValue();
 
+		/* Resets the seed back to default */
 		static void ResetSeed();
 
 		/* Returns a random value between 0 and 1 for a particular x and y */
 		static double GetRandomValue(unsigned int x, unsigned int y, unsigned long long SeedValue = 0);
+
+		/* Returns the file name from the absolute file path */
+		static std::string ExtractFileName(const std::string& AbsoluteFilePath);
+
+		/* Returns the file location from the absolute file path */
+		static std::string ExtractFileLocation(const std::string& AbsoluteFilePath);
 	};
 }

@@ -13,6 +13,9 @@ namespace engine
 		/* Shader used for rendering the model */
 		class Shader& m_Shader;
 
+		/* Path of the file */
+		std::string m_FilePath;
+
 	public:
 		/* Constructor */
 		Model3D(const std::string& FilePath, class Shader& shader);
@@ -22,7 +25,7 @@ namespace engine
 
 	private:
 		/* Load the model from the explorer*/
-		void LoadModel(const std::string& FilePath);
+		void LoadModel();
 
 		/* Process the scene retreived from the file */
 		void ProcessScene(const aiScene* Scene);

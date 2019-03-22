@@ -51,9 +51,6 @@ namespace engine
 		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
 
 	private:
-		/* Retrieves the file name from the file path*/
-		void ParseFileName(const std::string& FilePath);
-
 		/* Parse the source file and get the shader source codes */
 		ShaderSource ParseShaderSource(const std::string& filePath);
 
