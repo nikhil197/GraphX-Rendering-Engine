@@ -258,7 +258,6 @@ namespace engine
 
 		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"}, Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
 		m_Shaders.emplace_back(ter.GetShader());
-		m_Objects3D.emplace_back((Mesh3D*)&ter.GetMesh());
 		m_Terrain.push_back(&ter);
 
 		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
@@ -279,6 +278,9 @@ namespace engine
 		{
 			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 				m_Renderer3D->Submit(m_Objects3D[i]);
+
+			for (unsigned int i = 0; i < m_Terrain.size(); i++)
+				m_Renderer3D->Submit(m_Terrain[i]);
 
 			// Frame Time in seconds
 			float DeltaTime = Clock::GetClock()->GetDeltaTime();
@@ -437,7 +439,7 @@ namespace engine
 
 	void Application::RenderGui()
 	{
-		GraphXGui::DetailsWindow(*m_Objects3D[1]);
+		GraphXGui::DetailsWindow(*m_Objects3D[0]);
 		GraphXGui::LightProperties(*m_Light);
 		GraphXGui::CameraProperties(*m_Camera);
 		GraphXGui::Models();
@@ -560,6 +562,10 @@ namespace engine
 			if (!handled)
 			{
 				handled = dispatcher.Dispatch<CameraFOVChangedEvent>(BIND_EVENT_FUNC(Application::OnCameraFOVChanged));
+			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<CreateTerrainEvent>(BIND_EVENT_FUNC(Application::OnCreateTerrain));
 			}
 		}
 		
@@ -741,6 +747,12 @@ namespace engine
 	bool Application::OnCameraFOVChanged(class CameraFOVChangedEvent& e)
 	{
 		m_Camera->SetRenderStateDirty(true);
+		return true;
+	}
+
+	bool Application::OnCreateTerrain(CreateTerrainEvent& e)
+	{
+		m_Terrain.push_back(e.GetTerrain());
 		return true;
 	}
 

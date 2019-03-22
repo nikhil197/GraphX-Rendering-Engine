@@ -114,6 +114,8 @@ namespace engine
 
 		bool OnCameraFOVChanged(class CameraFOVChangedEvent& e);
 
+		bool OnCreateTerrain(class CreateTerrainEvent& e);
+
 #pragma endregion
 
 		/* Updates the scene */

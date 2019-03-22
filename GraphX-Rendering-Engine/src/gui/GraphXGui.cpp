@@ -14,6 +14,9 @@
 #include "entities/Terrain.h"
 #include "entities/Skybox.h"
 
+#include "Utilities/FileOpenDialog.h"
+#include "Utilities/EngineUtil.h"
+
 #include "Input/Mouse.h"
 #include "Events/GUIEvent.h"
 
@@ -75,7 +78,11 @@ namespace engine
 			ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
 			if (ImGui::Button("Add Texture"))
 			{
-				
+				FileOpenDialog dialogBox(ResourceType::TEXTURES);
+				dialogBox.Show();
+
+				const std::string& Tex = EngineUtil::ToByteString(dialogBox.GetAbsolutePath());
+				textures.push_back(Tex);
 			}
 			ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
 			ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
@@ -87,6 +94,7 @@ namespace engine
 					if (s_GuiEventCallback)
 					{
 						CreateTerrainEvent e(new Terrain(x, z, tileSize, textures, postion, scale));
+						textures.clear();
 						s_GuiEventCallback(e);
 					}
 				}
@@ -97,6 +105,7 @@ namespace engine
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel", ImVec2(120, 0)))
 			{ 
+				textures.clear();
 				ImGui::CloseCurrentPopup();
 			}
 
