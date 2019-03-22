@@ -8,9 +8,6 @@ namespace engine
 		: public Entity
 	{
 	private:
-		/* Point to which the camera is pointing */
-		gm::Vector3 m_CameraLookAtPoint;
-
 		/* Up Axis for the whole world */
 		gm::Vector3 m_WorldUpAxis;
 
@@ -32,7 +29,7 @@ namespace engine
 		/* Right axis in view coordinates */
 		gm::Vector3 m_RightAxis;
 
-		/* Up Axis in view coordinates */
+		/* Up Camera of the camera */
 		gm::Vector3 m_UpAxis;
 
 	public:
@@ -50,9 +47,6 @@ namespace engine
 		float CameraSpeed;
 
 	private:
-		/* Updates the camera axis */
-		void UpdateCameraAxes();
-
 		/* Process the input from the keyboard */
 		void ProcessKeyboardInput(float DeltaTime);
 
@@ -81,7 +75,7 @@ namespace engine
 		inline void SetRenderStateDirty(bool bNewRenderState) { m_RenderStateDirty = bNewRenderState; }
 
 		/* Returns a view matrix for the camera */
-		inline gm::Matrix4 GetViewMatrix() const { return gm::View::LookAt(CameraPosition, m_CameraLookAtPoint, m_WorldUpAxis); }
+		inline gm::Matrix4 GetViewMatrix() const { return gm::View::LookAt(CameraPosition, CameraPosition + m_ViewAxis, m_WorldUpAxis); }
 
 		/* Returns the projection matrix for the current camera settings */
 		inline gm::Matrix4 GetPerspectiveProjectionMatrix() const { return gm::Projection::Perspective(FieldOfView, m_AspectRatio, m_Near, m_Far); }

@@ -10,20 +10,15 @@
 namespace engine
 {
 	Camera::Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
-		:m_CameraLookAtPoint(LookAtPoint), m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), FieldOfView(FOV)
+		: m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(), m_RightAxis(0), FieldOfView(FOV)
 	{
-		UpdateCameraAxes();
-	}
-
-	void Camera::UpdateCameraAxes()
-	{
-		m_ViewAxis = CameraPosition - m_CameraLookAtPoint;
+		m_ViewAxis = LookAtPoint - CameraPosition;
 		m_ViewAxis.Normalize();
 
-		m_RightAxis = gm::Vector3::CrossProduct(m_WorldUpAxis, m_ViewAxis);
+		m_RightAxis = gm::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
 		m_RightAxis.Normalize();
 
-		m_UpAxis = gm::Vector3::CrossProduct(m_ViewAxis, m_RightAxis);
+		m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 	}
 
 	void Camera::Update(float DeltaTime)
@@ -44,32 +39,26 @@ namespace engine
 			if (keyboard->GetKey(Keys::GX_W))
 			{
 				CameraPosition += CurrentCameraSpeed * m_ViewAxis;
-				m_CameraLookAtPoint += CurrentCameraSpeed * m_ViewAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_S))
 			{
 				CameraPosition -= CurrentCameraSpeed * m_ViewAxis;
-				m_CameraLookAtPoint -= CurrentCameraSpeed * m_ViewAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_A))
 			{
 				CameraPosition -= CurrentCameraSpeed * m_RightAxis;
-				m_CameraLookAtPoint -= CurrentCameraSpeed * m_RightAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_D))
 			{
 				CameraPosition += CurrentCameraSpeed * m_RightAxis;
-				m_CameraLookAtPoint += CurrentCameraSpeed * m_RightAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_E))
 			{
 				CameraPosition += CurrentCameraSpeed * m_UpAxis;
-				m_CameraLookAtPoint += CurrentCameraSpeed * m_UpAxis;
 			}
 			else if (keyboard->GetKey(Keys::GX_Q))
 			{
 				CameraPosition -= CurrentCameraSpeed * m_UpAxis;
-				m_CameraLookAtPoint -= CurrentCameraSpeed * m_UpAxis;
 			}
 			else
 			{
@@ -90,38 +79,26 @@ namespace engine
 			float xOffset = CurrentPosition.x - LastPosition.x;
 			float yOffset = CurrentPosition.y - LastPosition.y;
 			
-			if (xOffset != 0 || yOffset != 0)
+			if ((xOffset != 0 && gm::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && gm::MathUtil::Abs(yOffset) < 20.0f))
 			{
+				xOffset *= DeltaTime;
+				yOffset *= DeltaTime;
+
 				m_RenderStateDirty = true;
 
-				/*static float zValue = m_CameraLookAtPoint.z - CameraPosition.z;
-				gm::Vector3 CameraToLastPos(gm::Vector3(LastPosition, zValue) - CameraPosition);
-				CameraToLastPos.Normalize();
-				gm::Vector3 CameraToLastPosXOffset(gm::Vector3(LastPosition.x + xOffset, LastPosition.y, zValue) - CameraPosition);
-				CameraToLastPosXOffset.Normalize();
-				gm::Vector3 CameraToCurrentPos(gm::Vector3(CurrentPosition, zValue) - CameraPosition);
-				CameraToCurrentPos.Normalize();
-				
-				float Yaw = (float)gm::MathUtil::CosInverse(gm::Vector3::DotProduct(CameraToLastPos, CameraToLastPosXOffset));
-				float Pitch = (float)gm::MathUtil::CosInverse(gm::Vector3::DotProduct(CameraToLastPosXOffset, CameraToCurrentPos));*/
+				EulerAngles.x += yOffset;
+				EulerAngles.y += xOffset;
 
-				float distance = (CameraPosition - gm::Vector3(LastPosition, (CameraPosition.z == 0.0f ? -1.0f : 0.0f))).Magnitude();
-				float Yaw = (float)gm::MathUtil::TanInverse(xOffset / distance);
-				float Pitch = (float)gm::MathUtil::TanInverse(yOffset / distance);
+				if (EulerAngles.x >= 89.0f)
+					EulerAngles.x = 89.0f;
+				else if (EulerAngles.x <= -89.0f)
+					EulerAngles.x = -89.0f;
 
-				gm::Vector3 Angles(-Pitch, -Yaw, 0);
-				EulerAngles += Angles;
 				gm::MathUtil::ClampAngle(EulerAngles.y);
-				gm::MathUtil::ClampAngle(EulerAngles.z);
-				gm::MathUtil::Clamp(EulerAngles.x, -90.0f, 90.0f);
 
-				gm::Translation trans(-CameraPosition);
-				gm::Matrix4 rotation = gm::Rotation(Angles);
-
-				m_CameraLookAtPoint = gm::Vector3(trans.Inverse() * rotation * trans * gm::Vector4(m_CameraLookAtPoint, 1.0f));
-				
-				// Update the axes
-				UpdateCameraAxes();
+				m_RightAxis = gm::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
+				m_ViewAxis = gm::Vector3(gm::Rotation(xOffset, m_UpAxis) * gm::Rotation(-yOffset, m_RightAxis) * gm::Vector4(m_ViewAxis, 1.0f));
+				m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 			}
 		}
 

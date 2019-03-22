@@ -211,7 +211,7 @@ namespace engine
 				s_GuiEventCallback(e);
 			}
 		}
-		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 1.0f, 0.1f, 1.0f);
+		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.01f, 5.0f);
 		ImGui::End();
 	}
 
