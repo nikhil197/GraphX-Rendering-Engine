@@ -45,6 +45,9 @@ uniform vec4 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
 
+uniform int u_TerrainWidth;	/* In the x - direction */
+uniform int u_TerrainDepth;	/* In the z - direction */
+
 /* Structure for the ambient light source */
 struct DirectionalLight
 {
@@ -56,11 +59,27 @@ struct DirectionalLight
 /* Ambient Light (Represents Sun) */
 uniform DirectionalLight u_LightSource = DirectionalLight(vec4(1.0f, 1.0f, 1.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), 1.0f);
 
+uniform bool u_CalculateShadow = false;
+
 uniform float u_AmbientStrength;
 uniform float u_Shininess;
 uniform float u_Reflectivity;
 
+/* RGB map representing the amount of textures to be used to fill the terrain */
+uniform sampler2D u_BlendMap;
+
+/* Base Texture for the terrain */
 uniform sampler2D u_Texture0;
+
+/* Represented by the R - channel in blendmap */
+uniform sampler2D u_Texture1;
+
+/* Represented by the G - channel in blendmap */
+uniform sampler2D u_Texture2;
+
+/* Represented by the B - channel in blendmap */
+uniform sampler2D u_Texture3;
+
 uniform sampler2D u_ShadowMap;
 
 /* Final color */
@@ -110,8 +129,17 @@ void main()
 	vec4 specularColor = shine * u_Reflectivity * u_LightColor;
 
 	// Calculate the shadow
-	float Shadow = ShadowCalculation(v_Data.LightSpacePos);
+	float Shadow = 0.0f;
+	if(u_CalculateShadow)
+		Shadow = ShadowCalculation(v_Data.LightSpacePos);
 
-	vec4 texColor = texture(u_Texture0, v_Data.TexCoord);
-	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + diffuseColor + specularColor)) * texColor;
+	vec2 BlendTexCoord = vec2(v_Data.TexCoord.x / (u_TerrainWidth - 1), v_Data.TexCoord.y / (u_TerrainDepth - 1));
+	vec4 texColorBlend = texture(u_BlendMap, BlendTexCoord);
+
+	vec4 texColor0 = texture(u_Texture0, v_Data.TexCoord) * (1.0f - (texColorBlend.r + texColorBlend.g + texColorBlend.b));
+	vec4 texColor1 = texture(u_Texture1, v_Data.TexCoord) * texColorBlend.r;
+	vec4 texColor2 = texture(u_Texture2, v_Data.TexCoord) * texColorBlend.g;
+	vec4 texColor3 = texture(u_Texture3, v_Data.TexCoord) * texColorBlend.b;
+
+	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + diffuseColor + specularColor)) * (texColor0 + texColor1 + texColor2 + texColor3);
 }

@@ -16,7 +16,7 @@ namespace engine
 {   
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Position, const gm::Vector2& Scale)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const gm::Vector3& Position, const gm::Vector2& Scale)
 		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
 	{
 		BuildTerrain();
@@ -31,6 +31,8 @@ namespace engine
 			const Texture* tex = new Texture(TexNames[i], true); // All terrain textures will be tiled textures
 			m_Textures->emplace_back(tex);
 		}
+
+		m_BlendMap = new Texture(BlendMap);
 		
 		if (m_Textures && m_Vertices && m_Indices)
 			m_Mesh = new Mesh3D(Position, gm::Vector3::ZeroVector, gm::Vector3(Scale.x, 1.0f, Scale.y), *m_Shader, *m_Textures, *m_Vertices, *m_Indices, gm::Vector4::ZeroVector, -1.0f, -1.0f);
@@ -50,8 +52,8 @@ namespace engine
 			for (int x = 0; x < m_Width; x++)
 			{
 				// Calculate the vertices of the terrain
-				//double yCoord = GetYCoords(x, z);
-				vertex.Position = gm::Vector3(x * m_TileSize, -20.0f, -z * m_TileSize);	// TODO: Add the height for the terrain
+				double yCoord = GetYCoords(x, z);
+				vertex.Position = gm::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
 				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
@@ -93,6 +95,7 @@ namespace engine
 		double center = EngineUtil::GetRandomValue(x, z, seed) / 4.0;
 		return corners + sides + center;
 	}
+
 	double Terrain::Interpolate(double a, double b, double blend)
 	{
 		double theta = blend * PI;
@@ -119,7 +122,10 @@ namespace engine
 	
 	void Terrain::Update(float DeltaTime)
 	{
-
+		if (m_Mesh)
+		{
+			m_Mesh->Update(DeltaTime);
+		}
 	}
 
 	void Terrain::Enable(class Shader& shader, const std::string& Name) const
@@ -128,6 +134,13 @@ namespace engine
 
 	void Terrain::Enable() const
 	{
+		m_Shader->Bind();
+		m_BlendMap->Bind(4);
+		m_Shader->SetUniform1i("u_BlendMap", 4);
+
+		m_Shader->SetUniform1i("u_TerrainWidth", m_Width);
+		m_Shader->SetUniform1i("u_TerrainDepth", m_Depth);
+
 		if (m_Mesh)
 		{
 			m_Mesh->Enable();
@@ -136,10 +149,13 @@ namespace engine
 
 	void Terrain::Disable() const
 	{
+		m_BlendMap->UnBind();
 		if (m_Mesh)
 		{
 			m_Mesh->Disable();
 		}
+
+		m_Shader->UnBind();
 	}
 
 	Terrain::~Terrain()

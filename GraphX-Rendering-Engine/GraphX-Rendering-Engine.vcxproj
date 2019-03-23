@@ -265,6 +265,7 @@
     <ClInclude Include="src\Timer\Timer.h" />
     <ClInclude Include="src\Gui\GraphXGui.h" />
     <ClInclude Include="src\Utilities\EngineConstants.h" />
+    <ClInclude Include="src\Utilities\EngineProperties.h" />
     <ClInclude Include="src\Utilities\EngineUtil.h" />
     <ClInclude Include="src\Utilities\FileOpenDialog.h" />
     <ClInclude Include="src\Utilities\MousePicker.h" />

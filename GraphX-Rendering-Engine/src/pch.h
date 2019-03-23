@@ -5,6 +5,8 @@
 #include "ErrorHandler.h"
 #include "GraphX_Maths.h"
 #include "Timer/Timer.h"
+#include "Utilities/EngineConstants.h"
+#include "Utilities/EngineProperties.h"
 
 /* Standard Libraries */
 #include <iostream>

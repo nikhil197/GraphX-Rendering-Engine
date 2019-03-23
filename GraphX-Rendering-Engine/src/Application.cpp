@@ -120,7 +120,7 @@ namespace engine
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
-		m_Camera = new Camera(gm::Vector3(0.0f, 0.0f, 3.0f), gm::Vector3::ZeroVector, gm::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight());
+		m_Camera = new Camera(gm::Vector3(0.0f, 0.0f, 3.0f), gm::Vector3::ZeroVector, gm::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -256,13 +256,14 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
 
-		Terrain ter(250, 250, 1.0f, {"res/Textures/Terrain/GrassGreenTexture0001.jpg"}, Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
-		m_Shaders.emplace_back(ter.GetShader());
-		m_Terrain.push_back(&ter);
-
 		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
 		m_Objects3D.emplace_back(&cube);
 		cube.bShowDetails = true;
+
+		Terrain ter(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
+		m_Shaders.emplace_back(ter.GetShader());
+		m_Terrain.push_back(&ter);
+
 		m_Shader->UnBind();
 
 		ter.GetShader()->Bind();
@@ -278,9 +279,6 @@ namespace engine
 		{
 			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 				m_Renderer3D->Submit(m_Objects3D[i]);
-
-			for (unsigned int i = 0; i < m_Terrain.size(); i++)
-				m_Renderer3D->Submit(m_Terrain[i]);
 
 			// Frame Time in seconds
 			float DeltaTime = Clock::GetClock()->GetDeltaTime();
@@ -310,7 +308,8 @@ namespace engine
 			Matrix4 model = trans * rotate * scale;
 
 			// Calculate the shadow maps
-			CalculateShadows();
+			if(GX_ENABLE_SHADOWS)
+				CalculateShadows();
 
 			/****** Normally render the scene *****/
 			// Clear the window 
@@ -328,9 +327,6 @@ namespace engine
 			m_Shader->Bind();
 			m_ShadowBuffer->BindDepthMap(2);		/* NOTE: Create a constants file and set a predefined slot for the shadow map */
 			ConfigureShaderForRendering(*m_Shader);
-
-			ter.GetShader()->Bind();
-			ConfigureShaderForRendering(*ter.GetShader());
 
 			m_Shader->Bind();
 			m_Shader->SetUniformMat4f("u_Model", model);
@@ -399,6 +395,9 @@ namespace engine
 		for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 			m_Objects3D[i]->Update(DeltaTime);
 
+		for (unsigned int i = 0; i < m_Terrain.size(); i++)
+			m_Terrain[i]->Update(DeltaTime);
+
 		m_ParticlesManager->Update(DeltaTime);
 
 		DayNightCycleCalculations(DeltaTime);
@@ -410,7 +409,7 @@ namespace engine
 	{
 		// Render the shadow maps
 		m_DepthShader->Bind();
-		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_Lights[1]->GetLightSpaceMatrix());
+		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetLightSpaceMatrix());
 		m_ShadowBuffer->Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -435,6 +434,30 @@ namespace engine
 		}
 		else
 			m_Renderer3D->Render();
+
+		RenderTerrain();
+	}
+
+	void Application::RenderTerrain()
+	{
+		for (unsigned int i = 0; i < m_Terrain.size(); i++)
+		{
+			Terrain* terrain = m_Terrain[i];
+
+			// Configure the terrain shaders
+			terrain->Enable();
+			Shader& shader = *terrain->GetShader();
+			ConfigureShaderForRendering(shader);
+
+			// Set the transformation matrix
+			gm::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
+			shader.SetUniformMat4f("u_Model", Model);
+
+			// Render the Terrain
+			m_Renderer->Draw(*terrain->GetMesh().GetIBO());
+
+			terrain->Disable();
+		}
 	}
 
 	void Application::RenderGui()
@@ -485,7 +508,9 @@ namespace engine
 		shader.SetUniform1i("u_ShadowMap", 2);
 		shader.SetUniform3f("u_LightPos", m_Light->Position);
 		shader.SetUniform4f("u_LightColor", m_Light->Color);
-		shader.SetUniformMat4f("u_LightSpaceMatrix", m_Light->GetLightSpaceMatrix());
+
+		if(GX_ENABLE_SHADOWS)
+			shader.SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetLightSpaceMatrix());
 
 		m_SunLight->Enable(shader, "u_LightSource");
 	}

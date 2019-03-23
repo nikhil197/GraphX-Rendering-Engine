@@ -133,6 +133,9 @@ namespace engine
 		/* Renders the scene */
 		void RenderScene(bool IsShadowPhase = false);
 
+		/* Renders the terrain in the scene */
+		void RenderTerrain();
+
 		/* Renders the GUI */
 		void RenderGui();
 

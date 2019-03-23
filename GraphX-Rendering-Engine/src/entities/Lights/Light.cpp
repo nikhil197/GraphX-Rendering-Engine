@@ -21,7 +21,8 @@ namespace engine
 		shader.SetUniform4f((LightName + ".Color").c_str(), Color);
 		shader.SetUniform1f((LightName + ".Intensity").c_str(), Intensity);
 
-		SetLightSpaceMatrix(shader, LightName);
+		if(GX_ENABLE_SHADOWS)
+			SetLightSpaceMatrix(shader, LightName);
 	}
 
 	void Light::Disable() const

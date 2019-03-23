@@ -26,6 +26,9 @@ namespace engine
 		/* Indices for the terrain mesh */
 		std::vector<unsigned int>* m_Indices;
 
+		/* Blendmap used to draw the terrain */
+		const class Texture* m_BlendMap;
+
 		/* Textures used for the terrain */
 		std::vector<const class Texture*> *m_Textures;
 
@@ -37,9 +40,10 @@ namespace engine
 		/* @Param Width  - # of tiles in the x - direction */
 		/* @Param Depth - # of tiles in the negative z - direction */
 		/* @Param TexNames - Names of the textures to be used for the terrain */
+		/* @Param BlendMap - Name of the blend map used to sample the textures specified in TexNames */
 		/* @Param Pos - Position of the terrain in the world */
 		/* @Param Scale - Scale of the mesh in the x and z direction */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const gm::Vector3& Pos, const gm::Vector2& Scale);
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const gm::Vector3& Pos, const gm::Vector2& Scale);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;
