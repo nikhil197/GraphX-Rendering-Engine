@@ -51,6 +51,16 @@ namespace engine
 		GLCall(glUniform3f(GetLocation(Name), r, g, b));
 	}
 
+	void Shader::SetUniform2f(const char* Name, float r, float g)
+	{
+		GLCall(glUniform2f(GetLocation(Name), r, g));
+	}
+
+	void Shader::SetUniform2f(const char* Name, const gm::Vector2& Vec)
+	{
+		GLCall(glUniform2f(GetLocation(Name), Vec.x, Vec.y));
+	}
+
 	void Shader::SetUniform3f(const char* Name, const gm::Vector3& Vec)
 	{
 		GLCall(glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z));

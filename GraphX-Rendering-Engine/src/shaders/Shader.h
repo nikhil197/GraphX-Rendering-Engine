@@ -38,6 +38,10 @@ namespace engine
 
 		void SetUniform1f(const char* Name, float val);
 
+		void SetUniform2f(const char* Name, float a, float b);
+
+		void SetUniform2f(const char* Name, const gm::Vector2& Vec);
+
 		void SetUniform3f(const char* Name, float r, float g, float b);
 
 		void SetUniform3f(const char* Name, const gm::Vector3& Vec);

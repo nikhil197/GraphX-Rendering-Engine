@@ -272,7 +272,7 @@ namespace engine
 		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
 		Texture particleTex("res/Textures/Particles/Star.png");
-		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 100.0f, 2.0f, 0.5f, 4.0f, 1.0f);
+		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 100.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)

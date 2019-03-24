@@ -40,6 +40,15 @@ namespace engine
 		/* Texture (Atlas) used for the particle */
 		const class Texture* m_Texture;
 
+		/* Offset of the current texture to be used in the atlas */
+		gm::Vector2 m_CurrentTexOffset;
+
+		/* Offset of the next texture to be used in the atlas */
+		gm::Vector2 m_NextTexOffset;
+
+		/* Factor used to blend between the two textures */
+		float m_BlendFactor;
+
 	public:
 		Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
@@ -64,5 +73,9 @@ namespace engine
 
 	private:
 		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader) const override;
+
+		void UpdateTexOffset();
+
+		void CalculateOffset(int index, gm::Vector2& TexOffset);
 	};
 }

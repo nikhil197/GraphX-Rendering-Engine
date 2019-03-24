@@ -33,7 +33,7 @@ namespace engine
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)
 	{
-		float Offset = 0.0f;
+		float Offset = Deviation * Average * ((float) EngineUtil::GetRandomValue() * 2 - 1.0f);
 		return Average + Offset;
 	}
 }

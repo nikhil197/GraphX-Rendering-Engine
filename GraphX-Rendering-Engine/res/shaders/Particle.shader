@@ -22,9 +22,16 @@ void main()
 in vec2 v_TexCoords;
 
 uniform sampler2D u_ParticleTexture;
+uniform vec2 u_TexCoordOffset1;
+uniform vec2 u_TexCoordOffset2;
+uniform int u_TexAtlasRows;
+uniform float u_BlendFactor;
+
 out vec4 fColor;
 
 void main()
 {
-	fColor = texture(u_ParticleTexture, v_TexCoords);
+	vec2 TexCoords1 = (v_TexCoords / u_TexAtlasRows) + u_TexCoordOffset1;
+	vec2 TexCoords2 = (v_TexCoords / u_TexAtlasRows) + u_TexCoordOffset2;
+	fColor = mix(texture(u_ParticleTexture, TexCoords1), texture(u_ParticleTexture, TexCoords2), u_BlendFactor);
 }
