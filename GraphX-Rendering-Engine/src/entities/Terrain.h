@@ -75,5 +75,7 @@ namespace engine
 		double Interpolate(double a, double b, double blend);
 
 		double InterpolatedNoise(double x, double y);
+
+		gm::Vector3 CalculateNormal(double x, double y);
 	};
 }
