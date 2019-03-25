@@ -54,7 +54,7 @@ namespace engine
 				// Calculate the vertices of the terrain
 				double yCoord = GetYCoords(x, z);
 				vertex.Position = gm::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
-				vertex.Normal   = gm::Vector3(0.0f, 1.0f, 0.0f);	// TODO: Change the normals when flat terrain is replaced with height maps
+				vertex.Normal = CalculateNormal(x, z);	// TODO: Optimize using another loop
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 
@@ -118,6 +118,17 @@ namespace engine
 		double i1 = Interpolate(v1, v2, fracX);
 		double i2 = Interpolate(v3, v4, fracX);
 		return Interpolate(i1, i2, fracZ);
+	}
+
+	gm::Vector3 Terrain::CalculateNormal(double x, double z)
+	{
+		double heightL = GetYCoords(x - 1, z);
+		double heightR = GetYCoords(x + 1, z);
+		double heightD = GetYCoords(x, z - 1);
+		double heightU = GetYCoords(x, z + 1);
+		gm::Vector3 normal = gm::Vector3(heightL - heightR, 2.0, heightD - heightU);
+		normal.Normalize();
+		return normal;
 	}
 	
 	void Terrain::Update(float DeltaTime)
