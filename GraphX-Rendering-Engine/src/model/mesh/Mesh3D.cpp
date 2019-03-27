@@ -23,9 +23,8 @@ namespace engine
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
-		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), BaseColor(Mesh.BaseColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()) 
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), BaseColor(Mesh.BaseColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(Mesh.m_VAO), m_VBO(Mesh.m_VBO), m_IBO(Mesh.m_IBO), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model)
 	{
-
 	}
 
 	void Mesh3D::Update(float DeltaTime)

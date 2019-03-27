@@ -65,7 +65,7 @@ namespace engine
 		*/
 		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color = gm::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
-		// Empty constructor for local objects
+		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
 
 		/* Updates the status of the Mesh */
