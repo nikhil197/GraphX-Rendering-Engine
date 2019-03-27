@@ -93,9 +93,9 @@ namespace engine
 				{
 					if (s_GuiEventCallback)
 					{
-						//CreateTerrainEvent e(new Terrain(x, z, tileSize, textures, postion, scale));
-						//textures.clear();
-						//s_GuiEventCallback(e);
+						CreateTerrainEvent e(new Terrain(x, z, tileSize, textures, "res/Textures/Terrain/BlendMap.png", postion, scale));
+						textures.clear();
+						s_GuiEventCallback(e);
 					}
 				}
 				ImGui::CloseCurrentPopup();

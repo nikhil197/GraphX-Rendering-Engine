@@ -132,7 +132,7 @@ namespace engine
 			Mesh3D* mMesh = nullptr;
 			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3(0.01f, 0.01f, 0.01f), m_Shader, *textures, *vertices, *indices);
+				mMesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, m_Shader, *textures, *vertices, *indices);
 			}
 			
 			if (mMesh == nullptr)

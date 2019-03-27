@@ -4,6 +4,7 @@ struct aiScene;
 
 namespace engine
 {
+	/* NOTE: Meshes of the model need to be deleted explicitly */
 	class Model3D
 	{
 	private:

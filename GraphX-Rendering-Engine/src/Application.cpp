@@ -235,7 +235,7 @@ namespace engine
 		m_Shaders.push_back(m_Shader);
 		//Shader m_Shader("res/shaders/BasicTexture.shader");
 		m_Shader->Bind();
-		m_Shader->SetUniform1f("u_AmbientStrength", 0.01f);
+		m_Shader->SetUniform1f("u_AmbientStrength", 0.1f);
 		m_Shader->SetUniform1f("u_Shininess", 256.0f);
 		m_Shader->SetUniform1f("u_Reflectivity", 1.0f);
 		//m_Shader->SetUniform1i("u_Texture", 0 /* Slot number*/);
@@ -260,9 +260,29 @@ namespace engine
 		m_Objects3D.emplace_back(&cube);
 		cube.bShowDetails = true;
 
-		Terrain ter(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-100.0f, -10.0f, 100.0f), Vector2(1.0f, 1.0f));
+		Terrain ter(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
 		m_Shaders.emplace_back(ter.GetShader());
 		m_Terrain.push_back(&ter);
+
+		// Load Trees
+		Model3D TreeModel("res/Models/tree.obj", *m_Shader);
+		Texture TreeTex("res/Textures/tree.png");
+		TreeModel.GetMeshes().at(0)->AddTexture(&TreeTex);
+		Mesh3D* TreeMesh = TreeModel.GetMeshes().at(0);
+		TreeMesh->Scale = 2 * Vector3::UnitVector;
+		unsigned int NumTree = 100;
+		for (unsigned int i = 0; i < NumTree; i++)
+		{
+			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetDepth() / 2);
+			TreeMesh->Position = Position;
+			m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
+		}
+
+		// Load Stall
+		Model3D StallModel("res/Models/stall.obj", *m_Shader);
+		Texture StallTex("res/Textures/stallTexture.png");
+		StallModel.GetMeshes().at(0)->AddTexture(&StallTex);
+		m_Objects3D.emplace_back(StallModel.GetMeshes().at(0));
 
 		m_Shader->UnBind();
 
@@ -271,7 +291,7 @@ namespace engine
 		ter.GetShader()->SetUniform1f("u_Shininess", 256.0f);
 		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
-		Texture particleTex("res/Textures/Particles/Star.png");
+		Texture particleTex("res/Textures/Particles/cosmic.png", false, 4);
 		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 100.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
 
 		// Draw while the window doesn't close
@@ -296,7 +316,7 @@ namespace engine
 				times = 0;
 			}
 
-			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
+			//particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
 
 			// Update all the elements of the scene
 			Update(DeltaTime);
@@ -466,7 +486,7 @@ namespace engine
 		GraphXGui::LightProperties(*m_Light);
 		GraphXGui::CameraProperties(*m_Camera);
 		GraphXGui::Models();
-		if (m_Terrain[0] != nullptr)
+		if (m_Terrain.size() > 0 && m_Terrain[0] != nullptr)
 		{
 			GraphXGui::TerrainDetails(*m_Terrain[0]);
 		}

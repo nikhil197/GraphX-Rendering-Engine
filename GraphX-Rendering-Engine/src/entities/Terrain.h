@@ -60,6 +60,12 @@ namespace engine
 		/* Returns the shader used for the terrain */
 		class Shader* GetShader() const { return m_Shader; }
 
+		/* Returns the Width of the terrain (x - direction) */
+		inline float GetWidth() const { return m_TileSize * m_Width; }
+
+		/* Returns the depth of the terrain (z - direction) */
+		inline float GetDepth() const { return m_TileSize * m_Depth; }
+
 		~Terrain();
 
 	private:
@@ -76,6 +82,6 @@ namespace engine
 
 		double InterpolatedNoise(double x, double y);
 
-		gm::Vector3 CalculateNormal(double x, double y);
+		gm::Vector3 CalculateNormal(int x, int y);
 	};
 }
