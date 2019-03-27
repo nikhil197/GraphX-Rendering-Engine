@@ -82,6 +82,8 @@ float ShadowCalculation(vec4 fragLightSpacePos)
 
 void main()
 {
+	bool bCalculateShadow = false;
+
 	// Normalize the light vector and the normal vector
 	vec3 UnitNormal = normalize(v_Data.Normal);
 
@@ -120,7 +122,9 @@ void main()
 	float AttenuationFactor = (u_AttenuationFactors.x + (u_AttenuationFactors.y * distance) + (u_AttenuationFactors.z * distance * distance));
 
 	// Calculate the shadow
-	float Shadow = ShadowCalculation(v_Data.LightSpacePos);
+	float Shadow = 0.0f;
+	if(bCalculateShadow)
+		Shadow = ShadowCalculation(v_Data.LightSpacePos);
 
 	// Divide the diffuse and specular components of the light color (ambient is the property of the environment, probably due to the directional light source - most probably sun)
 	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor))) * (texture(u_Texture0, vec2(v_Data.Color.xy)));
