@@ -145,11 +145,11 @@ namespace engine
 		}		
 	}
 
-	void GraphXGui::DetailsWindow(Mesh3D& mesh)
+	void GraphXGui::DetailsWindow(Mesh3D& mesh, const std::string& Name)
 	{
 		if (mesh.bShowDetails)
 		{
-			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
+			ImGui::Begin(Name.c_str(), (bool*)mesh.bShowDetails);
 			ImGui::Spacing();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Transformations");
 			ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f);

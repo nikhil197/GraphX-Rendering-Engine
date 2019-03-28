@@ -269,7 +269,7 @@ namespace engine
 		Texture TreeTex("res/Textures/tree.png");
 		TreeModel.GetMeshes().at(0)->AddTexture(&TreeTex);
 		Mesh3D* TreeMesh = TreeModel.GetMeshes().at(0);
-		TreeMesh->Scale = 2 * Vector3::UnitVector;
+		TreeMesh->Scale = 2.5f * Vector3::UnitVector;
 		unsigned int NumTree = 100;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
@@ -278,10 +278,24 @@ namespace engine
 			m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
 		}
 
+		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", *m_Shader);
+		Texture LowPolyTreeTex("res/Textures/lowPolyTree.png");
+		LowPolyTreeModel.GetMeshes().at(0)->AddTexture(&LowPolyTreeTex);
+		Mesh3D* LowPolyTreeMesh = LowPolyTreeModel.GetMeshes().at(0);
+		LowPolyTreeMesh->Scale = Vector3::UnitVector;
+		NumTree = 10;
+		for (unsigned int i = 0; i < NumTree; i++)
+		{
+			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetDepth() / 2);
+			LowPolyTreeMesh->Position = Position;
+			m_Objects3D.emplace_back(new Mesh3D(*LowPolyTreeMesh));
+		}
+
 		// Load Stall
 		Model3D StallModel("res/Models/stall.obj", *m_Shader);
 		Texture StallTex("res/Textures/stallTexture.png");
 		StallModel.GetMeshes().at(0)->AddTexture(&StallTex);
+		StallModel.GetMeshes().at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
 		m_Objects3D.emplace_back(StallModel.GetMeshes().at(0));
 
 		m_Shader->UnBind();
@@ -316,7 +330,7 @@ namespace engine
 				times = 0;
 			}
 
-			//particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
+			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
 
 			// Update all the elements of the scene
 			Update(DeltaTime);
@@ -483,6 +497,9 @@ namespace engine
 	void Application::RenderGui()
 	{
 		GraphXGui::DetailsWindow(*m_Objects3D[0]);
+		if (m_SelectedObject3D != nullptr)
+			GraphXGui::DetailsWindow(*m_SelectedObject3D, "Selected Object");
+
 		GraphXGui::LightProperties(*m_Light);
 		GraphXGui::CameraProperties(*m_Camera);
 		GraphXGui::Models();
@@ -753,15 +770,15 @@ namespace engine
 		dialog.Show();
 
 		std::string TexName = EngineUtil::ToByteString(dialog.GetAbsolutePath());
-		Texture texture(TexName);
+		Texture *texture = new Texture(TexName);
 
 		if (m_SelectedObject3D)
 		{
-			m_SelectedObject3D->AddTexture(&texture);
+			m_SelectedObject3D->AddTexture(texture);
 		}
 		else if (m_SelectedObject2D)
 		{
-			m_SelectedObject2D->AddTexture(&texture);
+			m_SelectedObject2D->AddTexture(texture);
 		}
 
 		return true;
@@ -771,7 +788,8 @@ namespace engine
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, {m_DefaultTexture}));
+			m_Objects3D.emplace_back(new Cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, {}));
+			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)
 		{
@@ -783,9 +801,12 @@ namespace engine
 			
 			for(unsigned int i = 0; i < meshes.size(); i++)
 				m_Objects3D.emplace_back(meshes[i]);
+
+			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		// Add more model types once added
 
+		m_SelectedObject3D->bShowDetails = true;
 		return true;
 	}
 

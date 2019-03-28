@@ -53,7 +53,7 @@ namespace engine
 			{
 				// Calculate the vertices of the terrain
 				double yCoord = GetYCoords(x, z);
-				vertex.Position = gm::Vector3(x * m_TileSize, yCoord, -z * m_TileSize);
+				vertex.Position = gm::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
 				vertex.Normal = CalculateNormal(x, z);	// TODO: Optimize using another loop
 				vertex.TexCoord = gm::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);

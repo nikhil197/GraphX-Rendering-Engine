@@ -33,7 +33,7 @@ namespace engine
 		static void TransformWindow(class Mesh3D& mesh);
 
 		/* Create a window showing the details of the Mesh3D*/
-		static void DetailsWindow(class Mesh3D& mesh);
+		static void DetailsWindow(class Mesh3D& mesh, const std::string& Name = "Details");
 
 		/* Create a window showing the light properties */
 		static void LightProperties(class Light& light);

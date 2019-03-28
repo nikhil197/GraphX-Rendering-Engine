@@ -150,6 +150,7 @@ namespace engine
 			delete texCoords;
 			delete indices;
 			delete vertices;
+			delete textures;
 		}
 	}
 }
