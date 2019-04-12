@@ -244,6 +244,7 @@
     <ClInclude Include="src\Input\Keyboard.h" />
     <ClInclude Include="src\Input\Mouse.h" />
     <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\MemoryManager.h" />
     <ClInclude Include="src\Model\Cube.h" />
     <ClInclude Include="src\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Model\Mesh\Mesh3D.h" />
@@ -292,6 +293,7 @@
     <None Include="res\Shaders\Particle.shader" />
     <None Include="res\shaders\Skybox.shader" />
     <None Include="res\Shaders\Terrain.shader" />
+    <None Include="src\MemoryManager.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">

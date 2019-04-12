@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MemoryManager.h"
+
 namespace engine
 {
 	/* Type of the texture used for the frame buffer */
@@ -14,6 +16,9 @@ namespace engine
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
+
+	private:
+		static MemoryManager<Texture> s_Manager;
 
 	private:
 		/* ID For the texture */
@@ -65,6 +70,12 @@ namespace engine
 
 		/* Returns the number of rows in the texture atlas */
 		inline unsigned int GetRowsInTexAtlas() const { return m_RowsInTexAtlas; }
+
+		/* Custom allocation operator */
+		void* operator new (std::size_t size);
+
+		/* Custom De-allocation operator */
+		void operator delete(void* ptr);
 
 		/* Destroy the texture */
 		~Texture();
