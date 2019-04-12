@@ -11,7 +11,7 @@ namespace gm
 	public:
 		/* Returns the square of the value */
 		template<typename T>
-		static float Square(const T Value)
+		static T Square(const T Value)
 		{
 			return Value * Value;
 		}
