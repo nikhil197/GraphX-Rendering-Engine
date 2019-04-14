@@ -2,6 +2,7 @@
 #include "Texture.h"
 
 #include "stb/stb_image.h"
+#include "Utilities/EngineUtil.h"
 
 namespace engine
 {
@@ -67,6 +68,11 @@ namespace engine
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
 
+	bool Texture::operator==(const Texture& OtherTex) const
+	{
+		return EngineUtil::ExtractFileName(OtherTex.GetFilePath()) == EngineUtil::ExtractFileName(m_FilePath) && OtherTex.m_Width == m_Width && OtherTex.m_Height == m_Height;
+	}
+
 	void* Texture::operator new(std::size_t size)
 	{
 		void* ptr = ::operator new(size);
@@ -86,5 +92,10 @@ namespace engine
 		// Free the local image data
 		if (m_LocalBuffer)
 			stbi_image_free(m_LocalBuffer);
+	}
+
+	bool operator==(const std::reference_wrapper<Texture>& Ref1, const std::reference_wrapper<Texture>& Ref2)
+	{
+		return Ref1.get().operator==(Ref2.get());
 	}
 }

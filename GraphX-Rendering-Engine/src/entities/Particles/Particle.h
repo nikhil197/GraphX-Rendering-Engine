@@ -53,10 +53,10 @@ namespace engine
 		Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Entity Interface */
-		void Update(float DeltaTime) override;
+		void Update(float DeltaTime, const gm::Matrix4& ViewMatrix, bool UpdateMatrix);
 
-		void Enable(class Shader& shader, const gm::Matrix4& ViewMatrix);
-
+		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader = "") const override;
+		
 		virtual void Disable() const override;
 
 		/* Returns the Position of the particle */
@@ -72,10 +72,12 @@ namespace engine
 		inline const class Texture& GetTexture() const { return *m_Texture; }
 
 	private:
-		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader) const override;
-
+		void Update(float DeltaTime) override;
+		
+		/* Updated the texture atlas offset for the particle based on the particle lifespan */
 		void UpdateTexOffset();
 
+		/* Calculates the offset for the given index */
 		void CalculateOffset(int index, gm::Vector2& TexOffset);
 	};
 }

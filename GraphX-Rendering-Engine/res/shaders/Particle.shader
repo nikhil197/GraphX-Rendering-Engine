@@ -22,10 +22,10 @@ void main()
 in vec2 v_TexCoords;
 
 uniform sampler2D u_ParticleTexture;
-uniform vec2 u_TexCoordOffset1;
-uniform vec2 u_TexCoordOffset2;
-uniform int u_TexAtlasRows;
-uniform float u_BlendFactor;
+uniform vec2 u_TexCoordOffset1 = vec2(0.0f);
+uniform vec2 u_TexCoordOffset2 = vec2(0.0f);
+uniform int u_TexAtlasRows = 1;
+uniform float u_BlendFactor = 0.0f;
 
 out vec4 fColor;
 

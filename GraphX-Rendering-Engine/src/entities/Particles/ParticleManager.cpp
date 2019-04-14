@@ -15,13 +15,18 @@ namespace engine
 
 	void ParticleManager::Update(float DeltaTime)
 	{
-		for (unsigned int i = 0; i < m_Particles.size(); i++)
+		ParticlesMap::iterator itr = m_Particle.begin();
+		for (; itr != m_Particle.end(); itr++)
 		{
-			m_Particles[i].Update(DeltaTime);
+			std::vector<Particle>& particles = itr->second;
+			for (unsigned int i = 0; i < particles.size(); i++)
+			{
+				particles[i].Update(DeltaTime, m_Camera.GetViewMatrix(), m_Camera.IsRenderStateDirty());
 
-			// Check if the life span of the particle has expired
-			if (m_Particles[i].IsToBeDestroyed())
-				m_Particles.erase(m_Particles.begin() + i);
+				// Check if the life span of the particle has expired
+				if (particles[i].IsToBeDestroyed())
+					particles.erase(particles.begin() + i);
+			}
 		}
 	}
 
@@ -32,10 +37,21 @@ namespace engine
 		// Render
 		static SimpleRenderer renderer;
 		const gm::Matrix4 View = m_Camera.GetViewMatrix();
-		for (Particle particle : m_Particles)
+
+		ParticlesMap::iterator itr = m_Particle.begin();
+		for (; itr != m_Particle.end(); itr++)
 		{
-			particle.Enable(*m_ParticleShader, View);
-			renderer.Draw(Quad::GetVerticesCount());
+			Texture& Tex = itr->first;
+			Tex.Bind();
+			m_ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+			m_ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Tex.GetRowsInTexAtlas());
+
+			std::vector<Particle>& particles = itr->second;
+			for (Particle particle : particles)
+			{
+				particle.Enable(*m_ParticleShader);
+				renderer.Draw(Quad::GetVerticesCount());
+			}
 		}
 
 		PostRender();
@@ -43,7 +59,8 @@ namespace engine
 
 	void ParticleManager::AddParticle(const Particle& particle)
 	{
-		m_Particles.push_back(particle);
+		m_Particle[(Texture&)particle.GetTexture()].push_back(particle);
+//		m_Particles.push_back(particle);
 	}
 
 	void ParticleManager::PreRender()

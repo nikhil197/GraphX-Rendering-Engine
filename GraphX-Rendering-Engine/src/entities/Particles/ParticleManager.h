@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Particle.h"
+#include "Utilities/HashUtil.h"
 
 namespace engine
 {
+	typedef std::unordered_map < std::reference_wrapper<Texture>, std::vector<Particle>> ParticlesMap;
+
 	class ParticleManager
 	{
 	private:
@@ -11,7 +14,7 @@ namespace engine
 		class Shader* m_ParticleShader;
 
 		/* All the Particles to be rendered */
-		std::vector<Particle> m_Particles;
+		ParticlesMap m_Particle;
 
 		/* Main Camera of the engine */
 		const class Camera& m_Camera;

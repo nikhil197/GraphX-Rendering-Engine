@@ -77,7 +77,13 @@ namespace engine
 		/* Custom De-allocation operator */
 		void operator delete(void* ptr);
 
+		/* Equality Test for the texture */
+		bool operator==(const Texture& OtherTex) const;
+
 		/* Destroy the texture */
 		~Texture();
 	};
+
+	/* Equality test for a Texture wrapped in reference_wrapper */
+	bool operator==(const std::reference_wrapper<Texture>& Ref1, const std::reference_wrapper<Texture>& Ref2);
 }

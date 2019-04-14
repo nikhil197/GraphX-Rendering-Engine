@@ -14,7 +14,7 @@ namespace engine
 
 	void ParticleSystem::SpawnParticles(const gm::Vector3& SpawnLocation, float DeltaTime)
 	{
-		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec * 2;
+		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec;
 		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
 		gm::MathUtil::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);

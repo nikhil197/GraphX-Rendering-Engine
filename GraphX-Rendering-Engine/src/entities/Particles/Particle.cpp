@@ -20,35 +20,49 @@ namespace engine
 
 	void Particle::Update(float DeltaTime)
 	{
-		m_Velocity.y += GX_ENGINE_GRAVITY * m_GravityEffect * DeltaTime;
-		m_Position = m_Position + (m_Velocity * m_Scale);
-		m_ElapsedTime += DeltaTime;
-		UpdateTexOffset();
-		if (m_ElapsedTime >= m_LifeSpan)
-			m_Destroy = true;
 	}
 
-	void Particle::Enable(Shader& shader, const gm::Matrix4& ViewMatrix)
+	void Particle::Update(float DeltaTime, const gm::Matrix4& ViewMatrix, bool UpdateMatrix)
 	{
-		m_Texture->Bind();
-		shader.SetUniform1i("u_ParticleTexture", 0);
-		m_Model = gm::Translation(m_Position);
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				m_Model[i][j] = ViewMatrix[j][i];
-		m_Model = gm::Scaling(m_Scale) * gm::Rotation(m_Rotation, gm::Vector3::ZAxis) * m_Model;
+		m_ElapsedTime += DeltaTime;
+		if (m_ElapsedTime >= m_LifeSpan)
+			m_Destroy = true;
+		else
+		{
+			m_Velocity.y += GX_ENGINE_GRAVITY * m_GravityEffect * DeltaTime;
+			m_Position = m_Position + (m_Velocity * m_Scale);
+			if (m_Texture->GetRowsInTexAtlas() > 1)
+				UpdateTexOffset();
+
+			// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
+			if (UpdateMatrix || m_ElapsedTime == DeltaTime)
+			{
+				m_Model = gm::Translation(m_Position);
+				for (int i = 0; i < 3; i++)
+					for (int j = 0; j < 3; j++)
+						m_Model[i][j] = ViewMatrix[j][i];
+				m_Model = gm::Scaling(m_Scale) * gm::Rotation(m_Rotation, gm::Vector3::ZAxis) * m_Model;
+			}
+			else
+			{
+				m_Model *= gm::Translation(m_Velocity * m_Scale);
+			}
+		}
+	}
+
+	void Particle::Enable(Shader& shader, const std::string& EntityNameInShader) const
+	{
 		shader.SetUniformMat4f("u_Model", m_Model);
-		shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
-		shader.SetUniform1i("u_TexAtlasRows", (int)m_Texture->GetRowsInTexAtlas());
-		shader.SetUniform2f("u_TexCoordOffset1", m_CurrentTexOffset);
-		shader.SetUniform2f("u_TexCoordOffset2", m_NextTexOffset);
+		
+		if (m_Texture->GetRowsInTexAtlas() > 1)
+		{
+			shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
+			shader.SetUniform2f("u_TexCoordOffset1", m_CurrentTexOffset);
+			shader.SetUniform2f("u_TexCoordOffset2", m_NextTexOffset);
+		}
 	}
 
 	void Particle::Disable() const
-	{
-	}
-
-	void Particle::Enable(class Shader& shader, const std::string& EntityNameInShader) const
 	{
 	}
 

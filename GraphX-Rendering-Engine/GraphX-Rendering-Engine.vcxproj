@@ -269,6 +269,7 @@
     <ClInclude Include="src\Utilities\EngineProperties.h" />
     <ClInclude Include="src\Utilities\EngineUtil.h" />
     <ClInclude Include="src\Utilities\FileOpenDialog.h" />
+    <ClInclude Include="src\Utilities\HashUtil.h" />
     <ClInclude Include="src\Utilities\MousePicker.h" />
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\Buffers\IndexBuffer.h" />
