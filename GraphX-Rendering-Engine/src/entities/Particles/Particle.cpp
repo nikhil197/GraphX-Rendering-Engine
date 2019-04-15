@@ -57,8 +57,7 @@ namespace engine
 		if (m_Texture->GetRowsInTexAtlas() > 1)
 		{
 			shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
-			shader.SetUniform2f("u_TexCoordOffset1", m_CurrentTexOffset);
-			shader.SetUniform2f("u_TexCoordOffset2", m_NextTexOffset);
+			shader.SetUniform4f("u_TexCoordOffsets", m_CurrentTexOffset, m_NextTexOffset);
 		}
 	}
 

@@ -50,6 +50,8 @@ namespace engine
 
 		void SetUniform4f(const char* Name, const gm::Vector4& Vec);
 
+		void SetUniform4f(const char* Name, const gm::Vector2& Vec1, const gm::Vector2& Vec2);
+
 		void SetUniformMat3f(const char* Name, const gm::Matrix3& Mat);
 
 		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
