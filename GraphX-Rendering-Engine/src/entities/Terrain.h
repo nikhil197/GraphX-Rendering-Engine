@@ -8,14 +8,14 @@ namespace engine
 		: public Entity
 	{
 	private:
-		/* 2D Mesh to represent the terrain */
+		/* Mesh to represent the terrain */
 		class Mesh3D* m_Mesh;
 
 		/* Shader for the terrain */
 		class Shader* m_Shader;
 
 		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
-		int m_Width, m_Depth;
+		const int m_Width, m_Depth;
 
 		/* Tile size for the terrain */
 		float m_TileSize;
@@ -74,6 +74,7 @@ namespace engine
 		
 		void Enable(class Shader& shader, const std::string& Name = "u_Terrain") const override;
 
+		/* Calculates the y - Coordinate for the vertices of the terrain mesh */
 		double GetYCoords(int x, int y);
 	    
 		double SmoothNoise(int x, int y);
@@ -82,6 +83,7 @@ namespace engine
 
 		double InterpolatedNoise(double x, double y);
 
-		gm::Vector3 CalculateNormal(int x, int y);
+		/* Calculates normals for the created mesh of the terrain */
+		void CalculateNormal(int x, int y);
 	};
 }

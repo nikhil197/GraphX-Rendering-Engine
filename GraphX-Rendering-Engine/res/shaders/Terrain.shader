@@ -45,8 +45,7 @@ uniform vec4 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
 
-uniform int u_TerrainWidth;	/* In the x - direction */
-uniform int u_TerrainDepth;	/* In the z - direction */
+uniform ivec2 u_TerrainDimensions;	/* X & Z dimension of the terrain */
 
 /* Structure for the ambient light source */
 struct DirectionalLight
@@ -133,7 +132,7 @@ void main()
 	if(u_CalculateShadow)
 		Shadow = ShadowCalculation(v_Data.LightSpacePos);
 
-	vec2 BlendTexCoord = vec2(v_Data.TexCoord.x / (u_TerrainWidth - 1), v_Data.TexCoord.y / (u_TerrainDepth - 1));
+	vec2 BlendTexCoord = vec2(v_Data.TexCoord.x / (u_TerrainDimensions.x - 1), v_Data.TexCoord.y / (u_TerrainDimensions.y - 1));
 	vec4 texColorBlend = texture(u_BlendMap, BlendTexCoord);
 
 	vec4 texColor0 = texture(u_Texture0, v_Data.TexCoord) * (1.0f - (texColorBlend.r + texColorBlend.g + texColorBlend.b));

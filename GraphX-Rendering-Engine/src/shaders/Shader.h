@@ -36,6 +36,8 @@ namespace engine
 		/* Set uniforms */
 		void SetUniform1i(const char* Name, int val);
 
+		void SetUniform2i(const char* Name, int v1, int v2);
+
 		void SetUniform1f(const char* Name, float val);
 
 		void SetUniform2f(const char* Name, float a, float b);

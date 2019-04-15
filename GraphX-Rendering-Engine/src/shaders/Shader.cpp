@@ -41,6 +41,11 @@ namespace engine
 		GLCall(glUniform1i(GetLocation(Name), Val));
 	}
 
+	void Shader::SetUniform2i(const char* Name, int v1, int v2)
+	{
+		GLCall(glUniform2i(GetLocation(Name), v1, v2));
+	}
+
 	void Shader::SetUniform1f(const char* Name, float Val)
 	{
 		GLCall(glUniform1f(GetLocation(Name), Val));
@@ -151,8 +156,8 @@ namespace engine
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
-		GX_ENGINE_INFO("{0} : Compiling Shaders", m_FileName);
-		Timer time(m_FileName + " : Compiling Shaders");
+		GX_ENGINE_INFO("{0} : Compiling {1} Shader", m_FileName, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
+		Timer time(m_FileName + " : Compiling " + (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") + " Shader");
 
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
