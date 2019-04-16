@@ -219,7 +219,7 @@ namespace engine
 			ImGui::Begin("Terrain Details", (bool*)true);
 			if (ImGui::DragFloat3("Position", (float*)& terrain.GetMesh().Position.x, 1.0f, -1000.0f, 1000.0f))
 			{
-				Mesh3D& mesh = (Mesh3D&)terrain.GetMesh();
+				Mesh3D& mesh = const_cast<Mesh3D&>(terrain.GetMesh());
 				mesh.UpdateModelMatrix(true);
 			}
 			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain.GetMesh().Scale.x, 1.0f, 0.0001f, 10.f);

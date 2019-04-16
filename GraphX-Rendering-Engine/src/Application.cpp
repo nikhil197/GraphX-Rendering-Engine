@@ -147,111 +147,21 @@ namespace engine
 
 	void Application::Run()
 	{
-		// Vertices for the cube including texture coordinates
-		// Vertices of the cube to be rendered
-		//VertexT vertices[] = {
-		//		/*Vertex Positions*/			/* Normal Coordinates */		/* Texture Coordinates */
-		//	// Front face
-		//	{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//0
-		//	{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//1
-		//	{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector2(1.0f, 1.0f) },	//2
-		//	{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector2(0.0f, 1.0f) },	//3
-
-		//	// Back face			
-		//	{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//4
-		//	{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
-		//	{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
-		//	{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) }	//7
-		//};
-		
-		// Vertices of the cube to be rendered
-		Vertex3DC vertices[] = {
-			/*Vertex Positions*/			  /* Normal Coordinates */				/* Colors */
-			// Front face
-			{ Vector3(-1.0f, -1.0f,  1.0f),	  Vector3(-1.0f, -1.0f,  1.0f),		Vector4(1.0f, 0.0f, 0.0f, 1.0f) },	//0
-			{ Vector3( 1.0f, -1.0f,  1.0f),	  Vector3( 1.0f, -1.0f,  1.0f),		Vector4(0.0f, 1.0f, 0.0f, 1.0f) },	//1
-			{ Vector3( 1.0f,  1.0f,  1.0f),	  Vector3( 1.0f,  1.0f,  1.0f),		Vector4(0.0f, 0.0f, 1.0f, 1.0f) },	//2
-			{ Vector3(-1.0f,  1.0f,  1.0f),	  Vector3(-1.0f,  1.0f,  1.0f),		Vector4(1.0f, 1.0f, 0.0f, 1.0f) },	//3
-
-			// Back face			  
-			{ Vector3(-1.0f, -1.0f, -1.0f),	  Vector3(-1.0f, -1.0f, -1.0f),		Vector4(0.0f, 1.0f, 1.0f, 1.0f) },	//4
-			{ Vector3( 1.0f, -1.0f, -1.0f),	  Vector3( 1.0f, -1.0f, -1.0f),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) },	//5
-			{ Vector3( 1.0f,  1.0f, -1.0f),	  Vector3( 1.0f,  1.0f, -1.0f),		Vector4(1.0f, 0.5f, 1.0f, 1.0f) },	//6
-			{ Vector3(-1.0f,  1.0f, -1.0f),	  Vector3(-1.0f,  1.0f, -1.0f),		Vector4(1.0f, 0.0f, 1.0f, 1.0f) }	//7
-		};
-
-		// Indices into the vertex buffer
-		unsigned int indices[] = {
-			// Front face
-			3, 0, 2,
-			2, 0, 1,
-
-			// Top Face
-			7, 3, 6,
-			6, 3, 2,
-
-			// Back Face
-			6, 5, 7,
-			7, 5, 4,
-
-			// Bottom Face
-			0, 4, 1,
-			1, 4, 5,
-
-			// Right face
-			2, 1, 6,
-			6, 1, 5,
-
-			// Left Face
-			7, 4, 3,
-			3, 4, 0
-		};
-
-		VertexArray vao;
-		VertexBuffer vbo(vertices, 8 * sizeof(Vertex3DC));
-		//VertexBuffer vbo(vertices, 8 * sizeof(VertexT));	// For Using Textures
-		VertexBufferLayout layout;
-		IndexBuffer ibo(indices, 36);
-
-		// Layout for the vertex positions
-		layout.Push<float>(Vector3::Components);
-
-		// Layout for the vertex normals
-		layout.Push<float>(Vector3::Components);
-
-		// Layout for the vertex colors
-		layout.Push<float>(Vector4::Components);
-
-		// Layout for texture coordinates
-		//layout.Push<float>(Vector2::Components);
-
-		// Add the layout to the vertex array
-		vao.AddBuffer(vbo, layout);
-		ibo.UnBind();
-		vao.UnBind();
-
 		// Basic Lighting Shader 
 		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
 		m_Shaders.push_back(m_Shader);
-		//Shader m_Shader("res/shaders/BasicTexture.shader");
+		
 		m_Shader->Bind();
 		m_Shader->SetUniform1f("u_AmbientStrength", 0.1f);
 		m_Shader->SetUniform1f("u_Shininess", 256.0f);
 		m_Shader->SetUniform1f("u_Reflectivity", 1.0f);
-		//m_Shader->SetUniform1i("u_Texture", 0 /* Slot number*/);
-
+		
 		m_Shader->SetUniform3f("u_LightPos", m_Light->Position);
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 
+		// For the purpose of fps count
 		int times = 0;
 		float then = Clock::GetClock()->GetEngineTime();
-
-		float rotation = 0.0f;
-		Vector3 translation(10.0f, 10.0f, -10.0f);
-		Vector3 scaleVec(4);
-		Vector3 axis(1, 0, 0);
-
-		bool bShowMenu = true;
 
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
@@ -335,12 +245,6 @@ namespace engine
 			// Update all the elements of the scene
 			Update(DeltaTime);
 
-			// Model Matrix
-			Translation trans(translation);
-			Rotation rotate(rotation * Clock::GetClock()->GetEngineTime(), axis);
-			Scaling scale(scaleVec);
-			Matrix4 model = trans * rotate * scale;
-
 			// Calculate the shadow maps
 			if(GX_ENABLE_SHADOWS)
 				CalculateShadows();
@@ -354,27 +258,10 @@ namespace engine
 
 			RenderSkybox();
 
-			// Get a new transform window for the cube
-			//GraphXGui::TransformWindow("Transform", translation, scaleVec, rotation, axis, bShowMenu);
-
 			// Bind the shader and draw the objects
 			m_Shader->Bind();
 			m_ShadowBuffer->BindDepthMap(2);		/* NOTE: Create a constants file and set a predefined slot for the shadow map */
 			ConfigureShaderForRendering(*m_Shader);
-
-			m_Shader->Bind();
-			m_Shader->SetUniformMat4f("u_Model", model);
-
-			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
-			Matrix3 normal = Matrix3(model);
-			m_Shader->SetUniformMat3f("u_Normal", normal);
-
-			// Render the Cube
-			/*vao.Bind();
-			ibo.Bind();
-			m_Renderer->Draw(ibo);
-			vao.UnBind();
-			ibo.UnBind();*/
 
 			RenderScene();
 

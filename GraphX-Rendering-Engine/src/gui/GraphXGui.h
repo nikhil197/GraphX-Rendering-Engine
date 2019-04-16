@@ -26,12 +26,6 @@ namespace engine
 		/* Create a window showing Add Terrain Button */
 		static void AddTerrain();
 
-		/* Create a window showing the details of the cube */
-		static void TransformWindow(std::string Name, gm::Vector3& translation, gm::Vector3& scale, float& rotation, const gm::Vector3& axis, bool& bShowMenu);
-
-		/* Create a window showing the tranformation details of the mesh */
-		static void TransformWindow(class Mesh3D& mesh);
-
 		/* Create a window showing the details of the Mesh3D*/
 		static void DetailsWindow(class Mesh3D& mesh, const std::string& Name = "Details");
 
