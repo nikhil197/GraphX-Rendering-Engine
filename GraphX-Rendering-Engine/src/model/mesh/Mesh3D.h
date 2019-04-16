@@ -15,7 +15,7 @@ namespace engine
 		gm::Vector3 Scale;
 
 		/* Base color of the object */
-		gm::Vector4 BaseColor;
+		gm::Vector4 TintColor;
 
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
@@ -52,6 +52,9 @@ namespace engine
 
 		/* Model matrix for the mesh */
 		gm::Matrix4 m_Model;
+
+		/* Whether the mesh needs to updated or not */
+		bool m_UpdateModelMatrix;
 
 	public:
 		/**
@@ -103,6 +106,9 @@ namespace engine
 
 		/* Returns the model matrix for the mesh */
 		inline const gm::Matrix4& GetModelMatrix() const { return m_Model; }
+
+		/* Sets new state for updating the model matrix */
+		inline void UpdateModelMatrix(bool bCalculateMatrix) { m_UpdateModelMatrix = bCalculateMatrix; }
 
 		virtual ~Mesh3D();
 	};

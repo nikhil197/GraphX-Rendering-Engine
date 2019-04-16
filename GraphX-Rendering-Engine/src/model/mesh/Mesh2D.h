@@ -15,7 +15,7 @@ namespace engine
 		gm::Vector2 Scale;
 
 		/* Base color of the object */
-		gm::Vector4 BaseColor;
+		gm::Vector4 TintColor;
 
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;

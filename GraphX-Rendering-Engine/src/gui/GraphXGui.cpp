@@ -113,38 +113,6 @@ namespace engine
 		}
 	}
 
-	void GraphXGui::TransformWindow(std::string Name, gm::Vector3& translation, gm::Vector3& scale, float& rotation, const gm::Vector3& axis, bool& bShowMenu)
-	{
-		if (bShowMenu)
-		{
-			ImGui::Begin(Name.c_str(), (bool*)bShowMenu);
-			ImGui::SliderFloat3("Translation", (float*)(&translation.x), -10.0f, 10.0f);
-			ImGui::SliderFloat("Rotation", (float*)(&rotation), 0.0f, 359.f);
-			ImGui::SliderFloat3("Rotation Axis", (float*)(&axis.x), 0.0f, 1.0f);
-			ImGui::SliderFloat3("Scale", (float*)(&scale.x), 0.00000001f, 10.f);
-
-			if (ImGui::Button("Close"))
-			{
-				bShowMenu = false;
-			}
-
-			ImGui::End();
-		}
-	}
-
-	void GraphXGui::TransformWindow(Mesh3D& mesh)
-	{
-		int x = sizeof(mesh);
-		if (mesh.bShowDetails)
-		{
-			ImGui::Begin("Transformations", (bool*)mesh.bShowDetails);
-			ImGui::SliderFloat3("Translation", (float*)&mesh.Position.x, -2000.0f, 2000.0f);
-			ImGui::SliderFloat3("Rotation", (float*)(&mesh.Rotation), 0.0f, 359.f);
-			ImGui::SliderFloat3("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
-			ImGui::End();
-		}		
-	}
-
 	void GraphXGui::DetailsWindow(Mesh3D& mesh, const std::string& Name)
 	{
 		if (mesh.bShowDetails)
@@ -152,9 +120,18 @@ namespace engine
 			ImGui::Begin(Name.c_str(), (bool*)mesh.bShowDetails);
 			ImGui::Spacing();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Transformations");
-			ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f);
-			ImGui::DragFloat3("Rotation", (float*)&mesh.Rotation, 1.0f, 0.0f, 359.f);
-			ImGui::DragFloat3("Scaling", (float*)&mesh.Scale.x, 1.0f, 0.0001f, 10.f);
+			if (ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f))
+			{
+				mesh.UpdateModelMatrix(true);
+			}
+			if (ImGui::DragFloat3("Rotation", (float*)& mesh.Rotation, 1.0f, -359.0f, 359.f))
+			{
+				mesh.UpdateModelMatrix(true);
+			}
+			if (ImGui::DragFloat3("Scaling", (float*)& mesh.Scale.x, 1.0f, 0.0001f, 10.f))
+			{
+				mesh.UpdateModelMatrix(true);
+			}
 
 			ImGui::Spacing();
 
@@ -162,7 +139,7 @@ namespace engine
 			ImGui::DragFloat("Shininess", (float*)&mesh.Shininess, 1.0f, 2.0f, 256.0f);
 			ImGui::DragFloat("Reflectivity", (float*)&mesh.Reflectivity, 1.0f, 0.0f, 1.0f);
 
-			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
+			ImGui::ColorEdit4("Tint Color", (float*)&mesh.TintColor);
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Texture Properties");
@@ -229,7 +206,7 @@ namespace engine
 			ImGui::Text("Color and Properties");
 			ImGui::SliderFloat("Shininess", (float*)&mesh.Shininess, 2.0f, 256.0f);
 			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
-			ImGui::ColorEdit4("Base Color", (float*)&mesh.BaseColor);
+			ImGui::ColorEdit4("Base Color", (float*)&mesh.TintColor);
 
 			ImGui::End();
 		}
@@ -240,7 +217,11 @@ namespace engine
 		if (true)
 		{
 			ImGui::Begin("Terrain Details", (bool*)true);
-			ImGui::DragFloat3("Position", (float*)&terrain.GetMesh().Position.x, 1.0f, -1000.0f, 1000.0f);
+			if (ImGui::DragFloat3("Position", (float*)& terrain.GetMesh().Position.x, 1.0f, -1000.0f, 1000.0f))
+			{
+				Mesh3D& mesh = (Mesh3D&)terrain.GetMesh();
+				mesh.UpdateModelMatrix(true);
+			}
 			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain.GetMesh().Scale.x, 1.0f, 0.0001f, 10.f);
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Note: Scaling in y - direction is not advised ");
 			ImGui::End();

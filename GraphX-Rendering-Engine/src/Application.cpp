@@ -306,7 +306,7 @@ namespace engine
 		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
 		Texture particleTex("res/Textures/Particles/cosmic.png", false, 4);
-		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 100.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
+		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)
@@ -397,26 +397,6 @@ namespace engine
 
 		// Update the camera
 		m_Camera->Update(DeltaTime);
-
-		if (m_Camera->IsRenderStateDirty())
-		{
-			for (unsigned int i = 0; i < m_Shaders.size(); i++)
-			{
-				Shader* shader = m_Shaders.at(i);
-				if (!shader)
-				{
-					m_Shaders.erase(m_Shaders.begin() + i);
-					continue;
-				}
-				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
-				shader->SetUniformMat4f("u_View", m_Camera->GetViewMatrix());
-				shader->SetUniformMat4f("u_Projection", m_Camera->GetPerspectiveProjectionMatrix());
-			}
-
-			// Set the state back to rendered
-			m_Camera->SetRenderStateDirty(false);
-		}
 		
 		// Update the lights
 		for (unsigned int i = 0; i < m_Lights.size(); i++)
@@ -437,6 +417,26 @@ namespace engine
 		DayNightCycleCalculations(DeltaTime);
 
 		m_CurrentSkybox->Update(DeltaTime);
+
+		if (m_Camera->IsRenderStateDirty())
+		{
+			for (unsigned int i = 0; i < m_Shaders.size(); i++)
+			{
+				Shader* shader = m_Shaders.at(i);
+				if (!shader)
+				{
+					m_Shaders.erase(m_Shaders.begin() + i);
+					continue;
+				}
+				shader->Bind();
+				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
+				shader->SetUniformMat4f("u_View", m_Camera->GetViewMatrix());
+				shader->SetUniformMat4f("u_Projection", m_Camera->GetPerspectiveProjectionMatrix());
+			}
+
+			// Set the state back to rendered
+			m_Camera->SetRenderStateDirty(false);
+		}
 	}
 
 	void Application::CalculateShadows()
@@ -508,7 +508,6 @@ namespace engine
 			GraphXGui::TerrainDetails(*m_Terrain[0]);
 		}
 		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime);
-		//GraphXGui::AddTerrain();
 		GraphXGui::Render();
 	}
 

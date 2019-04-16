@@ -46,7 +46,7 @@ in struct Data
 uniform vec4 u_LightColor;
 uniform vec3 u_LightPos;
 uniform vec3 u_CameraPos;
-uniform vec4 u_Color = vec4(0.0f);
+uniform vec4 u_TintColor = vec4(0.0f);
 
 /* Structure for the ambient light source */
 struct DirectionalLight
@@ -127,5 +127,5 @@ void main()
 		Shadow = ShadowCalculation(v_Data.LightSpacePos);
 
 	// Divide the diffuse and specular components of the light color (ambient is the property of the environment, probably due to the directional light source - most probably sun)
-	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor))) * (texture(u_Texture0, vec2(v_Data.Color.xy)));
+	fColor = (AmbientColor + (1.0f - Shadow) * (DiffuseColor_Global + SpecularColor_Global + (diffuseColor / AttenuationFactor) + (specularColor / AttenuationFactor))) * (mix(texture(u_Texture0, vec2(v_Data.Color.xy)), u_TintColor, 0.5f));
 }

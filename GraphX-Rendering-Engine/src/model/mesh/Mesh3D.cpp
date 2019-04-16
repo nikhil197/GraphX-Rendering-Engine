@@ -12,7 +12,7 @@
 namespace engine
 {
 	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color, float Reflect, float Shine)
-		: Position(Pos), Rotation(Rotation), Scale(Scale), BaseColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
+		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices), m_Model(), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex3D));
@@ -23,17 +23,22 @@ namespace engine
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
-		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), BaseColor(Mesh.BaseColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(Mesh.m_VAO), m_VBO(Mesh.m_VBO), m_IBO(Mesh.m_IBO), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model)
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), TintColor(Mesh.TintColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(Mesh.m_VAO), m_VBO(Mesh.m_VBO), m_IBO(Mesh.m_IBO), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
 	}
 
 	void Mesh3D::Update(float DeltaTime)
 	{
-		gm::Translation translation(Position);
-		gm::Rotation rotation(Rotation);
-		gm::Scaling scale(Scale);
+		if (m_UpdateModelMatrix)
+		{
+			gm::Translation translation(Position);
+			gm::Rotation rotation(Rotation);
+			gm::Scaling scale(Scale);
 
-		m_Model = translation * rotation * scale;
+			m_Model = translation * rotation * scale;
+
+			m_UpdateModelMatrix = false;
+		}
 	}
 
 	void Mesh3D::Enable() const
@@ -47,9 +52,8 @@ namespace engine
 			m_Shader.SetUniform1f("u_Shininess", Shininess);
 
 		// Set the base color of the object
-		if(BaseColor != gm::Vector4::ZeroVector)
-			m_Shader.SetUniform4f("u_Color", BaseColor);
-
+		m_Shader.SetUniform4f("u_TintColor", TintColor);
+		
 		// Bind the textures
 		int NumTex = m_Textures.size();
 		for (int i = 0; i < NumTex; i++)
