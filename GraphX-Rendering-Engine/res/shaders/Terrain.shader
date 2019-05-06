@@ -100,20 +100,19 @@ void main()
 	vec3 UnitNormal = normalize(v_Data.Normal);
 
 	// Calculate Ambient Color
-	vec4 AmbientColor = u_AmbientStrength * u_LightSource.Color;
+	vec4 AmbientColor = u_LightSource.Intensity * u_AmbientStrength * u_LightSource.Color;
 
 	/**** Color due to the Global Light Source ****/
 	// Calculate Diffuse Color
 	vec3 LightDir = normalize(-u_LightSource.Direction);
 	float brightness = max(0.0f, dot(UnitNormal, LightDir));
-	vec4 DiffuseColor_Global = u_LightSource.Color * brightness;
+	vec4 DiffuseColor_Global = u_LightSource.Intensity * u_LightSource.Color * brightness;
 
 	// Calculate the specular color
 	vec3 ViewDir = normalize(u_CameraPos - v_Data.WorldPosition);
 	vec3 ReflectedDir = reflect(-LightDir, UnitNormal);
 	float Shine = pow(max(dot(ReflectedDir, ViewDir), 0.0f), u_Shininess);
-	vec4 SpecularColor_Global = u_LightSource.Color * Shine * u_Reflectivity;
-
+	vec4 SpecularColor_Global = u_LightSource.Intensity * u_LightSource.Color * Shine * u_Reflectivity;
 
 	/**** Color due to the Point Lights ****/
 	// Diffuse Light Color

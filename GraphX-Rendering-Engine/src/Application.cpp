@@ -166,13 +166,13 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
 
-		Cube cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
-		m_Objects3D.emplace_back(&cube);
-		cube.bShowDetails = true;
+		Cube *cube = new Cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
+		m_Objects3D.emplace_back(cube);
+		cube->bShowDetails = true;
 
-		Terrain ter(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
-		m_Shaders.emplace_back(ter.GetShader());
-		m_Terrain.push_back(&ter);
+		Terrain *ter = new Terrain(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
+		m_Shaders.emplace_back(ter->GetShader());
+		m_Terrain.emplace_back(ter);
 
 		// Load Trees
 		Model3D TreeModel("res/Models/tree.obj", *m_Shader);
@@ -183,7 +183,7 @@ namespace engine
 		unsigned int NumTree = 100;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
-			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetDepth() / 2);
+			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
 			TreeMesh->Position = Position;
 			m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
 		}
@@ -196,7 +196,7 @@ namespace engine
 		NumTree = 10;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
-			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter.GetDepth() / 2);
+			Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
 			LowPolyTreeMesh->Position = Position;
 			m_Objects3D.emplace_back(new Mesh3D(*LowPolyTreeMesh));
 		}
@@ -210,10 +210,10 @@ namespace engine
 
 		m_Shader->UnBind();
 
-		ter.GetShader()->Bind();
-		ter.GetShader()->SetUniform1f("u_AmbientStrength", 0.01f);
-		ter.GetShader()->SetUniform1f("u_Shininess", 256.0f);
-		ter.GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
+		ter->GetShader()->Bind();
+		ter->GetShader()->SetUniform1f("u_AmbientStrength", 0.01f);
+		ter->GetShader()->SetUniform1f("u_Shininess", 256.0f);
+		ter->GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
 		Texture particleTex("res/Textures/Particles/cosmic.png", false, 4);
 		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
@@ -394,7 +394,7 @@ namespace engine
 		{
 			GraphXGui::TerrainDetails(*m_Terrain[0]);
 		}
-		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime);
+		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity);
 		GraphXGui::Render();
 	}
 
@@ -733,6 +733,10 @@ namespace engine
 
 		for (unsigned int i = 0; i < m_Shaders.size(); i++)
 			delete m_Shaders[i];
+
+		delete m_Renderer3D;
+		delete m_Renderer;
+		delete m_ParticlesManager;
 
 		delete m_Camera;
 		delete m_Window;

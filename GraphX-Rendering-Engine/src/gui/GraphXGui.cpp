@@ -41,7 +41,7 @@ namespace engine
 		ImGui_ImplGlfwGL3_NewFrame();
 	}
 
-	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime)
+	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime, float& SunLightIntensity)
 	{
 		ImGui::Begin("Global Settings", (bool*)true);
 
@@ -50,6 +50,9 @@ namespace engine
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Day Time Details");
 		ImGui::DragFloat("Day Time Hours", &daytime, 0.1f, 0.0f, 2.0f);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Global Light Intensity");
+		ImGui::DragFloat("Global Light Intensity", &SunLightIntensity, 0.1f, 0.1f, 5.0f);
 		ImGui::End();
 	}
 
