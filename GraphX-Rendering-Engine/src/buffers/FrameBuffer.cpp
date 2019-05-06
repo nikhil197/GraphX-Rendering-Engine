@@ -49,7 +49,6 @@ namespace engine
 
 	FrameBuffer::~FrameBuffer()
 	{
-		delete m_DepthMap;
 		GLCall(glDeleteFramebuffers(1, &m_RendererID));
 	}
 }
