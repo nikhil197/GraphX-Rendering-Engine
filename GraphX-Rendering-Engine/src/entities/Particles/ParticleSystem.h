@@ -48,7 +48,7 @@ namespace engine
 
 	private:
 		/* Emits a particle */
-		class Particle EmitParticle(const gm::Vector3& SpawnLocation);
+		void EmitParticle(const gm::Vector3& SpawnLocation);
 
 		/* Generates a random value using the average value and the offset deviation factor */
 		float GenerateRandomValue(float AverageValue, float Deviation);

@@ -49,8 +49,17 @@ namespace engine
 		/* Factor used to blend between the two textures */
 		float m_BlendFactor;
 
+		/* Whether the current particle is being used or not (Used specially for particles pool) */
+		bool m_Used;
+
 	public:
+		/* Default Consturctor for the particle pool */
+		Particle();
+
 		Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+
+		/* To Initialise the particles that are defualt constructed */
+		void Init(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Entity Interface */
 		void Update(float DeltaTime, const gm::Matrix4& ViewMatrix, bool UpdateMatrix);
@@ -70,6 +79,9 @@ namespace engine
 
 		/* Returns the texture(atlas) of the particle */
 		inline const class Texture& GetTexture() const { return *m_Texture; }
+
+		/* Whether the particles is being used or not */
+		inline bool IsUsed() const { return m_Used; }
 
 	private:
 		void Update(float DeltaTime) override;

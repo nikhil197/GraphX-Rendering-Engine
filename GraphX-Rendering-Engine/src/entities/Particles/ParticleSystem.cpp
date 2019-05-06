@@ -18,20 +18,21 @@ namespace engine
 		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
 		gm::MathUtil::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
-		for (int i = 0; i < ParticlesCount; i++)
+		for (int i = 0; i < ParticlesCount && m_Manager.IsPoolEmpty(); i++)
 		{
-			Particle particle(EmitParticle(SpawnLocation));
-			m_Manager.AddParticle(particle);
+			EmitParticle(SpawnLocation);
+//			m_Manager.AddParticle(particle);
 		}
 	}
 
-	Particle ParticleSystem::EmitParticle(const gm::Vector3& SpawnLocation)
+	void ParticleSystem::EmitParticle(const gm::Vector3& SpawnLocation)
 	{
 		float LifeSpan = GenerateRandomValue(m_LifeSpan, m_LifeSpanDeviation);
 		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
 		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
 		gm::Vector3 Velocity = gm::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
-		return Particle(SpawnLocation, Velocity, LifeSpan, 0.0f, m_Texture, Scale, GravityEffect);
+		m_Manager.AddParticle(SpawnLocation, Velocity, LifeSpan, 0.0f, &m_Texture, Scale, GravityEffect);
+//		return Particle(SpawnLocation, Velocity, LifeSpan, 0.0f, m_Texture, Scale, GravityEffect);
 	}
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)

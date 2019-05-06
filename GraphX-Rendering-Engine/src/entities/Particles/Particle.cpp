@@ -13,9 +13,27 @@ namespace engine
 		return s_Quad;
 	}
 
-	Particle::Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Tex, float Scale, float GravityEffect)
-		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f), m_Texture(&Tex), m_CurrentTexOffset(gm::Vector2()), m_NextTexOffset(gm::Vector2()), m_BlendFactor(0.0f)
+	Particle::Particle()
+		: Entity(), m_Position(), m_Velocity(), m_GravityEffect(1.0f), m_LifeSpan(0.0f), m_Rotation(0.0f), m_Scale(1.0f), m_ElapsedTime(0.0f), m_Texture(nullptr), m_CurrentTexOffset(), m_NextTexOffset(), m_BlendFactor(0.0f), m_Used(false)
 	{
+	}
+
+	Particle::Particle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Tex, float Scale, float GravityEffect)
+		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f), m_Texture(&Tex), m_CurrentTexOffset(gm::Vector2()), m_NextTexOffset(gm::Vector2()), m_BlendFactor(0.0f), m_Used(false)
+	{
+	}
+
+	void Particle::Init(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
+	{
+		m_ElapsedTime = 0.0f;
+		m_Position = Position;
+		m_Velocity = Velocity;
+		m_LifeSpan = LifeSpan;
+		m_Rotation = Rotation;
+		m_Texture = texture;
+		m_Scale = Scale;
+		m_GravityEffect = GravityEffect;
+		m_Used = true;
 	}
 
 	void Particle::Update(float DeltaTime)
@@ -26,12 +44,17 @@ namespace engine
 	{
 		m_ElapsedTime += DeltaTime;
 		if (m_ElapsedTime >= m_LifeSpan)
-			m_Destroy = true;
-		else
+		{
+			//m_Destroy = true;
+			m_Used = false;
+			m_Texture = nullptr;
+			m_ElapsedTime = 0.0f;
+		}
+		else if(m_Used)
 		{
 			m_Velocity.y += GX_ENGINE_GRAVITY * m_GravityEffect * DeltaTime;
 			m_Position = m_Position + (m_Velocity * m_Scale);
-			if (m_Texture->GetRowsInTexAtlas() > 1)
+			if (m_Texture && m_Texture->GetRowsInTexAtlas() > 1)
 				UpdateTexOffset();
 
 			// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
@@ -54,7 +77,14 @@ namespace engine
 	{
 		shader.SetUniformMat4f("u_Model", m_Model);
 		
-		if (m_Texture->GetRowsInTexAtlas() > 1)
+		if (m_Texture)
+		{
+			m_Texture->Bind();
+			shader.SetUniform1i("u_ParticleTexture", 0);
+			shader.SetUniform1i("u_TexAtlasRows", (int)m_Texture->GetRowsInTexAtlas());
+		}
+
+		if (m_Texture && m_Texture->GetRowsInTexAtlas() > 1)
 		{
 			shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
 			shader.SetUniform4f("u_TexCoordOffsets", m_CurrentTexOffset, m_NextTexOffset);
@@ -67,15 +97,18 @@ namespace engine
 
 	void Particle::UpdateTexOffset()
 	{
-		float LifeSpanFactor = m_ElapsedTime / m_LifeSpan;
-		int TotalStages = gm::MathUtil::Square(m_Texture->GetRowsInTexAtlas());
-		float LifeProgress = LifeSpanFactor * TotalStages;
-		int index1 = (int)LifeProgress;
-		int index2 = (index1 + 1 < TotalStages) ? index1 + 1 : index1;
-		m_BlendFactor = LifeProgress - index1;
+		if (m_Used && m_Texture)
+		{
+			float LifeSpanFactor = m_ElapsedTime / m_LifeSpan;
+			int TotalStages = gm::MathUtil::Square(m_Texture->GetRowsInTexAtlas());
+			float LifeProgress = LifeSpanFactor * TotalStages;
+			int index1 = (int)LifeProgress;
+			int index2 = (index1 + 1 < TotalStages) ? index1 + 1 : index1;
+			m_BlendFactor = LifeProgress - index1;
 
-		CalculateOffset(index1, m_CurrentTexOffset);
-		CalculateOffset(index2, m_NextTexOffset);
+			CalculateOffset(index1, m_CurrentTexOffset);
+			CalculateOffset(index2, m_NextTexOffset);
+		}
 	}
 
 	void Particle::CalculateOffset(int index, gm::Vector2& TexOffset)
