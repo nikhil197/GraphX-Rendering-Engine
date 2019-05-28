@@ -21,7 +21,7 @@ namespace engine
 		static void Update();
 
 		/* Create a window showing Global Settings like Day Time and Skybox */
-		static void GlobalSettings(class Skybox& skybox, float& daytime, float& SunlightIntensity);
+		static void GlobalSettings(class Skybox& skybox, float& daytime, float& SunlightIntensity, bool& EnableParticles);
 
 		/* Create a window showing Add Terrain Button */
 		static void AddTerrain();

@@ -41,7 +41,7 @@ namespace engine
 		ImGui_ImplGlfwGL3_NewFrame();
 	}
 
-	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime, float& SunLightIntensity)
+	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime, float& SunLightIntensity, bool& EnableParticles)
 	{
 		ImGui::Begin("Global Settings", (bool*)true);
 
@@ -53,6 +53,9 @@ namespace engine
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Global Light Intensity");
 		ImGui::DragFloat("Global Light Intensity", &SunLightIntensity, 0.1f, 0.1f, 5.0f);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Enable Particle Effects");
+		ImGui::Checkbox("Enable Particle Effects", &EnableParticles);
 		ImGui::End();
 	}
 

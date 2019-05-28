@@ -91,7 +91,10 @@ namespace engine
 		}
 
 		// Print the gl version
-		GX_ENGINE_INFO(glGetString(GL_VERSION));
+		GX_ENGINE_INFO("OpenGL Info:");
+		GX_ENGINE_INFO("	Vendor: {0}", glGetString(GL_VENDOR));
+		GX_ENGINE_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
+		GX_ENGINE_INFO("	Version: {0}", glGetString(GL_VERSION));
 
 		// To enable the depth test
 		GLCall(glEnable(GL_DEPTH_TEST));
@@ -215,7 +218,7 @@ namespace engine
 		ter->GetShader()->SetUniform1f("u_Shininess", 256.0f);
 		ter->GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
-		Texture particleTex("res/Textures/Particles/cosmic.png", false, 4);
+		Texture particleTex("res/Textures/Particles/particleAtlas.png", false, 4);
 		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
 
 		// Draw while the window doesn't close
@@ -240,7 +243,10 @@ namespace engine
 				times = 0;
 			}
 
-			particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
+			if (GX_ENABLE_PARTICLE_EFFECTS)
+			{
+				particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
+			}
 
 			// Update all the elements of the scene
 			Update(DeltaTime);
@@ -394,7 +400,7 @@ namespace engine
 		{
 			GraphXGui::TerrainDetails(*m_Terrain[0]);
 		}
-		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity);
+		GraphXGui::GlobalSettings(*m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity, GX_ENABLE_PARTICLE_EFFECTS);
 		GraphXGui::Render();
 	}
 
