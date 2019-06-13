@@ -59,7 +59,7 @@ namespace engine
 	using namespace gm;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Renderer3D(nullptr), m_Renderer(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
@@ -131,7 +131,7 @@ namespace engine
 
 		m_CurrentSkybox = m_NightSkybox;
 
-		m_SunLight = new DirectionalLight(Vector3(0, 10.0f, 20.0f), gm::Vector4::UnitVector, gm::Vector3(-1.0f, -1.0f, 1.0f));
+		m_SunLight = new DirectionalLight(gm::Vector4::UnitVector, gm::Vector3(-1.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		m_Light = new PointLight(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
@@ -146,6 +146,105 @@ namespace engine
 		m_ParticlesManager = new ParticleManager(*m_Camera);
 
 		m_DefaultTexture  = new Texture("res/Textures/stone.jpg");
+	}
+
+	// renderCube() renders a 1x1 3D cube in NDC.
+	// -------------------------------------------------
+	unsigned int cubeVAO = 0;
+	unsigned int cubeVBO = 0;
+	void renderCube()
+	{
+		// initialize (if necessary)
+		if (cubeVAO == 0)
+		{
+			float vertices[] = {
+				// back face
+				-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+				 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+				 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+				 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+				-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+				-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+				// front face
+				-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+				 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+				 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+				 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+				-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+				-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+				// left face
+				-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+				-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+				-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+				-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+				-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+				-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+				// right face
+				 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+				 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+				 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+				 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+				 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+				 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+				// bottom face
+				-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+				 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+				 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+				 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+				-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+				-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+				// top face
+				-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+				 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+				 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+				 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+				-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+				-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+			};
+			glGenVertexArrays(1, &cubeVAO);
+			glGenBuffers(1, &cubeVBO);
+			// fill buffer
+			glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+			// link vertex attributes
+			glBindVertexArray(cubeVAO);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+		}
+		// render Cube
+		glBindVertexArray(cubeVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+	}
+
+	// renders the 3D scene
+// --------------------
+	void renderScene(Shader& shader)
+	{
+		gm::Matrix4 model;
+		// cubes
+		model = gm::Matrix4(1.0f);
+		model = gm::Translation(gm::Vector3(0.0f, 1.5f, 0.0));
+		model = gm::Scaling(gm::Vector3(0.5f));
+		shader.SetUniformMat4f("u_Model", model);
+		renderCube();
+		model = gm::Matrix4(1.0f);
+		model = gm::Translation(gm::Vector3(2.0f, 0.0f, 1.0));
+		model = gm::Scaling(gm::Vector3(0.5f));
+		shader.SetUniformMat4f("u_Model", model);
+		renderCube();
+		model = gm::Matrix4(1.0f);
+		model = gm::Translation(gm::Vector3(-1.0f, 0.0f, 2.0));
+		model = gm::Rotation(60.0f, gm::Vector3(1.0, 0.0, 1.0));
+		model = gm::Scaling(gm::Vector3(0.25));
+		shader.SetUniformMat4f("u_Model", model);
+		renderCube();
 	}
 
 	void Application::Run()
@@ -253,7 +352,7 @@ namespace engine
 
 			// Calculate the shadow maps
 			if(GX_ENABLE_SHADOWS)
-				CalculateShadows();
+				RenderShadowMap();
 
 			/****** Normally render the scene *****/
 			// Clear the window 
@@ -266,7 +365,7 @@ namespace engine
 
 			// Bind the shader and draw the objects
 			m_Shader->Bind();
-			m_ShadowBuffer->BindDepthMap(2);		/* NOTE: Create a constants file and set a predefined slot for the shadow map */
+			m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 			ConfigureShaderForRendering(*m_Shader);
 
 			RenderScene();
@@ -332,14 +431,14 @@ namespace engine
 		}
 	}
 
-	void Application::CalculateShadows()
+	void Application::RenderShadowMap()
 	{
 		// Render the shadow maps
 		m_DepthShader->Bind();
-		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetLightSpaceMatrix());
+		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetShadowInfo()->LightViewProjMat);
 		m_ShadowBuffer->Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
-
+		
 		RenderScene(true);
 
 		m_ShadowBuffer->UnBind();
@@ -434,12 +533,12 @@ namespace engine
 
 	void Application::ConfigureShaderForRendering(Shader& shader)
 	{
-		shader.SetUniform1i("u_ShadowMap", 2);
+		shader.SetUniform1i("u_ShadowMap", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 		shader.SetUniform3f("u_LightPos", m_Light->Position);
 		shader.SetUniform4f("u_LightColor", m_Light->Color);
 
 		if(GX_ENABLE_SHADOWS)
-			shader.SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetLightSpaceMatrix());
+			shader.SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetShadowInfo()->LightViewProjMat);
 
 		m_SunLight->Enable(shader, "u_LightSource");
 	}

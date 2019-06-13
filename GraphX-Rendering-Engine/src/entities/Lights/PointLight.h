@@ -7,7 +7,12 @@ namespace engine
 	class PointLight
 		: public Light
 	{
+	public:
+		/* The position of the light */
+		gm::Vector3 Position;
+
 	private:
+
 		/* Coefficients of the attenuation equation used for the light
 		*	x -> Constant factor of the equation (Must be 1)
 		*	y -> Linear Coefficient of the equation

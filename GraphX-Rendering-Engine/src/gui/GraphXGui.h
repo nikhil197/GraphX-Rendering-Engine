@@ -30,7 +30,7 @@ namespace engine
 		static void DetailsWindow(class Mesh3D& mesh, const std::string& Name = "Details");
 
 		/* Create a window showing the light properties */
-		static void LightProperties(class Light& light);
+		static void LightProperties(class PointLight& light);
 
 		/* Create a window showing the Camera properties */
 		static void CameraProperties(class Camera& camera);

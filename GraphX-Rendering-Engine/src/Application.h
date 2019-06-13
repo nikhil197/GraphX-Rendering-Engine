@@ -125,7 +125,7 @@ namespace engine
 		void ConfigureShaderForRendering(class Shader& shader);
 
 		/* Calculates the shadows */
-		void CalculateShadows();
+		void RenderShadowMap();
 
 		/* Renderes the skybox */
 		void RenderSkybox();

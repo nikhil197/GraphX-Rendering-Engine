@@ -9,7 +9,7 @@
 
 #include "Textures/Texture.h"
 
-#include "entities/Lights/Light.h"
+#include "entities/Lights/PointLight.h"
 #include "entities/Camera.h"
 #include "entities/Terrain.h"
 #include "entities/Skybox.h"
@@ -170,7 +170,7 @@ namespace engine
 		}
 	}
 
-	void GraphXGui::LightProperties(Light& light)
+	void GraphXGui::LightProperties(PointLight& light)
 	{
 		if (light.bShowDetails)
 		{

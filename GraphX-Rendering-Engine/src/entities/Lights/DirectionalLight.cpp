@@ -6,9 +6,10 @@
 
 namespace engine
 {
-	DirectionalLight::DirectionalLight(const gm::Vector3& Pos, const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity)
-		: Light(Pos, Color, gm::Projection::Ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1000.0f), Intensity), Direction(LightDir)
+	DirectionalLight::DirectionalLight(const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity)
+		: Light(Color, gm::Projection::Ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1000.0f), Intensity), Direction(LightDir)
 	{
+		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * gm::View::LookAt(gm::Vector3(100.0f), gm::Vector3(0.0f), gm::Vector3::YAxis);
 	}
 
 	void DirectionalLight::Update(float DeltaTime)

@@ -12,7 +12,7 @@ namespace engine
 		gm::Vector3 Direction;
 
 		/* Constructor */
-		DirectionalLight(const gm::Vector3& Pos, const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity = 1.0f);
+		DirectionalLight(const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity = 1.0f);
 
 		virtual void Update(float DeltaTime) override;
 

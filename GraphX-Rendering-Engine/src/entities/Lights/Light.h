@@ -4,13 +4,25 @@
 
 namespace engine
 {
+	/* To store the shadow information for the light */
+	struct LightShadowInfo
+	{
+		/* Projection matrix from the perspective of the light */
+		gm::Matrix4 LightProjMat;
+
+		/* Combined View and projection matrix from the perspective of the light */
+		gm::Matrix4 LightViewProjMat;
+
+		LightShadowInfo(const gm::Matrix4& ProjMat, const gm::Matrix4& LightViewProjMat)
+			: LightProjMat(ProjMat), LightViewProjMat(LightViewProjMat)
+		{
+		}
+	};
+
 	class Light
 		: public Entity
 	{
 	public:
-		/* The position of the light */
-		gm::Vector3 Position;
-
 		/* Color of the light */
 		gm::Vector4 Color;
 
@@ -21,15 +33,12 @@ namespace engine
 		bool bShowDetails : 1;
 
 	protected:
-		/* Combined View and projection matrix from the perspective of the light */
-		gm::Matrix4 m_LightViewProjMat;
-
-		/* Projection matrix from the perspective of the light */
-		gm::Matrix4 m_LightProjMatrix;
+		/* Light information required for shadows */
+		LightShadowInfo* m_LightShadowInfo;
 
 	protected:
 		/* Constructor */
-		Light(const gm::Vector3& Pos, const gm::Vector4& Color, gm::Matrix4 ProjMat, float Intensity = 1.0f);
+		Light(const gm::Vector4& Color, gm::Matrix4 ProjMat, float Intensity = 1.0f);
 
 	public:
 		/* Updates the status of the light */
@@ -44,8 +53,8 @@ namespace engine
 		/* Sets the light view and projection matrices for the purpose of light */
 		void SetLightSpaceMatrix(class Shader& DepthShader, const std::string& LightName = "u_Light") const;
 
-		/* Returns the View, projection matrix from the perspective of light */
-		const gm::Matrix4& GetLightSpaceMatrix() const { return m_LightViewProjMat; }
+		/* Returns the light's shadow information */
+		inline const LightShadowInfo* GetShadowInfo() const { return m_LightShadowInfo; }
 
 		/* Destructor */
 		virtual ~Light();
