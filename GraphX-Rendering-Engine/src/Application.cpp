@@ -520,6 +520,10 @@ namespace engine
 			{
 				handled = dispatcher.Dispatch<CameraFOVChangedEvent>(BIND_EVENT_FUNC(Application::OnCameraFOVChanged));
 			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<CameraProjectionModeChange>(BIND_EVENT_FUNC(Application::OnCameraProjectionModeChanged));
+			}
 		}
 		
 		// Raise an error if the event is not handled
@@ -703,7 +707,13 @@ namespace engine
 
 	bool Application::OnCameraFOVChanged(class CameraFOVChangedEvent& e)
 	{
-		m_Camera->SetNewFOV(e.GetChangedFOV());
+		e.GetEntity().SetNewFOV(e.GetChangedFOV());
+		return true;
+	}
+
+	bool Application::OnCameraProjectionModeChanged(class CameraProjectionModeChange& e)
+	{
+		e.GetEntity().SetNewProjectionMode(e.GetNewProjectionMode());
 		return true;
 	}
 

@@ -88,4 +88,22 @@ namespace engine
 
 		EVENT_CLASS_TYPE(GX_FOV_CHANGED)
 	};
+
+	class CameraProjectionModeChange
+		: public EntityChangedEvent
+	{
+	private:
+		ProjectionMode m_NewMode;
+
+	public:
+		CameraProjectionModeChange(Camera& cam, ProjectionMode NewMode)
+			: EntityChangedEvent(cam), m_NewMode(NewMode)
+		{}
+
+		ProjectionMode GetNewProjectionMode() const { return m_NewMode; }
+
+		virtual class Camera& GetEntity() const override { return *(static_cast<Camera*>(&m_Entity)); }
+
+		EVENT_CLASS_TYPE(GX_PROJECTION_MODE_CHANGED)
+	};
 }

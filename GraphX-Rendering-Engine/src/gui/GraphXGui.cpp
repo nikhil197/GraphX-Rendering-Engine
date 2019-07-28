@@ -204,15 +204,17 @@ namespace engine
 		{
 			if (s_GuiEventCallback)
 			{
-				
+				CameraProjectionModeChange e(camera, ProjectionMode::Perspective);
+				s_GuiEventCallback(e);
 			}
 		}
-
+		ImGui::SameLine();
 		if (ImGui::RadioButton("Orthographic", !bPerspectiveMode))
 		{
 			if (s_GuiEventCallback)
 			{
-				
+				CameraProjectionModeChange e(camera, ProjectionMode::Orthographic);
+				s_GuiEventCallback(e);
 			}
 		}
 		ImGui::End();

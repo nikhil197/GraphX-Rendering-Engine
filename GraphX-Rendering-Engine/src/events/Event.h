@@ -14,31 +14,19 @@ namespace engine
 		NONE = 0,
 
 		/* Mouse Events */
-		GX_MOUSE_MOVED,
-		GX_MOUSE_BUTTON_PRESSED,
-		GX_MOUSE_BUTTON_RELEASED,
-		GX_MOUSE_SCROLLED,
+		GX_MOUSE_MOVED, GX_MOUSE_BUTTON_PRESSED, GX_MOUSE_BUTTON_RELEASED, GX_MOUSE_SCROLLED,
 
 		/* Keyboard events */
-		GX_KEY_PRESSED,
-		GX_KEY_RELEASED,
+		GX_KEY_PRESSED, GX_KEY_RELEASED,
 
 		/* Window events */
-		GX_WINDOW_CLOSED,
-		GX_WINDOW_RESIZED,
-		GX_WINDOW_MOVED,
-		GX_WINDOW_FOCUS,
-		GX_WINDOW_LOST_FOCUS,
+		GX_WINDOW_CLOSED, GX_WINDOW_RESIZED, GX_WINDOW_MOVED, GX_WINDOW_FOCUS, GX_WINDOW_LOST_FOCUS,
 
 		/* GUI Events */
-		GX_ADD_TEXTURE,
-		GX_LOAD_MODEL,
-		GX_CREATE_TERRAIN,
-		
+		GX_ADD_TEXTURE, GX_LOAD_MODEL, GX_CREATE_TERRAIN,
 		/* Entity Change events */
-
 		/* Camera changed */
-		GX_FOV_CHANGED
+		GX_FOV_CHANGED, GX_PROJECTION_MODE_CHANGED
 	};
 
 	// Not a scoped enum because it doesn't represent any actual thing in the event, unlike event type
