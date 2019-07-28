@@ -7,8 +7,7 @@ layout(location = 2) in vec4 vColor;
 
 /* Uniforms */
 uniform mat4 u_Model = mat4(1.0f);
-uniform mat4 u_View = mat4(1.0f);
-uniform mat4 u_Projection = mat4(1.0f);
+uniform mat4 u_ProjectionView = mat4(1.0f);
 uniform mat3 u_Normal = mat3(1.0f);
 
 /* Data sent to the fragment shader */
@@ -22,7 +21,7 @@ out struct Data
 void main()
 {
 	v_Data.WorldPosition = vec3(u_Model * vec4(vPosition, 1.0f));
-	gl_Position = u_Projection * u_View * v_Data.WorldPosition;
+	gl_Position = u_ProjectionView * v_Data.WorldPosition;
 	v_Data.Normal = u_Normal * vNormal;
 	v_Data.Color = vColor;
 }

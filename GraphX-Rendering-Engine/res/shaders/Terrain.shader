@@ -7,8 +7,7 @@ layout(location = 2) in vec2 vTexCoord;
 
 /* Uniforms */
 uniform mat4 u_Model = mat4(1.0f);
-uniform mat4 u_View = mat4(1.0f);
-uniform mat4 u_Projection = mat4(1.0f);
+uniform mat4 u_ProjectionView = mat4(1.0f);
 uniform mat4 u_LightSpaceMatrix = mat4(1.0f);
 
 /* Data sent to the fragment shader */
@@ -23,7 +22,7 @@ out struct Data
 void main()
 {
 	v_Data.WorldPosition = vec3(u_Model * vec4(vPosition, 1.0f));
-	gl_Position = u_Projection * u_View * vec4(v_Data.WorldPosition, 1.0f);
+	gl_Position = u_ProjectionView * vec4(v_Data.WorldPosition, 1.0f);
 	v_Data.Normal = vNormal;
 	v_Data.TexCoord = vTexCoord;
 	v_Data.LightSpacePos = u_LightSpaceMatrix * vec4(v_Data.WorldPosition, 1.0f);

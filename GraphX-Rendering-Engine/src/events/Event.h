@@ -34,7 +34,11 @@ namespace engine
 		GX_ADD_TEXTURE,
 		GX_LOAD_MODEL,
 		GX_CREATE_TERRAIN,
-		GX_ENTITY_CHANGED
+		
+		/* Entity Change events */
+
+		/* Camera changed */
+		GX_FOV_CHANGED
 	};
 
 	// Not a scoped enum because it doesn't represent any actual thing in the event, unlike event type
@@ -46,7 +50,8 @@ namespace engine
 		GX_EVENT_CATEGORY_MOUSE_BUTTON  = BIT(2),
 		GX_EVENT_CATEGORY_KEYBOARD		= BIT(3),
 		GX_EVENT_CATEGORY_WINDOW		= BIT(4),
-		GX_EVENT_CATEGORY_GUI			= BIT(5)
+		GX_EVENT_CATEGORY_GUI			= BIT(5),
+		GX_EVENT_CATEGORY_ENTITY_CHANGE	= BIT(6)
 	};
 
 	// Macros to override the base event class methods

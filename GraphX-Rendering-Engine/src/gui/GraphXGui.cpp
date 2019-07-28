@@ -184,17 +184,37 @@ namespace engine
 
 	void GraphXGui::CameraProperties(Camera& camera)
 	{
+		float FOV = camera.GetFieldOfView();
+		bool bPerspectiveMode = camera.GetProjectionMode() == ProjectionMode::Perspective;
 		ImGui::Begin("Camera Properties", (bool*)true);
 		ImGui::DragFloat("Camera Speed", (float*)&camera.CameraSpeed, 1.0f, 0.0f, 100.0f);
-		if (ImGui::DragFloat("Field Of View", (float*)&camera.FieldOfView, 1.0f, 10.0f, 100.0f))
+		
+		if (ImGui::DragFloat("Field Of View", &FOV, 1.0f, 10.0f, 100.0f))
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraFOVChangedEvent e(camera);
+				CameraFOVChangedEvent e(camera, FOV);
 				s_GuiEventCallback(e);
 			}
 		}
+		
 		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.01f, 5.0f);
+
+		if (ImGui::RadioButton("Perspective", bPerspectiveMode))
+		{
+			if (s_GuiEventCallback)
+			{
+				
+			}
+		}
+
+		if (ImGui::RadioButton("Orthographic", !bPerspectiveMode))
+		{
+			if (s_GuiEventCallback)
+			{
+				
+			}
+		}
 		ImGui::End();
 	}
 

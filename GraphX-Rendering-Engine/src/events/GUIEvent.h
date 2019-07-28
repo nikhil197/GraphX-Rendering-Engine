@@ -57,28 +57,35 @@ namespace engine
 		: public Event
 	{
 	protected:
-		const class Entity& m_Entity;
+		class Entity& m_Entity;
 
-	public:
-		EntityChangedEvent(const Entity& e)
+	protected:
+		EntityChangedEvent(Entity& e)
 			: m_Entity(e)
 		{}
 
 		/* Returns the entity */
-		virtual const class Entity& GetEntity() const = 0;
+		virtual class Entity& GetEntity() const = 0;
 
-		EVENT_CLASS_TYPE(GX_ENTITY_CHANGED)
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI | GX_EVENT_CATEGORY_ENTITY_CHANGE)
 	};
 
+	/* Camera Events */
 	class CameraFOVChangedEvent
 		: public EntityChangedEvent
 	{
+	private:
+		float m_ChangedFOV;
+
 	public:
-		CameraFOVChangedEvent(const Camera& cam)
-			: EntityChangedEvent(cam)
+		CameraFOVChangedEvent(Camera& cam, float FOV)
+			: EntityChangedEvent(cam), m_ChangedFOV(FOV)
 		{}
 
-		virtual const class Camera& GetEntity() const override { return *((Camera*)&m_Entity); }
+		float GetChangedFOV() const { return m_ChangedFOV; }
+
+		virtual class Camera& GetEntity() const override { return *(static_cast<Camera*>(&m_Entity)); }
+
+		EVENT_CLASS_TYPE(GX_FOV_CHANGED)
 	};
 }

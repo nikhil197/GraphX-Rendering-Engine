@@ -318,13 +318,12 @@ namespace engine
 				Shader* shader = m_Shaders.at(i);
 				if (!shader)
 				{
-					m_Shaders.erase(m_Shaders.begin() + i);
+					m_Shaders.erase(m_Shaders.begin() + i);		// TODO : Fix Memory leak
 					continue;
 				}
 				shader->Bind();
 				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
-				shader->SetUniformMat4f("u_View", m_Camera->GetViewMatrix());
-				shader->SetUniformMat4f("u_Projection", m_Camera->GetPerspectiveProjectionMatrix());
+				shader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
 			}
 
 			// Set the state back to rendered
@@ -347,7 +346,7 @@ namespace engine
 
 	void Application::RenderSkybox()
 	{
-		// Render the skybox
+		// Render the sky box
 		m_CurrentSkybox->Enable();
 		m_Renderer->Draw(m_CurrentSkybox->GetIBO());
 		m_CurrentSkybox->Disable();
@@ -515,11 +514,11 @@ namespace engine
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<CameraFOVChangedEvent>(BIND_EVENT_FUNC(Application::OnCameraFOVChanged));
+				handled = dispatcher.Dispatch<CreateTerrainEvent>(BIND_EVENT_FUNC(Application::OnCreateTerrain));
 			}
 			if (!handled)
 			{
-				handled = dispatcher.Dispatch<CreateTerrainEvent>(BIND_EVENT_FUNC(Application::OnCreateTerrain));
+				handled = dispatcher.Dispatch<CameraFOVChangedEvent>(BIND_EVENT_FUNC(Application::OnCameraFOVChanged));
 			}
 		}
 		
@@ -704,7 +703,7 @@ namespace engine
 
 	bool Application::OnCameraFOVChanged(class CameraFOVChangedEvent& e)
 	{
-		m_Camera->SetRenderStateDirty(true);
+		m_Camera->SetNewFOV(e.GetChangedFOV());
 		return true;
 	}
 

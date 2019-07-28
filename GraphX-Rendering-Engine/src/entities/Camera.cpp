@@ -10,7 +10,7 @@
 namespace engine
 {
 	Camera::Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
-		: m_WorldUpAxis(UpAxis), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_RenderStateDirty(true), CameraSpeed(5.5f), CameraPosition(CameraPos), EulerAngles(0), m_ViewAxis(), m_RightAxis(0), FieldOfView(FOV)
+		: m_WorldUpAxis(UpAxis), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_FieldOfView(FOV), CameraPosition(CameraPos), EulerAngles(0)
 	{
 		m_ViewAxis = LookAtPoint - CameraPosition;
 		m_ViewAxis.Normalize();
@@ -19,12 +19,33 @@ namespace engine
 		m_RightAxis.Normalize();
 
 		m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+
+		// Calculate the view and projection matrices (Default projection mode is perspective)
+		m_ViewMatrix = gm::View::LookAt(CameraPosition, CameraPosition + m_ViewAxis, m_WorldUpAxis);
+		CalculateProjectionMatrix();
 	}
 
 	void Camera::Update(float DeltaTime)
 	{
 		ProcessKeyboardInput(DeltaTime);
 		ProcessMouseInput(DeltaTime);
+
+		if (m_ViewChanged)
+		{
+			m_ViewMatrix = gm::View::LookAt(CameraPosition, CameraPosition + m_ViewAxis, m_WorldUpAxis);
+			m_RenderStateDirty = true;
+		}
+
+		if (m_ProjDataChanged)
+		{
+			CalculateProjectionMatrix();
+			m_RenderStateDirty = true;
+		}
+
+		if (m_RenderStateDirty)
+		{
+			m_ProjectionViewMatrix = m_ProjectionMatrix * m_ViewMatrix;
+		}
 	}
 
 	void Camera::ProcessKeyboardInput(float DeltaTime)
@@ -34,7 +55,7 @@ namespace engine
 		{
 			float CurrentCameraSpeed = CameraSpeed * DeltaTime;
 			const std::shared_ptr<Keyboard>& keyboard = Keyboard::GetKeyboard();
-			m_RenderStateDirty = true;
+			m_ViewChanged = true;
 			
 			if (keyboard->GetKey(Keys::GX_W))
 			{
@@ -62,7 +83,7 @@ namespace engine
 			}
 			else
 			{
-				m_RenderStateDirty = false;
+				m_ViewChanged = false;
 			}
 		}
 	}
@@ -84,7 +105,7 @@ namespace engine
 				xOffset *= DeltaTime;
 				yOffset *= DeltaTime;
 
-				m_RenderStateDirty = true;
+				m_ViewChanged = true;
 
 				EulerAngles.x += yOffset;
 				EulerAngles.y += xOffset;
@@ -102,14 +123,30 @@ namespace engine
 			}
 		}
 
-		// Check for the mouse scroll
-		if (Mouse::GetMouse()->GetScrollOffset() != gm::Vector2::ZeroVector)
+		// Check for the mouse scroll only in perspective projection mode
+		if (m_CurrentProjectionMode == ProjectionMode::Perspective && Mouse::GetMouse()->GetScrollOffset() != gm::Vector2::ZeroVector)
 		{
 			gm::Vector2 Offset = Mouse::GetMouse()->GetScrollOffset();
-			FieldOfView -= Offset.y;
+			m_FieldOfView -= Offset.y;
 
-			m_RenderStateDirty = true;
+			m_ProjDataChanged = true;
 		}
+	}
+
+	void Camera::CalculateProjectionMatrix()
+	{
+		if (m_CurrentProjectionMode == ProjectionMode::Perspective)
+		{
+			m_ProjectionMatrix = gm::Projection::Perspective(m_FieldOfView, m_AspectRatio, m_Near, m_Far);
+		}
+		else
+		{
+			float HalfOrthoWidth = m_OrthoWidth / 2.0f;
+			float HalfOrthoHeight = m_OrthoHeight / 2.0f;
+			m_ProjectionMatrix = gm::Projection::Ortho(-HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_Near, m_Far);
+		}
+
+		m_ProjectionViewMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}
 
 	void Camera::Enable(class Shader& shader, const std::string& Name) const

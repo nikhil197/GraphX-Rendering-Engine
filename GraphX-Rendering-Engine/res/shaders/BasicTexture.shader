@@ -7,8 +7,7 @@ layout(location = 2) in vec2 vTexCoord;
 
 // uniforms
 uniform mat4 u_Model;
-uniform mat4 u_View;
-uniform mat4 u_Projection;
+uniform mat4 u_ProjectionView;
 uniform mat3 u_Normal;
 
 // varying variables
@@ -19,7 +18,7 @@ out vec3 v_Normal;
 void main()
 {
 	v_WorldPosition = vec3(u_Model * vec4(vPosition, 1.0));
-	gl_Position = u_Projection * u_View * vec4(v_WorldPosition, 1.0);
+	gl_Position = u_ProjectionView * vec4(v_WorldPosition, 1.0);
 	v_TexCoord = vTexCoord;
 	v_Normal = u_Normal * vNormal;
 }

@@ -75,7 +75,7 @@ namespace engine
 
 		// Set the uniforms
 		m_Shader->SetUniformMat4f("u_View", m_View);
-		m_Shader->SetUniformMat4f("u_Projection", m_Camera.GetPerspectiveProjectionMatrix());
+		m_Shader->SetUniformMat4f("u_Projection", m_Camera.GetProjectionMatrix());
 		m_Shader->SetUniform1i("u_Skybox", m_BindingSlot);
 		m_Shader->SetUniform1f("u_BlendFactor", BlendFactor);
 	}

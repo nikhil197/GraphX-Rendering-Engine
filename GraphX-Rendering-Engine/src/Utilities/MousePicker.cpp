@@ -33,7 +33,7 @@ namespace engine
 	gm::Vector3 MousePicker::ToWorldCoordinates(const gm::Vector2& NormalisedCoords)
 	{
 		// Coordinates in the view space													/* Clip Space Coordinates */
-		gm::Vector4 ViewSpaceCoords = m_Camera.GetPerspectiveProjectionMatrix().Inverse() * gm::Vector4(NormalisedCoords, -1.0f, 1.0f);
+		gm::Vector4 ViewSpaceCoords = m_Camera.GetProjectionMatrix().Inverse() * gm::Vector4(NormalisedCoords, -1.0f, 1.0f);
 
 		gm::Vector4 WorldCoords = m_Camera.GetViewMatrix().Inverse() * ViewSpaceCoords;
 

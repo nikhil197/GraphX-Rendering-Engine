@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test\test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\vectors\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test\test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\vectors\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
