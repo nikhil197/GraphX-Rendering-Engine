@@ -262,7 +262,7 @@ namespace gm
 	/* Non - member functions */
 	std::ostream& operator<<(std::ostream& Out, const Vector3& Vec)
 	{
-		return Out << "X: " << Vec.x << " Y: " << Vec.y << " Z: " << Vec.z << std::endl;
+		return Out << "X: " << Vec.x << " Y: " << Vec.y << " Z: " << Vec.z;
 	}
 
 	const Vector3 operator+(float Value, const Vector3& Vec)

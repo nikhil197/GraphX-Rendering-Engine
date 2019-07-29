@@ -338,9 +338,9 @@ namespace gm
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
-				Out << Mat[i][j] << " ";
+				Out << Mat[i][j] << ' ';
 
-			Out << std::endl;
+			Out << '\n';
 		}
 
 		return Out;
