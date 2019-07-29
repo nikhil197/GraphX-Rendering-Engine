@@ -22,7 +22,7 @@ namespace engine
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
 
-		/* Senstivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
+		/* Sensitivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
 		float m_ScrollSenstivity;
 
 		/* Position of the mouse */

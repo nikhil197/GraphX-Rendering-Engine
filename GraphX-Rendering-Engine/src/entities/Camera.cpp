@@ -21,18 +21,19 @@ namespace engine
 		m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 
 		// Calculate the view and projection matrices (Default projection mode is perspective)
-		m_ViewMatrix = gm::View::LookAt(CameraPosition, CameraPosition + m_ViewAxis, m_WorldUpAxis);
+		gm::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
 		CalculateProjectionMatrix();
 	}
 
 	void Camera::Update(float DeltaTime)
 	{
+		
 		ProcessKeyboardInput(DeltaTime);
 		ProcessMouseInput(DeltaTime);
 
 		if (m_ViewChanged)
 		{
-			m_ViewMatrix = gm::View::LookAt(CameraPosition, CameraPosition + m_ViewAxis, m_WorldUpAxis);
+			gm::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
 			m_RenderStateDirty = true;
 		}
 
@@ -93,12 +94,15 @@ namespace engine
 		if (Mouse::GetMouse()->IsRightButtonPressed())
 		{
 			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
-			const gm::Vector2 LastPosition = mouse->GetLastPosition();
-			const gm::Vector2 CurrentPosition = mouse->GetPosition();
+			const gm::Vector2& LastPosition = mouse->GetLastPosition();
+			const gm::Vector2& CurrentPosition = mouse->GetPosition();
 
 			// Calculate the Yaw and the Pitch offset
 			float xOffset = CurrentPosition.x - LastPosition.x;
 			float yOffset = CurrentPosition.y - LastPosition.y;
+
+			GX_ENGINE_INFO("xOffset: {0}, yOffset: {1}", xOffset, yOffset);
+			GX_ENGINE_INFO("LastPos: {0}, Pos: {1} \n", LastPosition, CurrentPosition);
 			
 			if ((xOffset != 0 && gm::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && gm::MathUtil::Abs(yOffset) < 20.0f))
 			{

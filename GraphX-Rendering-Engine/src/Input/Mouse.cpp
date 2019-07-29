@@ -39,29 +39,25 @@ namespace engine
 	void Mouse::OnEvent(MouseMovedEvent& e)
 	{
 		m_LastPosition = m_Position;
+
 		float xOffset = e.GetX() - m_Position.x;
 		float yOffset = e.GetY() - m_Position.y;
 
-		xOffset *= Sensitivity;
-		yOffset *= Sensitivity;
-
-		m_Position.x += xOffset;
-		m_Position.y += yOffset;
+		m_Position.x += xOffset * Sensitivity;
+		m_Position.y += yOffset * Sensitivity;
 	}
 
 	void Mouse::OnEvent(MouseScrolledEvent& e)
 	{
-		float xOffset = e.GetXOffset() * m_ScrollSenstivity;
-		float yOffset = e.GetYOffset() * m_ScrollSenstivity;
-
-		m_ScrollOffset = gm::Vector2(xOffset, yOffset);
+		m_ScrollOffset.x = e.GetXOffset() * m_ScrollSenstivity;
+		m_ScrollOffset.y = e.GetYOffset() * m_ScrollSenstivity;
 	}
 
 	void Mouse::Update()
 	{
 		// Update the last mouse position to the current at the end of every frame
 		m_LastPosition = m_Position;
-
+		
 		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
 		m_ScrollOffset = gm::Vector2::ZeroVector;
 	}
