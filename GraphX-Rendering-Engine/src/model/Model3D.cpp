@@ -14,7 +14,7 @@
 
 namespace GraphX
 {
-	Model3D::Model3D(const std::string& FilePath, Shader& shader)
+	Model3D::Model3D(const std::string& FilePath, Shader* shader)
 		: m_Meshes(new std::vector<Mesh3D*>()), m_Shader(shader), m_FilePath(FilePath)
 	{
 		LoadModel();

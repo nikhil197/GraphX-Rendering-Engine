@@ -37,7 +37,7 @@ namespace GraphX
 		class IndexBuffer* m_IBO;
 
 		/* Shader used to render the object */
-		class Shader& m_Shader;
+		class Shader* m_Shader;
 
 		// Multiple textures can be used to texture the object
 		// GX currently supports only single texture rendering
@@ -66,7 +66,7 @@ namespace GraphX
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, class Shader* shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -102,7 +102,10 @@ namespace GraphX
 		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
 
 		/* Returns the shader for the object */
-		inline class Shader& GetShader() const { return m_Shader; }
+		inline class Shader* GetShader() const { return m_Shader; }
+
+		/* Sets a new shader for the mesh */
+		inline void SetShader(Shader* NewShader) { m_Shader = NewShader; }
 
 		/* Returns the model matrix for the mesh */
 		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }

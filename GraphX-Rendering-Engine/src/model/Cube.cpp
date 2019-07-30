@@ -79,7 +79,7 @@ namespace GraphX
 		3, 4, 0
 	};
 
-	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Shader& Shader, const std::vector<const Texture*>& Textures, const GraphXMaths::Vector4& Color)
+	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Shader* Shader, const std::vector<const Texture*>& Textures, const GraphXMaths::Vector4& Color)
 		: Mesh3D(Position, Rotation, Size, Shader, Textures, s_Vertices, s_Indices, Color)
 	{
 	}

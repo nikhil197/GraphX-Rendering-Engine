@@ -169,7 +169,7 @@ namespace GraphX
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
 
-		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, *m_Shader, textures);
+		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_Shader, textures);
 		m_Objects3D.emplace_back(cube);
 		cube->bShowDetails = true;
 
@@ -178,7 +178,7 @@ namespace GraphX
 		m_Terrain.emplace_back(ter);
 
 		// Load Trees
-		Model3D TreeModel("res/Models/tree.obj", *m_Shader);
+		Model3D TreeModel("res/Models/tree.obj", m_Shader);
 		Texture TreeTex("res/Textures/tree.png");
 		TreeModel.GetMeshes().at(0)->AddTexture(&TreeTex);
 		Mesh3D* TreeMesh = TreeModel.GetMeshes().at(0);
@@ -191,7 +191,7 @@ namespace GraphX
 			m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
 		}
 
-		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", *m_Shader);
+		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", m_Shader);
 		Texture LowPolyTreeTex("res/Textures/lowPolyTree.png");
 		LowPolyTreeModel.GetMeshes().at(0)->AddTexture(&LowPolyTreeTex);
 		Mesh3D* LowPolyTreeMesh = LowPolyTreeModel.GetMeshes().at(0);
@@ -205,7 +205,7 @@ namespace GraphX
 		}
 
 		// Load Stall
-		Model3D StallModel("res/Models/stall.obj", *m_Shader);
+		Model3D StallModel("res/Models/stall.obj", m_Shader);
 		Texture StallTex("res/Textures/stallTexture.png");
 		StallModel.GetMeshes().at(0)->AddTexture(&StallTex);
 		StallModel.GetMeshes().at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
@@ -419,7 +419,7 @@ namespace GraphX
 
 		static Shader shader("res/shaders/Basic.shader");
 
-		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
+		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, &shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
 
 		static Renderer2D renderer;
 
@@ -683,7 +683,7 @@ namespace GraphX
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, *m_Shader, {}));
+			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_Shader, {}));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)
@@ -691,7 +691,7 @@ namespace GraphX
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			Model3D *model = new Model3D(EngineUtil::ToByteString(dialog.GetAbsolutePath()), *m_Shader);
+			Model3D *model = new Model3D(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_Shader);
 			std::vector<Mesh3D*> meshes = model->GetMeshes();
 			
 			for(unsigned int i = 0; i < meshes.size(); i++)

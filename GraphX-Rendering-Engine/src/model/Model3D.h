@@ -12,14 +12,14 @@ namespace GraphX
 		std::vector<class Mesh3D*>* m_Meshes;
 
 		/* Shader used for rendering the model */
-		class Shader& m_Shader;
+		class Shader* m_Shader;
 
 		/* Path of the file */
 		std::string m_FilePath;
 
 	public:
 		/* Constructor */
-		Model3D(const std::string& FilePath, class Shader& shader);
+		Model3D(const std::string& FilePath, class Shader* shader);
 
 		/* Returns the meshes of the model */
 		inline const std::vector<class Mesh3D*>& GetMeshes() const { return *m_Meshes; }

@@ -37,7 +37,7 @@ namespace GraphX
 		class IndexBuffer* m_IBO;
 
 		/* Shader used to render the object */
-		class Shader& m_Shader;
+		class Shader* m_Shader;
 
 		/* Textures used by the mesh */
 		std::vector<const class Texture*> m_Textures;
@@ -61,7 +61,7 @@ namespace GraphX
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, class Shader* shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
 		/* Updates the status of the Mesh */
 		virtual void Update(float DeltaTime);
@@ -91,7 +91,10 @@ namespace GraphX
 		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
 
 		/* Returns the shader for the object */
-		inline class Shader& GetShader() const { return m_Shader; }
+		inline class Shader* GetShader() const { return m_Shader; }
+
+		/* Sets new shader for the mesh */
+		inline void SetShader(Shader* NewShader) { m_Shader = NewShader; }
 
 		/* Returns the vertices of the object */
 		inline const std::vector<Vertex2D>& GetVertices() const { return m_Vertices; }

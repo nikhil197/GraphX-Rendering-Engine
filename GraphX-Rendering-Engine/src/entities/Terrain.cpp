@@ -39,7 +39,7 @@ namespace GraphX
 		
 		if (m_Textures && m_Vertices && m_Indices)
 		{
-			m_Mesh = new Mesh3D(Position, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3(Scale.x, 1.0f, Scale.y), *m_Shader, *m_Textures, *m_Vertices, *m_Indices, GraphXMaths::Vector4::ZeroVector, -1.0f, -1.0f);
+			m_Mesh = new Mesh3D(Position, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3(Scale.x, 1.0f, Scale.y), m_Shader, *m_Textures, *m_Vertices, *m_Indices, GraphXMaths::Vector4::ZeroVector, -1.0f, -1.0f);
 			
 			delete m_Vertices;
 			delete m_Indices;

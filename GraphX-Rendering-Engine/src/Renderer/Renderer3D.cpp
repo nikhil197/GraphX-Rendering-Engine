@@ -42,16 +42,16 @@ namespace GraphX
 			mesh->Enable();
 
 			// Render the object
-			Shader& shader = mesh->GetShader();
-			shader.Bind();
+			Shader* shader = mesh->GetShader();
+			shader->Bind();
 			
 			// Set the transformation matrix
 			GraphXMaths::Matrix4 Model = mesh->GetModelMatrix();
-			shader.SetUniformMat4f("u_Model", Model);
+			shader->SetUniformMat4f("u_Model", Model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
 			GraphXMaths::Matrix3 Normal = GraphXMaths::Matrix3(Model);
-			shader.SetUniformMat3f("u_Normal", Normal);
+			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
 			GLCall(glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));

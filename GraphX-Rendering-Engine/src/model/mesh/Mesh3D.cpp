@@ -11,7 +11,7 @@
 
 namespace GraphX
 {
-	Mesh3D::Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color, float Reflect, float Shine)
+	Mesh3D::Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, Shader* shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color, float Reflect, float Shine)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices), m_Model(), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
@@ -46,22 +46,25 @@ namespace GraphX
 	{
 		m_VAO->Bind();
 
-		m_Shader.Bind();
-		if(Reflectivity > 0)
-			m_Shader.SetUniform1f("u_Reflectivity", Reflectivity);
-		if(Shininess > 0)
-			m_Shader.SetUniform1f("u_Shininess", Shininess);
-
-		// Set the base color of the object
-		m_Shader.SetUniform4f("u_TintColor", TintColor);
-		
-		// Bind the textures
-		int NumTex = m_Textures.size();
-		for (int i = 0; i < NumTex; i++)
+		if (m_Shader)
 		{
-			const Texture* texture = m_Textures[i];
-			texture->Bind(i);
-			m_Shader.SetUniform1i((std::string("u_Texture") + std::to_string(i)).c_str(), i);
+			m_Shader->Bind();
+			if (Reflectivity > 0)
+				m_Shader->SetUniform1f("u_Reflectivity", Reflectivity);
+			if (Shininess > 0)
+				m_Shader->SetUniform1f("u_Shininess", Shininess);
+
+			// Set the base color of the object
+			m_Shader->SetUniform4f("u_TintColor", TintColor);
+
+			// Bind the textures
+			int NumTex = m_Textures.size();
+			for (int i = 0; i < NumTex; i++)
+			{
+				const Texture* texture = m_Textures[i];
+				texture->Bind(i);
+				m_Shader->SetUniform1i((std::string("u_Texture") + std::to_string(i)).c_str(), i);
+			}
 		}
 	}
 
