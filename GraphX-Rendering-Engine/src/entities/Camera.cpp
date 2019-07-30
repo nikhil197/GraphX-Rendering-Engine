@@ -100,9 +100,6 @@ namespace GraphX
 			// Calculate the Yaw and the Pitch offset
 			float xOffset = CurrentPosition.x - LastPosition.x;
 			float yOffset = CurrentPosition.y - LastPosition.y;
-
-			GX_ENGINE_INFO("xOffset: {0}, yOffset: {1}", xOffset, yOffset);
-			GX_ENGINE_INFO("LastPos: {0}, Pos: {1} \n", LastPosition, CurrentPosition);
 			
 			if ((xOffset != 0 && GraphXMaths::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && GraphXMaths::MathUtil::Abs(yOffset) < 20.0f))
 			{

@@ -23,12 +23,5 @@ namespace GraphX
 
 		/* Returns the meshes of the model */
 		inline const std::vector<class Mesh3D*>& GetMeshes() const { return *m_Meshes; }
-
-	private:
-		/* Load the model from the explorer*/
-		void LoadModel();
-
-		/* Process the scene retreived from the file */
-		void ProcessScene(const aiScene* Scene);
 	};
 }
