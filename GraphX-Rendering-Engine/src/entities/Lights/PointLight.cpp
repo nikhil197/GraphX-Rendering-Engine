@@ -4,10 +4,10 @@
 #include "Shaders/Shader.h"
 #include "Entities/Camera.h"
 
-namespace engine
+namespace GraphX
 {
-	PointLight::PointLight(const gm::Vector3& Pos, const gm::Vector4& Col, float Intensity, const gm::Vector3& AttenuationFactors)
-		: Light(Col, gm::Projection::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 1000.0f), Intensity), Position(Pos), m_AttenuationFactors(AttenuationFactors)
+	PointLight::PointLight(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector4& Col, float Intensity, const GraphXMaths::Vector3& AttenuationFactors)
+		: Light(Col, GraphXMaths::Projection::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 1000.0f), Intensity), Position(Pos), m_AttenuationFactors(AttenuationFactors)
 	{
 	}
 
@@ -15,7 +15,7 @@ namespace engine
 	{
 		Light::Update(DeltaTime);
 
-		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * gm::View::LookAt(Position, gm::Vector3(0.0f), gm::Vector3::YAxis);
+		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GraphXMaths::View::LookAt(Position, GraphXMaths::Vector3(0.0f), GraphXMaths::Vector3::YAxis);
 	}
 
 	void PointLight::Enable(Shader& shader, const std::string& LightName) const

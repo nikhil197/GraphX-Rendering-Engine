@@ -4,7 +4,7 @@
 #include "stb/stb_image.h"
 #include "Utilities/EngineUtil.h"
 
-namespace engine
+namespace GraphX
 {
 	MemoryManager<Texture> Texture::s_Manager;
 

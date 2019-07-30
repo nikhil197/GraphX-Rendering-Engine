@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-namespace engine
+namespace GraphX
 {
 	/* Abstract event for key events */
 	class KeyEvent 

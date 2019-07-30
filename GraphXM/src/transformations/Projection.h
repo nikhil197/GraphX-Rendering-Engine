@@ -1,6 +1,6 @@
 #pragma once
 
-namespace gm
+namespace GraphXMaths
 {
 	// Forward declarations 
 	class Matrix4;

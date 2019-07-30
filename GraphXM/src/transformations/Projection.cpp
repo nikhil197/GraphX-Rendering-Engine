@@ -8,7 +8,7 @@
 #include "Scaling.h"
 #include "../MathUtil.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Matrix4 Projection::Ortho(float left, float right, float bottom, float top, float near, float far)
 	{

@@ -6,7 +6,7 @@
 #include "Shaders/Shader.h"
 #include "Renderer/SimpleRenderer.h"
 
-namespace engine
+namespace GraphX
 {
 	ParticleManager::ParticleManager(const Camera& camera)
 		: m_ParticleShader(new Shader("res/Shaders/Particle.shader")), m_Camera(camera), m_Index(0), m_PoolCap(500)
@@ -29,7 +29,7 @@ namespace engine
 		//			particles.erase(particles.begin() + i);
 		//	}
 		//}
-		const gm::Matrix4& ViewMat = m_Camera.GetViewMatrix();
+		const GraphXMaths::Matrix4& ViewMat = m_Camera.GetViewMatrix();
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
 			m_Particles.at(i).Update(DeltaTime, ViewMat, m_Camera.IsRenderStateDirty());
@@ -42,7 +42,7 @@ namespace engine
 
 		// Render
 		static SimpleRenderer renderer;
-		const gm::Matrix4 View = m_Camera.GetViewMatrix();
+		const GraphXMaths::Matrix4 View = m_Camera.GetViewMatrix();
 
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
@@ -78,7 +78,7 @@ namespace engine
 //		m_Particles.push_back(particle);
 	}
 
-	void ParticleManager::AddParticle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
+	void ParticleManager::AddParticle(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
 	{
 		m_Particles.at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
 		m_Index = (m_Index + 1) % m_PoolCap;

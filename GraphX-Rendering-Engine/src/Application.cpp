@@ -54,9 +54,9 @@
 #include "Utilities/EngineUtil.h"
 #include "Utilities/FileOpenDialog.h"
 
-namespace engine
+namespace GraphX
 {
-	using namespace gm;
+	using namespace GraphXMaths;
 
 	Application::Application(std::string& title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Renderer3D(nullptr), m_Renderer(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
@@ -123,7 +123,7 @@ namespace engine
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
-		m_Camera = new Camera(gm::Vector3(0.0f, 0.0f, 3.0f), gm::Vector3::ZeroVector, gm::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
+		m_Camera = new Camera(GraphXMaths::Vector3(0.0f, 0.0f, 3.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -131,7 +131,7 @@ namespace engine
 
 		m_CurrentSkybox = m_NightSkybox;
 
-		m_SunLight = new DirectionalLight(gm::Vector4::UnitVector, gm::Vector3(-1.0f, -1.0f, 1.0f));
+		m_SunLight = new DirectionalLight(GraphXMaths::Vector4::UnitVector, GraphXMaths::Vector3(-1.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		m_Light = new PointLight(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
@@ -169,7 +169,7 @@ namespace engine
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
 
-		Cube *cube = new Cube(gm::Vector3(-10.0f, 10.0f, -5.0f), gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, textures);
+		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, *m_Shader, textures);
 		m_Objects3D.emplace_back(cube);
 		cube->bShowDetails = true;
 
@@ -245,7 +245,7 @@ namespace engine
 
 			if (GX_ENABLE_PARTICLE_EFFECTS)
 			{
-				particleSys.SpawnParticles(gm::Vector3::ZeroVector, DeltaTime);
+				particleSys.SpawnParticles(GraphXMaths::Vector3::ZeroVector, DeltaTime);
 			}
 
 			// Update all the elements of the scene
@@ -376,7 +376,7 @@ namespace engine
 			ConfigureShaderForRendering(shader);
 
 			// Set the transformation matrix
-			gm::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
+			GraphXMaths::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
 			shader.SetUniformMat4f("u_Model", Model);
 
 			// Render the Terrain
@@ -419,7 +419,7 @@ namespace engine
 
 		static Shader shader("res/shaders/Basic.shader");
 
-		static Mesh2D QuadMesh(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector2::UnitVector, shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
+		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
 
 		static Renderer2D renderer;
 
@@ -554,7 +554,7 @@ namespace engine
 		{
 			TimeOfDay = DayTime::GX_MORNING - TimeOfDay;
 			m_CurrentSkybox = m_DaySkybox;
-			m_SunLight->Color = gm::Vector4(0.5f, 0.5f, 0.0f, 1.0f);
+			m_SunLight->Color = GraphXMaths::Vector4(0.5f, 0.5f, 0.0f, 1.0f);
 			m_CurrentSkybox->BlendFactor = 0.6f;
 		}
 		else if (TimeOfDay >= DayTime::GX_MORNING && TimeOfDay < DayTime::GX_AFTERNOON)
@@ -576,7 +576,7 @@ namespace engine
 		{
 			TimeOfDay = DayTime::GX_NIGHT - TimeOfDay;
 			m_CurrentSkybox = m_NightSkybox;
-			m_SunLight->Color = gm::Vector4::UnitVector;
+			m_SunLight->Color = GraphXMaths::Vector4::UnitVector;
 			m_CurrentSkybox->BlendFactor = 0.2f;
 		}
 
@@ -586,8 +586,8 @@ namespace engine
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		gm::Rotation rotation(angle, gm::Vector3::YAxis);
-		m_SunLight->Direction = gm::Vector3(rotation * gm::Vector4(m_SunLight->Direction, 1.0f));
+		GraphXMaths::Rotation rotation(angle, GraphXMaths::Vector3::YAxis);
+		m_SunLight->Direction = GraphXMaths::Vector3(rotation * GraphXMaths::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
 #pragma region eventHandlers
@@ -683,7 +683,7 @@ namespace engine
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, *m_Shader, {}));
+			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, *m_Shader, {}));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)

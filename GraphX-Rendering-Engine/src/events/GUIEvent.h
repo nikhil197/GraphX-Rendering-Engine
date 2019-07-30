@@ -3,7 +3,7 @@
 #include "Event.h"
 #include "Model/ModelTypes.h"
 
-namespace engine
+namespace GraphX
 {
 	class AddTextureEvent
 		: public Event

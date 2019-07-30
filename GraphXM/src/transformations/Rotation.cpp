@@ -8,7 +8,7 @@
 
 #include "../MathUtil.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Rotation::Rotation(float Value)
 		:Matrix4(),

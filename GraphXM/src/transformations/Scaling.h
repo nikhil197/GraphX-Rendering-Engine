@@ -3,7 +3,7 @@
 #include "../matrices/Matrix4.h"
 #include "../vectors/Vector3.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	class Scaling
 		: public Matrix4

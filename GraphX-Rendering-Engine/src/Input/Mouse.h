@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	enum MouseButton
 	{
@@ -26,13 +26,13 @@ namespace engine
 		float m_ScrollSenstivity;
 
 		/* Position of the mouse */
-		gm::Vector2 m_Position;
+		GraphXMaths::Vector2 m_Position;
 
 		/* Position of the mouse in the last frame */
-		gm::Vector2 m_LastPosition;
+		GraphXMaths::Vector2 m_LastPosition;
 
 		/* Current frame offset of the mouse scroll */
-		gm::Vector2 m_ScrollOffset;
+		GraphXMaths::Vector2 m_ScrollOffset;
 
 		/* Static instance of the Mouse */
 		static std::shared_ptr<Mouse> s_Mouse;
@@ -66,13 +66,13 @@ namespace engine
 		void Update();
 
 		/* Returns the mouse position */
-		inline const gm::Vector2& GetPosition() const { return m_Position; }
+		inline const GraphXMaths::Vector2& GetPosition() const { return m_Position; }
 
 		/* Returns the last frame mouse position */
-		inline const gm::Vector2& GetLastPosition() const { return m_LastPosition; }
+		inline const GraphXMaths::Vector2& GetLastPosition() const { return m_LastPosition; }
 
 		/* Returns the current scroll offset */
-		inline const gm::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
+		inline const GraphXMaths::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
 
 		/* Returns if the left mouse button is pressed */
 		inline bool IsLeftButtonPressed() const { return m_LeftButtonPressed; }

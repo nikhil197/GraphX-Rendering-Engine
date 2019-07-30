@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-namespace gm
+namespace GraphXMaths
 {
 	// Forward Declaration
 	struct Vector4;

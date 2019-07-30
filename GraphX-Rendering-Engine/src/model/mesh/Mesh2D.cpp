@@ -9,9 +9,9 @@
 #include "Buffers/IndexBuffer.h"
 #include "Shaders/Shader.h"
 
-namespace engine
+namespace GraphX
 {
-	Mesh2D::Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color, float Reflect, float Shine)
+	Mesh2D::Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color, float Reflect, float Shine)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
 	{
 		m_VAO = new VertexArray();
@@ -26,9 +26,9 @@ namespace engine
 	void Mesh2D::Update(float DeltaTime)
 	{
 		// Update the model matrix
-		gm::Translation translation(Position);
-		gm::Rotation rotation(Rotation);
-		gm::Scaling scale(gm::Vector3(Scale, 1.0f));
+		GraphXMaths::Translation translation(Position);
+		GraphXMaths::Rotation rotation(Rotation);
+		GraphXMaths::Scaling scale(GraphXMaths::Vector3(Scale, 1.0f));
 
 		m_Model = translation * rotation * scale;
 	}
@@ -44,7 +44,7 @@ namespace engine
 			m_Shader.SetUniform1f("u_Shininess", Shininess);
 
 		// Set the base Color of the object
-		if(TintColor != gm::Vector4::ZeroVector)
+		if(TintColor != GraphXMaths::Vector4::ZeroVector)
 			m_Shader.SetUniform4f("u_Color", TintColor);
 
 		int NumTex = m_Textures.size();

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	/* What frame buffer will be used for */
 	enum FramebufferType

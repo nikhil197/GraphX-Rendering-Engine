@@ -5,25 +5,25 @@
 #include "Buffers/VertexBufferLayout.h"
 #include "VertexArray.h"
 
-namespace engine
+namespace GraphX
 {
-	std::vector<gm::Vector2> Quad::s_Vertices = 
+	std::vector<GraphXMaths::Vector2> Quad::s_Vertices = 
 	{
-		gm::Vector2(-0.5f, -0.5f),
-		gm::Vector2( 0.5f, -0.5f),
-		gm::Vector2( 0.5f,  0.5f),
-		gm::Vector2( 0.5f,  0.5f),
-		gm::Vector2(-0.5f,  0.5f),
-		gm::Vector2(-0.5f, -0.5f)
+		GraphXMaths::Vector2(-0.5f, -0.5f),
+		GraphXMaths::Vector2( 0.5f, -0.5f),
+		GraphXMaths::Vector2( 0.5f,  0.5f),
+		GraphXMaths::Vector2( 0.5f,  0.5f),
+		GraphXMaths::Vector2(-0.5f,  0.5f),
+		GraphXMaths::Vector2(-0.5f, -0.5f)
 	};
 
 	const unsigned int Quad::s_QuadVertexCount = 6;
 
 	Quad::Quad()
 	{
-		VertexBuffer vbo(&s_Vertices[0], s_Vertices.size() * sizeof(gm::Vector2));
+		VertexBuffer vbo(&s_Vertices[0], s_Vertices.size() * sizeof(GraphXMaths::Vector2));
 		VertexBufferLayout layout;
-		layout.Push<float>(gm::Vector2::Components);
+		layout.Push<float>(GraphXMaths::Vector2::Components);
 
 		m_VAO = new VertexArray();
 		m_VAO->AddBuffer(vbo, layout);

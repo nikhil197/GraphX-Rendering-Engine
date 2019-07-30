@@ -20,7 +20,7 @@
 #include "Input/Mouse.h"
 #include "Events/GUIEvent.h"
 
-namespace engine
+namespace GraphX
 {
 	std::function<void(Event&)> GraphXGui::s_GuiEventCallback = nullptr;
 
@@ -73,8 +73,8 @@ namespace engine
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 			ImGui::PopStyleVar();
 
-			static gm::Vector3 postion;
-			static gm::Vector2 scale(1);
+			static GraphXMaths::Vector3 postion;
+			static GraphXMaths::Vector2 scale(1);
 			static int x = 0, z = 0;
 			static float tileSize = 0.0f;
 			static std::vector<std::string> textures;

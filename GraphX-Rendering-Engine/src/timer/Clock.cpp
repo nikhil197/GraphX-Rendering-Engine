@@ -2,7 +2,7 @@
 #include "Clock.h"
 #include "Timer.h"
 
-namespace engine
+namespace GraphX
 {
 	std::shared_ptr<Clock> Clock::s_Clock;
 

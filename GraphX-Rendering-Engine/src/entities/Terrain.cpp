@@ -12,11 +12,11 @@
 #include "Buffers/IndexBuffer.h"
 
 
-namespace engine
+namespace GraphX
 {   
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const gm::Vector3& Position, const gm::Vector2& Scale)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GraphXMaths::Vector3& Position, const GraphXMaths::Vector2& Scale)
 		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
 	{
 		BuildTerrain();
@@ -39,7 +39,7 @@ namespace engine
 		
 		if (m_Textures && m_Vertices && m_Indices)
 		{
-			m_Mesh = new Mesh3D(Position, gm::Vector3::ZeroVector, gm::Vector3(Scale.x, 1.0f, Scale.y), *m_Shader, *m_Textures, *m_Vertices, *m_Indices, gm::Vector4::ZeroVector, -1.0f, -1.0f);
+			m_Mesh = new Mesh3D(Position, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3(Scale.x, 1.0f, Scale.y), *m_Shader, *m_Textures, *m_Vertices, *m_Indices, GraphXMaths::Vector4::ZeroVector, -1.0f, -1.0f);
 			
 			delete m_Vertices;
 			delete m_Indices;
@@ -61,8 +61,8 @@ namespace engine
 			{
 				// Calculate the vertices of the terrain
 				double yCoord = GetYCoords(x, z);
-				vertex.Position = gm::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
-				vertex.TexCoord = gm::Vector2((float)x, (float)z);
+				vertex.Position = GraphXMaths::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
+				vertex.TexCoord = GraphXMaths::Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 
 				// Calculate the indices for the vertices of the terrain
@@ -137,11 +137,11 @@ namespace engine
 
 	void Terrain::CalculateNormal(int x, int z)
 	{
-		float heightL = m_Vertices->at(gm::MathUtil::Max((x - 1) + z * m_Width, 0)).Position.y;
-		float heightR = m_Vertices->at(gm::MathUtil::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		float heightD = m_Vertices->at(gm::MathUtil::Max(x + (z - 1) * m_Width, 0)).Position.y;
-		float heightU = m_Vertices->at(gm::MathUtil::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		m_Vertices->at(x + z * m_Width).Normal = gm::Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
+		float heightL = m_Vertices->at(GraphXMaths::MathUtil::Max((x - 1) + z * m_Width, 0)).Position.y;
+		float heightR = m_Vertices->at(GraphXMaths::MathUtil::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		float heightD = m_Vertices->at(GraphXMaths::MathUtil::Max(x + (z - 1) * m_Width, 0)).Position.y;
+		float heightU = m_Vertices->at(GraphXMaths::MathUtil::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		m_Vertices->at(x + z * m_Width).Normal = GraphXMaths::Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
 	}
 	
 	void Terrain::Update(float DeltaTime)

@@ -1,12 +1,12 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	class MousePicker
 	{
 	private:
 		/* Ray used to pick the intersecting object in the scene */
-		gm::Vector3 m_PickerRay;
+		GraphXMaths::Vector3 m_PickerRay;
 
 		/* Main Camera of the renderer */
 		const class Camera& m_Camera;
@@ -21,12 +21,12 @@ namespace engine
 		void Update();
 
 		/* Converts the given screen coordinates to normalised screen coordinates */
-		gm::Vector2 ToNormalisedScreenCoordinates(const gm::Vector2& ScreenCoords);
+		GraphXMaths::Vector2 ToNormalisedScreenCoordinates(const GraphXMaths::Vector2& ScreenCoords);
 
 		/* Convertes the given normalised screen coordinates to world coordinates */
-		gm::Vector3 ToWorldCoordinates(const gm::Vector2& NormalisedCoords);
+		GraphXMaths::Vector3 ToWorldCoordinates(const GraphXMaths::Vector2& NormalisedCoords);
 
 		/* Returns the picker ray */
-		inline const gm::Vector3& GetPickerRay() const { return m_PickerRay; }
+		inline const GraphXMaths::Vector3& GetPickerRay() const { return m_PickerRay; }
 	};;
 }

@@ -3,11 +3,11 @@
 #include "Cube.h"
 #include "Shaders/Shader.h"
 
-namespace engine
+namespace GraphX
 {
-	using namespace gm;
+	using namespace GraphXMaths;
 
-	std::vector<gm::Vector3> Cube::s_VertexPositions = 
+	std::vector<GraphXMaths::Vector3> Cube::s_VertexPositions = 
 	{
 		Vector3(-1.0f, -1.0f,  1.0f),
 		Vector3( 1.0f, -1.0f,  1.0f),
@@ -79,7 +79,7 @@ namespace engine
 		3, 4, 0
 	};
 
-	Cube::Cube(const gm::Vector3& Position, const gm::Vector3& Rotation, const gm::Vector3& Size, class Shader& Shader, const std::vector<const Texture*>& Textures, const gm::Vector4& Color)
+	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Shader& Shader, const std::vector<const Texture*>& Textures, const GraphXMaths::Vector4& Color)
 		: Mesh3D(Position, Rotation, Size, Shader, Textures, s_Vertices, s_Indices, Color)
 	{
 	}

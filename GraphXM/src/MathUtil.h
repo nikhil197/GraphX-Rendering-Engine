@@ -3,7 +3,7 @@
 // Define the value of PI (static to make it private to this translation unit i.e. the translation unit in which this header file will be included)
 static const double PI = 3.14159265;
 
-namespace gm
+namespace GraphXMaths
 {
 	/* Maths utility for the maths library */
 	class MathUtil

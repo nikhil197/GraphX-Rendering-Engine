@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	class Entity
 	{

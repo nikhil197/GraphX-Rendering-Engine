@@ -4,7 +4,7 @@
 
 #include "../vectors/Vector3.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Translation::Translation(float Value)
 		:Matrix4(),

@@ -7,7 +7,7 @@ struct IShellItem;
 
 typedef struct _COMDLG_FILTERSPEC COMDLG_FILTERSPEC;
 
-namespace engine
+namespace GraphX
 {
 	/* The type of resource to be opened */
 	enum ResourceType

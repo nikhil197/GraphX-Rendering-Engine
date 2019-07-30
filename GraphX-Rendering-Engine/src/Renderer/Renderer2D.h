@@ -2,7 +2,7 @@
 
 #include "Renderer2DCore.h"
 
-namespace engine
+namespace GraphX
 {
 	class Renderer2D
 		: public Renderer2DCore

@@ -2,7 +2,7 @@
 
 #include "Renderer3DCore.h"
 
-namespace engine
+namespace GraphX
 {
 	class Renderer3D
 		: public Renderer3DCore

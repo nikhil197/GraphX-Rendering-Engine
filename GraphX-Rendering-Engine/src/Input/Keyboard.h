@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	/* Keycodes accepted by the GraphX engine */
 	enum Keys

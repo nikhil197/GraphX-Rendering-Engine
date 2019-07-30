@@ -12,7 +12,7 @@
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
 
-namespace engine
+namespace GraphX
 {
 	Model3D::Model3D(const std::string& FilePath, Shader& shader)
 		: m_Meshes(new std::vector<Mesh3D*>()), m_Shader(shader), m_FilePath(FilePath)
@@ -46,37 +46,37 @@ namespace engine
 			aiMesh* Mesh = Scene->mMeshes[i];
 
 			// Extract the Vertex positions
-			std::vector<gm::Vector3>* vertexPositions = nullptr;
+			std::vector<GraphXMaths::Vector3>* vertexPositions = nullptr;
 			if (Mesh->HasPositions())
 			{
-				vertexPositions = new std::vector<gm::Vector3>();
+				vertexPositions = new std::vector<GraphXMaths::Vector3>();
 
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					gm::Vector3 vertex(Mesh->mVertices[i].x, Mesh->mVertices[i].y, Mesh->mVertices[i].z);
+					GraphXMaths::Vector3 vertex(Mesh->mVertices[i].x, Mesh->mVertices[i].y, Mesh->mVertices[i].z);
 					vertexPositions->emplace_back(vertex);
 				}
 			}
 
 			// Extract the Normals
-			std::vector<gm::Vector3>* normals = nullptr;
+			std::vector<GraphXMaths::Vector3>* normals = nullptr;
 			if (Mesh->HasNormals())
 			{
-				normals = new std::vector<gm::Vector3>();
+				normals = new std::vector<GraphXMaths::Vector3>();
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					gm::Vector3 normal(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z);
+					GraphXMaths::Vector3 normal(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z);
 					normals->emplace_back(normal);
 				}
 			}
 
 			// Extract the Texture coordinates
-			std::vector<gm::Vector2>* texCoords = new std::vector<gm::Vector2>();
+			std::vector<GraphXMaths::Vector2>* texCoords = new std::vector<GraphXMaths::Vector2>();
 			if (Mesh->HasTextureCoords(0))
 			{
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					gm::Vector2 texCoord(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y);
+					GraphXMaths::Vector2 texCoord(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y);
 					texCoords->emplace_back(texCoord);
 				}
 			}
@@ -123,7 +123,7 @@ namespace engine
 					Vertex3D vertex;
 					vertex.Position = vertexPositions->at(i);
 					vertex.Normal = normals->at(i);
-					vertex.TexCoord = (texCoords->size() > i) ? texCoords->at(i) : gm::Vector2::ZeroVector;
+					vertex.TexCoord = (texCoords->size() > i) ? texCoords->at(i) : GraphXMaths::Vector2::ZeroVector;
 					vertices->emplace_back(vertex);
 				}
 			}
@@ -132,7 +132,7 @@ namespace engine
 			Mesh3D* mMesh = nullptr;
 			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = new Mesh3D(gm::Vector3::ZeroVector, gm::Vector3::ZeroVector, gm::Vector3::UnitVector, m_Shader, *textures, *vertices, *indices);
+				mMesh = new Mesh3D(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_Shader, *textures, *vertices, *indices);
 			}
 			
 			if (mMesh == nullptr)

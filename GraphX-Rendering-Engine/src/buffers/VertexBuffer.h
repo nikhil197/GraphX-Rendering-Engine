@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	/* Class to represent the buffers */
 	class VertexBuffer

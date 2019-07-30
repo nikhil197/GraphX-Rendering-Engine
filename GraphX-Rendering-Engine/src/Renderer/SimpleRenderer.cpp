@@ -3,7 +3,7 @@
 #include "SimpleRenderer.h"
 #include "Buffers/IndexBuffer.h"
 
-namespace engine
+namespace GraphX
 {
 	void SimpleRenderer::Draw(int count) const
 	{

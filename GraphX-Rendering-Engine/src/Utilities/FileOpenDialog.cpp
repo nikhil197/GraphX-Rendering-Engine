@@ -6,7 +6,7 @@
 #include <KnownFolders.h>
 #include <shtypes.h>
 
-namespace engine
+namespace GraphX
 {
 	const COMDLG_FILTERSPEC FileOpenDialog::TextureFileTypes[] = {
 		{L"PNG (*.png)", L"*.png"},

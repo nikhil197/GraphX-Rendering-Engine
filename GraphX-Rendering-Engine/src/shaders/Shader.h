@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	// Struct to hold the both the shaders' source
 	struct ShaderSource
@@ -42,21 +42,21 @@ namespace engine
 
 		void SetUniform2f(const char* Name, float a, float b);
 
-		void SetUniform2f(const char* Name, const gm::Vector2& Vec);
+		void SetUniform2f(const char* Name, const GraphXMaths::Vector2& Vec);
 
 		void SetUniform3f(const char* Name, float r, float g, float b);
 
-		void SetUniform3f(const char* Name, const gm::Vector3& Vec);
+		void SetUniform3f(const char* Name, const GraphXMaths::Vector3& Vec);
 
 		void SetUniform4f(const char* Name, float r, float g, float b, float a);
 
-		void SetUniform4f(const char* Name, const gm::Vector4& Vec);
+		void SetUniform4f(const char* Name, const GraphXMaths::Vector4& Vec);
 
-		void SetUniform4f(const char* Name, const gm::Vector2& Vec1, const gm::Vector2& Vec2);
+		void SetUniform4f(const char* Name, const GraphXMaths::Vector2& Vec1, const GraphXMaths::Vector2& Vec2);
 
-		void SetUniformMat3f(const char* Name, const gm::Matrix3& Mat);
+		void SetUniformMat3f(const char* Name, const GraphXMaths::Matrix3& Mat);
 
-		void SetUniformMat4f(const char* Name, const gm::Matrix4& Mat);
+		void SetUniformMat4f(const char* Name, const GraphXMaths::Matrix4& Mat);
 
 	private:
 		/* Parse the source file and get the shader source codes */

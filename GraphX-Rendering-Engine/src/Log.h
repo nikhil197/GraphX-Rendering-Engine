@@ -2,7 +2,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
-namespace engine
+namespace GraphX
 {
 	class Log
 	{
@@ -20,7 +20,7 @@ namespace engine
 }
 
 // Macros to use the logger
-#define GX_ENGINE_WARN(...)  ::engine::Log::GetEngineLogger()->warn(__VA_ARGS__)
-#define GX_ENGINE_INFO(...)  ::engine::Log::GetEngineLogger()->info(__VA_ARGS__)
-#define GX_ENGINE_TRACE(...) ::engine::Log::GetEngineLogger()->trace(__VA_ARGS__)
-#define GX_ENGINE_ERROR(...) ::engine::Log::GetEngineLogger()->error(__VA_ARGS__)
+#define GX_ENGINE_WARN(...)  ::GraphX::Log::GetEngineLogger()->warn(__VA_ARGS__)
+#define GX_ENGINE_INFO(...)  ::GraphX::Log::GetEngineLogger()->info(__VA_ARGS__)
+#define GX_ENGINE_TRACE(...) ::GraphX::Log::GetEngineLogger()->trace(__VA_ARGS__)
+#define GX_ENGINE_ERROR(...) ::GraphX::Log::GetEngineLogger()->error(__VA_ARGS__)

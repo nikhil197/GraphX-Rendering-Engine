@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 
-namespace engine
+namespace GraphX
 {
 	/* Operating mode for the camera */
 	enum class ProjectionMode : uint8_t
@@ -16,25 +16,25 @@ namespace engine
 	{
 	private:
 		/* Up Axis for the whole world */
-		gm::Vector3 m_WorldUpAxis;
+		GraphXMaths::Vector3 m_WorldUpAxis;
 
 		/* Camera view axis */
-		gm::Vector3 m_ViewAxis;
+		GraphXMaths::Vector3 m_ViewAxis;
 
 		/* Right axis in view coordinates */
-		gm::Vector3 m_RightAxis;
+		GraphXMaths::Vector3 m_RightAxis;
 
 		/* Up Camera of the camera */
-		gm::Vector3 m_UpAxis;
+		GraphXMaths::Vector3 m_UpAxis;
 
 		/* The View matrix for the current camera orientation */
-		gm::Matrix4 m_ViewMatrix;
+		GraphXMaths::Matrix4 m_ViewMatrix;
 
 		/* Projection matrix for the current camera settings */
-		gm::Matrix4 m_ProjectionMatrix;
+		GraphXMaths::Matrix4 m_ProjectionMatrix;
 
 		/* Product of the view and the projection matrix */
-		gm::Matrix4 m_ProjectionViewMatrix;
+		GraphXMaths::Matrix4 m_ProjectionViewMatrix;
 
 		/* The width of the orthographic view or screen (ignored in perspective mode)  */
 		float m_OrthoWidth = 1920.0f;
@@ -69,10 +69,10 @@ namespace engine
 	public:
 		/* Camera Attributes */
 		/* Position of the camera */
-		gm::Vector3 CameraPosition;
+		GraphXMaths::Vector3 CameraPosition;
 
 		/* Pitch, Yaw and Roll of the camera (Euler angles should not be modified directly) */
-		gm::Vector3 EulerAngles;
+		GraphXMaths::Vector3 EulerAngles;
 
 		/* Camera settings for control */
 		float CameraSpeed = 5.5f;
@@ -89,7 +89,7 @@ namespace engine
 
 	public:
 		/* Constructor */
-		Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
+		Camera(const GraphXMaths::Vector3& CameraPos, const GraphXMaths::Vector3& LookAtPoint, const GraphXMaths::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
 
 		/* Update the camera */
 		void Update(float DeltaTime) override;
@@ -190,13 +190,13 @@ namespace engine
 		}
 
 		/* Returns a view matrix for the camera */
-		inline const gm::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const GraphXMaths::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
 
 		/* Returns the product of projection and view matrix */
-		inline const gm::Matrix4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
+		inline const GraphXMaths::Matrix4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
 
 		/* Returns the projection matrix for the current camera settings */
-		inline const gm::Matrix4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline const GraphXMaths::Matrix4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
 	private:
 		void Enable(class Shader& shader, const std::string& Name) const override;

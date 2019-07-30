@@ -1,21 +1,21 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	class Mesh2D
 	{
 	public:
 		/* Position of the object (3rd coordinate is need to for determining which object will be in front of which) */
-		gm::Vector3 Position;
+		GraphXMaths::Vector3 Position;
 
 		/* Rotation of the object */
-		gm::Vector3 Rotation;
+		GraphXMaths::Vector3 Rotation;
 
 		/* Scale of the object */
-		gm::Vector2 Scale;
+		GraphXMaths::Vector2 Scale;
 
 		/* Base color of the object */
-		gm::Vector4 TintColor;
+		GraphXMaths::Vector4 TintColor;
 
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
@@ -49,7 +49,7 @@ namespace engine
 		std::vector<unsigned int> m_Indices;
 
 		/* Model matrix for the mesh */
-		gm::Matrix4 m_Model;
+		GraphXMaths::Matrix4 m_Model;
 
 	public:
 		/**
@@ -61,7 +61,7 @@ namespace engine
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh2D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color = gm::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
 		/* Updates the status of the Mesh */
 		virtual void Update(float DeltaTime);
@@ -100,7 +100,7 @@ namespace engine
 		inline const std::vector<unsigned int>& GetIndices() const { return m_Indices; }
 
 		/* Returns the model matrix for the mesh */
-		inline const gm::Matrix4& GetModelMatrix() const { return m_Model; }
+		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		virtual ~Mesh2D();
 	};

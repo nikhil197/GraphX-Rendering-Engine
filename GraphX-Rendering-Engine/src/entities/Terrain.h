@@ -2,7 +2,7 @@
 
 #include "Entity.h"
 
-namespace engine
+namespace GraphX
 {
 	class Terrain
 		: public Entity
@@ -43,7 +43,7 @@ namespace engine
 		/* @Param BlendMap - Name of the blend map used to sample the textures specified in TexNames */
 		/* @Param Pos - Position of the terrain in the world */
 		/* @Param Scale - Scale of the mesh in the x and z direction */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const gm::Vector3& Pos, const gm::Vector2& Scale);
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector2& Scale);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;

@@ -2,7 +2,7 @@
 
 #include "../vectors/Vector4.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Matrix4::Matrix4()
 	{

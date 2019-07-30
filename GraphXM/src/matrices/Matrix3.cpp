@@ -3,7 +3,7 @@
 #include "Matrix4.h"
 #include "../vectors/Vector3.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Matrix3::Matrix3()
 	{

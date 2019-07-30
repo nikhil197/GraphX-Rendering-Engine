@@ -5,9 +5,9 @@
 namespace std
 {
 	template<>
-	struct hash<reference_wrapper<engine::Texture>>
+	struct hash<reference_wrapper<GraphX::Texture>>
 	{
-		std::size_t operator()(reference_wrapper<engine::Texture> const& Tex) const noexcept
+		std::size_t operator()(reference_wrapper<GraphX::Texture> const& Tex) const noexcept
 		{
 			std::size_t h1(std::hash<std::string>{} (Tex.get().GetFilePath()));
 			std::size_t h2(std::hash<int>{} (Tex.get().GetWidth()));

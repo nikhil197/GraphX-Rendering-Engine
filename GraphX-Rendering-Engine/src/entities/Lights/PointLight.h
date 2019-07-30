@@ -2,14 +2,14 @@
 
 #include "Light.h"
 
-namespace engine
+namespace GraphX
 {
 	class PointLight
 		: public Light
 	{
 	public:
 		/* The position of the light */
-		gm::Vector3 Position;
+		GraphXMaths::Vector3 Position;
 
 	private:
 
@@ -18,11 +18,11 @@ namespace engine
 		*	y -> Linear Coefficient of the equation
 		*	z -> Quadratic Coefficient of the equation
 		*/
-		gm::Vector3 m_AttenuationFactors;
+		GraphXMaths::Vector3 m_AttenuationFactors;
 
 	public:
 		/* Constructor */
-		PointLight(const gm::Vector3& Pos, const gm::Vector4& Col, float Intensity = 1.0f, const gm::Vector3& AttenuationFactors = gm::Vector3(1.0f, 0.0f, 0.0f));
+		PointLight(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector4& Col, float Intensity = 1.0f, const GraphXMaths::Vector3& AttenuationFactors = GraphXMaths::Vector3(1.0f, 0.0f, 0.0f));
 
 		virtual void Update(float DeltaTime) override;
 
@@ -31,10 +31,10 @@ namespace engine
 		virtual void Disable() const override;
 
 		/* Returns the attenuation factors of the light */
-		inline const gm::Vector3& GetAttenuationFactors() const { return m_AttenuationFactors; }
+		inline const GraphXMaths::Vector3& GetAttenuationFactors() const { return m_AttenuationFactors; }
 
 		/* Sets the new factors for the light attenuation */
-		inline void SetAttenuationFactors(const gm::Vector3& NewFactors)
+		inline void SetAttenuationFactors(const GraphXMaths::Vector3& NewFactors)
 		{
 			m_AttenuationFactors = NewFactors;
 			m_AttenuationFactors.x = 1.0f;

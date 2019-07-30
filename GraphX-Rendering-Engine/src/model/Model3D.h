@@ -2,7 +2,7 @@
 
 struct aiScene;
 
-namespace engine
+namespace GraphX
 {
 	/* NOTE: Meshes of the model need to be deleted explicitly */
 	class Model3D

@@ -2,7 +2,7 @@
 
 #include "MemoryManager.h"
 
-namespace engine
+namespace GraphX
 {
 	/* Type of the texture used for the frame buffer */
 	enum FramebufferAttachmentType

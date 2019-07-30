@@ -4,7 +4,7 @@
 #include "../matrices/Matrix4.h"
 #include "../vectors/Vector3.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Matrix4 View::LookAt(const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector)
 	{

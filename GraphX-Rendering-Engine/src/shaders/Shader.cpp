@@ -4,7 +4,7 @@
 #include "Utilities/EngineUtil.h"
 #include "../Timer/Timer.h"
 
-namespace engine
+namespace GraphX
 {
 	Shader::Shader(const std::string& filePath)
 		:m_FileName(std::string()), m_RendererID(0)
@@ -61,12 +61,12 @@ namespace engine
 		GLCall(glUniform2f(GetLocation(Name), r, g));
 	}
 
-	void Shader::SetUniform2f(const char* Name, const gm::Vector2& Vec)
+	void Shader::SetUniform2f(const char* Name, const GraphXMaths::Vector2& Vec)
 	{
 		GLCall(glUniform2f(GetLocation(Name), Vec.x, Vec.y));
 	}
 
-	void Shader::SetUniform3f(const char* Name, const gm::Vector3& Vec)
+	void Shader::SetUniform3f(const char* Name, const GraphXMaths::Vector3& Vec)
 	{
 		GLCall(glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z));
 	}
@@ -76,22 +76,22 @@ namespace engine
 		GLCall(glUniform4f(GetLocation(Name), r, g, b, a));
 	}
 
-	void Shader::SetUniform4f(const char* Name, const gm::Vector4& Vec)
+	void Shader::SetUniform4f(const char* Name, const GraphXMaths::Vector4& Vec)
 	{
 		GLCall(glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w));
 	}
 
-	void Shader::SetUniform4f(const char* Name, const gm::Vector2& Vec1, const gm::Vector2& Vec2)
+	void Shader::SetUniform4f(const char* Name, const GraphXMaths::Vector2& Vec1, const GraphXMaths::Vector2& Vec2)
 	{
 		GLCall(glUniform4f(GetLocation(Name), Vec1.x, Vec1.y, Vec2.x, Vec2.y));
 	}
 
-	void Shader::SetUniformMat3f(const char* Name, const gm::Matrix3& Mat)
+	void Shader::SetUniformMat3f(const char* Name, const GraphXMaths::Matrix3& Mat)
 	{
 		GLCall(glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
 	}
 
-	void Shader::SetUniformMat4f(const char* Name, const gm::Matrix4& Mat)
+	void Shader::SetUniformMat4f(const char* Name, const GraphXMaths::Matrix4& Mat)
 	{
 		GLCall(glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
 	}

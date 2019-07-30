@@ -3,7 +3,7 @@
 #include "CubeMap.h"
 #include "stb/stb_image.h"
 
-namespace engine
+namespace GraphX
 {
 	CubeMap::CubeMap(const std::string& FilePath, const std::vector<std::string>& FileNames)
 		: m_FilePath(FilePath), m_FileNames(FileNames), m_LocalBuffer(nullptr)

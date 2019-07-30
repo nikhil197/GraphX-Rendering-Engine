@@ -9,7 +9,7 @@
 #include "Events/MouseEvent.h"
 
 #include "Utilities/EngineUtil.h"
-namespace engine
+namespace GraphX
 {
 	Window::Window(std::string title, int width, int height)
 		: m_Title(title), m_Width(width), m_Height(height), m_Closed(false), m_EventCallback(nullptr)

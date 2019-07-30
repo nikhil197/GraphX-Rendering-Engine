@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	// Whether to enable shadows or not
 	static bool GX_ENABLE_SHADOWS = true;

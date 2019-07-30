@@ -3,10 +3,10 @@
 
 #include "Shaders/Shader.h"
 
-namespace engine
+namespace GraphX
 {
-	Light::Light(const gm::Vector4& Color, gm::Matrix4 ProjMat, float Intensity)
-		: Color(Color), Intensity(Intensity), bShowDetails(true), m_LightShadowInfo(new LightShadowInfo(ProjMat, gm::Matrix4()))
+	Light::Light(const GraphXMaths::Vector4& Color, GraphXMaths::Matrix4 ProjMat, float Intensity)
+		: Color(Color), Intensity(Intensity), bShowDetails(true), m_LightShadowInfo(new LightShadowInfo(ProjMat, GraphXMaths::Matrix4()))
 	{
 	}
 

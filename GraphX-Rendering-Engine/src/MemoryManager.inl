@@ -1,5 +1,5 @@
 
-namespace engine
+namespace GraphX
 {
 	template<typename T>
 	void MemoryManager<T>::AddObject(T* Object)

@@ -4,7 +4,7 @@
 
 #include "../MathUtil.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	// Define the zero vector
 	const Vector3 Vector3::ZeroVector(0, 0, 0);

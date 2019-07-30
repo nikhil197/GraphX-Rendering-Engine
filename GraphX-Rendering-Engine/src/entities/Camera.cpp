@@ -7,21 +7,21 @@
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
 
-namespace engine
+namespace GraphX
 {
-	Camera::Camera(const gm::Vector3& CameraPos, const gm::Vector3& LookAtPoint, const gm::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
+	Camera::Camera(const GraphXMaths::Vector3& CameraPos, const GraphXMaths::Vector3& LookAtPoint, const GraphXMaths::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
 		: m_WorldUpAxis(UpAxis), m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), m_AspectRatio(AspectRatio), m_Near(Near), m_Far(Far), m_FieldOfView(FOV), CameraPosition(CameraPos), EulerAngles(0)
 	{
 		m_ViewAxis = LookAtPoint - CameraPosition;
 		m_ViewAxis.Normalize();
 
-		m_RightAxis = gm::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
+		m_RightAxis = GraphXMaths::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
 		m_RightAxis.Normalize();
 
-		m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+		m_UpAxis = GraphXMaths::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 
 		// Calculate the view and projection matrices (Default projection mode is perspective)
-		gm::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
+		GraphXMaths::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
 		CalculateProjectionMatrix();
 	}
 
@@ -33,7 +33,7 @@ namespace engine
 
 		if (m_ViewChanged)
 		{
-			gm::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
+			GraphXMaths::View::LookAt(m_ViewMatrix, CameraPosition, m_ViewAxis, m_RightAxis, m_UpAxis);
 			m_RenderStateDirty = true;
 		}
 
@@ -94,8 +94,8 @@ namespace engine
 		if (Mouse::GetMouse()->IsRightButtonPressed())
 		{
 			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
-			const gm::Vector2& LastPosition = mouse->GetLastPosition();
-			const gm::Vector2& CurrentPosition = mouse->GetPosition();
+			const GraphXMaths::Vector2& LastPosition = mouse->GetLastPosition();
+			const GraphXMaths::Vector2& CurrentPosition = mouse->GetPosition();
 
 			// Calculate the Yaw and the Pitch offset
 			float xOffset = CurrentPosition.x - LastPosition.x;
@@ -104,7 +104,7 @@ namespace engine
 			GX_ENGINE_INFO("xOffset: {0}, yOffset: {1}", xOffset, yOffset);
 			GX_ENGINE_INFO("LastPos: {0}, Pos: {1} \n", LastPosition, CurrentPosition);
 			
-			if ((xOffset != 0 && gm::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && gm::MathUtil::Abs(yOffset) < 20.0f))
+			if ((xOffset != 0 && GraphXMaths::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && GraphXMaths::MathUtil::Abs(yOffset) < 20.0f))
 			{
 				xOffset *= DeltaTime;
 				yOffset *= DeltaTime;
@@ -119,18 +119,18 @@ namespace engine
 				else if (EulerAngles.x <= -89.0f)
 					EulerAngles.x = -89.0f;
 
-				gm::MathUtil::ClampAngle(EulerAngles.y);
+				GraphXMaths::MathUtil::ClampAngle(EulerAngles.y);
 
-				m_RightAxis = gm::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
-				m_ViewAxis = gm::Vector3(gm::Rotation(xOffset, m_UpAxis) * gm::Rotation(-yOffset, m_RightAxis) * gm::Vector4(m_ViewAxis, 1.0f));
-				m_UpAxis = gm::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+				m_RightAxis = GraphXMaths::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
+				m_ViewAxis = GraphXMaths::Vector3(GraphXMaths::Rotation(xOffset, m_UpAxis) * GraphXMaths::Rotation(-yOffset, m_RightAxis) * GraphXMaths::Vector4(m_ViewAxis, 1.0f));
+				m_UpAxis = GraphXMaths::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 			}
 		}
 
 		// Check for the mouse scroll only in perspective projection mode
-		if (m_CurrentProjectionMode == ProjectionMode::Perspective && Mouse::GetMouse()->GetScrollOffset() != gm::Vector2::ZeroVector)
+		if (m_CurrentProjectionMode == ProjectionMode::Perspective && Mouse::GetMouse()->GetScrollOffset() != GraphXMaths::Vector2::ZeroVector)
 		{
-			gm::Vector2 Offset = Mouse::GetMouse()->GetScrollOffset();
+			GraphXMaths::Vector2 Offset = Mouse::GetMouse()->GetScrollOffset();
 			m_FieldOfView -= Offset.y;
 
 			m_ProjDataChanged = true;
@@ -141,13 +141,13 @@ namespace engine
 	{
 		if (m_CurrentProjectionMode == ProjectionMode::Perspective)
 		{
-			m_ProjectionMatrix = gm::Projection::Perspective(m_FieldOfView, m_AspectRatio, m_Near, m_Far);
+			m_ProjectionMatrix = GraphXMaths::Projection::Perspective(m_FieldOfView, m_AspectRatio, m_Near, m_Far);
 		}
 		else
 		{
 			float HalfOrthoWidth = m_OrthoWidth / 2.0f;
 			float HalfOrthoHeight = m_OrthoHeight / 2.0f;
-			m_ProjectionMatrix = gm::Projection::Ortho(-HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_Near, m_Far);
+			m_ProjectionMatrix = GraphXMaths::Projection::Ortho(-HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_Near, m_Far);
 		}
 
 		m_ProjectionViewMatrix = m_ProjectionMatrix * m_ViewMatrix;

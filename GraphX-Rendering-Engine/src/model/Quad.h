@@ -1,12 +1,12 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	class Quad
 	{
 	private:
 		/* Vertices of the quad used to represent the particle */
-		static std::vector<gm::Vector2> s_Vertices;
+		static std::vector<GraphXMaths::Vector2> s_Vertices;
 		
 		/* Number of vertices in the quad */
 		static const unsigned int s_QuadVertexCount;
@@ -25,7 +25,7 @@ namespace engine
 		~Quad();
 
 		/* Returns the vertices of the quad */
-		static const std::vector<gm::Vector2>& GetVertices() { return s_Vertices; }
+		static const std::vector<GraphXMaths::Vector2>& GetVertices() { return s_Vertices; }
 
 		/* Returns the vertices count for the quad */
 		static const unsigned int GetVerticesCount() { return s_QuadVertexCount; }

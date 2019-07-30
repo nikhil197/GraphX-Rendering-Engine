@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	// Macro to bind the class event functions
 #define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)

@@ -3,7 +3,7 @@
 // Forward declaration of needs to be outside the engine namespace since the window is a part of an external library
 struct GLFWwindow;
 
-namespace engine
+namespace GraphX
 {
 	class Event;
 

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 
-namespace engine
+namespace GraphX
 {
 	Timer::Timer(const std::string& name)
 		:m_Name(name), m_StartTimePoint(std::chrono::high_resolution_clock::now()), m_LastUpdateTimePoint(std::chrono::high_resolution_clock::now())

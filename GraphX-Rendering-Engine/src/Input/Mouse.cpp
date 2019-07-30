@@ -3,7 +3,7 @@
 #include "Mouse.h"
 #include "Events/MouseEvent.h"
 
-namespace engine
+namespace GraphX
 {
 	std::shared_ptr<Mouse> Mouse::s_Mouse;
 
@@ -59,6 +59,6 @@ namespace engine
 		m_LastPosition = m_Position;
 		
 		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
-		m_ScrollOffset = gm::Vector2::ZeroVector;
+		m_ScrollOffset = GraphXMaths::Vector2::ZeroVector;
 	}
 }

@@ -3,7 +3,7 @@
 #include "Vector3.h"
 #include "../MathUtil.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	// Define the zero vector 
 	const Vector2 Vector2::ZeroVector(0, 0);
@@ -219,7 +219,7 @@ namespace gm
 
 	const Vector3 Vector2::CrossProduct(const Vector2& V1, const Vector2& V2)
 	{
-		return gm::Vector3::CrossProduct(Vector3(V1, 0), Vector3(V2, 0));
+		return GraphXMaths::Vector3::CrossProduct(Vector3(V1, 0), Vector3(V2, 0));
 		//return (V1.x * V2.y - V1.y * V2.x);
 	}
 

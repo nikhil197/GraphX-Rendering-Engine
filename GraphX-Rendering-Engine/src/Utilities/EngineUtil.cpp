@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EngineUtil.h"
 
-namespace engine
+namespace GraphX
 {
 	std::random_device EngineUtil::s_RandDevice;
 

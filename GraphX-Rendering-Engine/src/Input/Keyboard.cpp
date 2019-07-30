@@ -3,7 +3,7 @@
 #include "Keyboard.h"
 #include "Events/KeyboardEvent.h"
 
-namespace engine
+namespace GraphX
 {
 	std::shared_ptr<Keyboard> Keyboard::s_Keyboard;
 

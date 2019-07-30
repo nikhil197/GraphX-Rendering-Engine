@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace gm
+namespace GraphXMaths
 {
 	struct Vector3;
 

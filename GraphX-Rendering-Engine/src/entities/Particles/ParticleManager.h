@@ -3,7 +3,7 @@
 #include "Particle.h"
 #include "Utilities/HashUtil.h"
 
-namespace engine
+namespace GraphX
 {
 	typedef std::unordered_map < std::reference_wrapper<Texture>, std::vector<Particle>> ParticlesMap;
 
@@ -40,7 +40,7 @@ namespace engine
 		/* Adds a new particle to render */
 		void AddParticle(const Particle& particle);
 
-		void AddParticle(const gm::Vector3& Position, const gm::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		void AddParticle(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Whether more particles can be added or not */
 		bool IsPoolEmpty() const { return !m_Particles.at(m_Index).IsUsed(); }

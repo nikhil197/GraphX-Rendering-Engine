@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 
-namespace engine
+namespace GraphX
 {
 	template<typename T>
 	class MemoryManager

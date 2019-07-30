@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VertexBuffer.h"
 
-namespace engine
+namespace GraphX
 {
 	VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 	{

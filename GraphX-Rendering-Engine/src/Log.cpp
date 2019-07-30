@@ -3,7 +3,7 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace engine
+namespace GraphX
 {
 	std::shared_ptr <spdlog::logger> Log::s_EngineLogger;
 

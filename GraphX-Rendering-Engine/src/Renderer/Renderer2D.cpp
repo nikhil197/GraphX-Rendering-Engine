@@ -5,7 +5,7 @@
 #include "Model/Mesh/Mesh2D.h"
 #include "Buffers/IndexBuffer.h"
 
-namespace engine
+namespace GraphX
 {
 	void Renderer2D::Submit(const Mesh2D& mesh)
 	{
@@ -27,11 +27,11 @@ namespace engine
 			Shader& shader = mesh->GetShader();
 
 			// Set the transformation matrix
-			gm::Matrix4 Model = mesh->GetModelMatrix();
+			GraphXMaths::Matrix4 Model = mesh->GetModelMatrix();
 			shader.SetUniformMat4f("u_Model", Model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
-			gm::Matrix3 Normal = gm::Matrix3(Model);
+			GraphXMaths::Matrix3 Normal = GraphXMaths::Matrix3(Model);
 			shader.SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
@@ -51,7 +51,7 @@ namespace engine
 			Mesh->BindBuffers();
 
 			// Set the transformation matrix
-			gm::Matrix4 Model = Mesh->GetModelMatrix();
+			GraphXMaths::Matrix4 Model = Mesh->GetModelMatrix();
 			DepthShader.SetUniformMat4f("u_Model", Model);
 
 			// Draw the object

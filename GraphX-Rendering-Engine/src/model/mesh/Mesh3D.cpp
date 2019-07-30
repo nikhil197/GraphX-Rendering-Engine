@@ -9,9 +9,9 @@
 #include "Buffers/IndexBuffer.h"
 #include "Shaders/Shader.h"
 
-namespace engine
+namespace GraphX
 {
-	Mesh3D::Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color, float Reflect, float Shine)
+	Mesh3D::Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, Shader& shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color, float Reflect, float Shine)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices), m_Model(), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
@@ -32,9 +32,9 @@ namespace engine
 	{
 		if (m_UpdateModelMatrix)
 		{
-			gm::Translation translation(Position);
-			gm::Rotation rotation(Rotation);
-			gm::Scaling scale(Scale);
+			GraphXMaths::Translation translation(Position);
+			GraphXMaths::Rotation rotation(Rotation);
+			GraphXMaths::Scaling scale(Scale);
 
 			m_Model = translation * rotation * scale;
 

@@ -2,7 +2,7 @@
 
 #include "pch.h"
 
-namespace engine
+namespace GraphX
 {
 #define BIT(x) (1 << x)
 

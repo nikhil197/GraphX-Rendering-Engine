@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ErrorHandler.h"
 
-namespace engine
+namespace GraphX
 {
 	void GLClearError()
 	{

@@ -2,17 +2,17 @@
 
 #include "Light.h"
 
-namespace engine
+namespace GraphX
 {
 	class DirectionalLight
 		: public Light
 	{
 	public:
 		/* Direction of the light */
-		gm::Vector3 Direction;
+		GraphXMaths::Vector3 Direction;
 
 		/* Constructor */
-		DirectionalLight(const gm::Vector4& Color, const gm::Vector3& LightDir, float Intensity = 1.0f);
+		DirectionalLight(const GraphXMaths::Vector4& Color, const GraphXMaths::Vector3& LightDir, float Intensity = 1.0f);
 
 		virtual void Update(float DeltaTime) override;
 

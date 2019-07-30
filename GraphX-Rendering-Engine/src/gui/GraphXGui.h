@@ -2,7 +2,7 @@
 
 struct GLFWwindow;
 
-namespace engine
+namespace GraphX
 {
 	// This will be a static class to create ui elements and will serve as an abstraction for the ImGui
 	class GraphXGui

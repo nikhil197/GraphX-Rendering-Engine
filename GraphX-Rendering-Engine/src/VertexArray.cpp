@@ -5,7 +5,7 @@
 #include "Buffers/VertexBufferLayout.h"
 #include "Buffers/IndexBuffer.h"
 
-namespace engine
+namespace GraphX
 {
 	VertexArray::VertexArray()
 	{

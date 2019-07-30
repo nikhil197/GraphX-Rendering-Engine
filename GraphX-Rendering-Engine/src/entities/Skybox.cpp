@@ -12,9 +12,9 @@
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
 
-namespace engine
+namespace GraphX
 {
-	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Camera& Camera, const gm::Vector4& color, float factor, unsigned int slot, float Speed)
+	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Camera& Camera, const GraphXMaths::Vector4& color, float factor, unsigned int slot, float Speed)
 		: m_VAO(new VertexArray()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(new Shader(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Camera(Camera), m_BindingSlot(slot), m_Rotation(0.0f), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
 	{
 		std::vector<unsigned int> indices = Cube::GetIndices();
@@ -33,13 +33,13 @@ namespace engine
 		indices[22] = 4;
 		indices[23] = 5;
 
-		std::vector<gm::Vector3> vertices = Cube::GetVertexPositions();
+		std::vector<GraphXMaths::Vector3> vertices = Cube::GetVertexPositions();
 
-		m_VBO = new VertexBuffer(&vertices[0], vertices.size() * sizeof(gm::Vector3));
+		m_VBO = new VertexBuffer(&vertices[0], vertices.size() * sizeof(GraphXMaths::Vector3));
 		m_IBO = new IndexBuffer(&indices[0], indices.size());
 
 		VertexBufferLayout layout;
-		layout.Push<float>(gm::Vector3::Components);
+		layout.Push<float>(GraphXMaths::Vector3::Components);
 		
 		m_VAO->AddBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
@@ -56,8 +56,8 @@ namespace engine
 	void Skybox::Update(float DeltaTime)
 	{
 		m_Rotation += RotationSpeed * DeltaTime;
-		gm::MathUtil::ClampAngle(m_Rotation);
-		m_View = m_View * gm::Rotation(RotationSpeed * DeltaTime, gm::Vector3::YAxis);
+		GraphXMaths::MathUtil::ClampAngle(m_Rotation);
+		m_View = m_View * GraphXMaths::Rotation(RotationSpeed * DeltaTime, GraphXMaths::Vector3::YAxis);
 	}
 
 	void Skybox::Enable(class Shader& shader, const std::string& Name) const

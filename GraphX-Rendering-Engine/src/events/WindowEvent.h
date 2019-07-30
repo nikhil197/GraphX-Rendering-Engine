@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-namespace engine
+namespace GraphX
 {
 	class WindowCloseEvent
 		: public Event

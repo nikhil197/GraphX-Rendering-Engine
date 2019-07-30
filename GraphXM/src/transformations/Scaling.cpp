@@ -4,7 +4,7 @@
 
 #include "../matrices/Matrix4.h"
 
-namespace gm
+namespace GraphXMaths
 {
 	Scaling::Scaling(float Value)
 		:Matrix4(),

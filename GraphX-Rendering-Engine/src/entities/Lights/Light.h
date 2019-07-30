@@ -2,18 +2,18 @@
 
 #include "Entities/Entity.h"
 
-namespace engine
+namespace GraphX
 {
 	/* To store the shadow information for the light */
 	struct LightShadowInfo
 	{
 		/* Projection matrix from the perspective of the light */
-		gm::Matrix4 LightProjMat;
+		GraphXMaths::Matrix4 LightProjMat;
 
 		/* Combined View and projection matrix from the perspective of the light */
-		gm::Matrix4 LightViewProjMat;
+		GraphXMaths::Matrix4 LightViewProjMat;
 
-		LightShadowInfo(const gm::Matrix4& ProjMat, const gm::Matrix4& LightViewProjMat)
+		LightShadowInfo(const GraphXMaths::Matrix4& ProjMat, const GraphXMaths::Matrix4& LightViewProjMat)
 			: LightProjMat(ProjMat), LightViewProjMat(LightViewProjMat)
 		{
 		}
@@ -24,7 +24,7 @@ namespace engine
 	{
 	public:
 		/* Color of the light */
-		gm::Vector4 Color;
+		GraphXMaths::Vector4 Color;
 
 		/* Intensity of the light (total energy emitted by the light) */
 		float Intensity;
@@ -38,7 +38,7 @@ namespace engine
 
 	protected:
 		/* Constructor */
-		Light(const gm::Vector4& Color, gm::Matrix4 ProjMat, float Intensity = 1.0f);
+		Light(const GraphXMaths::Vector4& Color, GraphXMaths::Matrix4 ProjMat, float Intensity = 1.0f);
 
 	public:
 		/* Updates the status of the light */

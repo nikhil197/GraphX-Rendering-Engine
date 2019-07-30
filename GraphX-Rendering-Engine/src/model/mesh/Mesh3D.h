@@ -1,21 +1,21 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	class Mesh3D
 	{
 	public:
 		/* Position of the object */
-		gm::Vector3 Position;
+		GraphXMaths::Vector3 Position;
 
 		/* Rotation (Euler Angles) of the object about each axis */
-		gm::Vector3 Rotation;
+		GraphXMaths::Vector3 Rotation;
 
 		/* Scale of the object */
-		gm::Vector3 Scale;
+		GraphXMaths::Vector3 Scale;
 
 		/* Base color of the object */
-		gm::Vector4 TintColor;
+		GraphXMaths::Vector4 TintColor;
 
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
@@ -51,7 +51,7 @@ namespace engine
 		std::vector<unsigned int> m_Indices;
 
 		/* Model matrix for the mesh */
-		gm::Matrix4 m_Model;
+		GraphXMaths::Matrix4 m_Model;
 
 		/* Whether the mesh needs to updated or not */
 		bool m_UpdateModelMatrix;
@@ -66,7 +66,7 @@ namespace engine
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
 		*/
-		Mesh3D(const gm::Vector3& Pos, const gm::Vector3& Rotation, const gm::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const gm::Vector4& Color = gm::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, class Shader& shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -105,7 +105,7 @@ namespace engine
 		inline class Shader& GetShader() const { return m_Shader; }
 
 		/* Returns the model matrix for the mesh */
-		inline const gm::Matrix4& GetModelMatrix() const { return m_Model; }
+		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		/* Sets new state for updating the model matrix */
 		inline void UpdateModelMatrix(bool bCalculateMatrix) { m_UpdateModelMatrix = bCalculateMatrix; }

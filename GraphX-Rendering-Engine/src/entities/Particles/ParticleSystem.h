@@ -1,6 +1,6 @@
 #pragma once
 
-namespace engine
+namespace GraphX
 {
 	/* Generates and renders the particles in the scene */
 	class ParticleSystem
@@ -44,11 +44,11 @@ namespace engine
 			float SpeedDeviation = 0.0f, float LifeSpanDeviation = 0.0f, float ScaleDeviation = 0.0f, float GravityEffectDeviation = 0.0f);
 
 		/* Spawn Particles at the specified location */
-		void SpawnParticles(const gm::Vector3& SpawnLocation, float DeltaTime);
+		void SpawnParticles(const GraphXMaths::Vector3& SpawnLocation, float DeltaTime);
 
 	private:
 		/* Emits a particle */
-		void EmitParticle(const gm::Vector3& SpawnLocation);
+		void EmitParticle(const GraphXMaths::Vector3& SpawnLocation);
 
 		/* Generates a random value using the average value and the offset deviation factor */
 		float GenerateRandomValue(float AverageValue, float Deviation);

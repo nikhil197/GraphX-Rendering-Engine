@@ -6,7 +6,7 @@
 
 #include "GL/glew.h"
 
-namespace engine
+namespace GraphX
 {
 	/* Clear all the OpenGL errors */
 	void GLClearError();
