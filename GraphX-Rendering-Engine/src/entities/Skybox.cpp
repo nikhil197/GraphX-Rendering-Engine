@@ -42,6 +42,7 @@ namespace engine
 		layout.Push<float>(gm::Vector3::Components);
 		
 		m_VAO->AddBuffer(*m_VBO, layout);
+		m_VAO->AddIndexBuffer(*m_IBO);
 
 		m_View = m_Camera.GetViewMatrix();
 		m_View[0][3] = 0.0f;
@@ -69,7 +70,7 @@ namespace engine
 		GLCall(glDisable(GL_CULL_FACE));
 
 		m_VAO->Bind();
-		m_IBO->Bind();
+		
 		m_Shader->Bind();
 		m_CubeMap->Bind(m_BindingSlot);
 
@@ -86,7 +87,7 @@ namespace engine
 		GLCall(glEnable(GL_CULL_FACE));
 
 		m_VAO->UnBind();
-		m_IBO->UnBind();
+		
 		m_Shader->UnBind();
 		m_CubeMap->UnBind();
 	}

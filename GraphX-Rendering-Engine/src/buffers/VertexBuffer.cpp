@@ -9,7 +9,7 @@ namespace engine
 		GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
 		GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
 
-		UnBind();
+		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 
 	void VertexBuffer::Bind() const

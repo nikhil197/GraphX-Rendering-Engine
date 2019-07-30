@@ -3,21 +3,19 @@
 
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
+#include "Buffers/IndexBuffer.h"
 
 namespace engine
 {
 	VertexArray::VertexArray()
 	{
 		GLCall(glGenVertexArrays(1, &m_RendererID));
-		GLCall(glBindVertexArray(m_RendererID));
-
-		UnBind();
 	}
 
 	void VertexArray::AddBuffer(VertexBuffer& vbo, VertexBufferLayout& layout)
 	{
 		// Bind both the vertex array and the buffer before specifying the layout
-		Bind();
+		GLCall(glBindVertexArray(m_RendererID));
 		vbo.Bind();
 			
 		const auto& elements = layout.GetElements();
@@ -38,7 +36,14 @@ namespace engine
 		}
 
 		// Unbind the vertex array
-		UnBind();
+		GLCall(glBindVertexArray(0));
+	}
+
+	void VertexArray::AddIndexBuffer(const IndexBuffer& IBO)
+	{
+		GLCall(glBindVertexArray(m_RendererID));
+		IBO.Bind();
+		GLCall(glBindVertexArray(0));
 	}
 
 	void VertexArray::Bind() const

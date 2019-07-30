@@ -20,6 +20,7 @@ namespace engine
 		m_VAO->AddBuffer(*m_VBO, layout);
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
+		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
 	void Mesh2D::Update(float DeltaTime)
@@ -34,7 +35,7 @@ namespace engine
 
 	void Mesh2D::Enable() const
 	{
-		BindBuffers();
+		m_VAO->Bind();
 
 		m_Shader.Bind();
 		if(Reflectivity > 0)
@@ -57,7 +58,7 @@ namespace engine
 
 	void Mesh2D::Disable() const
 	{
-		UnBindBuffers();
+		m_VAO->UnBind();
 
 		// Bind the textures
 		int NumTex = m_Textures.size();
@@ -71,13 +72,11 @@ namespace engine
 	void Mesh2D::BindBuffers() const
 	{
 		m_VAO->Bind();
-		m_IBO->Bind();
 	}
 
 	void Mesh2D::UnBindBuffers() const
 	{
 		m_VAO->UnBind();
-		m_IBO->UnBind();
 	}
 
 	void Mesh2D::AddTexture(const Texture* texture)

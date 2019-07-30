@@ -20,6 +20,7 @@ namespace engine
 		m_VAO->AddBuffer(*m_VBO, layout);
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
+		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
@@ -43,7 +44,7 @@ namespace engine
 
 	void Mesh3D::Enable() const
 	{
-		BindBuffers();
+		m_VAO->Bind();
 
 		m_Shader.Bind();
 		if(Reflectivity > 0)
@@ -66,7 +67,7 @@ namespace engine
 
 	void Mesh3D::Disable() const
 	{
-		UnBindBuffers();
+		m_VAO->UnBind();
 
 		// UnBind the textures
 		int NumTex = m_Textures.size();
@@ -80,13 +81,11 @@ namespace engine
 	void Mesh3D::BindBuffers() const
 	{
 		m_VAO->Bind();
-		m_IBO->Bind();
 	}
 
 	void Mesh3D::UnBindBuffers() const
 	{
 		m_VAO->UnBind();
-		m_IBO->UnBind();
 	}
 
 	void Mesh3D::AddTexture(const Texture* texture)

@@ -22,7 +22,7 @@ namespace engine
 			m_DepthMap = nullptr;
 
 		ASSERT(m_DepthMap != nullptr && glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-		UnBind();
+		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	}
 
 	void FrameBuffer::Bind() const
