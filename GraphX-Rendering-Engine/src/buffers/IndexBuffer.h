@@ -14,6 +14,9 @@ namespace GraphX
 		/* data is the collection of indices and size is the size of collection in bytes */
 		IndexBuffer(const unsigned int* data, unsigned int count);
 
+		/* Copy Construct an index buffer */
+		IndexBuffer(const IndexBuffer& Other);
+
 		/* Bind the index buffer */
 		void Bind() const;
 

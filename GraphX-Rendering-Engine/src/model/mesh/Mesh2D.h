@@ -51,6 +51,9 @@ namespace GraphX
 		/* Model matrix for the mesh */
 		GraphXMaths::Matrix4 m_Model;
 
+		/* Whether the mesh needs to updated or not */
+		bool m_UpdateModelMatrix;
+
 	public:
 		/**
 		@param Pos Position of the mesh in the world
@@ -62,6 +65,8 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		*/
 		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, class Shader* shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+
+		Mesh2D(const Mesh2D& Other);
 
 		/* Updates the status of the Mesh */
 		virtual void Update(float DeltaTime);
@@ -80,6 +85,9 @@ namespace GraphX
 
 		/* Adds a texture to the mesh */
 		void AddTexture(const class Texture* texture);
+
+		/* Returns the textures of the mesh3D */
+		inline const std::vector<const class Texture*> GetTextures() const { return m_Textures; }
 
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }

@@ -24,8 +24,12 @@ namespace GraphX
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
-		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), TintColor(Mesh.TintColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(Mesh.m_VAO), m_VBO(Mesh.m_VBO), m_IBO(Mesh.m_IBO), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), TintColor(Mesh.TintColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
+		const VertexBufferLayout& layout = Vertex3D::GetVertexLayout();
+		m_VAO = new VertexArray();
+		m_VAO->AddBuffer(*m_VBO, layout);
+		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
 	void Mesh3D::Update(float DeltaTime)
@@ -101,8 +105,20 @@ namespace GraphX
 
 	Mesh3D::~Mesh3D()
 	{
-		delete m_VBO;
-		delete m_IBO;
-		delete m_VAO;
+		if (m_VBO != nullptr)
+		{
+			delete m_VBO;
+			m_VBO = nullptr;
+		}
+		if (m_IBO != nullptr)
+		{
+			delete m_IBO;
+			m_IBO = nullptr;
+		}
+		if (m_VAO != nullptr)
+		{
+			delete m_VAO;
+			m_VAO = nullptr;
+		}
 	}
 }

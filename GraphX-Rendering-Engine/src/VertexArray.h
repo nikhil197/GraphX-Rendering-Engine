@@ -18,7 +18,7 @@ namespace GraphX
 		~VertexArray();
 
 		/* Add new buffer to the vao object to be bound */
-		void AddBuffer(VertexBuffer& vbo, VertexBufferLayout& layout);
+		void AddBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
 
 		void AddIndexBuffer(const IndexBuffer& ibo);
 

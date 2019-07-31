@@ -12,7 +12,7 @@
 namespace GraphX
 {
 	Mesh2D::Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, Shader* shader, const std::vector<const Texture*>& Textures, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color, float Reflect, float Shine)
-		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices)
+		: Position(Pos), Rotation(Rotation), Scale(Scale), TintColor(Color), bShowDetails(0), Reflectivity(Reflect), Shininess(Shine), m_Shader(shader), m_Textures(Textures), m_Vertices(Vertices), m_Indices(Indices), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex2D));
@@ -20,6 +20,15 @@ namespace GraphX
 		m_VAO->AddBuffer(*m_VBO, layout);
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
+		m_VAO->AddIndexBuffer(*m_IBO);
+	}
+
+	Mesh2D::Mesh2D(const Mesh2D& Mesh)
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), TintColor(Mesh.TintColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
+	{
+		const VertexBufferLayout& layout = Vertex2D::GetVertexLayout();
+		m_VAO = new VertexArray();
+		m_VAO->AddBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
