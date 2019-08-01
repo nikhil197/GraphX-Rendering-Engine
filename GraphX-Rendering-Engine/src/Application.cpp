@@ -143,7 +143,8 @@ namespace GraphX
 		m_Renderer3D = new Renderer3D();
 		m_Renderer = new SimpleRenderer();
 
-		m_ParticlesManager = new ParticleManager(*m_Camera);
+		m_ParticlesManager = new ParticleManager();
+		m_ParticlesManager->Initialize(m_Camera, 1000);	// Move to a suitable location
 
 		m_DefaultTexture  = new Texture("res/Textures/stone.jpg");
 	}

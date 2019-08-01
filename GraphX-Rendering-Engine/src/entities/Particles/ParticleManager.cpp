@@ -8,79 +8,72 @@
 
 namespace GraphX
 {
-	ParticleManager::ParticleManager(const Camera& camera)
-		: m_ParticleShader(new Shader("res/Shaders/Particle.shader")), m_Camera(camera), m_Index(0), m_PoolCap(500)
+#define Check() {															\
+		if(!IsInitialized())												\
+		{																	\
+			GX_ENGINE_ERROR("Particles Manager has not been Initialised");	\
+			ASSERT(false);													\
+		}																	\
+	}
+
+	ParticleManager::ParticleManager()
+		: m_ParticleShader(nullptr), m_Particles(nullptr), m_Camera(nullptr), m_Index(0), m_PoolCap(0)
+	{ }
+
+	void ParticleManager::Initialize(const Camera* Camera, const int PoolCap)
 	{
-		m_Particles.resize(m_PoolCap);
+		m_Camera = Camera;
+		m_PoolCap = PoolCap;
+
+		m_ParticleShader = new Shader("res/Shaders/Particle.shader");
+		if (m_Particles != nullptr)
+		{
+			m_Particles->resize(m_PoolCap);
+		}
+		else
+		{
+			m_Particles = new std::vector<Particle>(PoolCap);
+		}
 	}
 
 	void ParticleManager::Update(float DeltaTime)
 	{
-		//ParticlesMap::iterator itr = m_Particle.begin();
-		//for (; itr != m_Particle.end(); itr++)
-		//{
-		//	std::vector<Particle>& particles = itr->second;
-		//	for (unsigned int i = 0; i < particles.size(); i++)
-		//	{
-		//		particles[i].Update(DeltaTime, m_Camera.GetViewMatrix(), m_Camera.IsRenderStateDirty());
+		Check()
 
-		//		// Check if the life span of the particle has expired
-		//		if (particles[i].IsToBeDestroyed())
-		//			particles.erase(particles.begin() + i);
-		//	}
-		//}
-		const GraphXMaths::Matrix4& ViewMat = m_Camera.GetViewMatrix();
+		const GraphXMaths::Matrix4& ViewMat = m_Camera->GetViewMatrix();
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
-			m_Particles.at(i).Update(DeltaTime, ViewMat, m_Camera.IsRenderStateDirty());
+			m_Particles->at(i).Update(DeltaTime, ViewMat, m_Camera->IsRenderStateDirty());
 		}
 	}
 
 	void ParticleManager::RenderParticles()
 	{
+		Check()
+
 		PreRender();
 
 		// Render
 		static SimpleRenderer renderer;
-		const GraphXMaths::Matrix4 View = m_Camera.GetViewMatrix();
+		const GraphXMaths::Matrix4 View = m_Camera->GetViewMatrix();
 
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
-			if (m_Particles.at(i).IsUsed())
+			if (m_Particles->at(i).IsUsed())
 			{
-				m_Particles.at(i).Enable(*m_ParticleShader);
+				m_Particles->at(i).Enable(*m_ParticleShader);
 				renderer.Draw(Quad::GetVerticesCount());
 			}
 		}
 
-		/*ParticlesMap::iterator itr = m_Particle.begin();
-		for (; itr != m_Particle.end(); itr++)
-		{
-			Texture& Tex = itr->first;
-			Tex.Bind();
-			m_ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-			m_ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Tex.GetRowsInTexAtlas());
-
-			std::vector<Particle>& particles = itr->second;
-			for (Particle particle : particles)
-			{
-				particle.Enable(*m_ParticleShader);
-				renderer.Draw(Quad::GetVerticesCount());
-			}
-		}*/
-
 		PostRender();
-	}
-
-	void ParticleManager::AddParticle(const Particle& particle)
-	{
-		//m_Particle[(Texture&)particle.GetTexture()].push_back(particle);
-//		m_Particles.push_back(particle);
 	}
 
 	void ParticleManager::AddParticle(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
 	{
-		m_Particles.at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
+		Check();
+
+		m_Particles->at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
 		m_Index = (m_Index + 1) % m_PoolCap;
 	}
 
@@ -89,7 +82,7 @@ namespace GraphX
 		m_ParticleShader->Bind();
 		Particle::GetQuad().Enable();
 		GLCall(glDepthMask(false));	// Don't render the particles to the depth buffer
-		m_ParticleShader->SetUniformMat4f("u_ProjectionView", m_Camera.GetProjectionViewMatrix());
+		m_ParticleShader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
 
 		// To enable blending
 		GLCall(glEnable(GL_BLEND));
@@ -104,5 +97,32 @@ namespace GraphX
 		m_ParticleShader->UnBind();
 
 		GLCall(glDisable(GL_BLEND));
+	}
+
+	bool ParticleManager::IsInitialized()
+	{
+		if (m_Camera == nullptr)
+			return false;
+		if (m_Particles == nullptr)
+			return false;
+		if (m_ParticleShader == nullptr)
+			return false;
+
+		return true;
+	}
+
+	ParticleManager::~ParticleManager()
+	{
+		if (m_ParticleShader != nullptr)
+		{
+			delete m_ParticleShader;
+			m_ParticleShader = nullptr;
+		}
+
+		if (m_Particles != nullptr)
+		{
+			delete m_Particles;
+			m_Particles = nullptr;
+		}
 	}
 }

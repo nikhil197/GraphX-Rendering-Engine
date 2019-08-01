@@ -21,7 +21,6 @@ namespace GraphX
 		for (int i = 0; i < ParticlesCount && m_Manager.IsPoolEmpty(); i++)
 		{
 			EmitParticle(SpawnLocation);
-//			m_Manager.AddParticle(particle);
 		}
 	}
 
@@ -32,7 +31,6 @@ namespace GraphX
 		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
 		GraphXMaths::Vector3 Velocity = GraphXMaths::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
 		m_Manager.AddParticle(SpawnLocation, Velocity, LifeSpan, 0.0f, &m_Texture, Scale, GravityEffect);
-//		return Particle(SpawnLocation, Velocity, LifeSpan, 0.0f, m_Texture, Scale, GravityEffect);
 	}
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)
