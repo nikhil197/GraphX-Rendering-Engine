@@ -20,6 +20,8 @@ namespace GraphX
 				m_KeyCode = keyCode - 150;
 			else if (keyCode >= 320)
 				m_KeyCode = keyCode - 320;
+			else
+				m_KeyCode = -1;
 		}
 
 	public:

@@ -92,7 +92,7 @@ namespace GraphX
 		Camera(const GraphXMaths::Vector3& CameraPos, const GraphXMaths::Vector3& LookAtPoint, const GraphXMaths::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
 
 		/* Update the camera */
-		void Update(float DeltaTime) override;
+		virtual void Update(float DeltaTime) override;
 
 		/* Sets the new aspect ratio for the camera */
 		inline void SetAspectRatio(float NewRatio)
@@ -199,8 +199,8 @@ namespace GraphX
 		inline const GraphXMaths::Matrix4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
 	private:
-		void Enable(class Shader& shader, const std::string& Name) const override;
+		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader = "") const override;
 
-		void Disable() const override;
+		virtual void Disable() const override;
 	};
 }

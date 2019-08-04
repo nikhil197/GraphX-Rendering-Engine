@@ -61,14 +61,14 @@ namespace GraphX
 		void Enable() const;
 
 		/* Unbind the skybox buffers and shader to */
-		void Disable() const override;
+		virtual void Disable() const override;
 
 		/* Returns the index buffer of the skybox */
 		const class IndexBuffer& GetIBO() const { return *m_IBO; }
 
-		~Skybox();
+		virtual ~Skybox();
 
 	private:
-		void Enable(class Shader& shader, const std::string& Name) const override;
+		virtual void Enable(class Shader& shader, const std::string& Name = "") const override;
 	};
 }

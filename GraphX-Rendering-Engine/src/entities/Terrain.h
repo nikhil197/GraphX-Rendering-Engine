@@ -52,7 +52,7 @@ namespace GraphX
 		void Enable() const;
 
 		/* Unbinds the terrain after the rendering */
-		void Disable() const override;
+		virtual void Disable() const override;
 
 		/* Returns the mesh of the terrain */
 		const class Mesh3D& GetMesh() const { return *m_Mesh; }
@@ -66,13 +66,13 @@ namespace GraphX
 		/* Returns the depth of the terrain (z - direction) */
 		inline float GetDepth() const { return m_TileSize * m_Depth; }
 
-		~Terrain();
+		virtual ~Terrain();
 
 	private:
 		/* Builds the terrain */
 		void BuildTerrain();
 		
-		void Enable(class Shader& shader, const std::string& Name = "u_Terrain") const override;
+		virtual void Enable(class Shader& shader, const std::string& Name = "") const override;
 
 		/* Calculates the y - Coordinate for the vertices of the terrain mesh */
 		double GetYCoords(int x, int y);
