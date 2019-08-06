@@ -224,12 +224,12 @@ namespace GraphXMaths
 
 	float Vector3::Magnitude() const
 	{
-		return MathUtil::Sqrt(MagnitudeSquare());
+		return Sqrt(MagnitudeSquare());
 	}
 
 	float Vector3::MagnitudeSquare() const
 	{
-		return (MathUtil::Square(x) + MathUtil::Square(y) + MathUtil::Square(z));
+		return (Square(x) + Square(y) + Square(z));
 	}
 
 	bool Vector3::IsZero() const
@@ -251,12 +251,12 @@ namespace GraphXMaths
 
 	float Vector3::Distance(const Vector3& V1, const Vector3& V2)
 	{
-		return MathUtil::Sqrt(Vector3::DistanceSquared(V1, V2));
+		return Sqrt(Vector3::DistanceSquared(V1, V2));
 	}
 
 	float Vector3::DistanceSquared(const Vector3& V1, const Vector3& V2)
 	{
-		return (MathUtil::Square(V1.x - V2.x) + MathUtil::Square(V1.y - V2.y) + MathUtil::Square(V1.z - V2.z));
+		return (Square(V1.x - V2.x) + Square(V1.y - V2.y) + Square(V1.z - V2.z));
 	}
 
 	/* Non - member functions */

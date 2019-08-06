@@ -113,7 +113,7 @@ namespace GraphX
 
 	double Terrain::Interpolate(double a, double b, double blend)
 	{
-		double theta = blend * PI;
+		double theta = blend * GraphXMaths::PI;
 		double f = (1.0 - std::cos(theta)) * 0.5;
 		return a * (1.0 - f) + b * f;
 	}
@@ -137,10 +137,10 @@ namespace GraphX
 
 	void Terrain::CalculateNormal(int x, int z)
 	{
-		float heightL = m_Vertices->at(GraphXMaths::MathUtil::Max((x - 1) + z * m_Width, 0)).Position.y;
-		float heightR = m_Vertices->at(GraphXMaths::MathUtil::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		float heightD = m_Vertices->at(GraphXMaths::MathUtil::Max(x + (z - 1) * m_Width, 0)).Position.y;
-		float heightU = m_Vertices->at(GraphXMaths::MathUtil::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		float heightL = m_Vertices->at(GraphXMaths::Max((x - 1) + z * m_Width, 0)).Position.y;
+		float heightR = m_Vertices->at(GraphXMaths::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		float heightD = m_Vertices->at(GraphXMaths::Max(x + (z - 1) * m_Width, 0)).Position.y;
+		float heightU = m_Vertices->at(GraphXMaths::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
 		m_Vertices->at(x + z * m_Width).Normal = GraphXMaths::Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
 	}
 	

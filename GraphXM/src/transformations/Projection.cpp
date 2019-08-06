@@ -54,7 +54,7 @@ namespace GraphXMaths
 	Matrix4 Projection::Perspective(float FieldOfView, float AspectRatio, float near, float far)
 	{
 		// Calculate the dimensions of the bounding frustum
-		float tanOfFov = (float)MathUtil::Tan(FieldOfView / 2);
+		float tanOfFov = (float)Tan(FieldOfView / 2);
 	
 		Matrix4 result;
 		result[0][0] = 1 / (AspectRatio * tanOfFov);

@@ -56,7 +56,7 @@ namespace GraphX
 	void Skybox::Update(float DeltaTime)
 	{
 		m_Rotation += RotationSpeed * DeltaTime;
-		GraphXMaths::MathUtil::ClampAngle(m_Rotation);
+		GraphXMaths::ClampAngle(m_Rotation);
 		m_View = m_View * GraphXMaths::Rotation(RotationSpeed * DeltaTime, GraphXMaths::Vector3::YAxis);
 	}
 

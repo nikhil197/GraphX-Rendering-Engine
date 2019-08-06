@@ -100,7 +100,7 @@ namespace GraphX
 		if (m_Used && m_Texture)
 		{
 			float LifeSpanFactor = m_ElapsedTime / m_LifeSpan;
-			int TotalStages = GraphXMaths::MathUtil::Square(m_Texture->GetRowsInTexAtlas());
+			int TotalStages = GraphXMaths::Square(m_Texture->GetRowsInTexAtlas());
 			float LifeProgress = LifeSpanFactor * TotalStages;
 			int index1 = (int)LifeProgress;
 			int index2 = (index1 + 1 < TotalStages) ? index1 + 1 : index1;

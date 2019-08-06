@@ -101,7 +101,7 @@ namespace GraphX
 			float xOffset = CurrentPosition.x - LastPosition.x;
 			float yOffset = CurrentPosition.y - LastPosition.y;
 			
-			if ((xOffset != 0 && GraphXMaths::MathUtil::Abs(xOffset) < 20.0f) || (yOffset != 0 && GraphXMaths::MathUtil::Abs(yOffset) < 20.0f))
+			if ((xOffset != 0 && GraphXMaths::Abs(xOffset) < 20.0f) || (yOffset != 0 && GraphXMaths::Abs(yOffset) < 20.0f))
 			{
 				xOffset *= DeltaTime;
 				yOffset *= DeltaTime;
@@ -116,7 +116,7 @@ namespace GraphX
 				else if (EulerAngles.x <= -89.0f)
 					EulerAngles.x = -89.0f;
 
-				GraphXMaths::MathUtil::ClampAngle(EulerAngles.y);
+				GraphXMaths::ClampAngle(EulerAngles.y);
 
 				m_RightAxis = GraphXMaths::Vector3::CrossProduct(m_ViewAxis, m_WorldUpAxis);
 				m_ViewAxis = GraphXMaths::Vector3(GraphXMaths::Rotation(xOffset, m_UpAxis) * GraphXMaths::Rotation(-yOffset, m_RightAxis) * GraphXMaths::Vector4(m_ViewAxis, 1.0f));
