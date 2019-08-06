@@ -1,12 +1,7 @@
+#include "CommonPch.h"
 #include "Rotation.h"
-#include "Translation.h"
 
-#include "../vectors/Vector2.h"
-#include "../vectors/Vector3.h"
-
-#include "../matrices/Matrix4.h"
-
-#include "../MathUtil.h"
+#include "MathUtil.h"
 
 namespace GraphXMaths
 {

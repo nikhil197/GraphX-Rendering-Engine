@@ -1,12 +1,8 @@
+#include "CommonPch.h"
 #include "Projection.h"
 
-#include "../matrices/Matrix4.h"
-
-#include "../vectors/Vector3.h"
-
-#include "Translation.h"
-#include "Scaling.h"
-#include "../MathUtil.h"
+#include "matrices\Matrix4.h"
+#include "MathUtil.h"
 
 namespace GraphXMaths
 {
@@ -27,7 +23,6 @@ namespace GraphXMaths
 		return result;
 	}
 
-	// TODO: Logic needs to be fixed
 	Matrix4 Projection::Frustum(float left, float right, float bottom, float top, float near, float far)
 	{
 		Matrix4 result;

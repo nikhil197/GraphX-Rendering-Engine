@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 namespace GraphXMaths
 {
 	struct Vector3;

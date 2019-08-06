@@ -45,6 +45,9 @@
     <ClCompile Include="src\transformations\Projection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\CommonPch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vectors\Vector2.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphX_Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CommonPch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

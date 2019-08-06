@@ -2,7 +2,7 @@
 
 namespace GraphXMaths
 {
-	// Forward declarations 
+	// Forward declarations
 	class Matrix4;
 
 	class Projection

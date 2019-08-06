@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(ProjectDir)vendor\spdlog\include;$(ProjectDir)vendor\;$(ProjectDir)src\;$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -109,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)RTM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -126,7 +126,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(ProjectDir)vendor\spdlog\include;$(ProjectDir)vendor\;$(ProjectDir)src\;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)RTM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)RTM\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(ProjectDir)src\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)GraphXM\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>

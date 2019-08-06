@@ -23,6 +23,5 @@ namespace GraphXMaths
 		static void LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector);
 
 		static void LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& ViewAxis, const Vector3& RightAxis, const Vector3& UpAxis);
-
 	};
 }

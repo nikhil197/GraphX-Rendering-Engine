@@ -1,15 +1,15 @@
 #pragma once
 
+#include "CommonPch.h"
+
 /** 
  * A Utility for the mathematics library containing the common mathematics functions
  **/
-
 namespace GraphXMaths
 {
 	// Define the value of PI (static to make it private to this translation unit i.e. the translation unit in which this header file will be included)
 	static const double PI = 3.14159265;
 
-	
 	/* Returns the square of the value */
 	template<typename T>
 	static T Square(const T Value)
@@ -83,7 +83,7 @@ namespace GraphXMaths
 		double val = Cos(angleInDegrees);
 
 		if (val == 0)
-			return DBL_MAX;
+			return std::numeric_limits<double>::max();
 		else
 			return 1 / val;
 	}
@@ -102,7 +102,7 @@ namespace GraphXMaths
 		double val = Sin(angleInDegrees);
 
 		if (val == 0)
-			return DBL_MAX;
+			return std::numeric_limits<double>::max();
 		else
 			return 1 / val;
 	}
@@ -121,7 +121,7 @@ namespace GraphXMaths
 		double val = Tan(angleInDegrees);
 
 		if (val == 0)
-			return DBL_MAX;
+			return std::numeric_limits<double>::max();
 		else
 			return 1 / val;
 	}

@@ -1,8 +1,5 @@
+#include "CommonPch.h"
 #include "Scaling.h"
-
-#include "../vectors/Vector3.h"
-
-#include "../matrices/Matrix4.h"
 
 namespace GraphXMaths
 {
