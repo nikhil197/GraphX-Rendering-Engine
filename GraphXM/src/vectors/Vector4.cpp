@@ -3,7 +3,7 @@
 
 #include "Vector2.h"
 #include "Vector3.h"
-#include "MathUtil.h"
+#include "MathUtility.h"
 
 namespace GraphXMaths
 {
@@ -204,12 +204,12 @@ namespace GraphXMaths
 
 	float Vector4::Magnitude() const
 	{
-		return Sqrt(MagnitudeSquare());
+		return Utility::Sqrt(MagnitudeSquare());
 	}
 
 	float Vector4::MagnitudeSquare() const
 	{
-		return (Square(x) + Square(y) + Square(z) + Square(w));
+		return (Utility::Square(x) + Utility::Square(y) + Utility::Square(z) + Utility::Square(w));
 	}
 
 	bool Vector4::IsZero() const
@@ -252,12 +252,12 @@ namespace GraphXMaths
 
 	float Vector4::Distance(const Vector4& V1, const Vector4& V2)
 	{
-		return Sqrt(Vector4::DistanceSquared(V1, V2));
+		return Utility::Sqrt(Vector4::DistanceSquared(V1, V2));
 	}
 
 	float Vector4::DistanceSquared(const Vector4& V1, const Vector4& V2)
 	{
-		return (Square(V1.x - V2.x) + Square(V1.y - V2.y) + Square(V1.z - V2.z) + Square(V1.w - V2.w));
+		return (Utility::Square(V1.x - V2.x) + Utility::Square(V1.y - V2.y) + Utility::Square(V1.z - V2.z) + Utility::Square(V1.w - V2.w));
 	}
 
 	/* Non - Member functions */

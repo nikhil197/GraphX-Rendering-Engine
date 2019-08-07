@@ -148,11 +148,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\CommonPch.h" />
+    <ClInclude Include="src\geometry\BoundingBox.h" />
+    <ClInclude Include="src\geometry\BoundingBox2D.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
     <ClInclude Include="src\GraphX_Matrices.h" />
     <ClInclude Include="src\GraphX_Transform.h" />
     <ClInclude Include="src\GraphX_Vectors.h" />
-    <ClInclude Include="src\MathUtil.h" />
+    <ClInclude Include="src\MathUtility.h" />
     <ClInclude Include="src\matrices\Matrix3.h" />
     <ClInclude Include="src\matrices\Matrix4.h" />
     <ClInclude Include="src\transformations\Projection.h" />
@@ -171,6 +173,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\geometry\BoundingBox.cpp" />
+    <ClCompile Include="src\geometry\BoundingBox2D.cpp" />
     <ClCompile Include="src\matrices\Matrix3.cpp" />
     <ClCompile Include="src\matrices\Matrix4.cpp" />
     <ClCompile Include="src\transformations\Projection.cpp" />

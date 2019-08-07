@@ -2,7 +2,7 @@
 #include "Vector2.h"
 
 #include "Vector3.h"
-#include "MathUtil.h"
+#include "MathUtility.h"
 
 namespace GraphXMaths
 {
@@ -199,12 +199,12 @@ namespace GraphXMaths
 
 	float Vector2::Magnitude() const
 	{
-		return Sqrt(MagnitudeSquare());
+		return Utility::Sqrt(MagnitudeSquare());
 	}
 
 	float Vector2::MagnitudeSquare() const
 	{
-		return Square(x) + Square(y);
+		return Utility::Square(x) + Utility::Square(y);
 	}
 
 	bool Vector2::IsZero() const
@@ -220,18 +220,18 @@ namespace GraphXMaths
 
 	const Vector3 Vector2::CrossProduct(const Vector2& V1, const Vector2& V2)
 	{
-		return GraphXMaths::Vector3::CrossProduct(Vector3(V1, 0), Vector3(V2, 0));
+		return Vector3::CrossProduct(Vector3(V1, 0), Vector3(V2, 0));
 		//return (V1.x * V2.y - V1.y * V2.x);
 	}
 
 	float Vector2::Distance(const Vector2& V1, const Vector2& V2)
 	{
-		return Sqrt(Vector2::DistanceSquared(V1, V2));
+		return Utility::Sqrt(Vector2::DistanceSquared(V1, V2));
 	}
 
 	float Vector2::DistanceSquared(const Vector2& V1, const Vector2& V2)
 	{
-		return (Square(V1.x - V2.x) + Square(V1.y - V2.y));
+		return (Utility::Square(V1.x - V2.x) + Utility::Square(V1.y - V2.y));
 	}
 
 	/* Non member functions */

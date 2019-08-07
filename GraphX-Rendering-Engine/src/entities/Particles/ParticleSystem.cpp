@@ -17,7 +17,7 @@ namespace GraphX
 		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec;
 		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
-		GraphXMaths::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
+		GraphXMaths::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
 		for (int i = 0; i < ParticlesCount && m_Manager.IsPoolEmpty(); i++)
 		{
 			EmitParticle(SpawnLocation);

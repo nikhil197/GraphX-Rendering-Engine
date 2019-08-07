@@ -48,15 +48,18 @@
     <ClCompile Include="src\CommonPch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\geometry\BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\geometry\BoundingBox2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vectors\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vectors\Vector3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MathUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vectors\Vector4.h">
@@ -96,6 +99,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\CommonPch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MathUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\geometry\BoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\geometry\BoundingBox2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
