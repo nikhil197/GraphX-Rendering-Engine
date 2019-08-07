@@ -57,8 +57,8 @@ namespace GraphXMaths
 		float MagXZ = ProjXZ.Magnitude();
 
 		// Calculate the Roll (Rotation about z-axis) and the Yaw (Rotation about y-axis) for the axis
-		float Roll = MagXY == 0 ? 0.0f : (float)Utility::CosInverse(Vector3::DotProduct(ProjXY, Vector3::XAxis) / MagXY);
-		float Yaw  = MagXZ == 0 ? 0.0f : (float)Utility::CosInverse(Vector3::DotProduct(ProjXZ, Vector3::XAxis) / MagXZ);
+		float Roll = MagXY == 0 ? 0.0f : (float)Utility::ACos(Vector3::DotProduct(ProjXY, Vector3::XAxis) / MagXY);
+		float Yaw  = MagXZ == 0 ? 0.0f : (float)Utility::ACos(Vector3::DotProduct(ProjXZ, Vector3::XAxis) / MagXZ);
 
 		// Rotate the axes to make the given axis as the new X - axis
 		Rotation rotate(Vector3(0, Yaw, Roll));

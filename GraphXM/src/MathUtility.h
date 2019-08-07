@@ -132,7 +132,7 @@ namespace GraphXMaths
 
 		// Inverse Cosine Function
 		template <typename T>
-		static double CosInverse(T Val)
+		static double ACos(T Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
@@ -141,7 +141,7 @@ namespace GraphXMaths
 
 		// Inverse Sine Function
 		template <typename T>
-		static double SinInverse(T Val)
+		static double ASin(T Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
@@ -150,7 +150,7 @@ namespace GraphXMaths
 
 		// Inverse Tangent Function
 		template <typename T>
-		static double TanInverse(T Val)
+		static double ATan(T Val)
 		{
 			return atan(Val) * 180 / PI;
 		}
