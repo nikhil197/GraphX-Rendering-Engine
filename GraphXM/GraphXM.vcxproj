@@ -150,6 +150,7 @@
     <ClInclude Include="src\CommonPch.h" />
     <ClInclude Include="src\geometry\BoundingBox.h" />
     <ClInclude Include="src\geometry\BoundingBox2D.h" />
+    <ClInclude Include="src\geometry\Plane.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
     <ClInclude Include="src\GraphX_Matrices.h" />
     <ClInclude Include="src\GraphX_Transform.h" />
@@ -175,6 +176,7 @@
     </ClCompile>
     <ClCompile Include="src\geometry\BoundingBox.cpp" />
     <ClCompile Include="src\geometry\BoundingBox2D.cpp" />
+    <ClCompile Include="src\geometry\Plane.cpp" />
     <ClCompile Include="src\matrices\Matrix3.cpp" />
     <ClCompile Include="src\matrices\Matrix4.cpp" />
     <ClCompile Include="src\transformations\Projection.cpp" />
