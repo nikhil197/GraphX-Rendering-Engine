@@ -8,7 +8,7 @@ namespace GraphX
 	std::shared_ptr<Mouse> Mouse::s_Mouse;
 
 	Mouse::Mouse(ConstructorHelper&& ch)
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(0.1f), m_ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(0.1f), ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
 	{}
 
 	void Mouse::Init()
@@ -49,8 +49,8 @@ namespace GraphX
 
 	void Mouse::OnEvent(MouseScrolledEvent& e)
 	{
-		m_ScrollOffset.x = e.GetXOffset() * m_ScrollSenstivity;
-		m_ScrollOffset.y = e.GetYOffset() * m_ScrollSenstivity;
+		m_ScrollOffset.x = e.GetXOffset() * ScrollSenstivity;
+		m_ScrollOffset.y = e.GetYOffset() * ScrollSenstivity;
 	}
 
 	void Mouse::Update()

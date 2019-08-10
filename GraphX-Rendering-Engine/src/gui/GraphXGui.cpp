@@ -189,7 +189,7 @@ namespace GraphX
 		ImGui::Begin("Camera Properties", (bool*)true);
 		ImGui::DragFloat("Camera Speed", (float*)&camera.CameraSpeed, 1.0f, 0.0f, 100.0f);
 		
-		if (ImGui::DragFloat("Field Of View", &FOV, 1.0f, 10.0f, 100.0f))
+		if (ImGui::DragFloat("Field Of View", &FOV, .1f, 10.0f, 100.0f))
 		{
 			if (s_GuiEventCallback)
 			{
@@ -198,7 +198,7 @@ namespace GraphX
 			}
 		}
 		
-		ImGui::DragFloat("Camera Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.01f, 5.0f);
+		ImGui::DragFloat("Mouse Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.01f, 1.0f);
 
 		if (ImGui::RadioButton("Perspective", bPerspectiveMode))
 		{

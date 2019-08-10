@@ -22,9 +22,6 @@ namespace GraphX
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
 
-		/* Sensitivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
-		float m_ScrollSenstivity;
-
 		/* Position of the mouse */
 		GraphXMaths::Vector2 m_Position;
 
@@ -46,6 +43,9 @@ namespace GraphX
 
 		/* Sensitivity of the mouse i.e. how much the pointer position in application units will be changed with a unit change in device position */
 		float Sensitivity;
+
+		/* Sensitivity of the mouse scroll i.e. how much the scroll in application units will be changed with a unit change in device scroll */
+		float ScrollSenstivity;
 
 		/* Initialise the mouse */
 		static void Init();
