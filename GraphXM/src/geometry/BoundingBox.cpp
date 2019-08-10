@@ -66,4 +66,24 @@ namespace GraphXMaths
 	{
 		return BoundingBox(*this) += OtherBox;
 	}
+
+	void BoundingBox::ShiftBy(const Vector3& Delta)
+	{
+		Min += Delta;
+		Max += Delta;
+	}
+
+	BoundingBox BoundingBox::ShiftBy(const Vector3& Delta) const
+	{
+		return BoundingBox(Min + Delta, Max + Delta);
+	}
+
+	void BoundingBox::MoveTo(const Vector3& Location)
+	{
+		Vector3 Offset = Location - GetCenter();
+		Min += Offset;
+		Max += Offset;
+	}
+
+
 }

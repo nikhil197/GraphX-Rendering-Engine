@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GraphX_Geometry.h" />
     <ClInclude Include="src\CommonPch.h" />
     <ClInclude Include="src\geometry\BoundingBox.h" />
     <ClInclude Include="src\geometry\BoundingBox2D.h" />

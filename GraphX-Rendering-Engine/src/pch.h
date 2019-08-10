@@ -11,6 +11,7 @@
 #include "GraphX_Vectors.h"
 #include "GraphX_Matrices.h"
 #include "GraphX_Transform.h"
+#include "GraphX_Geometry.h"
 #include "MathUtility.h"
 
 /* Common Pch for Both Maths library and the engine */
