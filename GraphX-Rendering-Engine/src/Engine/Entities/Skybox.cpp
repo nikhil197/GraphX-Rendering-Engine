@@ -41,7 +41,7 @@ namespace GraphX
 		VertexBufferLayout layout;
 		layout.Push<float>(GraphXMaths::Vector3::Components);
 		
-		m_VAO->AddBuffer(*m_VBO, layout);
+		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 
 		m_View = m_Camera.GetViewMatrix();

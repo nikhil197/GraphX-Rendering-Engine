@@ -13,7 +13,7 @@ namespace GraphX
 
 	public:
 		/* Submit the mesh to be rendered to the render */
-		virtual void Submit(const class Mesh2D& mesh) override;
+		virtual void Submit(const class Mesh2D* mesh) override;
 
 		/* Renders the objects submitted to the renderer */
 		virtual void Render() override;

@@ -10,7 +10,7 @@ namespace GraphX
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, count));
 	}
 
-	void SimpleRenderer::Draw(const IndexBuffer& ibo) const
+	void SimpleRenderer::DrawIndexed(const IndexBuffer& ibo) const
 	{
 		GLCall(glDrawElements(GL_TRIANGLES, ibo.GetCount(), GL_UNSIGNED_INT, nullptr));
 	}

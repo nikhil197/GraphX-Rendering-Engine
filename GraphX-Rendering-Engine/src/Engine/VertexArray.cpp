@@ -12,7 +12,7 @@ namespace GraphX
 		GLCall(glGenVertexArrays(1, &m_RendererID));
 	}
 
-	void VertexArray::AddBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout)
+	void VertexArray::AddVertexBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout)
 	{
 		// Bind both the vertex array and the buffer before specifying the layout
 		GLCall(glBindVertexArray(m_RendererID));

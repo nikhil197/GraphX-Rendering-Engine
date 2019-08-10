@@ -349,7 +349,7 @@ namespace GraphX
 	{
 		// Render the sky box
 		m_CurrentSkybox->Enable();
-		m_Renderer->Draw(m_CurrentSkybox->GetIBO());
+		m_Renderer->DrawIndexed(m_CurrentSkybox->GetIBO());
 		m_CurrentSkybox->Disable();
 	}
 
@@ -381,7 +381,7 @@ namespace GraphX
 			shader.SetUniformMat4f("u_Model", Model);
 
 			// Render the Terrain
-			m_Renderer->Draw(*terrain->GetMesh().GetIBO());
+			m_Renderer->DrawIndexed(*terrain->GetMesh().GetIBO());
 
 			terrain->Disable();
 		}
@@ -427,7 +427,7 @@ namespace GraphX
 		shader.Bind();
 		m_ShadowBuffer->BindDepthMap();
 		shader.SetUniform1i("u_Tex", 0);
-		renderer.Submit(QuadMesh);
+		renderer.Submit(&QuadMesh);
 		renderer.Render();
 		shader.UnBind();
 	}

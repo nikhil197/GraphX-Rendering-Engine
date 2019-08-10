@@ -7,9 +7,9 @@
 
 namespace GraphX
 {
-	void Renderer2D::Submit(const Mesh2D& mesh)
+	void Renderer2D::Submit(const Mesh2D* mesh)
 	{
-		m_RenderQueue.emplace_back(&mesh);
+		m_RenderQueue.emplace_back(mesh);
 	}
 
 	void Renderer2D::Render()

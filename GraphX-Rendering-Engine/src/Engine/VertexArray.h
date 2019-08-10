@@ -8,17 +8,13 @@ namespace GraphX
 
 	class VertexArray
 	{
-	private:
-		/* Identifier for the vao */
-		unsigned int m_RendererID;
-
 	public:
 		VertexArray();
 
 		~VertexArray();
 
 		/* Add new buffer to the vao object to be bound */
-		void AddBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
+		void AddVertexBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
 
 		void AddIndexBuffer(const IndexBuffer& ibo);
 
@@ -27,5 +23,9 @@ namespace GraphX
 
 		/* UnBind the vao */
 		void UnBind() const;
+	
+	private:
+		/* Identifier for the vao */
+		unsigned int m_RendererID;
 	};
 }

@@ -26,7 +26,7 @@ namespace GraphX
 		layout.Push<float>(GraphXMaths::Vector2::Components);
 
 		m_VAO = new VertexArray();
-		m_VAO->AddBuffer(vbo, layout);
+		m_VAO->AddVertexBuffer(vbo, layout);
 		m_VAO->UnBind();
 	}
 

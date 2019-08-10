@@ -17,7 +17,7 @@ namespace GraphX
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex2D));
 		VertexBufferLayout layout = Vertex2D::GetVertexLayout();
-		m_VAO->AddBuffer(*m_VBO, layout);
+		m_VAO->AddVertexBuffer(*m_VBO, layout);
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
 		m_VAO->AddIndexBuffer(*m_IBO);
@@ -28,7 +28,7 @@ namespace GraphX
 	{
 		const VertexBufferLayout& layout = Vertex2D::GetVertexLayout();
 		m_VAO = new VertexArray();
-		m_VAO->AddBuffer(*m_VBO, layout);
+		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
