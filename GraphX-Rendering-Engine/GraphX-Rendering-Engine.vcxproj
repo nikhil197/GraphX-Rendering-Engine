@@ -187,9 +187,9 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Engine\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Engine\Renderer\Renderer3D.cpp" />
-    <ClCompile Include="src\Engine\Renderer\SimpleRenderer.cpp" />
+    <ClCompile Include="src\Engine\Core\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Renderer\Renderer3D.cpp" />
+    <ClCompile Include="src\Engine\Core\Renderer\SimpleRenderer.cpp" />
     <ClCompile Include="src\Engine\Shaders\Shader.cpp" />
     <ClCompile Include="src\Engine\Textures\CubeMap.cpp" />
     <ClCompile Include="src\Engine\Textures\Texture.cpp" />
@@ -257,11 +257,11 @@
     <ClInclude Include="src\Engine\Model\Quad.h" />
     <ClInclude Include="src\Engine\Entities\Particles\ParticleManager.h" />
     <ClInclude Include="src\Engine\pch.h" />
-    <ClInclude Include="src\Engine\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Engine\Renderer\Renderer2DCore.h" />
-    <ClInclude Include="src\Engine\Renderer\Renderer3D.h" />
-    <ClInclude Include="src\Engine\Renderer\Renderer3DCore.h" />
-    <ClInclude Include="src\Engine\Renderer\SimpleRenderer.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\Renderer2DCore.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\Renderer3D.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\Renderer3DCore.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\SimpleRenderer.h" />
     <ClInclude Include="src\Engine\Shaders\Shader.h" />
     <ClInclude Include="src\Engine\Textures\CubeMap.h" />
     <ClInclude Include="src\Engine\Textures\Texture.h" />
