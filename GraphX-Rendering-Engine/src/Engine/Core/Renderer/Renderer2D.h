@@ -7,9 +7,14 @@ namespace GraphX
 	class Renderer2D
 		: public Renderer2DCore
 	{
+		friend class Renderer;
 	private:
 		/* Queue containing the objects to be rendered */
 		std::deque<const class Mesh2D*> m_RenderQueue;
+
+	private:
+		/* Renderer Class provides abstraction for Renderer. No instantiation required */
+		Renderer2D() = default;
 
 	public:
 		/* Submit the mesh to be rendered to the render */

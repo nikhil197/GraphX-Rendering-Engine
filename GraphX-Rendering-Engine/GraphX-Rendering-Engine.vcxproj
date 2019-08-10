@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="src\Engine\Application.cpp" />
     <ClCompile Include="src\Engine\Buffers\FrameBuffer.cpp" />
+    <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="src\Engine\Application.h" />
     <ClInclude Include="src\Engine\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Engine\Buffers\VertexBufferLayout.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
     <ClInclude Include="src\Engine\Entities\Entity.h" />
     <ClInclude Include="src\Engine\Entities\Lights\DirectionalLight.h" />

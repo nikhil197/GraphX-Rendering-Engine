@@ -15,9 +15,7 @@
 #include "Textures/Texture.h"
 
 /* Renderer */
-#include "Renderer/SimpleRenderer.h"
-#include "Renderer/Renderer3D.h"
-#include "Renderer/Renderer2D.h"
+#include "Core/Renderer/Renderer.h"
 
 /* Entities */
 #include "Entities/Lights/PointLight.h"
@@ -59,13 +57,14 @@ namespace GraphX
 	using namespace GraphXMaths;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Renderer3D(nullptr), m_Renderer(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
 		Clock::Init();
 		Mouse::Init();
 		Keyboard::Init();
+		Renderer::Initialize();
 
 		m_Window = new Window(m_Title, width, height);
 
@@ -139,9 +138,6 @@ namespace GraphX
 
 		m_ShadowBuffer = new FrameBuffer(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
 		m_DepthShader = new Shader("res/Shaders/Depth.shader");
-
-		m_Renderer3D = new Renderer3D();
-		m_Renderer = new SimpleRenderer();
 
 		m_ParticlesManager = new ParticleManager();
 		m_ParticlesManager->Initialize(m_Camera, 1000);	// Move to a suitable location
@@ -225,9 +221,6 @@ namespace GraphX
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
-			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
-				m_Renderer3D->Submit(m_Objects3D[i]);
-
 			// Frame Time in seconds
 			float DeltaTime = Clock::GetClock()->GetDeltaTime();
 			
@@ -260,6 +253,12 @@ namespace GraphX
 			// Clear the window 
 			m_Window->Clear();
 
+			// Start a scene
+			Renderer::BeginScene();
+
+			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+				Renderer::Submit(m_Objects3D[i]);
+
 			// Draw the debug quad to show the depth map
 			//RenderShadowDebugQuad();
 
@@ -274,6 +273,10 @@ namespace GraphX
 
 			m_ParticlesManager->RenderParticles();
 
+			// End the scene
+			Renderer::EndScene();
+
+			// Renders ImGUI
 			RenderGui();
 
 			//Update the mouse
@@ -349,7 +352,7 @@ namespace GraphX
 	{
 		// Render the sky box
 		m_CurrentSkybox->Enable();
-		m_Renderer->DrawIndexed(m_CurrentSkybox->GetIBO());
+		Renderer::RenderIndexed(m_CurrentSkybox->GetIBO());	// Change this to directly submit skybox
 		m_CurrentSkybox->Disable();
 	}
 
@@ -357,10 +360,10 @@ namespace GraphX
 	{
 		if (IsShadowPhase)
 		{
-			m_Renderer3D->Render(*m_DepthShader);
+			Renderer::RenderDepth(*m_DepthShader);
 		}
 		else
-			m_Renderer3D->Render();
+			Renderer::Render();
 
 		RenderTerrain();
 	}
@@ -381,7 +384,7 @@ namespace GraphX
 			shader.SetUniformMat4f("u_Model", Model);
 
 			// Render the Terrain
-			m_Renderer->DrawIndexed(*terrain->GetMesh().GetIBO());
+			Renderer::RenderIndexed(*terrain->GetMesh().GetIBO());	// TODO: Change this to directly submit terrain
 
 			terrain->Disable();
 		}
@@ -422,13 +425,10 @@ namespace GraphX
 
 		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, &shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
 
-		static Renderer2D renderer;
-
 		shader.Bind();
 		m_ShadowBuffer->BindDepthMap();
 		shader.SetUniform1i("u_Tex", 0);
-		renderer.Submit(&QuadMesh);
-		renderer.Render();
+		Renderer::Submit(&QuadMesh);
 		shader.UnBind();
 	}
 
@@ -750,8 +750,7 @@ namespace GraphX
 		for (unsigned int i = 0; i < m_Shaders.size(); i++)
 			delete m_Shaders[i];
 
-		delete m_Renderer3D;
-		delete m_Renderer;
+		Renderer::CleanUp();
 		delete m_ParticlesManager;
 
 		delete m_Camera;

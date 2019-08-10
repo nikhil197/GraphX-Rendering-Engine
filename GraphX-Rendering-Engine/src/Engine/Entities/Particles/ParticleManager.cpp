@@ -4,7 +4,7 @@
 #include "Entities/Camera.h"
 #include "Model/Quad.h"
 #include "Shaders/Shader.h"
-#include "Renderer/SimpleRenderer.h"
+#include "Core/Renderer/Renderer.h"
 
 namespace GraphX
 {
@@ -53,8 +53,6 @@ namespace GraphX
 
 		PreRender();
 
-		// Render
-		static SimpleRenderer renderer;
 		const GraphXMaths::Matrix4 View = m_Camera->GetViewMatrix();
 
 		for (unsigned int i = 0; i < m_PoolCap; i++)
@@ -62,7 +60,7 @@ namespace GraphX
 			if (m_Particles->at(i).IsUsed())
 			{
 				m_Particles->at(i).Enable(*m_ParticleShader);
-				renderer.Draw(Quad::GetVerticesCount());
+				Renderer::Render(Quad::GetVerticesCount());
 			}
 		}
 

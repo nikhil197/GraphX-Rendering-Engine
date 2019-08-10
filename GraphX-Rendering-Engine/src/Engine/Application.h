@@ -61,12 +61,6 @@ namespace GraphX
 		/* Current active skybox */
 		class Skybox* m_CurrentSkybox;
 
-		/* 3D renderer to render 3d objects */
-		class Renderer3D* m_Renderer3D;
-
-		/* Simple renderer to render objects like skybox */
-		class SimpleRenderer* m_Renderer;
-
 		/* To handle all the particles generated */
 		class ParticleManager* m_ParticlesManager;
 

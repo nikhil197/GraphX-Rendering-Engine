@@ -7,9 +7,14 @@ namespace GraphX
 	class Renderer3D
 		: public Renderer3DCore
 	{
+		friend class Renderer;
 	private:
 		/* Queue containing the objects to be rendered */
 		std::deque<const class Mesh3D*> m_RenderQueue;
+
+	private:
+		/* Renderer Class provides abstraction for Renderer. No instantiation required */
+		Renderer3D() = default;
 
 	public:
 		/* Submit the object to be rendered */
