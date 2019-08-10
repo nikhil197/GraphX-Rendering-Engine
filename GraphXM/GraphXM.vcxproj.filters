@@ -15,108 +15,108 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\vectors\Vector2.cpp">
+    <ClCompile Include="src\GraphXMaths\matrices\Matrix3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vectors\Vector3.cpp">
+    <ClCompile Include="src\GraphXMaths\matrices\Matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vectors\Vector4.cpp">
+    <ClCompile Include="src\GraphXMaths\transformations\Projection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\matrices\Matrix4.cpp">
+    <ClCompile Include="src\GraphXMaths\transformations\Rotation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\matrices\Matrix3.cpp">
+    <ClCompile Include="src\GraphXMaths\transformations\Scaling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\transformations\Translation.cpp">
+    <ClCompile Include="src\GraphXMaths\transformations\Translation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\transformations\Rotation.cpp">
+    <ClCompile Include="src\GraphXMaths\transformations\View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\transformations\Scaling.cpp">
+    <ClCompile Include="src\GraphXMaths\vectors\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\transformations\View.cpp">
+    <ClCompile Include="src\GraphXMaths\vectors\Vector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\transformations\Projection.cpp">
+    <ClCompile Include="src\GraphXMaths\vectors\Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\CommonPch.cpp">
+    <ClCompile Include="src\GraphXMaths\CommonPch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\geometry\BoundingBox.cpp">
+    <ClCompile Include="src\GraphXMaths\geometry\Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\geometry\BoundingBox2D.cpp">
+    <ClCompile Include="src\GraphXMaths\geometry\BoundingBox2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\geometry\Plane.cpp">
+    <ClCompile Include="src\GraphXMaths\geometry\BoundingBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\vectors\Vector2.h">
+    <ClInclude Include="src\GraphXMaths\MathUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vectors\Vector3.h">
+    <ClInclude Include="src\GraphXMaths\GraphX_Vectors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vectors\Vector4.h">
+    <ClInclude Include="src\GraphXMaths\GraphX_Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\matrices\Matrix4.h">
+    <ClInclude Include="src\GraphXMaths\GraphX_Matrices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\matrices\Matrix3.h">
+    <ClInclude Include="src\GraphXMaths\GraphX_Geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transformations\Translation.h">
+    <ClInclude Include="src\GraphXMaths\matrices\Matrix3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transformations\Rotation.h">
+    <ClInclude Include="src\GraphXMaths\matrices\Matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transformations\Scaling.h">
+    <ClInclude Include="src\GraphXMaths\transformations\Projection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transformations\View.h">
+    <ClInclude Include="src\GraphXMaths\transformations\Rotation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transformations\Projection.h">
+    <ClInclude Include="src\GraphXMaths\transformations\Scaling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GraphX_Vectors.h">
+    <ClInclude Include="src\GraphXMaths\transformations\Translation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\transformations\View.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\vectors\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\vectors\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\vectors\Vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\CommonPch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\geometry\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\geometry\BoundingBox2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphXMaths\geometry\BoundingBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphX_Maths.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphX_Matrices.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphX_Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CommonPch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MathUtility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\geometry\BoundingBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\geometry\BoundingBox2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\geometry\Plane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphX_Geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

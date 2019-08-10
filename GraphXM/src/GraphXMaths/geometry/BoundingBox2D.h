@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vectors\Vector2.h"
+#include "Vectors/Vector2.h"
 
 namespace GraphXMaths
 {

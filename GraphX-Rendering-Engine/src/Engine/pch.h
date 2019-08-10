@@ -8,11 +8,7 @@
 #include "Utilities/EngineProperties.h"
 
 /* Maths Library */
-#include "GraphX_Vectors.h"
-#include "GraphX_Matrices.h"
-#include "GraphX_Transform.h"
-#include "GraphX_Geometry.h"
-#include "MathUtility.h"
+#include "GraphX_Maths.h"
 
 /* Common Pch for Both Maths library and the engine */
 #include "CommonPch.h"

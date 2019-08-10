@@ -4,15 +4,15 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw_gl3.h"
 
-#include "model/mesh/Mesh3D.h"
-#include "model/mesh/Mesh2D.h"
+#include "Model/Mesh/Mesh2D.h"
+#include "Model/Mesh/Mesh3D.h"
 
 #include "Textures/Texture.h"
 
-#include "entities/Lights/PointLight.h"
-#include "entities/Camera.h"
-#include "entities/Terrain.h"
-#include "entities/Skybox.h"
+#include "Entities/Lights/PointLight.h"
+#include "Entities/Camera.h"
+#include "Entities/Terrain.h"
+#include "Entities/Skybox.h"
 
 #include "Utilities/FileOpenDialog.h"
 #include "Utilities/EngineUtil.h"

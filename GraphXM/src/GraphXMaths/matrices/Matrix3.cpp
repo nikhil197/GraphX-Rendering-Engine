@@ -2,7 +2,7 @@
 #include "Matrix3.h"
 
 #include "Matrix4.h"
-#include "vectors/Vector3.h"
+#include "Vectors/Vector3.h"
 
 namespace GraphXMaths
 {

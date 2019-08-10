@@ -15,21 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ErrorHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\ImGui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,125 +30,125 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Main.cpp">
+    <ClCompile Include="src\Engine\Buffers\FrameBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Application.cpp">
+    <ClCompile Include="src\Engine\Buffers\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\Mouse.cpp">
+    <ClCompile Include="src\Engine\Buffers\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\Keyboard.cpp">
+    <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Buffers\IndexBuffer.cpp">
+    <ClCompile Include="src\Engine\Entities\Lights\Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Buffers\VertexBuffer.cpp">
+    <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Camera.cpp">
+    <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gui\GraphXGui.cpp">
+    <ClCompile Include="src\Engine\Entities\Particles\ParticleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shaders\Shader.cpp">
+    <ClCompile Include="src\Engine\Entities\Particles\ParticleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Timer\Clock.cpp">
+    <ClCompile Include="src\Engine\Entities\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Timer\Timer.cpp">
+    <ClCompile Include="src\Engine\Entities\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Renderer2D.cpp">
+    <ClCompile Include="src\Engine\Entities\Terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\Renderer3D.cpp">
+    <ClCompile Include="src\Engine\Gui\GraphXGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Textures\Texture.cpp">
+    <ClCompile Include="src\Engine\Input\Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Mesh\Mesh2D.cpp">
+    <ClCompile Include="src\Engine\Input\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Mesh\Mesh3D.cpp">
+    <ClCompile Include="src\Engine\Model\Mesh\Mesh2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Textures\CubeMap.cpp">
+    <ClCompile Include="src\Engine\Model\Mesh\Mesh3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Cube.cpp">
+    <ClCompile Include="src\Engine\Model\Cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Skybox.cpp">
+    <ClCompile Include="src\Engine\Model\Model3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderer\SimpleRenderer.cpp">
+    <ClCompile Include="src\Engine\Model\Quad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Lights\Light.cpp">
+    <ClCompile Include="src\Engine\Renderer\Renderer2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Lights\PointLight.cpp">
+    <ClCompile Include="src\Engine\Renderer\Renderer3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Lights\DirectionalLight.cpp">
+    <ClCompile Include="src\Engine\Renderer\SimpleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Model3D.cpp">
+    <ClCompile Include="src\Engine\Shaders\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utilities\MousePicker.cpp">
+    <ClCompile Include="src\Engine\Textures\CubeMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utilities\FileOpenDialog.cpp">
+    <ClCompile Include="src\Engine\Textures\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utilities\EngineUtil.cpp">
+    <ClCompile Include="src\Engine\Timer\Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Terrain.cpp">
+    <ClCompile Include="src\Engine\Timer\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Buffers\FrameBuffer.cpp">
+    <ClCompile Include="src\Engine\Utilities\EngineUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Model\Quad.cpp">
+    <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Particles\Particle.cpp">
+    <ClCompile Include="src\Engine\Utilities\Importer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Particles\ParticleManager.cpp">
+    <ClCompile Include="src\Engine\Utilities\MousePicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entities\Particles\ParticleSystem.cpp">
+    <ClCompile Include="src\Engine\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utilities\Importer.cpp">
+    <ClCompile Include="src\Engine\ErrorHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ErrorHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\ImGui\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -188,148 +173,163 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application.h">
+    <ClInclude Include="src\Engine\Buffers\FrameBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\Mouse.h">
+    <ClInclude Include="src\Engine\Buffers\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\Keyboard.h">
+    <ClInclude Include="src\Engine\Buffers\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Buffers\IndexBuffer.h">
+    <ClInclude Include="src\Engine\Buffers\VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Buffers\VertexBuffer.h">
+    <ClInclude Include="src\Engine\Entities\Lights\DirectionalLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Buffers\VertexBufferLayout.h">
+    <ClInclude Include="src\Engine\Entities\Lights\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Camera.h">
+    <ClInclude Include="src\Engine\Entities\Lights\PointLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\Event.h">
+    <ClInclude Include="src\Engine\Entities\Particles\Particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\KeyboardEvent.h">
+    <ClInclude Include="src\Engine\Entities\Particles\ParticleManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\MouseEvent.h">
+    <ClInclude Include="src\Engine\Entities\Particles\ParticleSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\WindowEvent.h">
+    <ClInclude Include="src\Engine\Entities\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Gui\GraphXGui.h">
+    <ClInclude Include="src\Engine\Entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Mesh\Mesh2D.h">
+    <ClInclude Include="src\Engine\Entities\Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Mesh\Mesh3D.h">
+    <ClInclude Include="src\Engine\Entities\Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Mesh\Vertex.h">
+    <ClInclude Include="src\Engine\Events\Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shaders\Shader.h">
+    <ClInclude Include="src\Engine\Events\GUIEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Timer\Clock.h">
+    <ClInclude Include="src\Engine\Events\KeyboardEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Timer\Timer.h">
+    <ClInclude Include="src\Engine\Events\MouseEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Renderer2D.h">
+    <ClInclude Include="src\Engine\Events\WindowEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Renderer2DCore.h">
+    <ClInclude Include="src\Engine\Gui\GraphXGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Renderer3D.h">
+    <ClInclude Include="src\Engine\Input\Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Renderer3DCore.h">
+    <ClInclude Include="src\Engine\Input\Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Textures\Texture.h">
+    <ClInclude Include="src\Engine\Model\Mesh\Mesh2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Textures\CubeMap.h">
+    <ClInclude Include="src\Engine\Model\Mesh\Mesh3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Cube.h">
+    <ClInclude Include="src\Engine\Model\Mesh\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Skybox.h">
+    <ClInclude Include="src\Engine\Model\Cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\SimpleRenderer.h">
+    <ClInclude Include="src\Engine\Model\Model3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Lights\Light.h">
+    <ClInclude Include="src\Engine\Model\ModelTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Lights\PointLight.h">
+    <ClInclude Include="src\Engine\Model\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Lights\DirectionalLight.h">
+    <ClInclude Include="src\Engine\Renderer\Renderer2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Model3D.h">
+    <ClInclude Include="src\Engine\Renderer\Renderer2DCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\MousePicker.h">
+    <ClInclude Include="src\Engine\Renderer\Renderer3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\FileOpenDialog.h">
+    <ClInclude Include="src\Engine\Renderer\Renderer3DCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\EngineUtil.h">
+    <ClInclude Include="src\Engine\Renderer\SimpleRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\GUIEvent.h">
+    <ClInclude Include="src\Engine\Shaders\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\ModelTypes.h">
+    <ClInclude Include="src\Engine\Textures\CubeMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Terrain.h">
+    <ClInclude Include="src\Engine\Textures\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Buffers\FrameBuffer.h">
+    <ClInclude Include="src\Engine\Timer\Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Entity.h">
+    <ClInclude Include="src\Engine\Timer\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\EngineConstants.h">
+    <ClInclude Include="src\Engine\Utilities\EngineConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Model\Quad.h">
+    <ClInclude Include="src\Engine\Utilities\EngineProperties.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Particles\Particle.h">
+    <ClInclude Include="src\Engine\Utilities\EngineUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Particles\ParticleManager.h">
+    <ClInclude Include="src\Engine\Utilities\FileOpenDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entities\Particles\ParticleSystem.h">
+    <ClInclude Include="src\Engine\Utilities\HashUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\EngineProperties.h">
+    <ClInclude Include="src\Engine\Utilities\Importer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MemoryManager.h">
+    <ClInclude Include="src\Engine\Utilities\MousePicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\HashUtil.h">
+    <ClInclude Include="src\Engine\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utilities\Importer.h">
+    <ClInclude Include="src\Engine\ErrorHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\MemoryManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -343,7 +343,7 @@
     <None Include="res\Shaders\Terrain.shader" />
     <None Include="res\Shaders\Depth.shader" />
     <None Include="res\Shaders\Particle.shader" />
-    <None Include="src\MemoryManager.inl">
+    <None Include="src\Engine\MemoryManager.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

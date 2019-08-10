@@ -1,7 +1,7 @@
 #pragma once
 
-#include "matrices\Matrix4.h"
-#include "vectors\Vector3.h"
+#include "Matrices/Matrix4.h"
+#include "Vectors/Vector3.h"
 
 namespace GraphXMaths
 {

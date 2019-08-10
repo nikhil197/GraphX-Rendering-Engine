@@ -11,5 +11,8 @@
 // ---------- Transforms ---------------
 #include "GraphX_Transform.h"
 
+// ----------- Geometry ----------------
+#include "GraphX_Geometry.h"
+
 // ---------- Maths Util ---------------
-#include "MathUtil.h"
+#include "MathUtility.h"

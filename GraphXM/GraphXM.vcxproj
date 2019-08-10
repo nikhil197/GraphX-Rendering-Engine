@@ -90,7 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\GraphXMaths\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CommonPch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -103,7 +103,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\GraphXMaths\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CommonPch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\GraphXMaths\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CommonPch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -137,7 +137,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\GraphXMaths\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CommonPch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -147,47 +147,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\GraphX_Geometry.h" />
-    <ClInclude Include="src\CommonPch.h" />
-    <ClInclude Include="src\geometry\BoundingBox.h" />
-    <ClInclude Include="src\geometry\BoundingBox2D.h" />
-    <ClInclude Include="src\geometry\Plane.h" />
+    <ClInclude Include="src\GraphXMaths\GraphX_Geometry.h" />
+    <ClInclude Include="src\GraphXMaths\CommonPch.h" />
+    <ClInclude Include="src\GraphXMaths\geometry\BoundingBox.h" />
+    <ClInclude Include="src\GraphXMaths\geometry\BoundingBox2D.h" />
+    <ClInclude Include="src\GraphXMaths\geometry\Plane.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
-    <ClInclude Include="src\GraphX_Matrices.h" />
-    <ClInclude Include="src\GraphX_Transform.h" />
-    <ClInclude Include="src\GraphX_Vectors.h" />
-    <ClInclude Include="src\MathUtility.h" />
-    <ClInclude Include="src\matrices\Matrix3.h" />
-    <ClInclude Include="src\matrices\Matrix4.h" />
-    <ClInclude Include="src\transformations\Projection.h" />
-    <ClInclude Include="src\transformations\Rotation.h" />
-    <ClInclude Include="src\transformations\Scaling.h" />
-    <ClInclude Include="src\transformations\Translation.h" />
-    <ClInclude Include="src\transformations\View.h" />
-    <ClInclude Include="src\vectors\Vector2.h" />
-    <ClInclude Include="src\vectors\Vector3.h" />
-    <ClInclude Include="src\vectors\Vector4.h" />
+    <ClInclude Include="src\GraphXMaths\GraphX_Matrices.h" />
+    <ClInclude Include="src\GraphXMaths\GraphX_Transform.h" />
+    <ClInclude Include="src\GraphXMaths\GraphX_Vectors.h" />
+    <ClInclude Include="src\GraphXMaths\MathUtility.h" />
+    <ClInclude Include="src\GraphXMaths\matrices\Matrix3.h" />
+    <ClInclude Include="src\GraphXMaths\matrices\Matrix4.h" />
+    <ClInclude Include="src\GraphXMaths\transformations\Projection.h" />
+    <ClInclude Include="src\GraphXMaths\transformations\Rotation.h" />
+    <ClInclude Include="src\GraphXMaths\transformations\Scaling.h" />
+    <ClInclude Include="src\GraphXMaths\transformations\Translation.h" />
+    <ClInclude Include="src\GraphXMaths\transformations\View.h" />
+    <ClInclude Include="src\GraphXMaths\vectors\Vector2.h" />
+    <ClInclude Include="src\GraphXMaths\vectors\Vector3.h" />
+    <ClInclude Include="src\GraphXMaths\vectors\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CommonPch.cpp">
+    <ClCompile Include="src\GraphXMaths\CommonPch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\geometry\BoundingBox.cpp" />
-    <ClCompile Include="src\geometry\BoundingBox2D.cpp" />
-    <ClCompile Include="src\geometry\Plane.cpp" />
-    <ClCompile Include="src\matrices\Matrix3.cpp" />
-    <ClCompile Include="src\matrices\Matrix4.cpp" />
-    <ClCompile Include="src\transformations\Projection.cpp" />
-    <ClCompile Include="src\transformations\Rotation.cpp" />
-    <ClCompile Include="src\transformations\Scaling.cpp" />
-    <ClCompile Include="src\transformations\Translation.cpp" />
-    <ClCompile Include="src\transformations\View.cpp" />
-    <ClCompile Include="src\vectors\Vector2.cpp" />
-    <ClCompile Include="src\vectors\Vector3.cpp" />
-    <ClCompile Include="src\vectors\Vector4.cpp" />
+    <ClCompile Include="src\GraphXMaths\geometry\BoundingBox.cpp" />
+    <ClCompile Include="src\GraphXMaths\geometry\BoundingBox2D.cpp" />
+    <ClCompile Include="src\GraphXMaths\geometry\Plane.cpp" />
+    <ClCompile Include="src\GraphXMaths\matrices\Matrix3.cpp" />
+    <ClCompile Include="src\GraphXMaths\matrices\Matrix4.cpp" />
+    <ClCompile Include="src\GraphXMaths\transformations\Projection.cpp" />
+    <ClCompile Include="src\GraphXMaths\transformations\Rotation.cpp" />
+    <ClCompile Include="src\GraphXMaths\transformations\Scaling.cpp" />
+    <ClCompile Include="src\GraphXMaths\transformations\Translation.cpp" />
+    <ClCompile Include="src\GraphXMaths\transformations\View.cpp" />
+    <ClCompile Include="src\GraphXMaths\vectors\Vector2.cpp" />
+    <ClCompile Include="src\GraphXMaths\vectors\Vector3.cpp" />
+    <ClCompile Include="src\GraphXMaths\vectors\Vector4.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

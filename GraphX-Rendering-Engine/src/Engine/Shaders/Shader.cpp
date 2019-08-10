@@ -2,7 +2,7 @@
 #include "Shader.h"
 
 #include "Utilities/EngineUtil.h"
-#include "../Timer/Timer.h"
+#include "Timer/Timer.h"
 
 namespace GraphX
 {

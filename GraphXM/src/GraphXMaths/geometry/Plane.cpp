@@ -1,7 +1,7 @@
 #include "CommonPch.h"
 #include "Plane.h"
 
-#include "vectors\Vector3.h"
+#include "Vectors/Vector3.h"
 #include "MathUtility.h"
 
 namespace GraphXMaths
