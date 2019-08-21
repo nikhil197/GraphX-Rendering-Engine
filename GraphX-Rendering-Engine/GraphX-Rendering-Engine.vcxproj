@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -109,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -126,7 +126,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -160,7 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Application.cpp" />
-    <ClCompile Include="src\Engine\Buffers\FrameBuffer.cpp" />
+    <ClCompile Include="src\Engine\Core\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
@@ -191,9 +191,9 @@
     <ClCompile Include="src\Engine\Core\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer3D.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\SimpleRenderer.cpp" />
-    <ClCompile Include="src\Engine\Shaders\Shader.cpp" />
-    <ClCompile Include="src\Engine\Textures\CubeMap.cpp" />
-    <ClCompile Include="src\Engine\Textures\Texture.cpp" />
+    <ClCompile Include="src\Engine\Core\Shaders\Shader.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\CubeMap.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\Texture.cpp" />
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
     <ClCompile Include="src\Engine\Gui\GraphXGui.cpp" />
@@ -201,9 +201,9 @@
     <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp" />
     <ClCompile Include="src\Engine\Utilities\Importer.cpp" />
     <ClCompile Include="src\Engine\Utilities\MousePicker.cpp" />
-    <ClCompile Include="src\Engine\VertexArray.cpp" />
-    <ClCompile Include="src\Engine\Buffers\IndexBuffer.cpp" />
-    <ClCompile Include="src\Engine\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\Engine\Core\VertexArray.cpp" />
+    <ClCompile Include="src\Engine\Core\Buffers\IndexBuffer.cpp" />
+    <ClCompile Include="src\Engine\Core\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\Engine\Window.cpp" />
     <ClCompile Include="vendor\ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -228,8 +228,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Application.h" />
-    <ClInclude Include="src\Engine\Buffers\FrameBuffer.h" />
-    <ClInclude Include="src\Engine\Buffers\VertexBufferLayout.h" />
+    <ClInclude Include="src\Engine\Core\Buffers\FrameBuffer.h" />
+    <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
     <ClInclude Include="src\Engine\Entities\Entity.h" />
@@ -264,9 +264,9 @@
     <ClInclude Include="src\Engine\Core\Renderer\Renderer3D.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer3DCore.h" />
     <ClInclude Include="src\Engine\Core\Renderer\SimpleRenderer.h" />
-    <ClInclude Include="src\Engine\Shaders\Shader.h" />
-    <ClInclude Include="src\Engine\Textures\CubeMap.h" />
-    <ClInclude Include="src\Engine\Textures\Texture.h" />
+    <ClInclude Include="src\Engine\Core\Shaders\Shader.h" />
+    <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />
+    <ClInclude Include="src\Engine\Core\Textures\Texture.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />
@@ -277,9 +277,9 @@
     <ClInclude Include="src\Engine\Utilities\HashUtil.h" />
     <ClInclude Include="src\Engine\Utilities\Importer.h" />
     <ClInclude Include="src\Engine\Utilities\MousePicker.h" />
-    <ClInclude Include="src\Engine\VertexArray.h" />
-    <ClInclude Include="src\Engine\Buffers\IndexBuffer.h" />
-    <ClInclude Include="src\Engine\Buffers\VertexBuffer.h" />
+    <ClInclude Include="src\Engine\Core\VertexArray.h" />
+    <ClInclude Include="src\Engine\Core\Buffers\IndexBuffer.h" />
+    <ClInclude Include="src\Engine\Core\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Engine\Window.h" />
     <ClInclude Include="vendor\ImGui\imconfig.h" />
     <ClInclude Include="vendor\ImGui\imgui.h" />
