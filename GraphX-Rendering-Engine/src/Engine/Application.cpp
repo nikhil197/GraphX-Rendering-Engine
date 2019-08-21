@@ -64,8 +64,7 @@ namespace GraphX
 		Clock::Init();
 		Mouse::Init();
 		Keyboard::Init();
-		Renderer::Initialize();
-
+		
 		m_Window = new Window(m_Title, width, height);
 
 		bool success = InitializeOpenGL();
@@ -121,6 +120,9 @@ namespace GraphX
 	{
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
+
+		// Initialise the renderer
+		Renderer::Initialize();
 
 		m_Camera = new Camera(GraphXMaths::Vector3(0.0f, 0.0f, 3.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
@@ -254,7 +256,7 @@ namespace GraphX
 			m_Window->Clear();
 
 			// Start a scene
-			Renderer::BeginScene();
+			Renderer::BeginScene(m_Camera);
 
 			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 				Renderer::Submit(m_Objects3D[i]);
@@ -342,7 +344,7 @@ namespace GraphX
 		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetShadowInfo()->LightViewProjMat);
 		m_ShadowBuffer->Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
-		
+
 		RenderScene(true);
 
 		m_ShadowBuffer->UnBind();

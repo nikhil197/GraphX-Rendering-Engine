@@ -53,6 +53,9 @@ namespace GraphX
 		/* Model matrix for the mesh */
 		GraphXMaths::Matrix4 m_Model;
 
+		/* Box containing the whole object */
+		GraphXMaths::BoundingBox* m_BoundingBox;
+
 		/* Whether the mesh needs to updated or not */
 		bool m_UpdateModelMatrix;
 
@@ -109,6 +112,8 @@ namespace GraphX
 
 		/* Returns the model matrix for the mesh */
 		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
+
+		inline const struct GraphXMaths::BoundingBox* GetBoundingBox() const { return m_BoundingBox; }
 
 		/* Sets new state for updating the model matrix */
 		inline void UpdateModelMatrix(bool bCalculateMatrix) { m_UpdateModelMatrix = bCalculateMatrix; }

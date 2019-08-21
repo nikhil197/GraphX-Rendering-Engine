@@ -12,7 +12,7 @@ namespace GraphX
 		static void CleanUp();
 
 		/* Begin a Scene for rendering */
-		static void BeginScene();
+		static void BeginScene(const class Camera* MainCamera);
 
 		/* Marks the end of a scene */
 		static void EndScene();
@@ -43,11 +43,26 @@ namespace GraphX
 		/* Directly renders (without queuing) the current bound vertex array indexed by 'indexBuffer' */
 		static void RenderIndexed(const class IndexBuffer& indexBuffer);
 
+		/* Returns the shader used for debug rendering */
+		static class Shader* GetDebugCollisionsShader() { return s_DebugShader; }
+
 	private:
 		struct SceneInfo
 		{
+			/* Main Camera of the scene */
+			const class Camera* SceneCamera;
 
+			/* Resets the scene info */
+			void Reset()
+			{
+				SceneCamera = nullptr;
+			}
 		};
+
+		static class Shader* s_DebugShader;
+
+		/* Info required for rendering current scene */
+		static SceneInfo* s_SceneInfo;
 
 		/* 3D Renderer for rendering 3D objects */
 		static class Renderer3D* s_Renderer3D;

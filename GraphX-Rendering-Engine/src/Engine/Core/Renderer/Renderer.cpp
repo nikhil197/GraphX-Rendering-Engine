@@ -10,34 +10,89 @@
 
 #include "Shaders\Shader.h"
 
+#include "Entities\Camera.h"
+
 namespace GraphX
 {
+#define CheckRenderer() {																\
+		if(!s_Renderer || !s_Renderer2D || !s_Renderer3D || !s_SceneInfo)				\
+		{																				\
+			GX_ENGINE_ERROR("Renderer Not Initialised before initialising a scene");	\
+			ASSERT(false);																\
+		}																				\
+	}
+
 	Renderer3D* Renderer::s_Renderer3D = nullptr;
 	Renderer2D* Renderer::s_Renderer2D = nullptr;
 	SimpleRenderer* Renderer::s_Renderer = nullptr;
+
+	Renderer::SceneInfo* Renderer::s_SceneInfo = nullptr;
+	Shader* Renderer::s_DebugShader = nullptr;
 
 	void Renderer::Initialize()
 	{
 		s_Renderer = new SimpleRenderer();
 		s_Renderer2D = new Renderer2D();
 		s_Renderer3D = new Renderer3D();
+
+		s_SceneInfo = new Renderer::SceneInfo();
+
+		// TODO: Bind this to the GX_ENABLE_DEBUG_COLLISIONS_RENDERING
+		s_DebugShader = new Shader("res/Shaders/DebugCollisions.shader");
 	}
 
 	void Renderer::CleanUp()
 	{
-		delete s_Renderer;
-		delete s_Renderer2D;
-		delete s_Renderer3D;
+		if (!s_Renderer && !s_Renderer2D && !s_Renderer3D)
+		{
+			GX_ENGINE_WARN("Renderer::CleanUp called more than once.");
+			return;
+		}
+
+		if (s_Renderer)
+		{
+			delete s_Renderer;
+			s_Renderer = nullptr;
+		}
+		if (s_Renderer2D)
+		{
+			delete s_Renderer2D;
+			s_Renderer2D = nullptr;
+		}
+		if (s_Renderer3D)
+		{
+			delete s_Renderer3D;
+			s_Renderer3D = nullptr;
+		}
+		if (s_SceneInfo)
+		{
+			delete s_SceneInfo;
+			s_SceneInfo = nullptr;
+		}
+		if (s_DebugShader)
+		{
+			delete s_DebugShader;
+			s_DebugShader = nullptr;
+		}
 	}
 
-	void Renderer::BeginScene()
+	void Renderer::BeginScene(const Camera* MainCamera)
 	{
+		CheckRenderer();
 
+		s_SceneInfo->SceneCamera = MainCamera;
+
+		if (s_DebugShader)
+		{
+			s_DebugShader->Bind();
+			s_DebugShader->SetUniformMat4f("u_ViewProjection", MainCamera->GetProjectionViewMatrix());
+			s_DebugShader->SetUniform4f("u_DebugColor", 1.0f, 0.0f, 0.0f, 1.0f);
+		}
 	}
 
 	void Renderer::EndScene()
 	{
-
+		s_SceneInfo->Reset();
 	}
 
 	void Renderer::Submit(const class Mesh2D* Mesh)

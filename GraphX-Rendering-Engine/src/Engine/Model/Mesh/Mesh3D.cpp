@@ -21,6 +21,14 @@ namespace GraphX
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
 		m_VAO->AddIndexBuffer(*m_IBO);
+
+		std::vector<GraphXMaths::Vector3> positions;
+		for (unsigned int i = 0; i < m_Vertices.size(); i++)
+		{
+			positions.push_back(m_Vertices[i].Position);
+		}
+
+		m_BoundingBox = new GraphXMaths::BoundingBox(positions);
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
@@ -30,6 +38,14 @@ namespace GraphX
 		m_VAO = new VertexArray();
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
+
+		std::vector<GraphXMaths::Vector3> positions;
+		for (unsigned int i = 0; i < m_Vertices.size(); i++)
+		{
+			positions.push_back(m_Vertices[i].Position);
+		}
+
+		m_BoundingBox = new GraphXMaths::BoundingBox(positions);
 	}
 
 	void Mesh3D::Update(float DeltaTime)

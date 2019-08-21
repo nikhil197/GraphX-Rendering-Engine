@@ -352,5 +352,6 @@
     <None Include="src\Engine\MemoryManager.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="res\Shaders\DebugCollisions.shader" />
   </ItemGroup>
 </Project>

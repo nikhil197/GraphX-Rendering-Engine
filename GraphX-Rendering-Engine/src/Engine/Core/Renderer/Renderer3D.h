@@ -31,5 +31,8 @@ namespace GraphX
 
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
 		virtual void Render(class Shader& DepthShader) override;
+
+		/* Renders the collision bounds for debugging */
+		virtual void RenderDebugCollisions(const GraphXMaths::BoundingBox* Box, const GraphXMaths::Matrix4& Model) override;
 	};
 }
