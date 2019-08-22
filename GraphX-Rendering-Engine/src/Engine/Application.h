@@ -114,6 +114,9 @@ namespace GraphX
 
 #pragma endregion
 
+		/* Initializes all the components of the application */
+		void InitializeApplication();
+
 		/* Updates the scene */
 		void Update(float DeltaTime);
 
@@ -143,12 +146,6 @@ namespace GraphX
 
 	public:
 		Application(std::string& title, int width, int height);
-
-		/* Initializes the OpenGL elements, Returns whether initialization was successful */
-		bool InitializeOpenGL();
-
-		/* Initializes all the components of the application */
-		void InitializeApplication();
 
 		/* Application main method */
 		void Run();

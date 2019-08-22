@@ -18,7 +18,7 @@ namespace GraphX
 			}
 
 			// couldn't identify the type
-			ASSERT(false);
+			GX_ASSERT(false, "Unknown Type");
 			return 0;
 		}
 

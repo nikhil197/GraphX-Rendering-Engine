@@ -17,8 +17,7 @@ namespace GraphX
 #define CheckRenderer() {																\
 		if(!s_Renderer || !s_Renderer2D || !s_Renderer3D || !s_SceneInfo)				\
 		{																				\
-			GX_ENGINE_ERROR("Renderer Not Initialised before initialising a scene");	\
-			ASSERT(false);																\
+			GX_ASSERT(false, "Renderer Not Initialised before initialising a scene");	\
 		}																				\
 	}
 

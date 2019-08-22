@@ -2,6 +2,8 @@
 #include "Window.h"
 
 #include "GLFW/glfw3.h"
+
+#include "GraphicsContext.h"
 #include "Timer/Timer.h"
 #include "Gui/GraphXGui.h"
 #include "Events/WindowEvent.h"
@@ -11,14 +13,19 @@
 #include "Utilities/EngineUtil.h"
 namespace GraphX
 {
+	/* Error Callback for GLFW Window */
+	static void GlfwErrorCallback(int error, const char* description)
+	{
+		GX_ENGINE_ERROR("[GFLW Error] : {0}, {1}", error, description);
+	}
+
 	Window::Window(std::string title, int width, int height)
 		: m_Title(title), m_Width(width), m_Height(height), m_Closed(false), m_EventCallback(nullptr)
 	{
 		bool res = Init();
 		if (!res)
 		{
-			GX_ENGINE_ERROR("Window: Error While creating window");
-			ASSERT(res);
+			GX_ASSERT(res, "Error While creating window");
 		}
 
 		/* Intialise the ImGui */
@@ -48,7 +55,10 @@ namespace GraphX
 		}
 
 		// Make the context current
-		glfwMakeContextCurrent(m_Window);
+		m_Context = new GraphicsContext(m_Window);
+		
+		bool success = m_Context->Init();
+		GX_ASSERT(success, "Failed to intialize Graphics Context (OpenGL)");
 
 		// Setting the swap interval
 		glfwSwapInterval(1);

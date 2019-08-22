@@ -1,8 +1,9 @@
 #pragma once
-#define ASSERT(x) if(!(x)) __debugbreak();
+
+#define GX_ASSERT(x, ...) { if(!(x)) { GX_ENGINE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #define GLCall(x) GLClearError();\
 	x;\
-	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+	GX_ASSERT(GLLogCall(#x, __FILE__, __LINE__), "")
 
 #include "GL/glew.h"
 
@@ -13,7 +14,4 @@ namespace GraphX
 
 	/* Log an OpenGL call */
 	bool GLLogCall(const char* function, const char* file, int line);
-
-	/* Error callback for glfw */
-	void GlfwErrorCallback(int error, const char* decription);
 }

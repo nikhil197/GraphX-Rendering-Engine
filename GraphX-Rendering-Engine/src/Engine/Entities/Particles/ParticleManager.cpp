@@ -11,8 +11,7 @@ namespace GraphX
 #define Check() {															\
 		if(!IsInitialized())												\
 		{																	\
-			GX_ENGINE_ERROR("Particles Manager has not been Initialised");	\
-			ASSERT(false);													\
+			GX_ASSERT(false, "Particles Manager has not been Initialised");	\
 		}																	\
 	}
 

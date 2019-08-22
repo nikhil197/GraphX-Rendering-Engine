@@ -22,6 +22,9 @@ namespace GraphX
 		/* GLFW Window */
 		GLFWwindow* m_Window;
 
+		/* Graphics Context to render on */
+		class GraphicsContext* m_Context;
+
 		/* Function pointer to the Application Event callback*/
 		std::function<void(Event&)> m_EventCallback;
 

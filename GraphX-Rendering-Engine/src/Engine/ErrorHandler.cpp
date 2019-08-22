@@ -18,9 +18,4 @@ namespace GraphX
 
 		return true;
 	}
-
-	void GlfwErrorCallback(int error, const char* description)
-	{
-		GX_ENGINE_ERROR("[GFLW Error] : {0}, {1}", error, description);
-	}
 }
