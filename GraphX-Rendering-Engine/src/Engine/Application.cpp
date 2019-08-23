@@ -15,7 +15,7 @@
 #include "Textures/Texture.h"
 
 /* Renderer */
-#include "Core/Renderer/Renderer.h"
+#include "Renderer/Renderer.h"
 
 /* Entities */
 #include "Entities/Lights/PointLight.h"
@@ -86,7 +86,7 @@ namespace GraphX
 
 		m_CurrentSkybox = m_NightSkybox;
 
-		m_SunLight = new DirectionalLight(GraphXMaths::Vector4::UnitVector, GraphXMaths::Vector3(-1.0f, -1.0f, 1.0f));
+		m_SunLight = new DirectionalLight(GraphXMaths::Vector4::UnitVector, GraphXMaths::Vector3(-3.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		m_Light = new PointLight(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
@@ -96,7 +96,7 @@ namespace GraphX
 		m_DepthShader = new Shader("res/Shaders/Depth.shader");
 
 		m_ParticlesManager = new ParticleManager();
-		m_ParticlesManager->Initialize(m_Camera, 1000);	// Move to a suitable location
+		m_ParticlesManager->Initialize(m_Camera, 1000);	// TODO: Move to a suitable location
 
 		m_DefaultTexture  = new Texture("res/Textures/stone.jpg");
 	}
@@ -201,10 +201,6 @@ namespace GraphX
 			// Update all the elements of the scene
 			Update(DeltaTime);
 
-			// Calculate the shadow maps
-			if(GX_ENABLE_SHADOWS)
-				RenderShadowMap();
-
 			/****** Normally render the scene *****/
 			// Clear the window 
 			m_Window->Clear();
@@ -215,8 +211,12 @@ namespace GraphX
 			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 				Renderer::Submit(m_Objects3D[i]);
 
+			// Calculate the shadow maps
+			if (GX_ENABLE_SHADOWS)
+				RenderShadowMap();
+
 			// Draw the debug quad to show the depth map
-			//RenderShadowDebugQuad();
+			RenderShadowDebugQuad();
 
 			RenderSkybox();
 
@@ -297,7 +297,8 @@ namespace GraphX
 		m_DepthShader->Bind();
 		m_DepthShader->SetUniformMat4f("u_LightSpaceMatrix", m_SunLight->GetShadowInfo()->LightViewProjMat);
 		m_ShadowBuffer->Bind();
-		glClear(GL_DEPTH_BUFFER_BIT);
+	
+		m_Window->ClearDepthBuffer();
 
 		RenderScene(true);
 
@@ -314,33 +315,44 @@ namespace GraphX
 
 	void Application::RenderScene(bool IsShadowPhase)
 	{
+		
 		if (IsShadowPhase)
 		{
 			Renderer::RenderDepth(*m_DepthShader);
 		}
 		else
+		{
 			Renderer::Render();
-
-		RenderTerrain();
+		}
+		
+		RenderTerrain(IsShadowPhase);
 	}
 
-	void Application::RenderTerrain()
+	void Application::RenderTerrain(bool IsShadowPhase)
 	{
+		// TODO: Design a better API
+		Shader* shader = m_DepthShader;
+
 		for (unsigned int i = 0; i < m_Terrain.size(); i++)
 		{
 			Terrain* terrain = m_Terrain[i];
 
 			// Configure the terrain shaders
 			terrain->Enable();
-			Shader& shader = *terrain->GetShader();
-			ConfigureShaderForRendering(shader);
+			if (!IsShadowPhase)
+			{
+				shader = terrain->GetShader();
+				ConfigureShaderForRendering(*shader);
+			}
+
+			shader->Bind();
 
 			// Set the transformation matrix
 			GraphXMaths::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
-			shader.SetUniformMat4f("u_Model", Model);
+			shader->SetUniformMat4f("u_Model", Model);
 
 			// Render the Terrain
-			Renderer::RenderIndexed(*terrain->GetMesh().GetIBO());	// TODO: Change this to directly submit terrain
+			Renderer::RenderIndexed(*terrain->GetMesh().GetIBO());
 
 			terrain->Disable();
 		}
@@ -382,8 +394,8 @@ namespace GraphX
 		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, &shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
 
 		shader.Bind();
-		m_ShadowBuffer->BindDepthMap();
-		shader.SetUniform1i("u_Tex", 0);
+		m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+		shader.SetUniform1i("u_Tex", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 		Renderer::Submit(&QuadMesh);
 		shader.UnBind();
 	}

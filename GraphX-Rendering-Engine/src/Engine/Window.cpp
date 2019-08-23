@@ -58,7 +58,7 @@ namespace GraphX
 		m_Context = new GraphicsContext(m_Window);
 		
 		bool success = m_Context->Init();
-		GX_ASSERT(success, "Failed to intialize Graphics Context (OpenGL)");
+		GX_ASSERT(success, "Failed to Intialize Graphics Context (OpenGL)");
 
 		// Setting the swap interval
 		glfwSwapInterval(1);
@@ -147,6 +147,11 @@ namespace GraphX
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// More efficient to do in one function call
 	}
 
+	void Window::ClearDepthBuffer()
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+
 	void Window::OnUpdate()
 	{
 		/* Swap the front and back buffers */
@@ -164,6 +169,9 @@ namespace GraphX
 	Window::~Window()
 	{
 		GX_ENGINE_INFO("Window: Destroying window");
+
+		/* Destroy the Graphics Context */
+		delete m_Context;
 
 		/* Cleanup the ImGui */
 		GraphXGui::Cleanup();

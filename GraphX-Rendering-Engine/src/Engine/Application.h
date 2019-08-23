@@ -133,7 +133,7 @@ namespace GraphX
 		void RenderScene(bool IsShadowPhase = false);
 
 		/* Renders the terrain in the scene */
-		void RenderTerrain();
+		void RenderTerrain(bool IsShadowPhase);
 
 		/* Renders the GUI */
 		void RenderGui();

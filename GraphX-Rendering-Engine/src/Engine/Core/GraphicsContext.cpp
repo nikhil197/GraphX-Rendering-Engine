@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "GraphicsContext.h"
 
-#include "GL\glew.h"
 #include "GLFW\glfw3.h"
 
 namespace GraphX
@@ -13,6 +12,7 @@ namespace GraphX
 
 	bool GraphicsContext::Init()
 	{
+		GX_ENGINE_INFO("Initializing OpenGL");
 		Timer timer("Initializing OpenGL");
 
 		glfwMakeContextCurrent(m_WindowHandle);
@@ -20,7 +20,7 @@ namespace GraphX
 		// Initialise GLEW
 		if (glewInit() != GLEW_OK)
 		{
-			GX_ENGINE_ERROR("Application: Error while initializing glew");
+			GX_ENGINE_ERROR("Error while initializing glew");
 			return false;
 		}
 

@@ -73,6 +73,9 @@ namespace GraphX
 		/* Clear the screen before each frame */
 		void Clear();
 
+		/* Clears the Depth Buffer */
+		void ClearDepthBuffer();
+
 		/* Update the window */
 		void OnUpdate();
 

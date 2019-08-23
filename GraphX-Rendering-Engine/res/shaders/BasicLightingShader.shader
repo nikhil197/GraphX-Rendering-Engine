@@ -81,7 +81,7 @@ float ShadowCalculation(vec4 fragLightSpacePos)
 
 void main()
 {
-	bool bCalculateShadow = false;
+	bool bCalculateShadow = true;
 
 	// Normalize the light vector and the normal vector
 	vec3 UnitNormal = normalize(v_Data.Normal);
