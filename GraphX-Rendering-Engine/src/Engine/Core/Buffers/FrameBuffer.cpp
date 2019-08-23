@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "FrameBuffer.h"
+#include "ErrorHandler.h"
 
 #include "Textures/Texture.h"
 

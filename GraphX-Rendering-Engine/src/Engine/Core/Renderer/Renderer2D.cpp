@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ErrorHandler.h"
 
 #include "Renderer2D.h"
 #include "Shaders/Shader.h"

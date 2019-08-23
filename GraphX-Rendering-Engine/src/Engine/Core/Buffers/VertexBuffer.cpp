@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ErrorHandler.h"
 #include "VertexBuffer.h"
 
 namespace GraphX

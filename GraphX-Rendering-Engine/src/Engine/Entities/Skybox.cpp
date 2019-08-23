@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "Skybox.h"
+
+#include "ErrorHandler.h"	// TODO: This should not be included outside of Core Submodule
 #include "Entities/Camera.h"
 #include "Model/Cube.h"
 
@@ -38,9 +40,10 @@ namespace GraphX
 		m_VBO = new VertexBuffer(&vertices[0], vertices.size() * sizeof(GraphXMaths::Vector3));
 		m_IBO = new IndexBuffer(&indices[0], indices.size());
 
-		VertexBufferLayout layout;
-		layout.Push<float>(GraphXMaths::Vector3::Components);
-		
+		VertexBufferLayout layout = {
+			{ BufferDataType::Float3 }
+		};
+
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 

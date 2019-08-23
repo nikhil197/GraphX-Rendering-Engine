@@ -16,7 +16,8 @@ namespace GraphX
 	{
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex2D));
-		VertexBufferLayout layout = Vertex2D::GetVertexLayout();
+		
+		const VertexBufferLayout& layout = Vertex2D::VertexLayout();
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
@@ -26,7 +27,7 @@ namespace GraphX
 	Mesh2D::Mesh2D(const Mesh2D& Mesh)
 		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), TintColor(Mesh.TintColor), bShowDetails(Mesh.bShowDetails), Reflectivity(Mesh.Reflectivity), Shininess(Mesh.Shininess), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Shader(Mesh.GetShader()), m_Textures(Mesh.GetTextures()), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
-		const VertexBufferLayout& layout = Vertex2D::GetVertexLayout();
+		const VertexBufferLayout& layout = Vertex2D::VertexLayout();
 		m_VAO = new VertexArray();
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);

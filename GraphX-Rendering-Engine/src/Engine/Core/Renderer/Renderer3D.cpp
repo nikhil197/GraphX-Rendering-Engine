@@ -1,6 +1,7 @@
 #include "pch.h"
-
 #include "Renderer3D.h"
+#include "ErrorHandler.h"
+
 #include "Model/Mesh/Mesh3D.h"
 #include "Model/Model3D.h"
 #include "Buffers/IndexBuffer.h"
@@ -135,8 +136,9 @@ namespace GraphX
 			VertexBuffer DebugVBO(&VertexPositions[0], 8 * sizeof(Vector3));
 			IndexBuffer DebugIBO(&Indices[0], Indices.size());
 
-			VertexBufferLayout layout;
-			layout.Push<float>(Vector3::Components);
+			VertexBufferLayout layout = {
+				{ BufferDataType::Float3 }
+			};
 
 			DebugVAO.AddVertexBuffer(DebugVBO, layout);
 			DebugVAO.AddIndexBuffer(DebugIBO);

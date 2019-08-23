@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ParticleManager.h"
 
+#include "ErrorHandler.h"	// TODO: This should not be included outside of Core Submodule
 #include "Entities/Camera.h"
 #include "Model/Quad.h"
 #include "Shaders/Shader.h"

@@ -2,23 +2,66 @@
 
 namespace GraphX
 {
+	/* Data types for the buffers (To Decouple Engine Implementation from specific API Implementations) */
+	enum class BufferDataType
+	{
+		None = 0, Float, Float2, Float3, Float4, Int, Int2, Int3, Int4, UInt, Bool, Mat3, Mat4
+	};
+
+	/* Returns the size of the Buffer Data Type */
+	static unsigned int GetBufferDataTypeSize(BufferDataType Type)
+	{
+		switch (Type)
+		{
+			case BufferDataType::Float:		return 4;
+			case BufferDataType::Float2:	return 4 * 2;
+			case BufferDataType::Float3:	return 4 * 3;
+			case BufferDataType::Float4:	return 4 * 4;
+			case BufferDataType::Int:		return 4;
+			case BufferDataType::Int2:		return 4 * 2;
+			case BufferDataType::Int3:		return 4 * 3;
+			case BufferDataType::Int4:		return 4 * 4;
+			case BufferDataType::UInt:		return 4;
+			case BufferDataType::Bool:		return 1;
+			case BufferDataType::Mat3:		return 4 * 3 * 3;
+			case BufferDataType::Mat4:		return 4 * 4 * 4;
+		}
+
+		GX_ASSERT(false, "Unknown Buffer Data Type");
+		return 0;
+	}
+
 	struct BufferLayoutElement
 	{
-		unsigned int type;
-		unsigned int count;
-		unsigned char normalised;
+		BufferDataType Type;
+		unsigned int Size;
+		unsigned int Offset;
+		bool Normalised;
 
-		static int GetSizeOfType(unsigned int type)
+		BufferLayoutElement(BufferDataType type, bool normalised = false)
+			: Type(type), Size(GetBufferDataTypeSize(type)), Offset(0), Normalised(normalised)
 		{
-			switch (type)
+		}
+
+		int GetComponentCount() const
+		{
+			switch (Type)
 			{
-			case GL_FLOAT:			return sizeof(GLfloat);
-			case GL_UNSIGNED_INT:	return sizeof(GLuint);
-			case GL_UNSIGNED_BYTE:	return sizeof(GLubyte);
+				case BufferDataType::Float:		return 1;
+				case BufferDataType::Float2:	return 2;
+				case BufferDataType::Float3:	return 3;
+				case BufferDataType::Float4:	return 4;
+				case BufferDataType::Int:		return 1;
+				case BufferDataType::Int2:		return 2;
+				case BufferDataType::Int3:		return 3;
+				case BufferDataType::Int4:		return 4;
+				case BufferDataType::UInt:		return 1;
+				case BufferDataType::Bool:		return 1;
+				case BufferDataType::Mat3:		return 3 * 3;
+				case BufferDataType::Mat4:		return 4 * 4;
 			}
 
-			// couldn't identify the type
-			GX_ASSERT(false, "Unknown Type");
+			GX_ASSERT(false, "Unknown Buffer Data Type");
 			return 0;
 		}
 
@@ -34,33 +77,21 @@ namespace GraphX
 		unsigned int m_Stride;
 
 	public:
-		// Initialise the Buffer Layout object
-		VertexBufferLayout()
-			: m_Stride(0) { }
-
-		// Invalid type 
-		// Here count is the number of components in the vertex attributes (like 2 in a vec2 or 3 in a vec3)
-		template<typename T>
-		void Push(unsigned int count)
+		VertexBufferLayout(const std::initializer_list<BufferLayoutElement>& Elements)
+			: m_Elements(Elements), m_Stride(0)
 		{
-			static_assert(false);
+			CalculateStrideAndOffset();
 		}
 
-		// Template specializations for various OpenGL types
-		template<>
-		void Push<float>(unsigned int count)
+		void CalculateStrideAndOffset()
 		{
-			m_Elements.push_back({ GL_FLOAT, count, GL_FALSE });
-
-			// increase the stride for the next vertex attribute
-			m_Stride += count * BufferLayoutElement::GetSizeOfType(GL_FLOAT);
-		}
-
-		template<>
-		void Push<unsigned int>(unsigned int count)
-		{
-			m_Elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-			m_Stride += count * BufferLayoutElement::GetSizeOfType(GL_UNSIGNED_INT);
+			unsigned int offset = 0;
+			for (BufferLayoutElement& Element : m_Elements)
+			{
+				Element.Offset = m_Stride;
+				m_Stride += Element.Size;
+				
+			}
 		}
 
 		/* Returns the layout elements specified for this buffer */

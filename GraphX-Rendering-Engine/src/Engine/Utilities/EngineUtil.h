@@ -2,9 +2,6 @@
 
 namespace GraphX
 {
-	// Macro to bind the class event functions
-#define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
-
 	// Time of the day and Coresponding hours
 	enum DayTime
 	{

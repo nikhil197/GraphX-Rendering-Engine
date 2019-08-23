@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "GraphicsContext.h"
+#include "ErrorHandler.h"
 
 #include "GLFW\glfw3.h"
 

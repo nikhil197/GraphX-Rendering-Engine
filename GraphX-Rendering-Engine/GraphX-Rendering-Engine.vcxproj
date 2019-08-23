@@ -112,6 +112,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLEW\lib\Release\Win32\;$(SolutionDir)Dependencies\GLFW\lib-vc2015</AdditionalLibraryDirectories>
@@ -150,6 +152,8 @@
       <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GraphXMaths\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -174,7 +178,7 @@
     <ClCompile Include="src\Engine\Main.cpp" />
     <ClCompile Include="src\Engine\Entities\Camera.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\Light.cpp" />
-    <ClCompile Include="src\Engine\ErrorHandler.cpp" />
+    <ClCompile Include="src\Engine\Core\ErrorHandler.cpp" />
     <ClCompile Include="src\Engine\Log.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
@@ -188,6 +192,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Engine\Core\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer3D.cpp" />
@@ -209,6 +215,8 @@
     <ClCompile Include="vendor\ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="vendor\ImGui\imgui_demo.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -225,6 +233,8 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +243,7 @@
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Engine\Core\GraphicsContext.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
+    <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
     <ClInclude Include="src\Engine\Entities\Entity.h" />
     <ClInclude Include="src\Engine\Entities\Lights\DirectionalLight.h" />
@@ -242,7 +253,7 @@
     <ClInclude Include="src\Engine\Entities\Particles\ParticleSystem.h" />
     <ClInclude Include="src\Engine\Entities\Skybox.h" />
     <ClInclude Include="src\Engine\Entities\Terrain.h" />
-    <ClInclude Include="src\Engine\ErrorHandler.h" />
+    <ClInclude Include="src\Engine\Core\ErrorHandler.h" />
     <ClInclude Include="src\Engine\Events\Event.h" />
     <ClInclude Include="src\Engine\Events\GUIEvent.h" />
     <ClInclude Include="src\Engine\Events\KeyboardEvent.h" />

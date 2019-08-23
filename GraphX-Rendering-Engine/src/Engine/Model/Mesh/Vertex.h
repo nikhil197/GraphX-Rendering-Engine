@@ -14,14 +14,15 @@ namespace GraphX
 		// The color for the vertex
 		GraphXMaths::Vector4 Color;
 
-		// Returns the vertexbufferlayout for this struct
-		static VertexBufferLayout GetVertexLayout()
+		// VertexBufferLayout for this struct
+		static const VertexBufferLayout& VertexLayout()
 		{
-			VertexBufferLayout layout;
-			layout.Push<float>(GraphXMaths::Vector2::Components);	// For positions
-			layout.Push<float>(GraphXMaths::Vector4::Components);	// For colors
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float2 },		// For positions
+				{ BufferDataType::Float4 }		// For Colors
+			};
 
-			return layout;
+			return Layout;
 		}
 	};
 
@@ -34,14 +35,15 @@ namespace GraphX
 		// The texture coordinate for the vertex
 		GraphXMaths::Vector2 TexCoord;
 
-		// Returns the vertexbufferlayout for this struct
-		static VertexBufferLayout GetVertexLayout()
+		// VertexBufferLayout for this struct
+		static const VertexBufferLayout& VertexLayout()
 		{
-			VertexBufferLayout layout;
-			layout.Push<float>(GraphXMaths::Vector2::Components);	// For positions
-			layout.Push<float>(GraphXMaths::Vector2::Components);	// For texture coordinates
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float2 },		// For positions
+				{ BufferDataType::Float2 }		// For texture coordinates
+			};
 
-			return layout;
+			return Layout;
 		}
 	};
 
@@ -57,15 +59,16 @@ namespace GraphX
 		// The color for the vertex
 		GraphXMaths::Vector4 Color;
 
-		// Returns the vertexbufferlayout for this struct
-		static VertexBufferLayout GetVertexLayout()
+		// VertexBufferLayout for this struct
+		static const VertexBufferLayout& VertexLayout()
 		{
-			VertexBufferLayout layout;
-			layout.Push<float>(GraphXMaths::Vector3::Components);	// For positions
-			layout.Push<float>(GraphXMaths::Vector3::Components);	// For Normals
-			layout.Push<float>(GraphXMaths::Vector4::Components);	// For colors
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float3 },	// For positions
+				{ BufferDataType::Float3 },	// For Normals
+				{ BufferDataType::Float4 }	// For Colors
+			};
 
-			return layout;
+			return Layout;
 		}
 	};
 
@@ -81,15 +84,16 @@ namespace GraphX
 		// The texture coordinate for the vertex
 		GraphXMaths::Vector2 TexCoord;
 
-		// Returns the vertexbufferlayout for this struct
-		static VertexBufferLayout GetVertexLayout()
+		// VertexBufferLayout for this struct
+		static const VertexBufferLayout& VertexLayout()
 		{
-			VertexBufferLayout layout;
-			layout.Push<float>(GraphXMaths::Vector3::Components);	// For positions
-			layout.Push<float>(GraphXMaths::Vector3::Components);	// For Normals
-			layout.Push<float>(GraphXMaths::Vector2::Components);	// For texture coordinates
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float3 },	// For positions
+				{ BufferDataType::Float3 },	// For Normals
+				{ BufferDataType::Float2 }	// For texture coordinates
+			};
 
-			return layout;
+			return Layout;
 		}
 	};
 }

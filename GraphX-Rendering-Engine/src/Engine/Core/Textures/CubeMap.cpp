@@ -1,6 +1,7 @@
 #include "pch.h"
-
 #include "CubeMap.h"
+#include "ErrorHandler.h"
+
 #include "stb/stb_image.h"
 
 namespace GraphX

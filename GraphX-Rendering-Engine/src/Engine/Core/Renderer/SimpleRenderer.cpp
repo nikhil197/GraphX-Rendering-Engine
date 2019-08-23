@@ -1,6 +1,7 @@
 #include "pch.h"
-
 #include "SimpleRenderer.h"
+#include "ErrorHandler.h"
+
 #include "Buffers/IndexBuffer.h"
 
 namespace GraphX

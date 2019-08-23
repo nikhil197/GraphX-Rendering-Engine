@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Texture.h"
+#include "ErrorHandler.h"
 
 #include "stb/stb_image.h"
 #include "Utilities/EngineUtil.h"

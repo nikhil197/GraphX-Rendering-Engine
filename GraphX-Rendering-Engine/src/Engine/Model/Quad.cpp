@@ -22,8 +22,9 @@ namespace GraphX
 	Quad::Quad()
 	{
 		VertexBuffer vbo(&s_Vertices[0], s_Vertices.size() * sizeof(GraphXMaths::Vector2));
-		VertexBufferLayout layout;
-		layout.Push<float>(GraphXMaths::Vector2::Components);
+		VertexBufferLayout layout = {
+			{ BufferDataType::Float2 }
+		};
 
 		m_VAO = new VertexArray();
 		m_VAO->AddVertexBuffer(vbo, layout);

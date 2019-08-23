@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shader.h"
+#include "ErrorHandler.h"
 
 #include "Utilities/EngineUtil.h"
 #include "Timer/Timer.h"

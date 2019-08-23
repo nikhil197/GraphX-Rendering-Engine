@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "VertexArray.h"
+#include "ErrorHandler.h"
 
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
@@ -7,6 +8,28 @@
 
 namespace GraphX
 {
+	static GLenum BufferDataTypeToOpenGLType(BufferDataType Type)
+	{
+		switch (Type)
+		{
+			case BufferDataType::Float:		return GL_FLOAT;
+			case BufferDataType::Float2:	return GL_FLOAT;
+			case BufferDataType::Float3:	return GL_FLOAT;
+			case BufferDataType::Float4:	return GL_FLOAT;
+			case BufferDataType::Mat3:		return GL_FLOAT;
+			case BufferDataType::Mat4:		return GL_FLOAT;
+			case BufferDataType::Int:		return GL_INT;
+			case BufferDataType::Int2:		return GL_INT;
+			case BufferDataType::Int3:		return GL_INT;
+			case BufferDataType::Int4:		return GL_INT;
+			case BufferDataType::UInt:		return GL_UNSIGNED_INT;
+			case BufferDataType::Bool:		return GL_BOOL;
+		}
+
+		GX_ASSERT(false, "Unknown Buffer Data Type");
+		return 0;
+	}
+
 	VertexArray::VertexArray()
 	{
 		GLCall(glGenVertexArrays(1, &m_RendererID));
@@ -20,8 +43,6 @@ namespace GraphX
 			
 		const auto& elements = layout.GetElements();
 
-		// Offset of the current vertex attribute (zero for first attribute)
-		unsigned int offset = 0;
 		for (unsigned int i = 0; i < elements.size(); i++)
 		{
 			//Enable the current vertex attribute array
@@ -29,10 +50,7 @@ namespace GraphX
 
 			//specify the layout
 			const auto& element = elements[i];
-			GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalised, layout.GetStride(), (const void*)offset));
-				
-			//increase the offset
-			offset += element.count * BufferLayoutElement::GetSizeOfType(element.type);
+			GLCall(glVertexAttribPointer(i, element.GetComponentCount(), BufferDataTypeToOpenGLType(element.Type), element.Normalised, layout.GetStride(), (const void*)element.Offset));
 		}
 
 		// Unbind the vertex array

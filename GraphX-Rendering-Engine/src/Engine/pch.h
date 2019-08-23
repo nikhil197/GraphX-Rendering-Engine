@@ -1,8 +1,10 @@
 #pragma once
 
-/* Engine Utilities */
+/* Engine Global Headers */
 #include "Log.h"
-#include "ErrorHandler.h"
+#include "EngineMacros.h"
+
+/* Engine Utilities */
 #include "Timer/Timer.h"
 #include "Utilities/EngineConstants.h"
 #include "Utilities/EngineProperties.h"
