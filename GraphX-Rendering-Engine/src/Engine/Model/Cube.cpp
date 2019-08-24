@@ -22,7 +22,7 @@ namespace GraphX
 
 	/* Initialise the vertices */
 	std::vector<Vertex3D> Cube::s_Vertices = {
-			/*Vertex Positions*/			/* Normal Coordinates */		/* Texture Coordinates */
+			/*Vertex Positions*/	/* Normal Coordinates */		/* Texture Coordinates */
 		// Front face
 		{ s_VertexPositions[0],	  Vector3(-1.0f, -1.0f,  1.0f),		Vector2(0.0f, 0.0f) },	//0
 		{ s_VertexPositions[1],	  Vector3( 1.0f, -1.0f,  1.0f),		Vector2(1.0f, 0.0f) },	//1
@@ -31,8 +31,8 @@ namespace GraphX
 
 		// Back face			
 		{ s_VertexPositions[4],	  Vector3(-1.0f, -1.0f, -1.0f),		Vector2(1.0f, 0.0f) },	//4
-		{ s_VertexPositions[5],	  Vector3(1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
-		{ s_VertexPositions[6],	  Vector3(1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
+		{ s_VertexPositions[5],	  Vector3( 1.0f, -1.0f, -1.0f),		Vector2(0.0f, 0.0f) },	//5
+		{ s_VertexPositions[6],	  Vector3( 1.0f,  1.0f, -1.0f),		Vector2(0.0f, 1.0f) },	//6
 		{ s_VertexPositions[7],	  Vector3(-1.0f,  1.0f, -1.0f),		Vector2(1.0f, 1.0f) },	//7
 
 		// Top face (Needed because of the different texture coordinates)
@@ -79,8 +79,8 @@ namespace GraphX
 		3, 4, 0
 	};
 
-	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Shader* Shader, const std::vector<const Texture*>& Textures, const GraphXMaths::Vector4& Color)
-		: Mesh3D(Position, Rotation, Size, Shader, Textures, s_Vertices, s_Indices, Color)
+	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, Material* Mat)
+		: Mesh3D(Position, Rotation, Size, s_Vertices, s_Indices, Mat)
 	{
 	}
 

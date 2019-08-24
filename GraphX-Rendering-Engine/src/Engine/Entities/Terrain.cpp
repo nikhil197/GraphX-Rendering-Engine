@@ -5,6 +5,7 @@
 #include "Model/Mesh/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
 #include "Shaders/Shader.h"
+#include "Materials/Material.h"
 #include "Textures/Texture.h"
 
 #include "VertexArray.h"
@@ -13,39 +14,47 @@
 
 
 namespace GraphX
-{   
+{
+	using namespace GraphXMaths;
+
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GraphXMaths::Vector3& Position, const GraphXMaths::Vector2& Scale)
-		: m_Mesh(nullptr), m_Shader(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr), m_Textures(nullptr)
+	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
+		: m_Mesh(nullptr), m_Material(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
 	{
 		BuildTerrain();
-	
-		m_Shader = new Shader("res/Shaders/Terrain.shader");
-		m_Shader->Bind();
-		m_Shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
-		m_Shader->UnBind();
 
-		if (TexNames.size() > 0)
-			m_Textures = new std::vector<const Texture*>();
+		m_Material = new Material(new Shader("res/Shaders/Terrain.shader"));
+		Shader* shader = m_Material->GetShader();
+		shader->Bind();
+		shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
+		shader->SetUniform1f("u_AmbientStrength", 0.01f);
 
-		for (unsigned int i = 0; i < TexNames.size(); i++)
-		{
-			const Texture* tex = new Texture(TexNames[i], true); // All terrain textures will be tiled textures
-			m_Textures->emplace_back(tex);
-		}
-
+		m_Material->SetSpecularStrength(1.0f);
+		m_Material->SetShininess(256.0f);
+		
 		m_BlendMap = new Texture(BlendMap);
 		
-		if (m_Textures && m_Vertices && m_Indices)
+		if (TexNames.size() > 0)
 		{
-			m_Mesh = new Mesh3D(Position, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3(Scale.x, 1.0f, Scale.y), m_Shader, *m_Textures, *m_Vertices, *m_Indices, GraphXMaths::Vector4::ZeroVector, -1.0f, -1.0f);
+			for (unsigned int i = 0; i < TexNames.size(); i++)
+			{
+				Texture* tex = new Texture(TexNames[i], true); // All terrain textures will be tiled textures
+				m_Material->AddTexture(tex);
+			}
+		}
+		
+		if (m_Vertices && m_Indices)
+		{
+			m_Mesh = new Mesh3D(Position, Vector3::ZeroVector, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
 			
 			delete m_Vertices;
 			delete m_Indices;
 		}
 		else
+		{
 			GX_ENGINE_ERROR("Error while building the terrain");
+		}
 	}
 
 	void Terrain::BuildTerrain()
@@ -61,8 +70,8 @@ namespace GraphX
 			{
 				// Calculate the vertices of the terrain
 				double yCoord = GetYCoords(x, z);
-				vertex.Position = GraphXMaths::Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
-				vertex.TexCoord = GraphXMaths::Vector2((float)x, (float)z);
+				vertex.Position = Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
+				vertex.TexCoord = Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 
 				// Calculate the indices for the vertices of the terrain
@@ -113,7 +122,7 @@ namespace GraphX
 
 	double Terrain::Interpolate(double a, double b, double blend)
 	{
-		double theta = blend * GraphXMaths::PI;
+		double theta = blend * PI;
 		double f = (1.0 - std::cos(theta)) * 0.5;
 		return a * (1.0 - f) + b * f;
 	}
@@ -137,11 +146,11 @@ namespace GraphX
 
 	void Terrain::CalculateNormal(int x, int z)
 	{
-		float heightL = m_Vertices->at(GraphXMaths::Utility::Max((x - 1) + z * m_Width, 0)).Position.y;
-		float heightR = m_Vertices->at(GraphXMaths::Utility::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		float heightD = m_Vertices->at(GraphXMaths::Utility::Max(x + (z - 1) * m_Width, 0)).Position.y;
-		float heightU = m_Vertices->at(GraphXMaths::Utility::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		m_Vertices->at(x + z * m_Width).Normal = GraphXMaths::Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
+		float heightL = m_Vertices->at(Utility::Max((x - 1) + z * m_Width, 0)).Position.y;
+		float heightR = m_Vertices->at(Utility::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		float heightD = m_Vertices->at(Utility::Max(x + (z - 1) * m_Width, 0)).Position.y;
+		float heightU = m_Vertices->at(Utility::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
+		m_Vertices->at(x + z * m_Width).Normal = Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
 	}
 	
 	void Terrain::Update(float DeltaTime)
@@ -158,9 +167,9 @@ namespace GraphX
 
 	void Terrain::Enable() const
 	{
-		m_Shader->Bind();
+		m_Material->Bind();
 		m_BlendMap->Bind(4);
-		m_Shader->SetUniform1i("u_BlendMap", 4);
+		m_Material->GetShader()->SetUniform1i("u_BlendMap", 4);
 
 		if (m_Mesh)
 		{
@@ -175,12 +184,13 @@ namespace GraphX
 		{
 			m_Mesh->Disable();
 		}
-
-		m_Shader->UnBind();
 	}
 
 	Terrain::~Terrain()
 	{
 		delete m_Mesh;
+
+		delete m_Material->GetShader();
+		delete m_Material;
 	}
 }

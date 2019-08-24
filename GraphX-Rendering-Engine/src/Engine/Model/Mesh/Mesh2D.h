@@ -14,17 +14,8 @@ namespace GraphX
 		/* Scale of the object */
 		GraphXMaths::Vector2 Scale;
 
-		/* Base color of the object */
-		GraphXMaths::Vector4 TintColor;
-
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
-
-		/* Reflectivity of the object */
-		float Reflectivity;
-
-		/* Shininess of the object */
-		float Shininess;
 
 	protected:
 		/* Vertex Array Object for the Mesh */
@@ -36,11 +27,8 @@ namespace GraphX
 		/* Index Buffer for the Mesh */
 		class IndexBuffer* m_IBO;
 
-		/* Shader used to render the object */
-		class Shader* m_Shader;
-
-		/* Textures used by the mesh */
-		std::vector<const class Texture*> m_Textures;
+		/* Material used to render mesh */
+		class Material* m_Material;
 
 		/* Vertex data */
 		std::vector<struct Vertex2D> m_Vertices;
@@ -59,12 +47,11 @@ namespace GraphX
 		@param Pos Position of the mesh in the world
 		@param Rotation Rotation of the mesh in the world
 		@param Scale Scale of the mesh
-		@param Shader shader used for shading (rendering) the mesh
-		@param Textures textures used for the mesh
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
+		@param Mat Material used to render the mesh
 		*/
-		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, class Shader* shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
 
 		Mesh2D(const Mesh2D& Other);
 
@@ -83,12 +70,6 @@ namespace GraphX
 		/* UnBinds the vertex buffer and the index buffer of the mesh */
 		virtual void UnBindBuffers() const;
 
-		/* Adds a texture to the mesh */
-		void AddTexture(const class Texture* texture);
-
-		/* Returns the textures of the mesh3D */
-		inline const std::vector<const class Texture*> GetTextures() const { return m_Textures; }
-
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }
 
@@ -99,10 +80,10 @@ namespace GraphX
 		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
 
 		/* Returns the shader for the object */
-		inline class Shader* GetShader() const { return m_Shader; }
+		inline class Material* GetMaterial() const { return m_Material; }
 
 		/* Sets new shader for the mesh */
-		inline void SetShader(Shader* NewShader) { m_Shader = NewShader; }
+		inline void SetMaterial(Material* NewMat) { m_Material = NewMat; }
 
 		/* Returns the vertices of the object */
 		inline const std::vector<Vertex2D>& GetVertices() const { return m_Vertices; }

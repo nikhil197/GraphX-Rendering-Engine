@@ -85,12 +85,10 @@ namespace GraphX
 
 		void CalculateStrideAndOffset()
 		{
-			unsigned int offset = 0;
 			for (BufferLayoutElement& Element : m_Elements)
 			{
 				Element.Offset = m_Stride;
-				m_Stride += Element.Size;
-				
+				m_Stride += Element.Size;	
 			}
 		}
 

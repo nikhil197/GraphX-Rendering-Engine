@@ -12,6 +12,8 @@
 
 namespace GraphX
 {
+	using namespace GraphXMaths;
+
 	Importer* Importer::s_Importer = nullptr;
 
 	Importer* Importer::Get()
@@ -24,7 +26,7 @@ namespace GraphX
 		return s_Importer;
 	}
 
-	bool Importer::ImportModel(const std::string& FilePath, std::vector<class Mesh3D*>& Meshes)
+	bool Importer::ImportModel(const std::string& FilePath, std::vector<class Mesh3D*>& Meshes, std::vector<std::vector<const Texture*>>& Textures)
 	{
 		Assimp::Importer AssimpImporter;
 		const aiScene* Scene = AssimpImporter.ReadFile(FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -35,10 +37,10 @@ namespace GraphX
 		}
 
 		// Extract meshes from the Scene object
-		return ProcessAssimpScene(FilePath, Scene, Meshes);
+		return ProcessAssimpScene(FilePath, Scene, Meshes, Textures);
 	}
 
-	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Mesh3D*>& Meshes)
+	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Mesh3D*>& Meshes, std::vector<std::vector<const Texture*>>& Textures)
 	{
 		if (!Scene->HasMeshes())
 			return false;
@@ -48,35 +50,35 @@ namespace GraphX
 			aiMesh* Mesh = Scene->mMeshes[i];
 
 			// Extract the Vertex positions
-			std::vector<GraphXMaths::Vector3>* vertexPositions = nullptr;
+			std::vector<Vector3>* vertexPositions = nullptr;
 			if (Mesh->HasPositions())
 			{
-				vertexPositions = new std::vector<GraphXMaths::Vector3>();
+				vertexPositions = new std::vector<Vector3>();
 
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					vertexPositions->emplace_back(GraphXMaths::Vector3(Mesh->mVertices[i].x, Mesh->mVertices[i].y, Mesh->mVertices[i].z));
+					vertexPositions->emplace_back(Vector3(Mesh->mVertices[i].x, Mesh->mVertices[i].y, Mesh->mVertices[i].z));
 				}
 			}
 
 			// Extract the Normals
-			std::vector<GraphXMaths::Vector3>* normals = nullptr;
+			std::vector<Vector3>* normals = nullptr;
 			if (Mesh->HasNormals())
 			{
-				normals = new std::vector<GraphXMaths::Vector3>();
+				normals = new std::vector<Vector3>();
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					normals->emplace_back(GraphXMaths::Vector3(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z));
+					normals->emplace_back(Vector3(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z));
 				}
 			}
 
 			// Extract the Texture coordinates
-			std::vector<GraphXMaths::Vector2>* texCoords = new std::vector<GraphXMaths::Vector2>();
+			std::vector<Vector2>* texCoords = new std::vector<Vector2>();
 			if (Mesh->HasTextureCoords(0))
 			{
 				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
 				{
-					texCoords->emplace_back(GraphXMaths::Vector2(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y));
+					texCoords->emplace_back(Vector2(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y));
 				}
 			}
 
@@ -124,7 +126,7 @@ namespace GraphX
 					Vertex3D vertex;
 					vertex.Position = vertexPositions->at(i);
 					vertex.Normal = normals->at(i);
-					vertex.TexCoord = (texCoords->size() > i) ? texCoords->at(i) : GraphXMaths::Vector2::ZeroVector;
+					vertex.TexCoord = (texCoords->size() > i) ? texCoords->at(i) : Vector2::ZeroVector;
 					vertices->emplace_back(vertex);
 				}
 			}
@@ -133,7 +135,7 @@ namespace GraphX
 			Mesh3D* mMesh = nullptr;
 			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = new Mesh3D(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, nullptr, *textures, *vertices, *indices);
+				mMesh = new Mesh3D(Vector3::ZeroVector, Vector3::ZeroVector, Vector3::UnitVector, *vertices, *indices);
 			}
 
 			if (mMesh == nullptr)
@@ -141,8 +143,13 @@ namespace GraphX
 				return false;
 			}
 
-			// Store the mesh
+			// Store the mesh and the textures
 			Meshes.emplace_back(mMesh);
+			Textures.emplace_back(std::vector<const Texture*>());
+			for (unsigned int index = 0; index < textures->size(); index++)
+			{
+				Textures[i].emplace_back(textures->at(index));
+			}
 
 			// Clean up the memory
 			delete vertexPositions;

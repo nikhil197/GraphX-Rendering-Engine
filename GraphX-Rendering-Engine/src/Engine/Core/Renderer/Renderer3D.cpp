@@ -6,6 +6,7 @@
 #include "Model/Model3D.h"
 #include "Buffers/IndexBuffer.h"
 #include "Shaders/Shader.h"
+#include "Materials/Material.h"
 
 #include "Renderer.h"
 #include "VertexArray.h"
@@ -51,8 +52,9 @@ namespace GraphX
 			mesh->Enable();
 
 			// Render the object
-			Shader* shader = mesh->GetShader();
-			shader->Bind();
+			Material* Mat = mesh->GetMaterial();
+			Mat->Bind();
+			Shader* shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
 			
 			// Set the transformation matrix
 			Matrix4 Model = mesh->GetModelMatrix();

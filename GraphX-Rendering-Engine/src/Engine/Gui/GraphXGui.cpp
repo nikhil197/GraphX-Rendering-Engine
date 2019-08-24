@@ -8,6 +8,7 @@
 #include "Model/Mesh/Mesh3D.h"
 
 #include "Textures/Texture.h"
+#include "Materials/Material.h"
 
 #include "Entities/Lights/PointLight.h"
 #include "Entities/Camera.h"
@@ -142,19 +143,38 @@ namespace GraphX
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Color and Properties");
-			ImGui::DragFloat("Shininess", (float*)&mesh.Shininess, 1.0f, 2.0f, 256.0f);
-			ImGui::DragFloat("Reflectivity", (float*)&mesh.Reflectivity, 1.0f, 0.0f, 1.0f);
 
-			ImGui::ColorEdit4("Tint Color", (float*)&mesh.TintColor);
+			Material* Mat = mesh.GetMaterial();
+
+			GraphXMaths::Vector4 BaseColor = Mat->GetBaseColor();
+			float Reflectivity = Mat->GetSpecularStrength();
+			float Shininess = Mat->GetShininess();
+
+			if (ImGui::DragFloat("Shininess", (float*)& Shininess, 1.0f, 2.0f, 256.0f))
+			{
+				Mat->SetShininess(Shininess);
+			}
+
+			if (ImGui::DragFloat("Reflectivity", (float*)& Reflectivity, 1.0f, 0.0f, 1.0f))
+			{
+				Mat->SetSpecularStrength(Reflectivity);
+			}
+
+			if (ImGui::ColorEdit4("Tint Color", (float*)& BaseColor))
+			{
+				Mat->SetBaseColor(BaseColor);
+			}
+
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Texture Properties");
 
 			ImGui::BeginChild("Textures in current model");
-			int size = mesh.GetTextures().size();
+			std::vector<const Texture*> Textures = Mat->GetTextures();
+			int size = Textures.size();
 			for (int n = 0; n < size; n++)
 			{
-				ImGui::Text("%s", mesh.GetTextures().at(n)->GetFilePath().c_str());
+				ImGui::Text("%s", Textures.at(n)->GetFilePath().c_str());
 			}
 			if(ImGui::Button("Add New Texture"))
 			{
@@ -232,9 +252,26 @@ namespace GraphX
 			ImGui::SliderFloat2("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
 
 			ImGui::Text("Color and Properties");
-			ImGui::SliderFloat("Shininess", (float*)&mesh.Shininess, 2.0f, 256.0f);
-			ImGui::SliderFloat("Reflectivity", (float*)&mesh.Reflectivity, 0.0f, 1.0f);
-			ImGui::ColorEdit4("Base Color", (float*)&mesh.TintColor);
+			
+			Material* Mat = mesh.GetMaterial();
+			GraphXMaths::Vector4 BaseColor = Mat->GetBaseColor();
+			float Reflectivity = Mat->GetSpecularStrength();
+			float Shininess = Mat->GetShininess();
+
+			if (ImGui::DragFloat("Shininess", (float*)&Shininess, 1.0f, 2.0f, 256.0f))
+			{
+				Mat->SetShininess(Shininess);
+			}
+
+			if (ImGui::DragFloat("Reflectivity", (float*)&Reflectivity, 1.0f, 0.0f, 1.0f))
+			{
+				Mat->SetSpecularStrength(Reflectivity);
+			}
+
+			if (ImGui::ColorEdit4("Tint Color", (float*)&BaseColor))
+			{
+				Mat->SetBaseColor(BaseColor);
+			}
 
 			ImGui::End();
 		}

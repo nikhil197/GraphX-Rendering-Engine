@@ -14,13 +14,13 @@ namespace GraphX
 		static Importer* Get();
 
 		/* Imports the Model into provides container. Returns if the model was loaded correctly or not */
-		bool ImportModel(const std::string& FilePath, /* out */ std::vector<class Mesh3D*>& Meshes);
+		bool ImportModel(const std::string& FilePath, /* out */ std::vector<class Mesh3D*>& Meshes, /* out */ std::vector<std::vector<const class Texture*>>& Textures);
 
 	private:
 		Importer() {}
 
 		/* Processes the scene loaded using the Assimp library */
-		bool ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Mesh3D*>& Meshes);
+		bool ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Mesh3D*>& Meshes, std::vector<std::vector<const Texture*>>& Textures);
 
 	private:
 		/* Importer Instance */

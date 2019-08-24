@@ -11,8 +11,8 @@ namespace GraphX
 		/* Mesh to represent the terrain */
 		class Mesh3D* m_Mesh;
 
-		/* Shader for the terrain */
-		class Shader* m_Shader;
+		/* Material used to render terrain */
+		class Material* m_Material;
 
 		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
 		const int m_Width, m_Depth;
@@ -28,9 +28,6 @@ namespace GraphX
 
 		/* Blendmap used to draw the terrain */
 		const class Texture* m_BlendMap;
-
-		/* Textures used for the terrain */
-		std::vector<const class Texture*> *m_Textures;
 
 		/* Amplitude of the height map for the terrain */
 		static double s_Amplitude;
@@ -58,7 +55,7 @@ namespace GraphX
 		const class Mesh3D& GetMesh() const { return *m_Mesh; }
 
 		/* Returns the shader used for the terrain */
-		class Shader* GetShader() const { return m_Shader; }
+		class Material* GetMaterial() const { return m_Material; }
 
 		/* Returns the Width of the terrain (x - direction) */
 		inline float GetWidth() const { return m_TileSize * m_Width; }

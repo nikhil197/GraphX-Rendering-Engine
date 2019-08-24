@@ -2,17 +2,19 @@
 
 #include "Model3D.h"
 #include "Mesh/Mesh3D.h"
-#include "Shaders/Shader.h"
+#include "Materials/Material.h"
 #include "Utilities/Importer.h"
 
 namespace GraphX
 {
-	Model3D::Model3D(const std::string& FilePath, Shader* shader)
-		: m_Meshes(new std::vector<Mesh3D*>()), m_Shader(shader), m_FilePath(FilePath)
+	Model3D::Model3D(const std::string& FilePath, Material* Mat)
+		: m_Meshes(new std::vector<Mesh3D*>()), m_FilePath(FilePath)
 	{
 		Timer timer("Loading Model \"" + m_FilePath + "\"");
 
-		bool Loaded = Importer::Get()->ImportModel(m_FilePath, *m_Meshes);
+		std::vector<std::vector<const Texture*>> Textures;
+
+		bool Loaded = Importer::Get()->ImportModel(m_FilePath, *m_Meshes, Textures);
 
 		if (Loaded)
 		{
@@ -20,10 +22,16 @@ namespace GraphX
 			std::vector<Mesh3D*>::iterator itr = m_Meshes->begin();
 			std::vector<Mesh3D*>::iterator end = m_Meshes->end();
 
+			unsigned int i = 0;
+
 			while (itr != end)
 			{
-				(*itr)->SetShader(m_Shader);
+				Material* NewMat = new Material(*Mat);
+				NewMat->AddTexture(Textures[i]);
+
+				(*itr)->SetMaterial(Mat);
 				itr++;
+				i++;
 			}
 		}
 		else

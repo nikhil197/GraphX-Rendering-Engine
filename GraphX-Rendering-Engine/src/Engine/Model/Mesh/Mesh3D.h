@@ -2,6 +2,9 @@
 
 namespace GraphX
 {
+	class Material;
+	
+	/* 3D Representation of an object in the scene */
 	class Mesh3D
 	{
 	public:
@@ -14,17 +17,8 @@ namespace GraphX
 		/* Scale of the object */
 		GraphXMaths::Vector3 Scale;
 
-		/* Base color of the object */
-		GraphXMaths::Vector4 TintColor;
-
 		/* Whether to show the details UI window (ImGUI) or not */
 		bool bShowDetails : 1;
-
-		/* Reflectivity of the object */
-		float Reflectivity;
-
-		/* Shininess of the object */
-		float Shininess;
 
 	protected:
 		/* Vertex Array Object for the Mesh */
@@ -36,13 +30,8 @@ namespace GraphX
 		/* Index Buffer for the Mesh */
 		class IndexBuffer* m_IBO;
 
-		/* Shader used to render the object */
-		class Shader* m_Shader;
-
-		// Multiple textures can be used to texture the object
-		// GX currently supports only single texture rendering
-		/* Texture used by the mesh */
-		std::vector<const class Texture*> m_Textures;
+		/* Material used to render the mesh */
+		Material* m_Material;
 
 		/* Vertex data */
 		std::vector<struct Vertex3D> m_Vertices;
@@ -64,12 +53,11 @@ namespace GraphX
 		@param Pos Position of the mesh in the world
 		@param Rotation Rotation of the mesh in the world
 		@param Scale Scale of the mesh
-		@param Shader shader used for shading (rendering) the mesh
-		@param Textures textures used for the mesh
 		@param Vertices vertices of the mesh (counter clockwise order)
 		@param Indices indices into the vertices vector
+		@param Mat Material used to render the mesh
 		*/
-		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, class Shader* shader, const std::vector<const class Texture*>& Textures, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector, float Reflect = 0.5f, float Shine = 32.0f);
+		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -89,12 +77,6 @@ namespace GraphX
 		/* UnBinds the vertex buffer and the index buffer of the mesh */
 		virtual void UnBindBuffers() const;
 
-		/* Adds a new texture to the mesh */
-		void AddTexture(const class Texture* texture);
-
-		/* Returns the textures of the mesh3D */
-		inline const std::vector<const class Texture*> GetTextures() const { return m_Textures; }
-
 		/* Returns the vao for the object */
 		inline const class VertexArray* GetVAO() const { return m_VAO; }
 
@@ -104,15 +86,16 @@ namespace GraphX
 		/* Returns the vbo for the object */
 		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
 
-		/* Returns the shader for the object */
-		inline class Shader* GetShader() const { return m_Shader; }
+		/* Returns the material used by the mesh */
+		inline class Material* GetMaterial() const { return m_Material; }
 
-		/* Sets a new shader for the mesh */
-		inline void SetShader(Shader* NewShader) { m_Shader = NewShader; }
+		/* Sets a new material for the mesh */
+		inline void SetMaterial(Material* NewMat) { m_Material = NewMat; }
 
 		/* Returns the model matrix for the mesh */
 		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
 
+		/* Returns the bounding collision box */
 		inline const struct GraphXMaths::BoundingBox* GetBoundingBox() const { return m_BoundingBox; }
 
 		/* Sets new state for updating the model matrix */

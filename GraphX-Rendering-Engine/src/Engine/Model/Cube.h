@@ -20,7 +20,7 @@ namespace GraphX
 
 	public:
 		/* Color is the base color of the cube used in the absence of textures */
-		Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Shader* Shader, const std::vector<const class Texture*>& Textures, const GraphXMaths::Vector4& Color = GraphXMaths::Vector4::ZeroVector);
+		Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, class Material* Mat = nullptr);
 
 		virtual void Enable() const override;
 

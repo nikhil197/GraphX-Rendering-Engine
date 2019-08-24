@@ -3,6 +3,7 @@
 
 #include "Renderer2D.h"
 #include "Shaders/Shader.h"
+#include "Materials/Material.h"
 #include "Model/Mesh/Mesh2D.h"
 #include "Buffers/IndexBuffer.h"
 
@@ -25,7 +26,9 @@ namespace GraphX
 			mesh->Enable();
 
 			// Render the object
-			Shader* shader = mesh->GetShader();
+			Material* Mat = mesh->GetMaterial();
+			Mat->Bind();
+			Shader* shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
 
 			// Set the transformation matrix
 			GraphXMaths::Matrix4 Model = mesh->GetModelMatrix();

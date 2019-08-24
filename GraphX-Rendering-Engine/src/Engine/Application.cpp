@@ -4,6 +4,7 @@
 
 #include "VertexArray.h"
 #include "Shaders/Shader.h"
+#include "Materials/Material.h"
 
 /* Buffers */
 #include "Buffers/VertexBuffer.h"
@@ -57,7 +58,7 @@ namespace GraphX
 	using namespace GraphXMaths;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
@@ -89,6 +90,12 @@ namespace GraphX
 		m_SunLight = new DirectionalLight(GraphXMaths::Vector4::UnitVector, GraphXMaths::Vector3(-3.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
+		// Basic Lighting Shader 
+		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
+		m_Shaders.push_back(m_Shader);
+
+		m_DefaultMaterial = new Material(m_Shader);
+
 		m_Light = new PointLight(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
@@ -103,10 +110,6 @@ namespace GraphX
 
 	void Application::Run()
 	{
-		// Basic Lighting Shader 
-		m_Shader = new Shader("res/Shaders/BasicLightingShader.shader");
-		m_Shaders.push_back(m_Shader);
-		
 		m_Shader->Bind();
 		m_Shader->SetUniform1f("u_AmbientStrength", 0.1f);
 		m_Shader->SetUniform1f("u_Shininess", 256.0f);
@@ -122,18 +125,21 @@ namespace GraphX
 		std::vector<const Texture*> textures(0);
 		textures.push_back(m_DefaultTexture);
 
-		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_Shader, textures);
+		Material CubeMaterial(m_Shader);
+		CubeMaterial.AddTexture(m_DefaultTexture);
+		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, &CubeMaterial);
 		m_Objects3D.emplace_back(cube);
 		cube->bShowDetails = true;
 
 		Terrain *ter = new Terrain(250, 250, 2.0f, {"res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png"}, "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
-		m_Shaders.emplace_back(ter->GetShader());
 		m_Terrain.emplace_back(ter);
 
 		// Load Trees
-		Model3D TreeModel("res/Models/tree.obj", m_Shader);
+		Material TreeMaterial(m_Shader);
 		Texture TreeTex("res/Textures/tree.png");
-		TreeModel.GetMeshes().at(0)->AddTexture(&TreeTex);
+		TreeMaterial.AddTexture(&TreeTex);
+
+		Model3D TreeModel("res/Models/tree.obj", &TreeMaterial);
 		Mesh3D* TreeMesh = TreeModel.GetMeshes().at(0);
 		TreeMesh->Scale = 2.5f * Vector3::UnitVector;
 		unsigned int NumTree = 100;
@@ -144,9 +150,12 @@ namespace GraphX
 			m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
 		}
 
-		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", m_Shader);
+		// Load Low Poly Trees
+		Material LowPolyTreeMaterial(m_Shader);
 		Texture LowPolyTreeTex("res/Textures/lowPolyTree.png");
-		LowPolyTreeModel.GetMeshes().at(0)->AddTexture(&LowPolyTreeTex);
+		LowPolyTreeMaterial.AddTexture(&LowPolyTreeTex);
+		
+		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", &LowPolyTreeMaterial);
 		Mesh3D* LowPolyTreeMesh = LowPolyTreeModel.GetMeshes().at(0);
 		LowPolyTreeMesh->Scale = Vector3::UnitVector;
 		NumTree = 10;
@@ -158,18 +167,15 @@ namespace GraphX
 		}
 
 		// Load Stall
-		Model3D StallModel("res/Models/stall.obj", m_Shader);
+		Material StallMaterial(m_Shader);
 		Texture StallTex("res/Textures/stallTexture.png");
-		StallModel.GetMeshes().at(0)->AddTexture(&StallTex);
+		StallMaterial.AddTexture(&StallTex);
+
+		Model3D StallModel("res/Models/stall.obj", &StallMaterial);
 		StallModel.GetMeshes().at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
 		m_Objects3D.emplace_back(StallModel.GetMeshes().at(0));
 
 		m_Shader->UnBind();
-
-		ter->GetShader()->Bind();
-		ter->GetShader()->SetUniform1f("u_AmbientStrength", 0.01f);
-		ter->GetShader()->SetUniform1f("u_Shininess", 256.0f);
-		ter->GetShader()->SetUniform1f("u_Reflectivity", 1.0f);
 
 		Texture particleTex("res/Textures/Particles/particleAtlas.png", false, 4);
 		ParticleSystem particleSys(*m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
@@ -286,6 +292,15 @@ namespace GraphX
 				shader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
 			}
 
+			// Update the terrain Material shader (TODO: Find a better way)
+			for (unsigned int i = 0; i < m_Terrain.size(); i++)
+			{
+				Shader* shader = m_Terrain[i]->GetMaterial()->GetShader();
+				shader->Bind();
+				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
+				shader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
+			}
+
 			// Set the state back to rendered
 			m_Camera->SetRenderStateDirty(false);
 		}
@@ -341,7 +356,7 @@ namespace GraphX
 			terrain->Enable();
 			if (!IsShadowPhase)
 			{
-				shader = terrain->GetShader();
+				shader = terrain->GetMaterial()->GetShader();
 				ConfigureShaderForRendering(*shader);
 			}
 
@@ -390,10 +405,11 @@ namespace GraphX
 		};
 
 		static Shader shader("res/shaders/Basic.shader");
+		static Material DebugMat(&shader);
 
-		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, &shader, {}, quadVertices, quadIndices, Vector4::ZeroVector, -1.0f, -1.0f);
+		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, quadVertices, quadIndices, &DebugMat);
 
-		shader.Bind();
+		DebugMat.Bind();
 		m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 		shader.SetUniform1i("u_Tex", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 		Renderer::Submit(&QuadMesh);
@@ -638,11 +654,13 @@ namespace GraphX
 
 		if (m_SelectedObject3D)
 		{
-			m_SelectedObject3D->AddTexture(texture);
+			Material* SelectedMat = m_SelectedObject3D->GetMaterial();
+			SelectedMat->AddTexture(texture);
 		}
 		else if (m_SelectedObject2D)
 		{
-			m_SelectedObject2D->AddTexture(texture);
+			Material* SelectedMat = m_SelectedObject2D->GetMaterial();
+			SelectedMat->AddTexture(texture);
 		}
 
 		return true;
@@ -652,7 +670,7 @@ namespace GraphX
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_Shader, {}));
+			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_DefaultMaterial));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)
@@ -660,7 +678,7 @@ namespace GraphX
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			Model3D *model = new Model3D(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_Shader);
+			Model3D *model = new Model3D(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial);
 			std::vector<Mesh3D*> meshes = model->GetMeshes();
 			
 			for(unsigned int i = 0; i < meshes.size(); i++)
@@ -719,7 +737,10 @@ namespace GraphX
 			delete m_Shaders[i];
 
 		Renderer::CleanUp();
+		
 		delete m_ParticlesManager;
+
+		delete m_DefaultMaterial;
 
 		delete m_Camera;
 		delete m_Window;

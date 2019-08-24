@@ -66,6 +66,9 @@ namespace GraphX
 
 		class Shader* m_Shader;
 
+		/* Default Material used by objects */
+		class Material* m_DefaultMaterial;
+
 		class PointLight* m_Light;
 
 		class Texture* m_DefaultTexture;
