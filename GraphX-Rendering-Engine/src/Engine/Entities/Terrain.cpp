@@ -15,7 +15,7 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
 	double Terrain::s_Amplitude = 5.0;
 

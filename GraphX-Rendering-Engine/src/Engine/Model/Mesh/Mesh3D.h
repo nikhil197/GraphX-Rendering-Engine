@@ -8,47 +8,6 @@ namespace GraphX
 	class Mesh3D
 	{
 	public:
-		/* Position of the object */
-		GraphXMaths::Vector3 Position;
-
-		/* Rotation (Euler Angles) of the object about each axis */
-		GraphXMaths::Vector3 Rotation;
-
-		/* Scale of the object */
-		GraphXMaths::Vector3 Scale;
-
-		/* Whether to show the details UI window (ImGUI) or not */
-		bool bShowDetails : 1;
-
-	protected:
-		/* Vertex Array Object for the Mesh */
-		class VertexArray* m_VAO;
-
-		/* Vertex Buffer for the object */
-		class VertexBuffer* m_VBO;
-
-		/* Index Buffer for the Mesh */
-		class IndexBuffer* m_IBO;
-
-		/* Material used to render the mesh */
-		Material* m_Material;
-
-		/* Vertex data */
-		std::vector<struct Vertex3D> m_Vertices;
-
-		/* Indices into the vertex buffer */
-		std::vector<unsigned int> m_Indices;
-
-		/* Model matrix for the mesh */
-		GraphXMaths::Matrix4 m_Model;
-
-		/* Box containing the whole object */
-		GraphXMaths::BoundingBox* m_BoundingBox;
-
-		/* Whether the mesh needs to updated or not */
-		bool m_UpdateModelMatrix;
-
-	public:
 		/**
 		@param Pos Position of the mesh in the world
 		@param Rotation Rotation of the mesh in the world
@@ -57,7 +16,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
+		Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -93,14 +52,55 @@ namespace GraphX
 		inline void SetMaterial(Material* NewMat) { m_Material = NewMat; }
 
 		/* Returns the model matrix for the mesh */
-		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
+		inline const GM::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		/* Returns the bounding collision box */
-		inline const struct GraphXMaths::BoundingBox* GetBoundingBox() const { return m_BoundingBox; }
+		inline const struct GM::BoundingBox* GetBoundingBox() const { return m_BoundingBox; }
 
 		/* Sets new state for updating the model matrix */
 		inline void UpdateModelMatrix(bool bCalculateMatrix) { m_UpdateModelMatrix = bCalculateMatrix; }
 
 		virtual ~Mesh3D();
+
+	public:
+		/* Position of the object */
+		GM::Vector3 Position;
+
+		/* Rotation (Euler Angles) of the object about each axis */
+		GM::Vector3 Rotation;
+
+		/* Scale of the object */
+		GM::Vector3 Scale;
+
+		/* Whether to show the details UI window (ImGUI) or not */
+		bool bShowDetails : 1;
+
+	protected:
+		/* Vertex Array Object for the Mesh */
+		class VertexArray* m_VAO;
+
+		/* Vertex Buffer for the object */
+		class VertexBuffer* m_VBO;
+
+		/* Index Buffer for the Mesh */
+		class IndexBuffer* m_IBO;
+
+		/* Material used to render the mesh */
+		Material* m_Material;
+
+		/* Vertex data */
+		std::vector<struct Vertex3D> m_Vertices;
+
+		/* Indices into the vertex buffer */
+		std::vector<unsigned int> m_Indices;
+
+		/* Model matrix for the mesh */
+		GM::Matrix4 m_Model;
+
+		/* Box containing the whole object */
+		GM::BoundingBox* m_BoundingBox;
+
+		/* Whether the mesh needs to updated or not */
+		bool m_UpdateModelMatrix;
 	};
 }

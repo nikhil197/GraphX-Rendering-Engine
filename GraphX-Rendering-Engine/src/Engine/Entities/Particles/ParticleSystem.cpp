@@ -12,24 +12,24 @@ namespace GraphX
 	{
 	}
 
-	void ParticleSystem::SpawnParticles(const GraphXMaths::Vector3& SpawnLocation, float DeltaTime)
+	void ParticleSystem::SpawnParticles(const GM::Vector3& SpawnLocation, float DeltaTime)
 	{
 		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec;
 		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
-		GraphXMaths::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
+		GM::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
 		for (int i = 0; i < ParticlesCount && m_Manager.IsPoolEmpty(); i++)
 		{
 			EmitParticle(SpawnLocation);
 		}
 	}
 
-	void ParticleSystem::EmitParticle(const GraphXMaths::Vector3& SpawnLocation)
+	void ParticleSystem::EmitParticle(const GM::Vector3& SpawnLocation)
 	{
 		float LifeSpan = GenerateRandomValue(m_LifeSpan, m_LifeSpanDeviation);
 		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
 		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
-		GraphXMaths::Vector3 Velocity = GraphXMaths::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		GM::Vector3 Velocity = GM::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
 		m_Manager.AddParticle(SpawnLocation, Velocity, LifeSpan, 0.0f, &m_Texture, Scale, GravityEffect);
 	}
 

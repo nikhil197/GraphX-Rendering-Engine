@@ -11,8 +11,8 @@
 
 namespace GraphX
 {
-	Mesh2D::Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat)
-		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Material(Mat), m_Vertices(Vertices), m_Indices(Indices), m_Model(GraphXMaths::Matrix4()), m_UpdateModelMatrix(true)
+	Mesh2D::Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat)
+		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Material(Mat), m_Vertices(Vertices), m_Indices(Indices), m_Model(GM::Matrix4()), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
 		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex2D));
@@ -36,9 +36,9 @@ namespace GraphX
 	void Mesh2D::Update(float DeltaTime)
 	{
 		// Update the model matrix
-		GraphXMaths::Translation translation(Position);
-		GraphXMaths::Rotation rotation(Rotation);
-		GraphXMaths::Scaling scale(GraphXMaths::Vector3(Scale, 1.0f));
+		GM::Translation translation(Position);
+		GM::Rotation rotation(Rotation);
+		GM::Scaling scale(GM::Vector3(Scale, 1.0f));
 
 		m_Model = translation * rotation * scale;
 	}

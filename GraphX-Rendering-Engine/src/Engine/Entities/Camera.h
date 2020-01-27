@@ -15,69 +15,6 @@ namespace GraphX
 		: public Entity
 	{
 	private:
-		/* Up Axis for the whole world */
-		GraphXMaths::Vector3 m_WorldUpAxis;
-
-		/* Camera view axis */
-		GraphXMaths::Vector3 m_ViewAxis;
-
-		/* Right axis in view coordinates */
-		GraphXMaths::Vector3 m_RightAxis;
-
-		/* Up Camera of the camera */
-		GraphXMaths::Vector3 m_UpAxis;
-
-		/* The View matrix for the current camera orientation */
-		GraphXMaths::Matrix4 m_ViewMatrix;
-
-		/* Projection matrix for the current camera settings */
-		GraphXMaths::Matrix4 m_ProjectionMatrix;
-
-		/* Product of the view and the projection matrix */
-		GraphXMaths::Matrix4 m_ProjectionViewMatrix;
-
-		/* The width of the orthographic view or screen (ignored in perspective mode)  */
-		float m_OrthoWidth = 1920.0f;
-
-		/* The height of the orthographic view or screen (ignored in perspective mode)  */
-		float m_OrthoHeight = 1080.0f;
-
-		/* The aspect ratio of the camera frame */
-		float m_AspectRatio;
-
-		/* The z - coordinate of the near plane behind which nothing will be rendered */
-		float m_Near;
-
-		/* The z - coordinate of the far plane beyond which nothing will be rendered */
-		float m_Far;
-
-		/* Horizontal Field of view of the camera (in degrees) in perspective mode (ignored in orthographic mode) */
-		float m_FieldOfView;
-
-		/* Whether the camera settings or orientation has changed */
-		bool m_RenderStateDirty = true;
-
-		/* Whether camera orientation has been changed */
-		bool m_ViewChanged = false;
-
-		/* Whether the projection data has been changed */
-		bool m_ProjDataChanged = false;
-
-		/* Current camera projection mode */
-		ProjectionMode m_CurrentProjectionMode = ProjectionMode::Perspective;
-
-	public:
-		/* Camera Attributes */
-		/* Position of the camera */
-		GraphXMaths::Vector3 CameraPosition;
-
-		/* Pitch, Yaw and Roll of the camera (Euler angles should not be modified directly) */
-		GraphXMaths::Vector3 EulerAngles;
-
-		/* Camera settings for control */
-		float CameraSpeed = 5.5f;
-
-	private:
 		/* Process the input from the keyboard */
 		void ProcessKeyboardInput(float DeltaTime);
 
@@ -89,7 +26,7 @@ namespace GraphX
 
 	public:
 		/* Constructor */
-		Camera(const GraphXMaths::Vector3& CameraPos, const GraphXMaths::Vector3& LookAtPoint, const GraphXMaths::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
+		Camera(const GM::Vector3& CameraPos, const GM::Vector3& LookAtPoint, const GM::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
 
 		/* Update the camera */
 		virtual void Update(float DeltaTime) override;
@@ -190,17 +127,80 @@ namespace GraphX
 		}
 
 		/* Returns a view matrix for the camera */
-		inline const GraphXMaths::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
+		inline const GM::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
 
 		/* Returns the product of projection and view matrix */
-		inline const GraphXMaths::Matrix4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
+		inline const GM::Matrix4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
 
 		/* Returns the projection matrix for the current camera settings */
-		inline const GraphXMaths::Matrix4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		inline const GM::Matrix4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
 	private:
 		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader = "") const override;
 
 		virtual void Disable() const override;
+
+	public:
+		/* Camera Attributes */
+		/* Position of the camera */
+		GM::Vector3 CameraPosition;
+
+		/* Pitch, Yaw and Roll of the camera (Euler angles should not be modified directly) */
+		GM::Vector3 EulerAngles;
+
+		/* Camera settings for control */
+		float CameraSpeed = 5.5f;
+
+	private:
+		/* Up Axis for the whole world */
+		GM::Vector3 m_WorldUpAxis;
+
+		/* Camera view axis */
+		GM::Vector3 m_ViewAxis;
+
+		/* Right axis in view coordinates */
+		GM::Vector3 m_RightAxis;
+
+		/* Up Camera of the camera */
+		GM::Vector3 m_UpAxis;
+
+		/* The View matrix for the current camera orientation */
+		GM::Matrix4 m_ViewMatrix;
+
+		/* Projection matrix for the current camera settings */
+		GM::Matrix4 m_ProjectionMatrix;
+
+		/* Product of the view and the projection matrix */
+		GM::Matrix4 m_ProjectionViewMatrix;
+
+		/* The width of the orthographic view or screen (ignored in perspective mode)  */
+		float m_OrthoWidth = 1920.0f;
+
+		/* The height of the orthographic view or screen (ignored in perspective mode)  */
+		float m_OrthoHeight = 1080.0f;
+
+		/* The aspect ratio of the camera frame */
+		float m_AspectRatio;
+
+		/* The z - coordinate of the near plane behind which nothing will be rendered */
+		float m_Near;
+
+		/* The z - coordinate of the far plane beyond which nothing will be rendered */
+		float m_Far;
+
+		/* Horizontal Field of view of the camera (in degrees) in perspective mode (ignored in orthographic mode) */
+		float m_FieldOfView;
+
+		/* Whether the camera settings or orientation has changed */
+		bool m_RenderStateDirty = true;
+
+		/* Whether camera orientation has been changed */
+		bool m_ViewChanged = false;
+
+		/* Whether the projection data has been changed */
+		bool m_ProjDataChanged = false;
+
+		/* Current camera projection mode */
+		ProjectionMode m_CurrentProjectionMode = ProjectionMode::Perspective;
 	};
 }

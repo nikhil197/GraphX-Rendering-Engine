@@ -74,8 +74,8 @@ namespace GraphX
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 			ImGui::PopStyleVar();
 
-			static GraphXMaths::Vector3 postion;
-			static GraphXMaths::Vector2 scale(1);
+			static GM::Vector3 postion;
+			static GM::Vector2 scale(1);
 			static int x = 0, z = 0;
 			static float tileSize = 0.0f;
 			static std::vector<std::string> textures;
@@ -146,7 +146,7 @@ namespace GraphX
 
 			Material* Mat = mesh.GetMaterial();
 
-			GraphXMaths::Vector4 BaseColor = Mat->GetBaseColor();
+			GM::Vector4 BaseColor = Mat->GetBaseColor();
 			float Reflectivity = Mat->GetSpecularStrength();
 			float Shininess = Mat->GetShininess();
 
@@ -254,7 +254,7 @@ namespace GraphX
 			ImGui::Text("Color and Properties");
 			
 			Material* Mat = mesh.GetMaterial();
-			GraphXMaths::Vector4 BaseColor = Mat->GetBaseColor();
+			GM::Vector4 BaseColor = Mat->GetBaseColor();
 			float Reflectivity = Mat->GetSpecularStrength();
 			float Shininess = Mat->GetShininess();
 

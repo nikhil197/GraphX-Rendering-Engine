@@ -31,11 +31,11 @@ namespace GraphX
 			Shader* shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
 
 			// Set the transformation matrix
-			GraphXMaths::Matrix4 Model = mesh->GetModelMatrix();
+			GM::Matrix4 Model = mesh->GetModelMatrix();
 			shader->SetUniformMat4f("u_Model", Model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
-			GraphXMaths::Matrix3 Normal = GraphXMaths::Matrix3(Model);
+			GM::Matrix3 Normal = GM::Matrix3(Model);
 			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
@@ -55,7 +55,7 @@ namespace GraphX
 			Mesh->BindBuffers();
 
 			// Set the transformation matrix
-			GraphXMaths::Matrix4 Model = Mesh->GetModelMatrix();
+			GM::Matrix4 Model = Mesh->GetModelMatrix();
 			DepthShader.SetUniformMat4f("u_Model", Model);
 
 			// Draw the object

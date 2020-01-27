@@ -6,8 +6,8 @@
 
 namespace GraphX
 {
-	PointLight::PointLight(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector4& Col, float Intensity, const GraphXMaths::Vector3& AttenuationFactors)
-		: Light(Col, GraphXMaths::Projection::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 1000.0f), Intensity), Position(Pos), m_AttenuationFactors(AttenuationFactors)
+	PointLight::PointLight(const GM::Vector3& Pos, const GM::Vector4& Col, float Intensity, const GM::Vector3& AttenuationFactors)
+		: Light(Col, GM::Projection::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 1000.0f), Intensity), Position(Pos), m_AttenuationFactors(AttenuationFactors)
 	{
 	}
 
@@ -15,7 +15,7 @@ namespace GraphX
 	{
 		Light::Update(DeltaTime);
 
-		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GraphXMaths::View::LookAt(Position, GraphXMaths::Vector3(0.0f), GraphXMaths::Vector3::YAxis);
+		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GM::View::LookAt(Position, GM::Vector3(0.0f), GM::Vector3::YAxis);
 	}
 
 	void PointLight::Enable(Shader& shader, const std::string& LightName) const

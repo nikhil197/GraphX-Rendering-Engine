@@ -12,7 +12,7 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
 	Importer* Importer::s_Importer = nullptr;
 

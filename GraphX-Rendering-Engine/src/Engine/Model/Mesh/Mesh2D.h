@@ -2,46 +2,10 @@
 
 namespace GraphX
 {
+	class Material;
+
 	class Mesh2D
 	{
-	public:
-		/* Position of the object (3rd coordinate is need to for determining which object will be in front of which) */
-		GraphXMaths::Vector3 Position;
-
-		/* Rotation of the object */
-		GraphXMaths::Vector3 Rotation;
-
-		/* Scale of the object */
-		GraphXMaths::Vector2 Scale;
-
-		/* Whether to show the details UI window (ImGUI) or not */
-		bool bShowDetails : 1;
-
-	protected:
-		/* Vertex Array Object for the Mesh */
-		class VertexArray* m_VAO;
-
-		/* Vertex Buffer for the object */
-		class VertexBuffer* m_VBO;
-
-		/* Index Buffer for the Mesh */
-		class IndexBuffer* m_IBO;
-
-		/* Material used to render mesh */
-		class Material* m_Material;
-
-		/* Vertex data */
-		std::vector<struct Vertex2D> m_Vertices;
-
-		/* Indices into the vertex buffer */
-		std::vector<unsigned int> m_Indices;
-
-		/* Model matrix for the mesh */
-		GraphXMaths::Matrix4 m_Model;
-
-		/* Whether the mesh needs to updated or not */
-		bool m_UpdateModelMatrix;
-
 	public:
 		/**
 		@param Pos Position of the mesh in the world
@@ -51,7 +15,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh2D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
+		Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
 
 		Mesh2D(const Mesh2D& Other);
 
@@ -92,8 +56,46 @@ namespace GraphX
 		inline const std::vector<unsigned int>& GetIndices() const { return m_Indices; }
 
 		/* Returns the model matrix for the mesh */
-		inline const GraphXMaths::Matrix4& GetModelMatrix() const { return m_Model; }
+		inline const GM::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		virtual ~Mesh2D();
+
+	public:
+		/* Position of the object (3rd coordinate is need to for determining which object will be in front of which) */
+		GM::Vector3 Position;
+
+		/* Rotation of the object */
+		GM::Vector3 Rotation;
+
+		/* Scale of the object */
+		GM::Vector2 Scale;
+
+		/* Whether to show the details UI window (ImGUI) or not */
+		bool bShowDetails : 1;
+
+	protected:
+		/* Vertex Array Object for the Mesh */
+		class VertexArray* m_VAO;
+
+		/* Vertex Buffer for the object */
+		class VertexBuffer* m_VBO;
+
+		/* Index Buffer for the Mesh */
+		class IndexBuffer* m_IBO;
+
+		/* Material used to render mesh */
+		Material* m_Material;
+
+		/* Vertex data */
+		std::vector<struct Vertex2D> m_Vertices;
+
+		/* Indices into the vertex buffer */
+		std::vector<unsigned int> m_Indices;
+
+		/* Model matrix for the mesh */
+		GM::Matrix4 m_Model;
+
+		/* Whether the mesh needs to updated or not */
+		bool m_UpdateModelMatrix;
 	};
 }

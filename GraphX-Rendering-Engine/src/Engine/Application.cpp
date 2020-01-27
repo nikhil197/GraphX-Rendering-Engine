@@ -55,7 +55,7 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
 	Application::Application(std::string& title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
@@ -79,7 +79,7 @@ namespace GraphX
 		// Initialise the renderer
 		Renderer::Initialize();
 
-		m_Camera = new Camera(GraphXMaths::Vector3(0.0f, 0.0f, 3.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
+		m_Camera = new Camera(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -87,7 +87,7 @@ namespace GraphX
 
 		m_CurrentSkybox = m_NightSkybox;
 
-		m_SunLight = new DirectionalLight(GraphXMaths::Vector4::UnitVector, GraphXMaths::Vector3(-3.0f, -1.0f, 1.0f));
+		m_SunLight = new DirectionalLight(GM::Vector4::UnitVector, GM::Vector3(-3.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
@@ -127,7 +127,7 @@ namespace GraphX
 
 		Material CubeMaterial(m_Shader);
 		CubeMaterial.AddTexture(m_DefaultTexture);
-		Cube *cube = new Cube(GraphXMaths::Vector3(-10.0f, 10.0f, -5.0f), GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, &CubeMaterial);
+		Cube *cube = new Cube(GM::Vector3(-10.0f, 10.0f, -5.0f), GM::Vector3::ZeroVector, GM::Vector3::UnitVector, &CubeMaterial);
 		m_Objects3D.emplace_back(cube);
 		cube->bShowDetails = true;
 
@@ -201,7 +201,7 @@ namespace GraphX
 
 			if (GX_ENABLE_PARTICLE_EFFECTS)
 			{
-				particleSys.SpawnParticles(GraphXMaths::Vector3::ZeroVector, DeltaTime);
+				particleSys.SpawnParticles(GM::Vector3::ZeroVector, DeltaTime);
 			}
 
 			// Update all the elements of the scene
@@ -363,7 +363,7 @@ namespace GraphX
 			shader->Bind();
 
 			// Set the transformation matrix
-			GraphXMaths::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
+			GM::Matrix4 Model = terrain->GetMesh().GetModelMatrix();
 			shader->SetUniformMat4f("u_Model", Model);
 
 			// Render the Terrain
@@ -407,7 +407,7 @@ namespace GraphX
 		static Shader shader("res/shaders/Basic.shader");
 		static Material DebugMat(&shader);
 
-		static Mesh2D QuadMesh(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector2::UnitVector, quadVertices, quadIndices, &DebugMat);
+		static Mesh2D QuadMesh(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector2::UnitVector, quadVertices, quadIndices, &DebugMat);
 
 		DebugMat.Bind();
 		m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
@@ -539,7 +539,7 @@ namespace GraphX
 		{
 			TimeOfDay = DayTime::GX_MORNING - TimeOfDay;
 			m_CurrentSkybox = m_DaySkybox;
-			m_SunLight->Color = GraphXMaths::Vector4(0.5f, 0.5f, 0.0f, 1.0f);
+			m_SunLight->Color = GM::Vector4(0.5f, 0.5f, 0.0f, 1.0f);
 			m_CurrentSkybox->BlendFactor = 0.6f;
 		}
 		else if (TimeOfDay >= DayTime::GX_MORNING && TimeOfDay < DayTime::GX_AFTERNOON)
@@ -561,7 +561,7 @@ namespace GraphX
 		{
 			TimeOfDay = DayTime::GX_NIGHT - TimeOfDay;
 			m_CurrentSkybox = m_NightSkybox;
-			m_SunLight->Color = GraphXMaths::Vector4::UnitVector;
+			m_SunLight->Color = GM::Vector4::UnitVector;
 			m_CurrentSkybox->BlendFactor = 0.2f;
 		}
 
@@ -571,8 +571,8 @@ namespace GraphX
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		GraphXMaths::Rotation rotation(angle, GraphXMaths::Vector3::YAxis);
-		m_SunLight->Direction = GraphXMaths::Vector3(rotation * GraphXMaths::Vector4(m_SunLight->Direction, 1.0f));
+		GM::Rotation rotation(angle, GM::Vector3::YAxis);
+		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
 #pragma region eventHandlers
@@ -670,7 +670,7 @@ namespace GraphX
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::ZeroVector, GraphXMaths::Vector3::UnitVector, m_DefaultMaterial));
+			m_Objects3D.emplace_back(new Cube(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector3::UnitVector, m_DefaultMaterial));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)

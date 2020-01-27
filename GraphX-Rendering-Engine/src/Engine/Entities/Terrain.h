@@ -7,31 +7,6 @@ namespace GraphX
 	class Terrain
 		: public Entity
 	{
-	private:
-		/* Mesh to represent the terrain */
-		class Mesh3D* m_Mesh;
-
-		/* Material used to render terrain */
-		class Material* m_Material;
-
-		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
-		const int m_Width, m_Depth;
-
-		/* Tile size for the terrain */
-		float m_TileSize;
-
-		/* Vertices of the terrain mesh */
-		std::vector<struct Vertex3D>* m_Vertices;
-
-		/* Indices for the terrain mesh */
-		std::vector<unsigned int>* m_Indices;
-
-		/* Blendmap used to draw the terrain */
-		const class Texture* m_BlendMap;
-
-		/* Amplitude of the height map for the terrain */
-		static double s_Amplitude;
-
 	public:
 		/* Constructs a new terrain */
 		/* @Param Width  - # of tiles in the x - direction */
@@ -40,7 +15,7 @@ namespace GraphX
 		/* @Param BlendMap - Name of the blend map used to sample the textures specified in TexNames */
 		/* @Param Pos - Position of the terrain in the world */
 		/* @Param Scale - Scale of the mesh in the x and z direction */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector2& Scale);
+		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;
@@ -82,5 +57,30 @@ namespace GraphX
 
 		/* Calculates normals for the created mesh of the terrain */
 		void CalculateNormal(int x, int y);
+
+	private:
+		/* Mesh to represent the terrain */
+		class Mesh3D* m_Mesh;
+
+		/* Material used to render terrain */
+		class Material* m_Material;
+
+		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
+		const int m_Width, m_Depth;
+
+		/* Tile size for the terrain */
+		float m_TileSize;
+
+		/* Vertices of the terrain mesh */
+		std::vector<struct Vertex3D>* m_Vertices;
+
+		/* Indices for the terrain mesh */
+		std::vector<unsigned int>* m_Indices;
+
+		/* Blendmap used to draw the terrain */
+		const class Texture* m_BlendMap;
+
+		/* Amplitude of the height map for the terrain */
+		static double s_Amplitude;
 	};
 }

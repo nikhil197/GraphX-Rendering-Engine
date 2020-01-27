@@ -7,21 +7,21 @@
 
 namespace GraphX
 {
-	std::vector<GraphXMaths::Vector2> Quad::s_Vertices = 
+	std::vector<GM::Vector2> Quad::s_Vertices = 
 	{
-		GraphXMaths::Vector2(-0.5f, -0.5f),
-		GraphXMaths::Vector2( 0.5f, -0.5f),
-		GraphXMaths::Vector2( 0.5f,  0.5f),
-		GraphXMaths::Vector2( 0.5f,  0.5f),
-		GraphXMaths::Vector2(-0.5f,  0.5f),
-		GraphXMaths::Vector2(-0.5f, -0.5f)
+		GM::Vector2(-0.5f, -0.5f),
+		GM::Vector2( 0.5f, -0.5f),
+		GM::Vector2( 0.5f,  0.5f),
+		GM::Vector2( 0.5f,  0.5f),
+		GM::Vector2(-0.5f,  0.5f),
+		GM::Vector2(-0.5f, -0.5f)
 	};
 
 	const unsigned int Quad::s_QuadVertexCount = 6;
 
 	Quad::Quad()
 	{
-		VertexBuffer vbo(&s_Vertices[0], s_Vertices.size() * sizeof(GraphXMaths::Vector2));
+		VertexBuffer vbo(&s_Vertices[0], s_Vertices.size() * sizeof(GM::Vector2));
 		VertexBufferLayout layout = {
 			{ BufferDataType::Float2 }
 		};

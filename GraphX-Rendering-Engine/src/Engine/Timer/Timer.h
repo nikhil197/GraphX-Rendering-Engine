@@ -4,16 +4,6 @@ namespace GraphX
 {
 	class Timer
 	{
-	private:
-		/* Name of the timer */
-		std::string m_Name;
-
-		/* To store the time point of the last update */
-		std::chrono::time_point<std::chrono::steady_clock> m_LastUpdateTimePoint;
-
-		/* To store the time point when the application started */
-		std::chrono::time_point<std::chrono::steady_clock> m_StartTimePoint;
-
 	public:
 		/* Constructor */
 		explicit Timer(const std::string& name);
@@ -29,5 +19,15 @@ namespace GraphX
 
 		/* Destructor for the timer */
 		~Timer();
+
+	private:
+		/* Name of the timer */
+		std::string m_Name;
+
+		/* To store the time point of the last update */
+		std::chrono::time_point<std::chrono::steady_clock> m_LastUpdateTimePoint;
+
+		/* To store the time point when the application started */
+		std::chrono::time_point<std::chrono::steady_clock> m_StartTimePoint;
 	};
 }

@@ -15,6 +15,6 @@ namespace GraphX
 
 		virtual void Render(class Shader& DepthShader) = 0;
 
-		virtual void RenderDebugCollisions(const struct GraphXMaths::BoundingBox* Box, const GraphXMaths::Matrix4& Model) = 0;
+		virtual void RenderDebugCollisions(const struct GM::BoundingBox* Box, const GM::Matrix4& Model) = 0;
 	};
 }

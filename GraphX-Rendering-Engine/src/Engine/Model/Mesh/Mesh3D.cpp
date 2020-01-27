@@ -11,7 +11,7 @@
 
 namespace GraphX
 {
-	Mesh3D::Mesh3D(const GraphXMaths::Vector3& Pos, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat)
+	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
 	{
 		m_VAO = new VertexArray();
@@ -22,13 +22,13 @@ namespace GraphX
 		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
 		m_VAO->AddIndexBuffer(*m_IBO);
 
-		std::vector<GraphXMaths::Vector3> positions;
+		std::vector<GM::Vector3> positions;
 		for (unsigned int i = 0; i < m_Vertices.size(); i++)
 		{
 			positions.push_back(m_Vertices[i].Position);
 		}
 
-		m_BoundingBox = new GraphXMaths::BoundingBox(positions);
+		m_BoundingBox = new GM::BoundingBox(positions);
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
@@ -39,22 +39,22 @@ namespace GraphX
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 
-		std::vector<GraphXMaths::Vector3> positions;
+		std::vector<GM::Vector3> positions;
 		for (unsigned int i = 0; i < m_Vertices.size(); i++)
 		{
 			positions.push_back(m_Vertices[i].Position);
 		}
 
-		m_BoundingBox = new GraphXMaths::BoundingBox(positions);
+		m_BoundingBox = new GM::BoundingBox(positions);
 	}
 
 	void Mesh3D::Update(float DeltaTime)
 	{
 		if (m_UpdateModelMatrix)
 		{
-			GraphXMaths::Translation translation(Position);
-			GraphXMaths::Rotation rotation(Rotation);
-			GraphXMaths::Scaling scale(Scale);
+			GM::Translation translation(Position);
+			GM::Rotation rotation(Rotation);
+			GM::Scaling scale(Scale);
 
 			m_Model = translation * rotation * scale;
 

@@ -8,15 +8,21 @@
 namespace GraphX
 {
 	Shader::Shader(const std::string& filePath)
-		:m_FileName(std::string()), m_RendererID(0)
+		:m_Name(std::string()), m_RendererID(0)
 	{
-		m_FileName = EngineUtil::ExtractFileName(filePath);
+		m_Name = EngineUtil::ExtractFileName(filePath);
 		ShaderSource source = ParseShaderSource(filePath);
 		
 		if (source.FragmentShaderSource.length() > 0 && source.VertexShaderSource.length() > 0)
 			m_RendererID = CreateShader(source.VertexShaderSource, source.FragmentShaderSource);
 		else
-			GX_ENGINE_ERROR("Error while creating the shader {0}, Source not found", m_FileName);
+			GX_ENGINE_ERROR("Error while creating the shader {0}, Source not found", m_Name);
+	}
+
+	Shader::Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc)
+		: m_Name(name), m_RendererID(0)
+	{
+		m_RendererID = CreateShader(vertexShaderSrc, fragShaderSrc);
 	}
 
 	Shader::~Shader()
@@ -27,7 +33,7 @@ namespace GraphX
 	void Shader::Bind() const
 	{
 		if (m_RendererID == 0)
-			GX_ENGINE_ERROR("{0} could not be bound", m_FileName);
+			GX_ENGINE_ERROR("{0} could not be bound", m_Name);
 		else
 			GLCall(glUseProgram(m_RendererID));
 	}
@@ -62,12 +68,12 @@ namespace GraphX
 		GLCall(glUniform2f(GetLocation(Name), r, g));
 	}
 
-	void Shader::SetUniform2f(const char* Name, const GraphXMaths::Vector2& Vec)
+	void Shader::SetUniform2f(const char* Name, const GM::Vector2& Vec)
 	{
 		GLCall(glUniform2f(GetLocation(Name), Vec.x, Vec.y));
 	}
 
-	void Shader::SetUniform3f(const char* Name, const GraphXMaths::Vector3& Vec)
+	void Shader::SetUniform3f(const char* Name, const GM::Vector3& Vec)
 	{
 		GLCall(glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z));
 	}
@@ -77,22 +83,22 @@ namespace GraphX
 		GLCall(glUniform4f(GetLocation(Name), r, g, b, a));
 	}
 
-	void Shader::SetUniform4f(const char* Name, const GraphXMaths::Vector4& Vec)
+	void Shader::SetUniform4f(const char* Name, const GM::Vector4& Vec)
 	{
 		GLCall(glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w));
 	}
 
-	void Shader::SetUniform4f(const char* Name, const GraphXMaths::Vector2& Vec1, const GraphXMaths::Vector2& Vec2)
+	void Shader::SetUniform4f(const char* Name, const GM::Vector2& Vec1, const GM::Vector2& Vec2)
 	{
 		GLCall(glUniform4f(GetLocation(Name), Vec1.x, Vec1.y, Vec2.x, Vec2.y));
 	}
 
-	void Shader::SetUniformMat3f(const char* Name, const GraphXMaths::Matrix3& Mat)
+	void Shader::SetUniformMat3f(const char* Name, const GM::Matrix3& Mat)
 	{
 		GLCall(glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
 	}
 
-	void Shader::SetUniformMat4f(const char* Name, const GraphXMaths::Matrix4& Mat)
+	void Shader::SetUniformMat4f(const char* Name, const GM::Matrix4& Mat)
 	{
 		GLCall(glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
 	}
@@ -110,7 +116,7 @@ namespace GraphX
 			//If the name is invalid
 			if (location == -1)
 			{
-				GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_FileName, Name);
+				GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_Name, Name);
 			}
 			// Cache the location
 			else
@@ -124,8 +130,8 @@ namespace GraphX
 
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 	{
-		GX_ENGINE_INFO("{0} : Parsing Shader source", m_FileName);
-		Timer time(m_FileName +" : Parsing Shader Source");
+		GX_ENGINE_INFO("{0} : Parsing Shader source", m_Name);
+		Timer time(m_Name +" : Parsing Shader Source");
 
 		enum class ShaderType
 		{
@@ -157,8 +163,8 @@ namespace GraphX
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
-		GX_ENGINE_INFO("{0} : Compiling {1} Shader", m_FileName, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
-		Timer time(m_FileName + " : Compiling " + (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") + " Shader");
+		GX_ENGINE_INFO("{0} : Compiling {1} Shader", m_Name, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
+		Timer time(m_Name + " : Compiling " + (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") + " Shader");
 
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
@@ -176,7 +182,7 @@ namespace GraphX
 			char* infoLog = (char*)alloca(length * sizeof(char));
 			GLCall(glGetShaderInfoLog(shaderID, length, &length, infoLog));
 
-			GX_ENGINE_ERROR("{0} : Failed to compile {1} shader",m_FileName, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
+			GX_ENGINE_ERROR("{0} : Failed to compile {1} shader",m_Name, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
 			GX_ENGINE_ERROR(infoLog);
 
 			GLCall(glDeleteShader(shaderID));

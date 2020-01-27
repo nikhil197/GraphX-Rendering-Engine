@@ -5,8 +5,8 @@
 
 namespace GraphX
 {
-	Light::Light(const GraphXMaths::Vector4& Color, GraphXMaths::Matrix4 ProjMat, float Intensity)
-		: Color(Color), Intensity(Intensity), bShowDetails(true), m_LightShadowInfo(new LightShadowInfo(ProjMat, GraphXMaths::Matrix4()))
+	Light::Light(const GM::Vector4& Color, GM::Matrix4 ProjMat, float Intensity)
+		: Color(Color), Intensity(Intensity), bShowDetails(true), m_LightShadowInfo(new LightShadowInfo(ProjMat, GM::Matrix4()))
 	{
 	}
 

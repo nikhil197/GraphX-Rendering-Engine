@@ -10,16 +10,6 @@ namespace GraphX
 
 	class FrameBuffer
 	{
-	private:
-		/* ID used by the renderer for this buffer */
-		unsigned int m_RendererID;
-
-		/* Width and height of the framebuffer (equal to the screen size) */
-		int m_Width, m_Height;
-
-		/* Depth Texture attachment for the frame buffer */
-		class Texture* m_DepthMap;
-
 	public:
 		/* Constructor */
 		/* @param width - width of the framebuffer */
@@ -46,5 +36,15 @@ namespace GraphX
 		inline int GetHeight() const { return m_Height; }
 
 		~FrameBuffer();
+
+	private:
+		/* ID used by the renderer for this buffer */
+		unsigned int m_RendererID;
+
+		/* Width and height of the framebuffer (equal to the screen size) */
+		int m_Width, m_Height;
+
+		/* Depth Texture attachment for the frame buffer */
+		class Texture* m_DepthMap;
 	};
 }

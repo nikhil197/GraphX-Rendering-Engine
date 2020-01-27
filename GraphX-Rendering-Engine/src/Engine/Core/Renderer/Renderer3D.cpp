@@ -18,7 +18,7 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
 	void Renderer3D::Submit(const Mesh3D* mesh)
 	{
@@ -99,7 +99,7 @@ namespace GraphX
 		}
 	}
 
-	void Renderer3D::RenderDebugCollisions(const GraphXMaths::BoundingBox* Box, const GraphXMaths::Matrix4& Model)
+	void Renderer3D::RenderDebugCollisions(const GM::BoundingBox* Box, const GM::Matrix4& Model)
 	{
 		// Todo: Figure out a better structure for debug drawing
 

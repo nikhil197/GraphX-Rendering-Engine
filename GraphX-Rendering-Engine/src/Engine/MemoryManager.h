@@ -6,10 +6,6 @@ namespace GraphX
 	template<typename T>
 	class MemoryManager
 	{
-	private:
-		/* Collection of the objects created in the engine */
-		std::vector<T*> m_Objects;
-
 	public:
 		/* Create a new object of the specified template type */
 		void AddObject(T* Object);
@@ -18,6 +14,10 @@ namespace GraphX
 		bool RemoveObject(T* Object);
 
 		~MemoryManager();
+
+	private:
+		/* Collection of the objects created in the engine */
+		std::vector<T*> m_Objects;
 	};
 }
 

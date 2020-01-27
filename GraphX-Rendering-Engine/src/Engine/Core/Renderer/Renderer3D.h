@@ -9,10 +9,6 @@ namespace GraphX
 	{
 		friend class Renderer;
 	private:
-		/* Queue containing the objects to be rendered */
-		std::deque<const class Mesh3D*> m_RenderQueue;
-
-	private:
 		/* Renderer Class provides abstraction for Renderer. No instantiation required */
 		Renderer3D() = default;
 
@@ -33,6 +29,10 @@ namespace GraphX
 		virtual void Render(class Shader& DepthShader) override;
 
 		/* Renders the collision bounds for debugging */
-		virtual void RenderDebugCollisions(const GraphXMaths::BoundingBox* Box, const GraphXMaths::Matrix4& Model) override;
+		virtual void RenderDebugCollisions(const GM::BoundingBox* Box, const GM::Matrix4& Model) override;
+
+	private:
+		/* Queue containing the objects to be rendered */
+		std::deque<const class Mesh3D*> m_RenderQueue;
 	};
 }

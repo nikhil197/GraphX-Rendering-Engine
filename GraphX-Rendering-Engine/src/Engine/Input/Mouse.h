@@ -12,28 +12,6 @@ namespace GraphX
 	/* */
 	class Mouse
 	{
-	private:
-		/* Whether the left mouse button is pressed or not */
-		bool m_LeftButtonPressed : 1;
-
-		/* Whether the right mouse button is pressed or not */
-		bool m_RightButtonPressed : 1;
-
-		/* Whether the middle mouse button is pressed or not */
-		bool m_MiddleButtonPressed : 1;
-
-		/* Position of the mouse */
-		GraphXMaths::Vector2 m_Position;
-
-		/* Position of the mouse in the last frame */
-		GraphXMaths::Vector2 m_LastPosition;
-
-		/* Current frame offset of the mouse scroll */
-		GraphXMaths::Vector2 m_ScrollOffset;
-
-		/* Static instance of the Mouse */
-		static std::shared_ptr<Mouse> s_Mouse;
-
 		/* To use as a constructor argument to make it private */
 		struct ConstructorHelper{};
 
@@ -66,13 +44,13 @@ namespace GraphX
 		void Update();
 
 		/* Returns the mouse position */
-		inline const GraphXMaths::Vector2& GetPosition() const { return m_Position; }
+		inline const GM::Vector2& GetPosition() const { return m_Position; }
 
 		/* Returns the last frame mouse position */
-		inline const GraphXMaths::Vector2& GetLastPosition() const { return m_LastPosition; }
+		inline const GM::Vector2& GetLastPosition() const { return m_LastPosition; }
 
 		/* Returns the current scroll offset */
-		inline const GraphXMaths::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
+		inline const GM::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
 
 		/* Returns if the left mouse button is pressed */
 		inline bool IsLeftButtonPressed() const { return m_LeftButtonPressed; }
@@ -82,5 +60,27 @@ namespace GraphX
 
 		/* Returns if the middle mouse button is pressed */
 		inline bool IsMiddleButtonPressed() const { return m_MiddleButtonPressed; }
+
+	private:
+		/* Whether the left mouse button is pressed or not */
+		bool m_LeftButtonPressed : 1;
+
+		/* Whether the right mouse button is pressed or not */
+		bool m_RightButtonPressed : 1;
+
+		/* Whether the middle mouse button is pressed or not */
+		bool m_MiddleButtonPressed : 1;
+
+		/* Position of the mouse */
+		GM::Vector2 m_Position;
+
+		/* Position of the mouse in the last frame */
+		GM::Vector2 m_LastPosition;
+
+		/* Current frame offset of the mouse scroll */
+		GM::Vector2 m_ScrollOffset;
+
+		/* Static instance of the Mouse */
+		static std::shared_ptr<Mouse> s_Mouse;
 	};
 }

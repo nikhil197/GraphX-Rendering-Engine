@@ -59,6 +59,6 @@ namespace GraphX
 		m_LastPosition = m_Position;
 		
 		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
-		m_ScrollOffset = GraphXMaths::Vector2::ZeroVector;
+		m_ScrollOffset = GM::Vector2::ZeroVector;
 	}
 }

@@ -12,5 +12,18 @@
 /* Maths Library */
 #include "GraphX_Maths.h"
 
-/* Common Pch for Both Maths library and the engine */
-#include "CommonPch.h"
+/* Standard Libraries */
+#include <iostream>
+#include <chrono>
+#include <memory>
+#include <random>
+#include <limits>
+
+/* STL */
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <deque>
+#include <sstream>
+#include <fstream>
+#include <functional>

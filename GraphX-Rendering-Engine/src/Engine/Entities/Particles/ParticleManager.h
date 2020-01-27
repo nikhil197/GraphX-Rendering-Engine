@@ -7,22 +7,6 @@ namespace GraphX
 {
 	class ParticleManager
 	{
-	private:
-		/* Shader used to renderer the particles in this particle system*/
-		class Shader* m_ParticleShader;
-
-		/* Particles pool */
-		std::vector<Particle>* m_Particles;
-
-		/* Main Camera of the engine */
-		const class Camera* m_Camera;
-
-		/* Current Index in the pool which is supposed to be un-used */
-		unsigned int m_Index;
-
-		/* Capacity of the pool */
-		unsigned int m_PoolCap;
-
 	public:
 		ParticleManager();
 
@@ -38,7 +22,7 @@ namespace GraphX
 		void Update(float DeltaTime);
 
 		/* Adds a new particle to render */
-		void AddParticle(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Whether more particles can be added or not */
 		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsUsed(); }
@@ -60,5 +44,21 @@ namespace GraphX
 		void PostRender();
 
 		bool IsInitialized();
+
+	private:
+		/* Shader used to renderer the particles in this particle system*/
+		class Shader* m_ParticleShader;
+
+		/* Particles pool */
+		std::vector<Particle>* m_Particles;
+
+		/* Main Camera of the engine */
+		const class Camera* m_Camera;
+
+		/* Current Index in the pool which is supposed to be un-used */
+		unsigned int m_Index;
+
+		/* Capacity of the pool */
+		unsigned int m_PoolCap;
 	};
 }

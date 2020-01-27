@@ -9,10 +9,10 @@ namespace GraphX
 	struct Vertex2DC
 	{
 		// The Position of the vertex
-		GraphXMaths::Vector2 Position;
+		GM::Vector2 Position;
 
 		// The color for the vertex
-		GraphXMaths::Vector4 Color;
+		GM::Vector4 Color;
 
 		// VertexBufferLayout for this struct
 		static const VertexBufferLayout& VertexLayout()
@@ -30,10 +30,10 @@ namespace GraphX
 	struct Vertex2D
 	{
 		// The Position of the vertex
-		GraphXMaths::Vector2 Position;
+		GM::Vector2 Position;
 
 		// The texture coordinate for the vertex
-		GraphXMaths::Vector2 TexCoord;
+		GM::Vector2 TexCoord;
 
 		// VertexBufferLayout for this struct
 		static const VertexBufferLayout& VertexLayout()
@@ -51,13 +51,13 @@ namespace GraphX
 	struct Vertex3DC
 	{
 		// The Position of the vertex
-		GraphXMaths::Vector3 Position;
+		GM::Vector3 Position;
 
 		// The normal vector of the vertex
-		GraphXMaths::Vector3 Normal;
+		GM::Vector3 Normal;
 		
 		// The color for the vertex
-		GraphXMaths::Vector4 Color;
+		GM::Vector4 Color;
 
 		// VertexBufferLayout for this struct
 		static const VertexBufferLayout& VertexLayout()
@@ -76,13 +76,13 @@ namespace GraphX
 	struct Vertex3D
 	{
 		// The Position of the vertex
-		GraphXMaths::Vector3 Position;
+		GM::Vector3 Position;
 
 		// The normal vector of the vertex
-		GraphXMaths::Vector3 Normal;
+		GM::Vector3 Normal;
 
 		// The texture coordinate for the vertex
-		GraphXMaths::Vector2 TexCoord;
+		GM::Vector2 TexCoord;
 
 		// VertexBufferLayout for this struct
 		static const VertexBufferLayout& VertexLayout()

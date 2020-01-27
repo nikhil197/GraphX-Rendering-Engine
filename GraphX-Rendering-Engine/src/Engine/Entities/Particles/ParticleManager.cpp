@@ -40,7 +40,7 @@ namespace GraphX
 	{
 		Check()
 
-		const GraphXMaths::Matrix4& ViewMat = m_Camera->GetViewMatrix();
+		const GM::Matrix4& ViewMat = m_Camera->GetViewMatrix();
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
 			m_Particles->at(i).Update(DeltaTime, ViewMat, m_Camera->IsRenderStateDirty());
@@ -53,7 +53,7 @@ namespace GraphX
 
 		PreRender();
 
-		const GraphXMaths::Matrix4 View = m_Camera->GetViewMatrix();
+		const GM::Matrix4 View = m_Camera->GetViewMatrix();
 
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
@@ -67,7 +67,7 @@ namespace GraphX
 		PostRender();
 	}
 
-	void ParticleManager::AddParticle(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
+	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
 	{
 		Check();
 

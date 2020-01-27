@@ -11,19 +11,11 @@ namespace GraphX
 
 	class Shader
 	{
-	private: 
-		/* Name to the shader source file */
-		std::string m_FileName;
-
-		/* ID of the shader */
-		unsigned int m_RendererID;
-
-		/* To cache the uniform locations */
-		std::unordered_map<std::string, int> m_UniformLocations;
-
 	public:
 		/* filePath is the path to the source file */
 		Shader(const std::string& filePath);
+
+		Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc);
 
 		~Shader();
 
@@ -42,21 +34,21 @@ namespace GraphX
 
 		void SetUniform2f(const char* Name, float a, float b);
 
-		void SetUniform2f(const char* Name, const GraphXMaths::Vector2& Vec);
+		void SetUniform2f(const char* Name, const GM::Vector2& Vec);
 
 		void SetUniform3f(const char* Name, float r, float g, float b);
 
-		void SetUniform3f(const char* Name, const GraphXMaths::Vector3& Vec);
+		void SetUniform3f(const char* Name, const GM::Vector3& Vec);
 
 		void SetUniform4f(const char* Name, float r, float g, float b, float a);
 
-		void SetUniform4f(const char* Name, const GraphXMaths::Vector4& Vec);
+		void SetUniform4f(const char* Name, const GM::Vector4& Vec);
 
-		void SetUniform4f(const char* Name, const GraphXMaths::Vector2& Vec1, const GraphXMaths::Vector2& Vec2);
+		void SetUniform4f(const char* Name, const GM::Vector2& Vec1, const GM::Vector2& Vec2);
 
-		void SetUniformMat3f(const char* Name, const GraphXMaths::Matrix3& Mat);
+		void SetUniformMat3f(const char* Name, const GM::Matrix3& Mat);
 
-		void SetUniformMat4f(const char* Name, const GraphXMaths::Matrix4& Mat);
+		void SetUniformMat4f(const char* Name, const GM::Matrix4& Mat);
 
 	private:
 		/* Parse the source file and get the shader source codes */
@@ -70,5 +62,15 @@ namespace GraphX
 
 		/* Returns the location of the uniform with the given name */
 		int GetLocation(const std::string& Name);
+
+	private:
+		/* Name to the shader source file */
+		std::string m_Name;
+
+		/* ID of the shader */
+		unsigned int m_RendererID;
+
+		/* To cache the uniform locations */
+		std::unordered_map<std::string, int> m_UniformLocations;
 	};
 }

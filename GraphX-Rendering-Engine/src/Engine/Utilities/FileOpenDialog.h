@@ -19,6 +19,21 @@ namespace GraphX
 	/* Dialog box to select a file from the windows explorer */
 	class FileOpenDialog
 	{
+	public:
+		/* RSType is the type of resources the dialog will be used to open */
+		FileOpenDialog(ResourceType RSType);
+
+		/* Display the dialog box to the user */
+		void Show();
+
+		/* Returns the relative path of the selected file */
+		const std::wstring& GetRelativePath() const { return m_RelativePath; }
+
+		/* Returns the system path of the selected file */
+		const std::wstring& GetAbsolutePath() const { return m_SystemPath; }
+
+		~FileOpenDialog();
+
 	private:
 		/* File types allowed for textures */
 		static const COMDLG_FILTERSPEC TextureFileTypes[];
@@ -50,20 +65,5 @@ namespace GraphX
 
 		/* System file Path */
 		std::wstring m_SystemPath;
-
-	public:
-		/* RSType is the type of resources the dialog will be used to open */
-		FileOpenDialog(ResourceType RSType);
-
-		/* Display the dialog box to the user */
-		void Show();
-
-		/* Returns the relative path of the selected file */
-		const std::wstring& GetRelativePath() const { return m_RelativePath; }
-
-		/* Returns the system path of the selected file */
-		const std::wstring& GetAbsolutePath() const { return m_SystemPath; }
-
-		~FileOpenDialog();
 	};
 }

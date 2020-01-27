@@ -6,72 +6,13 @@ namespace GraphX
 
 	class Application
 	{
-	private:
-		/* Application window */
-		Window* m_Window;
+	public:
+		Application(std::string& title, int width, int height);
 
-		/* Title of the application window */
-		std::string m_Title;
+		/* Application main method */
+		void Run();
 
-		/* Whether the application is running or not */
-		bool m_IsRunning;
-
-		/* How long will a day last in the engine (in hours) */
-		float m_EngineDayTime;
-
-		/* Collection of all the 2D objects in the scene */
-		std::vector<class Mesh2D*> m_Objects2D;
-
-		/* Collection of all the 3D objects in the scene */
-		std::vector<class Mesh3D*> m_Objects3D;
-
-		/* All the shaders used in the scene */
-		std::vector<class Shader*> m_Shaders;
-
-		/* All the lights in the scene */
-		std::vector<class Light*> m_Lights;
-
-		/* All the terrain in the scene */
-		std::vector<class Terrain*> m_Terrain;
-
-		/* Current selected 2D object */
-		class Mesh2D* m_SelectedObject2D;
-
-		/* Currently selected 3D object */
-		class Mesh3D* m_SelectedObject3D;
-
-		/* Main light source for the scene */
-		class DirectionalLight* m_SunLight;
-
-		/* Depth Frame buffer for shadow calculation */
-		class FrameBuffer* m_ShadowBuffer;
-
-		/* Shader used for rendering to depth buffer */
-		class Shader* m_DepthShader;
-
-		/* Main Camera for the application */
-		class Camera* m_Camera;
-
-		/* SKybox for the day time */
-		class Skybox* m_DaySkybox;
-
-		/* Skybox for the night time */
-		class Skybox* m_NightSkybox;
-
-		/* Current active skybox */
-		class Skybox* m_CurrentSkybox;
-
-		/* To handle all the particles generated */
-		class ParticleManager* m_ParticlesManager;
-
-		class Shader* m_Shader;
-
-		/* Default Material used by objects */
-		class Material* m_DefaultMaterial;
-
-		class PointLight* m_Light;
-
-		class Texture* m_DefaultTexture;
+		~Application();
 
 	private:
 		/* Callback for events */
@@ -147,12 +88,71 @@ namespace GraphX
 		/* All the calculations related to the day night cycle */
 		void DayNightCycleCalculations(float DeltaTime);
 
-	public:
-		Application(std::string& title, int width, int height);
+	private:
+		/* Application window */
+		Window* m_Window;
 
-		/* Application main method */
-		void Run();
+		/* Title of the application window */
+		std::string m_Title;
 
-		~Application();
+		/* Whether the application is running or not */
+		bool m_IsRunning;
+
+		/* How long will a day last in the engine (in hours) */
+		float m_EngineDayTime;
+
+		/* Collection of all the 2D objects in the scene */
+		std::vector<class Mesh2D*> m_Objects2D;
+
+		/* Collection of all the 3D objects in the scene */
+		std::vector<class Mesh3D*> m_Objects3D;
+
+		/* All the shaders used in the scene */
+		std::vector<class Shader*> m_Shaders;
+
+		/* All the lights in the scene */
+		std::vector<class Light*> m_Lights;
+
+		/* All the terrain in the scene */
+		std::vector<class Terrain*> m_Terrain;
+
+		/* Current selected 2D object */
+		class Mesh2D* m_SelectedObject2D;
+
+		/* Currently selected 3D object */
+		class Mesh3D* m_SelectedObject3D;
+
+		/* Main light source for the scene */
+		class DirectionalLight* m_SunLight;
+
+		/* Depth Frame buffer for shadow calculation */
+		class FrameBuffer* m_ShadowBuffer;
+
+		/* Shader used for rendering to depth buffer */
+		class Shader* m_DepthShader;
+
+		/* Main Camera for the application */
+		class Camera* m_Camera;
+
+		/* SKybox for the day time */
+		class Skybox* m_DaySkybox;
+
+		/* Skybox for the night time */
+		class Skybox* m_NightSkybox;
+
+		/* Current active skybox */
+		class Skybox* m_CurrentSkybox;
+
+		/* To handle all the particles generated */
+		class ParticleManager* m_ParticlesManager;
+
+		class Shader* m_Shader;
+
+		/* Default Material used by objects */
+		class Material* m_DefaultMaterial;
+
+		class PointLight* m_Light;
+
+		class Texture* m_DefaultTexture;
 	};
 }

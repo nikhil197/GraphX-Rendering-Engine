@@ -6,16 +6,16 @@ namespace GraphX
 {
 	class Log
 	{
-	private:
-		/* Shared Ptr to the logger */
-		static std::shared_ptr<spdlog::logger> s_EngineLogger;
-
 	public:
 		/* Initialize the logger */
 		static void Init();
 
 		/* Returns the logger */
 		inline static std::shared_ptr<spdlog::logger>& GetEngineLogger() { return s_EngineLogger; }
+
+	private:
+		/* Shared Ptr to the logger */
+		static std::shared_ptr<spdlog::logger> s_EngineLogger;
 	};
 }
 

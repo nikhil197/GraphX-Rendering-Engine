@@ -8,12 +8,12 @@ namespace GraphX
 	struct LightShadowInfo
 	{
 		/* Projection matrix from the perspective of the light */
-		GraphXMaths::Matrix4 LightProjMat;
+		GM::Matrix4 LightProjMat;
 
 		/* Combined View and projection matrix from the perspective of the light */
-		GraphXMaths::Matrix4 LightViewProjMat;
+		GM::Matrix4 LightViewProjMat;
 
-		LightShadowInfo(const GraphXMaths::Matrix4& ProjMat, const GraphXMaths::Matrix4& LightViewProjMat)
+		LightShadowInfo(const GM::Matrix4& ProjMat, const GM::Matrix4& LightViewProjMat)
 			: LightProjMat(ProjMat), LightViewProjMat(LightViewProjMat)
 		{
 		}
@@ -22,23 +22,9 @@ namespace GraphX
 	class Light
 		: public Entity
 	{
-	public:
-		/* Color of the light */
-		GraphXMaths::Vector4 Color;
-
-		/* Intensity of the light (total energy emitted by the light) */
-		float Intensity;
-
-		/* Whether to show the details UI window (ImGUI) or not */
-		bool bShowDetails : 1;
-
-	protected:
-		/* Light information required for shadows */
-		LightShadowInfo* m_LightShadowInfo;
-
 	protected:
 		/* Constructor */
-		Light(const GraphXMaths::Vector4& Color, GraphXMaths::Matrix4 ProjMat, float Intensity = 1.0f);
+		Light(const GM::Vector4& Color, GM::Matrix4 ProjMat, float Intensity = 1.0f);
 
 	public:
 		/* Updates the status of the light */
@@ -58,5 +44,19 @@ namespace GraphX
 
 		/* Destructor */
 		virtual ~Light();
+
+	public:
+		/* Color of the light */
+		GM::Vector4 Color;
+
+		/* Intensity of the light (total energy emitted by the light) */
+		float Intensity;
+
+		/* Whether to show the details UI window (ImGUI) or not */
+		bool bShowDetails : 1;
+
+	protected:
+		/* Light information required for shadows */
+		LightShadowInfo* m_LightShadowInfo;
 	};
 }

@@ -17,17 +17,6 @@ namespace GraphX
 
 	class EngineUtil
 	{
-
-	private:
-		/* Random device used to generate random values */
-		static std::random_device s_RandDevice;
-
-		/* Random value generator */
-		static std::mt19937_64 s_RandNumGenerator;
-
-		/* Convertor to convert between normal and wide strings */
-		static std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>> s_StringConvertor;
-
 	public:
 		/* Returns a byte string from the WideString */
 		static std::string ToByteString(const std::wstring& WideString);
@@ -49,5 +38,15 @@ namespace GraphX
 
 		/* Returns the file location from the absolute file path */
 		static std::string ExtractFileLocation(const std::string& AbsoluteFilePath);
+
+	private:
+		/* Random device used to generate random values */
+		static std::random_device s_RandDevice;
+
+		/* Random value generator */
+		static std::mt19937_64 s_RandNumGenerator;
+
+		/* Convertor to convert between normal and wide strings */
+		static std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>> s_StringConvertor;
 	};
 }

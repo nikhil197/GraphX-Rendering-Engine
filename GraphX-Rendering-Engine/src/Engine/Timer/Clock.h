@@ -6,13 +6,6 @@ namespace GraphX
 
 	class Clock
 	{
-	private:
-		/* Timer for the clock */
-		Timer* m_Timer;
-
-		/* Static clock */
-		static std::shared_ptr<Clock> s_Clock;
-
 		/* To use as a constructor argument to make it private */
 		struct ConstructorHelper {};
 
@@ -40,5 +33,12 @@ namespace GraphX
 
 		/* Release resources */
 		~Clock();
+
+	private:
+		/* Timer for the clock */
+		Timer* m_Timer;
+
+		/* Static clock */
+		static std::shared_ptr<Clock> s_Clock;
 	};
 }

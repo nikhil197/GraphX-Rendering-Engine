@@ -5,9 +5,9 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
-	std::vector<GraphXMaths::Vector3> Cube::s_VertexPositions = 
+	std::vector<GM::Vector3> Cube::s_VertexPositions = 
 	{
 		Vector3(-1.0f, -1.0f,  1.0f),
 		Vector3( 1.0f, -1.0f,  1.0f),
@@ -79,7 +79,7 @@ namespace GraphX
 		3, 4, 0
 	};
 
-	Cube::Cube(const GraphXMaths::Vector3& Position, const GraphXMaths::Vector3& Rotation, const GraphXMaths::Vector3& Size, Material* Mat)
+	Cube::Cube(const GM::Vector3& Position, const GM::Vector3& Rotation, const GM::Vector3& Size, Material* Mat)
 		: Mesh3D(Position, Rotation, Size, s_Vertices, s_Indices, Mat)
 	{
 	}

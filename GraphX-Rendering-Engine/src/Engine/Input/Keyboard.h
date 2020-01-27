@@ -118,15 +118,8 @@ namespace GraphX
 
 	class Keyboard
 	{
-	private:
-		/* To keep track of which keys have been pressed */
-		std::vector<bool>* m_Keys;
-
-		/* Static instance of the keyboard */
-		static std::shared_ptr<Keyboard> s_Keyboard;
-
 		/* To use as a constructor argument to make it private */
-		struct ConstructorHelper{};
+		struct ConstructorHelper {};
 
 	public:
 		/* Constructor helper is private to this class only, so the constructor cannot be invoked */
@@ -152,5 +145,12 @@ namespace GraphX
 		}
 
 		~Keyboard();
+
+	private:
+		/* To keep track of which keys have been pressed */
+		std::vector<bool>* m_Keys;
+
+		/* Static instance of the keyboard */
+		static std::shared_ptr<Keyboard> s_Keyboard;
 	};
 }

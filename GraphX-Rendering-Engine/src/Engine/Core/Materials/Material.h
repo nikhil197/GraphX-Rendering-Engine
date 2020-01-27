@@ -2,7 +2,7 @@
 
 namespace GraphX
 {
-	using namespace GraphXMaths;
+	using namespace GM;
 
 	class Texture;
 	class Shader;
