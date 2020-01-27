@@ -37,22 +37,25 @@ namespace GraphX
 
 	std::string EngineUtil::ExtractFileName(const std::string& AbsoluteFilePath)
 	{
-		std::string Result;
-		int i = AbsoluteFilePath.length() - 1;
-		while (i >= 0 && AbsoluteFilePath[i] != '/' && AbsoluteFilePath[i] != '\\')
-		{
-			Result.push_back(AbsoluteFilePath[i]);
-			i--;
-		}
+		int LastSlash = AbsoluteFilePath.find_last_of("/\\");
+		LastSlash = LastSlash == std::string::npos ? 0 : LastSlash + 1;
 
-		std::reverse(Result.begin(), Result.end());
-		return Result;
+		int LastDot = AbsoluteFilePath.rfind(".");
+		int count = LastDot == std::string::npos ? AbsoluteFilePath.size() - LastSlash : LastDot - LastSlash;
+
+		return AbsoluteFilePath.substr(LastSlash, count);
 	}
 
 	std::string EngineUtil::ExtractFileLocation(const std::string& AbsoluteFilePath)
 	{
-		std::string Result = ExtractFileName(AbsoluteFilePath);
-		
-		return std::string(AbsoluteFilePath, 0, AbsoluteFilePath.length() - Result.length() - 1);
+		int LastSlash = AbsoluteFilePath.find_last_of("/\\");
+		if (LastSlash == std::string::npos)
+		{
+			return std::string();
+		}
+		else
+		{
+			return AbsoluteFilePath.substr(0, LastSlash);
+		}
 	}
 }
