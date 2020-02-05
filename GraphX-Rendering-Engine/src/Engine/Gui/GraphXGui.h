@@ -33,7 +33,7 @@ namespace GraphX
 		static void LightProperties(class PointLight& light);
 
 		/* Create a window showing the Camera properties */
-		static void CameraProperties(class Camera& camera);
+		static void CameraProperties(class CameraController& camera);
 
 		/* Create a window showing the details of the Mesh2D */
 		static void DetailsWindow(class Mesh2D& mesh);

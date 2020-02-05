@@ -92,7 +92,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -112,7 +112,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -134,7 +134,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -158,7 +158,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -180,6 +180,7 @@
     <ClCompile Include="src\Engine\Core\GraphicsContext.cpp" />
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Engine\Controllers\CameraController.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
+    <ClInclude Include="src\Engine\Controllers\CameraController.h" />
     <ClInclude Include="src\Engine\Entities\Entity.h" />
     <ClInclude Include="src\Engine\Entities\Lights\DirectionalLight.h" />
     <ClInclude Include="src\Engine\Entities\Lights\Light.h" />
@@ -318,16 +320,6 @@
     <ClInclude Include="vendor\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\Basic.shader" />
-    <None Include="res\shaders\BasicLightingShader.shader" />
-    <None Include="res\shaders\BasicTexture.shader" />
-    <None Include="res\Shaders\DebugCollisions.shader" />
-    <None Include="res\Shaders\Depth.shader" />
-    <None Include="res\Shaders\GeneralShader.shader" />
-    <None Include="res\shaders\MVP_Color.shader" />
-    <None Include="res\Shaders\Particle.shader" />
-    <None Include="res\shaders\Skybox.shader" />
-    <None Include="res\Shaders\Terrain.shader" />
     <None Include="src\Engine\MemoryManager.inl" />
   </ItemGroup>
   <ItemGroup>

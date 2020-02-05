@@ -156,6 +156,9 @@
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Controllers\CameraController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imgui.h">
@@ -353,20 +356,13 @@
     <ClInclude Include="src\Engine\Core\Materials\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Controllers\CameraController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\Basic.shader" />
-    <None Include="res\shaders\MVP_Color.shader" />
-    <None Include="res\shaders\BasicLightingShader.shader" />
-    <None Include="res\shaders\BasicTexture.shader" />
-    <None Include="res\shaders\Skybox.shader" />
-    <None Include="res\Shaders\GeneralShader.shader" />
-    <None Include="res\Shaders\Terrain.shader" />
-    <None Include="res\Shaders\Depth.shader" />
-    <None Include="res\Shaders\Particle.shader" />
     <None Include="src\Engine\MemoryManager.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="res\Shaders\DebugCollisions.shader" />
   </ItemGroup>
 </Project>

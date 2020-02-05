@@ -1,64 +1,66 @@
 #include "pch.h"
-
 #include "Application.h"
 
-#include "VertexArray.h"
-#include "Shaders/Shader.h"
-#include "Materials/Material.h"
+#include "Engine/Core/VertexArray.h"
+#include "Engine/Core/Shaders/Shader.h"
+#include "Engine/Core/Materials/Material.h"
 
 /* Buffers */
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/VertexBufferLayout.h"
-#include "Buffers/IndexBuffer.h"
-#include "Buffers/FrameBuffer.h"
+#include "Engine/Core/Buffers/VertexBuffer.h"
+#include "Engine/Core/Buffers/VertexBufferLayout.h"
+#include "Engine/Core/Buffers/IndexBuffer.h"
+#include "Engine/Core/Buffers/FrameBuffer.h"
 
-#include "Model/Mesh/Vertex.h"
-#include "Textures/Texture.h"
+#include "Engine/Core/Textures/Texture.h"
 
 /* Renderer */
 #include "Renderer/Renderer.h"
 
+/* Controllers */
+#include "Engine/Controllers/CameraController.h"
+
 /* Entities */
-#include "Entities/Lights/PointLight.h"
-#include "Entities/Lights/DirectionalLight.h"
-#include "Entities/Camera.h"
-#include "Entities/Skybox.h"
-#include "Entities/Terrain.h"
-#include "Entities/Particles/Particle.h"
-#include "Entities/Particles/ParticleManager.h"
-#include "Entities/Particles/ParticleSystem.h"
+#include "Engine/Entities/Lights/PointLight.h"
+#include "Engine/Entities/Lights/DirectionalLight.h"
+#include "Engine/Entities/Camera.h"
+#include "Engine/Entities/Skybox.h"
+#include "Engine/Entities/Terrain.h"
+#include "Engine/Entities/Particles/Particle.h"
+#include "Engine/Entities/Particles/ParticleManager.h"
+#include "Engine/Entities/Particles/ParticleSystem.h"
 
 #include "Window.h"
 #include "Timer/Clock.h"
 #include "Gui/GraphXGui.h"
 
 /* Events */
-#include "Events/WindowEvent.h"
-#include "Events/KeyboardEvent.h"
-#include "Events/MouseEvent.h"
-#include "Events/GUIEvent.h"
+#include "Engine/Events/WindowEvent.h"
+#include "Engine/Events/KeyboardEvent.h"
+#include "Engine/Events/MouseEvent.h"
+#include "Engine/Events/GUIEvent.h"
 
 /* Input */
-#include "Input/Keyboard.h"
-#include "Input/Mouse.h"
+#include "Engine/Input/Keyboard.h"
+#include "Engine/Input/Mouse.h"
 
 /* Model */
-#include "Model/ModelTypes.h"
-#include "Model/Model3D.h"
-#include "Model/Mesh/Mesh2D.h"
-#include "Model/Mesh/Mesh3D.h"
-#include "model/Cube.h"
+#include "Model/Mesh/Vertex.h"
+#include "Engine/Model/ModelTypes.h"
+#include "Engine/Model/Model3D.h"
+#include "Engine/Model/Mesh/Mesh2D.h"
+#include "Engine/Model/Mesh/Mesh3D.h"
+#include "Engine/model/Cube.h"
 
 /* Utils */
-#include "Utilities/EngineUtil.h"
-#include "Utilities/FileOpenDialog.h"
+#include "Engine/Utilities/EngineUtil.h"
+#include "Engine/Utilities/FileOpenDialog.h"
 
 namespace GraphX
 {
 	using namespace GM;
 
 	Application::Application(std::string& title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_Camera(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
@@ -79,11 +81,11 @@ namespace GraphX
 		// Initialise the renderer
 		Renderer::Initialize();
 
-		m_Camera = new Camera(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
+		m_CameraController = new CameraController(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, *m_Camera, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, *m_Camera, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
+		m_DaySkybox  = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = new Skybox("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
 
@@ -103,7 +105,7 @@ namespace GraphX
 		m_DepthShader = new Shader("res/Shaders/Depth.shader");
 
 		m_ParticlesManager = new ParticleManager();
-		m_ParticlesManager->Initialize(m_Camera, 1000);	// TODO: Move to a suitable location
+		m_ParticlesManager->Initialize(&m_CameraController->GetCamera(), 1000);	// TODO: Move to a suitable location
 
 		m_DefaultTexture  = new Texture("res/Textures/stone.jpg");
 	}
@@ -199,44 +201,51 @@ namespace GraphX
 				times = 0;
 			}
 
-			if (GX_ENABLE_PARTICLE_EFFECTS)
+			// Update the Gui
+			GraphXGui::Update();
+
+			// No need to update or render stuff if the application (window) is minimised
+			if (!m_IsMinimised)
 			{
-				particleSys.SpawnParticles(GM::Vector3::ZeroVector, DeltaTime);
+				if (GX_ENABLE_PARTICLE_EFFECTS)
+				{
+					particleSys.SpawnParticles(GM::Vector3::ZeroVector, DeltaTime);
+				}
+
+				// Update all the elements of the scene
+				Update(DeltaTime);
+
+				/****** Normally render the scene *****/
+				// Clear the window 
+				m_Window->Clear();
+
+				// Start a scene
+				Renderer::BeginScene(&m_CameraController->GetCamera());
+
+				for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+					Renderer::Submit(m_Objects3D[i]);
+
+				// Calculate the shadow maps
+				if (GX_ENABLE_SHADOWS)
+					RenderShadowMap();
+
+				// Draw the debug quad to show the depth map
+				//RenderShadowDebugQuad();
+
+				RenderSkybox();
+
+				// Bind the shader and draw the objects
+				m_Shader->Bind();
+				m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+				ConfigureShaderForRendering(*m_Shader);
+
+				RenderScene();
+
+				m_ParticlesManager->RenderParticles();
+
+				// End the scene
+				Renderer::EndScene();
 			}
-
-			// Update all the elements of the scene
-			Update(DeltaTime);
-
-			/****** Normally render the scene *****/
-			// Clear the window 
-			m_Window->Clear();
-
-			// Start a scene
-			Renderer::BeginScene(m_Camera);
-
-			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
-				Renderer::Submit(m_Objects3D[i]);
-
-			// Calculate the shadow maps
-			if (GX_ENABLE_SHADOWS)
-				RenderShadowMap();
-
-			// Draw the debug quad to show the depth map
-			RenderShadowDebugQuad();
-
-			RenderSkybox();
-
-			// Bind the shader and draw the objects
-			m_Shader->Bind();
-			m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
-			ConfigureShaderForRendering(*m_Shader);
-
-			RenderScene();
-
-			m_ParticlesManager->RenderParticles();
-
-			// End the scene
-			Renderer::EndScene();
 
 			// Renders ImGUI
 			RenderGui();
@@ -251,11 +260,8 @@ namespace GraphX
 
 	void Application::Update(float DeltaTime)
 	{
-		// Update the Gui
-		GraphXGui::Update();
-
 		// Update the camera
-		m_Camera->Update(DeltaTime);
+		m_CameraController->Update(DeltaTime);
 		
 		// Update the lights
 		for (unsigned int i = 0; i < m_Lights.size(); i++)
@@ -277,7 +283,7 @@ namespace GraphX
 
 		m_CurrentSkybox->Update(DeltaTime);
 
-		if (m_Camera->IsRenderStateDirty())
+		if (m_CameraController->GetCamera().IsRenderStateDirty())
 		{
 			for (unsigned int i = 0; i < m_Shaders.size(); i++)
 			{
@@ -288,8 +294,10 @@ namespace GraphX
 					continue;
 				}
 				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
-				shader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
+				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+
+				//TODO: Uniforms need to be set in the renderer
+				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera().GetProjectionViewMatrix());
 			}
 
 			// Update the terrain Material shader (TODO: Find a better way)
@@ -297,12 +305,12 @@ namespace GraphX
 			{
 				Shader* shader = m_Terrain[i]->GetMaterial()->GetShader();
 				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_Camera->CameraPosition);
-				shader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
+				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera().GetProjectionViewMatrix());
 			}
 
 			// Set the state back to rendered
-			m_Camera->SetRenderStateDirty(false);
+			m_CameraController->GetCamera().SetRenderStateDirty(false);
 		}
 	}
 
@@ -380,7 +388,7 @@ namespace GraphX
 			GraphXGui::DetailsWindow(*m_SelectedObject3D, "Selected Object");
 
 		GraphXGui::LightProperties(*m_Light);
-		GraphXGui::CameraProperties(*m_Camera);
+		GraphXGui::CameraProperties(*m_CameraController);
 		GraphXGui::Models();
 		if (m_Terrain.size() > 0 && m_Terrain[0] != nullptr)
 		{
@@ -430,6 +438,9 @@ namespace GraphX
 
 	void Application::OnEvent(Event& e)
 	{
+		// Send the event to all the layers (once the layer system is in place)
+		m_CameraController->OnEvent(e);
+
 		bool handled = false;
 		EventDispatcher dispatcher(e);
 
@@ -579,8 +590,18 @@ namespace GraphX
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
 	{
+		// If either of the width or height is zero, it means the window is minimised
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_IsMinimised = true;
+			return true;
+		}
+
+		m_IsMinimised = false;
+
 		// Set the new size of the window
 		m_Window->OnResize();
+		
 		return true;
 	}
 
@@ -694,14 +715,27 @@ namespace GraphX
 
 	bool Application::OnCameraFOVChanged(class CameraFOVChangedEvent& e)
 	{
-		e.GetEntity().SetNewFOV(e.GetChangedFOV());
-		return true;
+		CameraController* Controller = e.GetEntity().GetCameraController();
+		if (Controller != nullptr)
+		{
+			Controller->SetFieldOfView(e.GetChangedFOV());
+			return true;
+		}
+
+		GX_ENGINE_ERROR("Trying to change Camera FOV for a camera without a controller");
+		return false;
 	}
 
 	bool Application::OnCameraProjectionModeChanged(class CameraProjectionModeChange& e)
 	{
-		e.GetEntity().SetNewProjectionMode(e.GetNewProjectionMode());
-		return true;
+		CameraController* Controller = e.GetEntity().GetCameraController();
+		if (Controller != nullptr)
+		{
+			Controller->SetProjectionMode(e.GetNewProjectionMode());
+		}
+
+		GX_ENGINE_ERROR("Trying to change Projection for a camera without a controller");
+		return false;
 	}
 
 	bool Application::OnCreateTerrain(CreateTerrainEvent& e)
@@ -742,7 +776,7 @@ namespace GraphX
 
 		delete m_DefaultMaterial;
 
-		delete m_Camera;
+		delete m_CameraController;
 		delete m_Window;
 	}
 }

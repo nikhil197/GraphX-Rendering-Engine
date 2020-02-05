@@ -3,8 +3,10 @@
 #include "Skybox.h"
 
 #include "ErrorHandler.h"	// TODO: This should not be included outside of Core Submodule
-#include "Entities/Camera.h"
 #include "Model/Cube.h"
+
+#include "Entities/Camera.h"
+#include "Engine/Controllers/CameraController.h"
 
 #include "Textures/CubeMap.h"
 #include "Shaders/Shader.h"
@@ -16,8 +18,8 @@
 
 namespace GraphX
 {
-	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Camera& Camera, const GM::Vector4& color, float factor, unsigned int slot, float Speed)
-		: m_VAO(new VertexArray()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(new Shader(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Camera(Camera), m_BindingSlot(slot), m_Rotation(0.0f), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
+	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const CameraController* CameraController, const GM::Vector4& color, float factor, unsigned int slot, float Speed)
+		: m_VAO(new VertexArray()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(new Shader(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_CameraController(CameraController), m_BindingSlot(slot), m_Rotation(0.0f), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
 	{
 		std::vector<unsigned int> indices = Cube::GetIndices();
 		// Top face
@@ -47,7 +49,7 @@ namespace GraphX
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 
-		m_View = m_Camera.GetViewMatrix();
+		m_View = m_CameraController->GetCamera().GetViewMatrix();
 		m_View[0][3] = 0.0f;
 		m_View[1][3] = 0.0f;
 		m_View[2][3] = 0.0f;
@@ -79,7 +81,10 @@ namespace GraphX
 
 		// Set the uniforms
 		m_Shader->SetUniformMat4f("u_View", m_View);
-		m_Shader->SetUniformMat4f("u_Projection", m_Camera.GetProjectionMatrix());
+
+		if(m_CameraController->GetProjectionMode() == ProjectionMode::Perspective)
+			m_Shader->SetUniformMat4f("u_Projection", m_CameraController->GetCamera().GetProjectionMatrix());
+
 		m_Shader->SetUniform1i("u_Skybox", m_BindingSlot);
 		m_Shader->SetUniform1f("u_BlendFactor", BlendFactor);
 	}

@@ -4,6 +4,8 @@
 #include "Entities/Camera.h"
 #include "Input/Mouse.h"
 
+#include "Engine/Controllers/CameraController.h"
+
 namespace GraphX
 {
 	MousePicker::MousePicker(const Camera& camera, float width, float height)
@@ -16,9 +18,7 @@ namespace GraphX
 		GM::Vector3 WorldCoords = ToWorldCoordinates(ToNormalisedScreenCoordinates(MousePosition));
 
 		// Update the ray
-		m_PickerRay = (WorldCoords - m_Camera.CameraPosition).Normal();
-
-
+		m_PickerRay = (WorldCoords - m_Camera.GetCameraController()->GetCameraPosition()).Normal();
 	}
 
 	GM::Vector2 MousePicker::ToNormalisedScreenCoordinates(const GM::Vector2& ScreenCoords)

@@ -69,8 +69,8 @@ namespace GraphX
 			for (int x = 0; x < m_Width; x++)
 			{
 				// Calculate the vertices of the terrain
-				double yCoord = GetYCoords(x, z);
-				vertex.Position = Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
+				//double yCoord = GetYCoords(x, z);
+				vertex.Position = Vector3(x * m_TileSize, -10.0f/*(float)yCoord*/, -z * m_TileSize);
 				vertex.TexCoord = Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 

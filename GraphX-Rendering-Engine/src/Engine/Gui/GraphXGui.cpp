@@ -15,6 +15,8 @@
 #include "Entities/Terrain.h"
 #include "Entities/Skybox.h"
 
+#include "Engine/Controllers/CameraController.h"
+
 #include "Utilities/FileOpenDialog.h"
 #include "Utilities/EngineUtil.h"
 
@@ -202,18 +204,19 @@ namespace GraphX
 		}
 	}
 
-	void GraphXGui::CameraProperties(Camera& camera)
+	void GraphXGui::CameraProperties(CameraController& cameraController)
 	{
-		float FOV = camera.GetFieldOfView();
-		bool bPerspectiveMode = camera.GetProjectionMode() == ProjectionMode::Perspective;
+		float FOV = cameraController.GetFieldOfView();
+		bool bPerspectiveMode = cameraController.GetProjectionMode() == ProjectionMode::Perspective;
 		ImGui::Begin("Camera Properties", (bool*)true);
-		ImGui::DragFloat("Camera Speed", (float*)&camera.CameraSpeed, 1.0f, 0.0f, 100.0f);
-		
+		ImGui::DragFloat("Camera Translation Speed", (float*)&cameraController.TranslationSpeed, 1.0f, 0.0f, 100.0f);
+		ImGui::DragFloat("Camera Roll Speed", (float*)&cameraController.RollSpeed, 1.0f, 30.0f, 360.0f);
+
 		if (ImGui::DragFloat("Field Of View", &FOV, .1f, 10.0f, 100.0f))
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraFOVChangedEvent e(camera, FOV);
+				CameraFOVChangedEvent e(cameraController.GetCamera(), FOV);
 				s_GuiEventCallback(e);
 			}
 		}
@@ -224,7 +227,7 @@ namespace GraphX
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraProjectionModeChange e(camera, ProjectionMode::Perspective);
+				CameraProjectionModeChange e(cameraController.GetCamera(), ProjectionMode::Perspective);
 				s_GuiEventCallback(e);
 			}
 		}
@@ -233,7 +236,7 @@ namespace GraphX
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraProjectionModeChange e(camera, ProjectionMode::Orthographic);
+				CameraProjectionModeChange e(cameraController.GetCamera(), ProjectionMode::Orthographic);
 				s_GuiEventCallback(e);
 			}
 		}

@@ -98,6 +98,9 @@ namespace GraphX
 		/* Whether the application is running or not */
 		bool m_IsRunning;
 
+		/* Whether the application is minimised or not */
+		bool m_IsMinimised = false;
+
 		/* How long will a day last in the engine (in hours) */
 		float m_EngineDayTime;
 
@@ -132,7 +135,7 @@ namespace GraphX
 		class Shader* m_DepthShader;
 
 		/* Main Camera for the application */
-		class Camera* m_Camera;
+		class CameraController* m_CameraController;
 
 		/* SKybox for the day time */
 		class Skybox* m_DaySkybox;
