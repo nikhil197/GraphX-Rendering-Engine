@@ -58,7 +58,6 @@ namespace GM
 		Mat[0][3] = -Vector3::DotProduct(RightAxis, CameraPosition);
 		Mat[1][3] = -Vector3::DotProduct(UpAxis, CameraPosition);
 		Mat[2][3] = Vector3::DotProduct(ViewAxis, CameraPosition);
-		//Translation trans(-CameraPosition);
 	}
 
 }
