@@ -1,17 +1,5 @@
 #pragma once
 
-/* Engine Global Headers */
-#include "Log.h"
-#include "EngineMacros.h"
-
-/* Engine Utilities */
-#include "Timer/Timer.h"
-#include "Utilities/EngineConstants.h"
-#include "Utilities/EngineProperties.h"
-
-/* Maths Library */
-#include "GraphX_Maths.h"
-
 /* Standard Libraries */
 #include <iostream>
 #include <chrono>
@@ -27,3 +15,18 @@
 #include <sstream>
 #include <fstream>
 #include <functional>
+
+/********************* Engine Files **************************/
+#include "Engine/Core/AssetManager/Manager.h"
+
+/* Engine Global Headers */
+#include "Engine/Log.h"
+#include "Engine/EngineMacros.h"
+
+/* Engine Utilities */
+#include "Engine/Timer/Timer.h"
+#include "Engine/Utilities/EngineConstants.h"
+#include "Engine/Utilities/EngineProperties.h"
+
+/* Maths Library */
+#include "GraphX_Maths.h"

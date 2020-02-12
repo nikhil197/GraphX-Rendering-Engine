@@ -159,6 +159,9 @@
     <ClCompile Include="src\Engine\Controllers\CameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imgui.h">
@@ -293,9 +296,6 @@
     <ClInclude Include="src\Engine\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\MemoryManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -359,10 +359,11 @@
     <ClInclude Include="src\Engine\Controllers\CameraController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Engine\MemoryManager.inl">
+    <ClInclude Include="src\Engine\Core\AssetManager\Manager.h">
       <Filter>Header Files</Filter>
-    </None>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -181,6 +181,7 @@
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Engine\Controllers\CameraController.cpp" />
+    <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp" />
@@ -253,11 +254,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Application.h" />
+    <ClInclude Include="src\Engine\Core\AssetManager\Manager.h" />
     <ClInclude Include="src\Engine\Core\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Engine\Core\GraphicsContext.h" />
     <ClInclude Include="src\Engine\Core\Materials\Material.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
+    <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
     <ClInclude Include="src\Engine\Controllers\CameraController.h" />
@@ -278,7 +281,6 @@
     <ClInclude Include="src\Engine\Input\Keyboard.h" />
     <ClInclude Include="src\Engine\Input\Mouse.h" />
     <ClInclude Include="src\Engine\Log.h" />
-    <ClInclude Include="src\Engine\MemoryManager.h" />
     <ClInclude Include="src\Engine\Model\Cube.h" />
     <ClInclude Include="src\Engine\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Engine\Model\Mesh\Mesh3D.h" />
@@ -318,9 +320,6 @@
     <ClInclude Include="vendor\ImGui\stb_textedit.h" />
     <ClInclude Include="vendor\ImGui\stb_truetype.h" />
     <ClInclude Include="vendor\stb\stb_image.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Engine\MemoryManager.inl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">
