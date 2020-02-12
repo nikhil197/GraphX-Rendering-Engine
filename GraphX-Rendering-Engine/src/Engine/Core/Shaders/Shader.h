@@ -13,7 +13,7 @@ namespace GraphX
 	{
 	public:
 		/* filePath is the path to the source file */
-		Shader(const std::string& filePath);
+		Shader(const std::string& filePath, const std::string& name = "");
 
 		Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc);
 
@@ -49,6 +49,9 @@ namespace GraphX
 		void SetUniformMat3f(const char* Name, const GM::Matrix3& Mat);
 
 		void SetUniformMat4f(const char* Name, const GM::Matrix4& Mat);
+
+		// Returns the name for the shader
+		const std::string& GetName() const { return m_Name; }
 
 	private:
 		/* Parse the source file and get the shader source codes */

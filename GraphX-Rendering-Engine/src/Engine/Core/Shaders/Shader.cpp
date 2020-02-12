@@ -7,10 +7,14 @@
 
 namespace GraphX
 {
-	Shader::Shader(const std::string& filePath)
-		:m_Name(std::string()), m_RendererID(0)
+	Shader::Shader(const std::string& filePath, const std::string& name)
+		:m_Name(name), m_RendererID(0)
 	{
-		m_Name = EngineUtil::ExtractFileName(filePath);
+		if (name == "")
+		{
+			m_Name = EngineUtil::ExtractFileName(filePath);
+		}
+
 		ShaderSource source = ParseShaderSource(filePath);
 		
 		if (source.FragmentShaderSource.length() > 0 && source.VertexShaderSource.length() > 0)
