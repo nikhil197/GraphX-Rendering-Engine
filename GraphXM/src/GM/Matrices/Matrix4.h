@@ -81,6 +81,11 @@ namespace GM
 		/* Returns the vector obtained after multipying a vec4 with this matrix */
 		const Vector4 operator*(const Vector4& Vec) const;
 
+		/* Returns the elements */
+		const float& operator()(int row, int column) const { return M[row][column]; }
+		float& operator()(int row, int column) { return M[row][column]; }
+
+		// Deprecated: This operator is prone to memory mis use (Use operator() instead)
 		float* const operator[](int index) const;
 
 		/* Converts the matrix into an identity matrix */
