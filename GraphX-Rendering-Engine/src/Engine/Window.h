@@ -7,68 +7,37 @@ namespace GraphX
 {
 	class Event;
 
+	/* Properties of the window */
+	struct WindowProps
+	{
+		// Title of the window
+		std::string Title;
+
+		// Width and height of the window
+		unsigned int Width, Height;
+
+		WindowProps(const std::string& title = "GraphX Engine", unsigned int width = 1920, unsigned int height = 1080)
+			: Title(title), Width(width), Height(height)
+		{}
+	};
+
 	class Window
 	{
-	private:
-		/* Title of the window */
-		std::string m_Title;
-
-		/* Width and height of the window */
-		int m_Width, m_Height;
-
-		/* Whether the window is closed */
-		bool m_Closed;
-
-		/* GLFW Window */
-		GLFWwindow* m_Window;
-
-		/* Graphics Context to render on */
-		class GraphicsContext* m_Context;
-
-		/* Function pointer to the Application Event callback*/
-		std::function<void(Event&)> m_EventCallback;
-
-	private:
-		/* Initialise the window */
-		bool Init();
-
-		// To handle all the events
-		void OnEvent(Event& e);
-
-#pragma region callbacks
-
-		/************* Window Callbacks **************/
-		void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
-
-		void WindowPositionCallback(GLFWwindow* window, int xpos, int ypos);
-
-		void WindowFocusCallback(GLFWwindow* window, int focused);
-
-		void WindowCloseCallback(GLFWwindow* window);
-
-		/************* Input Callbacks **************/
-		void KeyCallback(GLFWwindow* window, int keyCode, int scanCode, int action, int mods);
-
-		void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
-
-		void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-
-		void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
-#pragma endregion
-
 	public:
+		using EventCallbackFn = std::function<void(Event&)>;
+
 		/* Constructor */
-		Window(std::string title, int width, int height);
+		Window(const WindowProps& winProps = WindowProps());
 
 		/* Set the clear color */
 		void SetClearColor(float r, float g, float b, float a);
 
 		/* Set the event callback for the application */
-		void SetEventCallback(const std::function<void(Event&)>& func);
+		void SetEventCallback(const EventCallbackFn& func) { m_Data.EventCallback = func; }
 
-		/* Returns whether the window has been closed */
-		inline bool IsClosed() const { return m_Closed; }
+		// Set/Get VSync
+		void SetVSync(bool enabled);
+		bool IsVSync() const;
 
 		/* Clear the screen before each frame */
 		void Clear();
@@ -83,12 +52,43 @@ namespace GraphX
 		void OnResize();
 
 		/* Returns the width of the window */
-		inline int GetWidth() const { return m_Width; }
+		inline int GetWidth() const { return m_Data.Width; }
 
 		/* Returns the height of the window */
-		inline int GetHeight() const { return m_Height; }
+		inline int GetHeight() const { return m_Data.Height; }
 
 		/* Destruct the window */
 		~Window();
+
+	private:
+		/* Initialise the window */
+		void Init(const WindowProps& props);
+
+		void OnEvent(Event& event);
+
+	private:
+		/* GLFW Window */
+		GLFWwindow* m_Window;
+
+		/* Graphics Context to render on */
+		class GraphicsContext* m_Context;
+
+		struct WindowData
+		{
+			// Title of the window
+			std::string Title;
+
+			// Width and height of the window
+			unsigned int Width, Height;
+
+			// Function pointer to the Application Event callback
+			EventCallbackFn EventCallback;
+
+			// To enable VSync or not
+			bool Vsync;
+		};
+
+		// Data passed to GLFW
+		WindowData m_Data;
 	};
 }

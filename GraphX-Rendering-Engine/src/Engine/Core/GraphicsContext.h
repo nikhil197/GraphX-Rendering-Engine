@@ -10,7 +10,7 @@ namespace GraphX
 		GraphicsContext(GLFWwindow* WindowHandle);
 		
 		/* Initialise the Context for the window handle */
-		bool Init();
+		void Init();
 
 	private:
 		/* A handle to the GLFW Window */

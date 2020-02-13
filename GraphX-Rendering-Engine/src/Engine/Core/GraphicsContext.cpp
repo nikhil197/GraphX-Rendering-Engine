@@ -81,7 +81,7 @@ namespace GraphX
 	{
 	}
 
-	bool GraphicsContext::Init()
+	void GraphicsContext::Init()
 	{
 		GX_ENGINE_INFO("Initializing OpenGL");
 		Timer timer("Initializing OpenGL");
@@ -91,8 +91,8 @@ namespace GraphX
 		// Initialise GLEW
 		if (glewInit() != GLEW_OK)
 		{
-			GX_ENGINE_ERROR("Error while initializing glew");
-			return false;
+			GX_ASSERT(false, "Failed to Intialize Graphics Context (OpenGL)");
+			return;
 		}
 
 		// Print the gl version
@@ -123,7 +123,5 @@ namespace GraphX
 		// Blend Equation
 		// Add the src and dest values to get the result (can be changed to subtract, inverse, etc.)
 		glBlendEquation(GL_FUNC_ADD);
-
-		return true;
 	}
 }

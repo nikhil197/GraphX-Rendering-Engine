@@ -68,19 +68,19 @@ namespace GraphX
 		Mouse::Init();
 		Keyboard::Init();
 		
-		m_Window = new Window(m_Title, width, height);
-
-		InitializeApplication();
-	}
-
-	void Application::InitializeApplication()
-	{
+		m_Window = new Window(WindowProps(m_Title, width, height));
+		
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
 		// Initialise the renderer
 		Renderer::Initialize();
 
+		InitializeApplication();
+	}
+
+	void Application::InitializeApplication()
+	{
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
