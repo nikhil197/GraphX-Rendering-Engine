@@ -1,7 +1,22 @@
 #pragma once
 
+#include "Engine/Core/Shaders/ShaderLibrary.h"
+
 namespace GraphX
 {
+	class Mesh2D;
+	class Mesh3D;
+	class Model3D;
+	class Shader;
+	class IndexBuffer;
+
+	class Camera;
+	class Terrain;
+
+	class SimpleRenderer;
+	class Renderer2D;
+	class Renderer3D;
+
 	class Renderer
 	{
 	public:
@@ -12,22 +27,22 @@ namespace GraphX
 		static void CleanUp();
 
 		/* Begin a Scene for rendering */
-		static void BeginScene(const class Camera* MainCamera);
+		static void BeginScene(const Ref<Camera>& MainCamera);
 
 		/* Marks the end of a scene */
 		static void EndScene();
 
 		/* Submit a 2D mesh for rendering */
-		static void Submit(const class Mesh2D* mesh);
+		static void Submit(const Ref<Mesh2D>& mesh);
 
 		/* Submit a 3D mesh for rendering */
-		static void Submit(const class Mesh3D* mesh);
+		static void Submit(const Ref<Mesh3D>& mesh);
 
 		/* Submit a 3D model for rendering */
-		static void Submit(const class Model3D* model);
+		static void Submit(const Ref<Model3D>& model);
 
 		/* Submit a terrain for rendering */
-		static void Submit(const class Terrain* terrain);
+		static void Submit(const Ref<Terrain>& terrain);
 
 		/* Renders all the submitted meshes in the scene */
 		static void Render();
@@ -41,36 +56,39 @@ namespace GraphX
 		static void Render(unsigned int Count);
 
 		/* Directly renders (without queuing) the current bound vertex array indexed by 'indexBuffer' */
-		static void RenderIndexed(const class IndexBuffer& indexBuffer);
+		static void RenderIndexed(const IndexBuffer& indexBuffer);
 
 		/* Returns the shader used for debug rendering */
-		static class Shader* GetDebugCollisionsShader() { return s_DebugShader; }
+		static const Ref<Shader>& GetDebugCollisionsShader() { return s_DebugShader; }
+
+		/* Returns the shader library */
+		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }
 
 	private:
 		struct SceneInfo
 		{
 			/* Main Camera of the scene */
-			const class Camera* SceneCamera;
+			Ref<Camera> SceneCamera;
 
 			/* Resets the scene info */
-			void Reset()
-			{
-				SceneCamera = nullptr;
-			}
+			void Reset() {}
 		};
 
-		static class Shader* s_DebugShader;
+		/* Shaders library to store all the shaders */
+		static ShaderLibrary s_ShaderLibrary;
+
+		static Ref<Shader> s_DebugShader;
 
 		/* Info required for rendering current scene */
 		static SceneInfo* s_SceneInfo;
 
 		/* 3D Renderer for rendering 3D objects */
-		static class Renderer3D* s_Renderer3D;
+		static Renderer3D* s_Renderer3D;
 
 		/* 2D Renderer for rendering 2D objects */
-		static class Renderer2D* s_Renderer2D;
+		static Renderer2D* s_Renderer2D;
 
 		/* A Simple renderer to directly render stuff (without queuing) */
-		static class SimpleRenderer* s_Renderer;
+		static SimpleRenderer* s_Renderer;
 	};
 }

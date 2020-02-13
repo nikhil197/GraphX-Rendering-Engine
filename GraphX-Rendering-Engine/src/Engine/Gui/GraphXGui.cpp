@@ -44,12 +44,12 @@ namespace GraphX
 		ImGui_ImplGlfwGL3_NewFrame();
 	}
 
-	void GraphXGui::GlobalSettings(Skybox& skybox, float& daytime, float& SunLightIntensity, bool& EnableParticles)
+	void GraphXGui::GlobalSettings(const Ref<Skybox>& skybox, float& daytime, float& SunLightIntensity, bool& EnableParticles)
 	{
 		ImGui::Begin("Global Settings", (bool*)true);
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Skybox Details");
-		ImGui::DragFloat("Rotation Speed", &skybox.RotationSpeed, 0.1f, 0.0f, 2.0f);
+		ImGui::DragFloat("Rotation Speed", &skybox->RotationSpeed, 0.1f, 0.0f, 2.0f);
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Day Time Details");
 		ImGui::DragFloat("Day Time Hours", &daytime, 0.1f, 0.0f, 2.0f);
@@ -102,7 +102,7 @@ namespace GraphX
 				{
 					if (s_GuiEventCallback)
 					{
-						CreateTerrainEvent e(new Terrain(x, z, tileSize, textures, "res/Textures/Terrain/BlendMap.png", postion, scale));
+						CreateTerrainEvent e(CreateRef<Terrain>(x, z, tileSize, textures, "res/Textures/Terrain/BlendMap.png", postion, scale));
 						textures.clear();
 						s_GuiEventCallback(e);
 					}
@@ -122,31 +122,31 @@ namespace GraphX
 		}
 	}
 
-	void GraphXGui::DetailsWindow(Mesh3D& mesh, const std::string& Name)
+	void GraphXGui::DetailsWindow(const Ref<Mesh3D>& mesh, const std::string& Name)
 	{
-		if (mesh.bShowDetails)
+		if (mesh->bShowDetails)
 		{
-			ImGui::Begin(Name.c_str(), (bool*)mesh.bShowDetails);
+			ImGui::Begin(Name.c_str(), (bool*)mesh->bShowDetails);
 			ImGui::Spacing();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Transformations");
-			if (ImGui::DragFloat3("Translation", &mesh.Position.x, 1.0f, -1000.0f, 1000.0f))
+			if (ImGui::DragFloat3("Translation", &mesh->Position.x, 1.0f, -1000.0f, 1000.0f))
 			{
-				mesh.UpdateModelMatrix(true);
+				mesh->UpdateModelMatrix(true);
 			}
-			if (ImGui::DragFloat3("Rotation", (float*)& mesh.Rotation, 1.0f, -359.0f, 359.f))
+			if (ImGui::DragFloat3("Rotation", (float*)& mesh->Rotation, 1.0f, -359.0f, 359.f))
 			{
-				mesh.UpdateModelMatrix(true);
+				mesh->UpdateModelMatrix(true);
 			}
-			if (ImGui::DragFloat3("Scaling", (float*)& mesh.Scale.x, 1.0f, 0.0001f, 10.f))
+			if (ImGui::DragFloat3("Scaling", (float*)& mesh->Scale.x, 1.0f, 0.0001f, 10.f))
 			{
-				mesh.UpdateModelMatrix(true);
+				mesh->UpdateModelMatrix(true);
 			}
 
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Color and Properties");
 
-			Material* Mat = mesh.GetMaterial();
+			const Ref<Material>& Mat = mesh->GetMaterial();
 
 			GM::Vector4 BaseColor = Mat->GetBaseColor();
 			float Reflectivity = Mat->GetSpecularStrength();
@@ -172,7 +172,7 @@ namespace GraphX
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Texture Properties");
 
 			ImGui::BeginChild("Textures in current model");
-			std::vector<const Texture*> Textures = Mat->GetTextures();
+			std::vector<Ref<const Texture>> Textures = Mat->GetTextures();
 			int size = Textures.size();
 			for (int n = 0; n < size; n++)
 			{
@@ -192,31 +192,31 @@ namespace GraphX
 		}
 	}
 
-	void GraphXGui::LightProperties(PointLight& light)
+	void GraphXGui::LightProperties(const Ref<PointLight>& light)
 	{
-		if (light.bShowDetails)
+		if (light->bShowDetails)
 		{
-			ImGui::Begin("Lighting", (bool*)light.bShowDetails);
-			ImGui::DragFloat3("Position", (float*)&light.Position.x, 1.0f, -500.0f, 500.0f);
-			ImGui::DragFloat("Intensity", (float*)&light.Intensity, 1.0f, 0.0f, 100.0f);
-			ImGui::ColorEdit4("Color", (float*)&light.Color);
+			ImGui::Begin("Lighting", (bool*)light->bShowDetails);
+			ImGui::DragFloat3("Position", (float*)&light->Position.x, 1.0f, -500.0f, 500.0f);
+			ImGui::DragFloat("Intensity", (float*)&light->Intensity, 1.0f, 0.0f, 100.0f);
+			ImGui::ColorEdit4("Color", (float*)&light->Color);
 			ImGui::End();
 		}
 	}
 
-	void GraphXGui::CameraProperties(CameraController& cameraController)
+	void GraphXGui::CameraProperties(const Ref<CameraController>& cameraController)
 	{
-		float FOV = cameraController.GetFieldOfView();
-		bool bPerspectiveMode = cameraController.GetProjectionMode() == ProjectionMode::Perspective;
+		float FOV = cameraController->GetFieldOfView();
+		bool bPerspectiveMode = cameraController->GetProjectionMode() == ProjectionMode::Perspective;
 		ImGui::Begin("Camera Properties", (bool*)true);
-		ImGui::DragFloat("Camera Translation Speed", (float*)&cameraController.TranslationSpeed, 1.0f, 0.0f, 100.0f);
-		ImGui::DragFloat("Camera Roll Speed", (float*)&cameraController.RollSpeed, 1.0f, 30.0f, 360.0f);
+		ImGui::DragFloat("Camera Translation Speed", (float*)&cameraController->TranslationSpeed, 1.0f, 0.0f, 100.0f);
+		ImGui::DragFloat("Camera Roll Speed", (float*)&cameraController->RollSpeed, 1.0f, 30.0f, 360.0f);
 
 		if (ImGui::DragFloat("Field Of View", &FOV, .1f, 10.0f, 100.0f))
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraFOVChangedEvent e(cameraController.GetCamera(), FOV);
+				CameraFOVChangedEvent e(*cameraController->GetCamera(), FOV);
 				s_GuiEventCallback(e);
 			}
 		}
@@ -227,7 +227,7 @@ namespace GraphX
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraProjectionModeChange e(cameraController.GetCamera(), ProjectionMode::Perspective);
+				CameraProjectionModeChange e(*cameraController->GetCamera(), ProjectionMode::Perspective);
 				s_GuiEventCallback(e);
 			}
 		}
@@ -236,27 +236,27 @@ namespace GraphX
 		{
 			if (s_GuiEventCallback)
 			{
-				CameraProjectionModeChange e(cameraController.GetCamera(), ProjectionMode::Orthographic);
+				CameraProjectionModeChange e(*cameraController->GetCamera(), ProjectionMode::Orthographic);
 				s_GuiEventCallback(e);
 			}
 		}
 		ImGui::End();
 	}
 
-	void GraphXGui::DetailsWindow(Mesh2D& mesh)
+	void GraphXGui::DetailsWindow(const Ref<Mesh2D>& mesh)
 	{
-		if (mesh.bShowDetails)
+		if (mesh->bShowDetails)
 		{
-			ImGui::Begin("Details", (bool*)mesh.bShowDetails);
+			ImGui::Begin("Details", (bool*)mesh->bShowDetails);
 
 			ImGui::Text("Transformations");
-			ImGui::SliderFloat3("Translation", (float*)&mesh.Position.x, -1000.0f, 1000.0f);
-			ImGui::SliderFloat3("Rotation", (float*)(&mesh.Rotation), 0.0f, 359.f);
-			ImGui::SliderFloat2("Scale", (float*)(&mesh.Scale.x), 0.0001f, 10.f);
+			ImGui::SliderFloat3("Translation", (float*)&mesh->Position.x, -1000.0f, 1000.0f);
+			ImGui::SliderFloat3("Rotation", (float*)(&mesh->Rotation), 0.0f, 359.f);
+			ImGui::SliderFloat2("Scale", (float*)(&mesh->Scale.x), 0.0001f, 10.f);
 
 			ImGui::Text("Color and Properties");
 			
-			Material* Mat = mesh.GetMaterial();
+			Ref<Material> Mat = mesh->GetMaterial();
 			GM::Vector4 BaseColor = Mat->GetBaseColor();
 			float Reflectivity = Mat->GetSpecularStrength();
 			float Shininess = Mat->GetShininess();
@@ -280,17 +280,17 @@ namespace GraphX
 		}
 	}
 
-	void GraphXGui::TerrainDetails(Terrain& terrain)
+	void GraphXGui::TerrainDetails(const Ref<Terrain>& terrain)
 	{
 		if (true)
 		{
 			ImGui::Begin("Terrain Details", (bool*)true);
-			if (ImGui::DragFloat3("Position", (float*)& terrain.GetMesh().Position.x, 1.0f, -1000.0f, 1000.0f))
+			if (ImGui::DragFloat3("Position", (float*)&terrain->GetMesh()->Position.x, 1.0f, -1000.0f, 1000.0f))
 			{
-				Mesh3D& mesh = const_cast<Mesh3D&>(terrain.GetMesh());
+				Mesh3D& mesh = const_cast<Mesh3D&>(*terrain->GetMesh());
 				mesh.UpdateModelMatrix(true);
 			}
-			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain.GetMesh().Scale.x, 1.0f, 0.0001f, 10.f);
+			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain->GetMesh()->Scale.x, 1.0f, 0.0001f, 10.f);
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Note: Scaling in y - direction is not advised ");
 			ImGui::End();
 		}

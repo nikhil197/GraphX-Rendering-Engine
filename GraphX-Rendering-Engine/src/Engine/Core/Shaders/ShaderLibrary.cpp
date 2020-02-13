@@ -31,7 +31,7 @@ namespace GraphX
 		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::GetShader(const std::string& name)
+	Ref<Shader> ShaderLibrary::GetShader(const std::string& name) const
 	{
 		GX_ASSERT(Exists(name), "Shader {0} not found", name);
 		return m_Shaders[name];

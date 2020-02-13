@@ -3,6 +3,9 @@
 namespace GraphX
 {
 	class Material;
+	class VertexArray;
+	class VertexBuffer;
+	class IndexBuffer;
 
 	class Mesh2D
 	{
@@ -15,7 +18,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
+		Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
 
 		Mesh2D(const Mesh2D& Other);
 
@@ -35,19 +38,19 @@ namespace GraphX
 		virtual void UnBindBuffers() const;
 
 		/* Returns the vao for the object */
-		inline const class VertexArray* GetVAO() const { return m_VAO; }
+		inline const Ref<const VertexArray>& GetVAO() const { return m_VAO; }
 
 		/* Returns the ibo for the object */
-		inline const class IndexBuffer* GetIBO() const { return m_IBO; }
+		inline const Ref<const IndexBuffer>& GetIBO() const { return m_IBO; }
 
 		/* Returns the vbo for the object */
-		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
+		inline const Ref<const VertexBuffer>& GetVBO() const { return m_VBO; }
 
 		/* Returns the shader for the object */
-		inline class Material* GetMaterial() const { return m_Material; }
+		inline const Ref<Material>& GetMaterial() const { return m_Material; }
 
 		/* Sets new shader for the mesh */
-		inline void SetMaterial(Material* NewMat) { m_Material = NewMat; }
+		inline void SetMaterial(const Ref<Material>& NewMat) { m_Material = NewMat; }
 
 		/* Returns the vertices of the object */
 		inline const std::vector<Vertex2D>& GetVertices() const { return m_Vertices; }
@@ -75,16 +78,16 @@ namespace GraphX
 
 	protected:
 		/* Vertex Array Object for the Mesh */
-		class VertexArray* m_VAO;
+		Ref<VertexArray> m_VAO;
 
 		/* Vertex Buffer for the object */
-		class VertexBuffer* m_VBO;
+		Ref<VertexBuffer> m_VBO;
 
 		/* Index Buffer for the Mesh */
-		class IndexBuffer* m_IBO;
+		Ref<IndexBuffer> m_IBO;
 
 		/* Material used to render mesh */
-		Material* m_Material;
+		Ref<Material> m_Material;
 
 		/* Vertex data */
 		std::vector<struct Vertex2D> m_Vertices;

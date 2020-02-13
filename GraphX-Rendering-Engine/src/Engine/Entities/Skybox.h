@@ -4,6 +4,13 @@
 
 namespace GraphX
 {
+	class VertexArray;
+	class VertexBuffer;
+	class IndexBuffer;
+	class Shader;
+	class CubeMap;
+	class CameraController;
+
 	class Skybox
 		: public Entity
 	{
@@ -22,7 +29,7 @@ namespace GraphX
 		* @param FileNames names of the files to be used as textures for the six faces of the skybox. Order of the names should be right, left, top, bottom, front, back faces
 		* @param Camera Reference to the player camera
 		*/
-		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const class CameraController* CameraController, const GM::Vector4& color, float factor = 0.0f, unsigned int slot = 0, float Speed = 1.0f);
+		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Ref<CameraController>& CameraController, const GM::Vector4& color, float factor = 0.0f, unsigned int slot = 0, float Speed = 1.0f);
 
 		void Update(float DeltaTime) override;
 
@@ -33,7 +40,7 @@ namespace GraphX
 		virtual void Disable() const override;
 
 		/* Returns the index buffer of the skybox */
-		const class IndexBuffer& GetIBO() const { return *m_IBO; }
+		inline const Ref<IndexBuffer>& GetIBO() const { return m_IBO; }
 
 		virtual ~Skybox();
 
@@ -42,22 +49,22 @@ namespace GraphX
 
 	private:
 		/* Vertex Array for the skybox */
-		class VertexArray* m_VAO;
+		Scope<VertexArray> m_VAO;
 
 		/* Vertex Buffer for the skybox */
-		class VertexBuffer* m_VBO;
+		Scope<VertexBuffer> m_VBO;
 
 		/* Index Buffer for the skybox */
-		class IndexBuffer* m_IBO;
+		Ref<IndexBuffer> m_IBO;
 
 		/* Shader for the skybox */
-		class Shader* m_Shader;
+		Ref<Shader> m_Shader;
 
 		/* Cubemap used to render the skybox */
-		class CubeMap* m_CubeMap;
+		Ref<CubeMap> m_CubeMap;
 
 		/* Reference to the player camera */
-		const class CameraController* m_CameraController;
+		Ref<CameraController> m_CameraController;
 
 		/* Binding slot for the cubemap */
 		unsigned int m_BindingSlot;

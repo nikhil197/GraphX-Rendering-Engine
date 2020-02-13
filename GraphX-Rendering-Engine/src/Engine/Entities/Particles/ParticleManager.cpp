@@ -20,19 +20,19 @@ namespace GraphX
 		: m_ParticleShader(nullptr), m_Particles(nullptr), m_Camera(nullptr), m_Index(0), m_PoolCap(0)
 	{ }
 
-	void ParticleManager::Initialize(const Camera* Camera, const int PoolCap)
+	void ParticleManager::Initialize(const Ref<const Camera>& Camera, const int PoolCap)
 	{
 		m_Camera = Camera;
 		m_PoolCap = PoolCap;
 
-		m_ParticleShader = new Shader("res/Shaders/Particle.shader");
+		m_ParticleShader = CreateRef<Shader>("res/Shaders/Particle.shader");
 		if (m_Particles != nullptr)
 		{
 			m_Particles->resize(m_PoolCap);
 		}
 		else
 		{
-			m_Particles = new std::vector<Particle>(PoolCap);
+			m_Particles = CreateScope<std::vector<Particle>>(PoolCap);
 		}
 	}
 
@@ -67,7 +67,7 @@ namespace GraphX
 		PostRender();
 	}
 
-	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
+	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale, float GravityEffect)
 	{
 		Check();
 
@@ -111,16 +111,6 @@ namespace GraphX
 
 	ParticleManager::~ParticleManager()
 	{
-		if (m_ParticleShader != nullptr)
-		{
-			delete m_ParticleShader;
-			m_ParticleShader = nullptr;
-		}
-
-		if (m_Particles != nullptr)
-		{
-			delete m_Particles;
-			m_Particles = nullptr;
-		}
+		
 	}
 }

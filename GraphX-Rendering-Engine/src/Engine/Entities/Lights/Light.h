@@ -40,7 +40,7 @@ namespace GraphX
 		void SetLightSpaceMatrix(class Shader& DepthShader, const std::string& LightName = "u_Light") const;
 
 		/* Returns the light's shadow information */
-		inline const LightShadowInfo* GetShadowInfo() const { return m_LightShadowInfo; }
+		inline const Ref<LightShadowInfo>& GetShadowInfo() const { return m_LightShadowInfo; }
 
 		/* Destructor */
 		virtual ~Light();
@@ -57,6 +57,6 @@ namespace GraphX
 
 	protected:
 		/* Light information required for shadows */
-		LightShadowInfo* m_LightShadowInfo;
+		Ref<LightShadowInfo> m_LightShadowInfo;
 	};
 }

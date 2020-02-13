@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Particle.h"
-#include "Utilities/HashUtil.h"
 
 namespace GraphX
 {
+	class Camera;
+	class Shader;
+
 	class ParticleManager
 	{
 	public:
@@ -13,7 +15,7 @@ namespace GraphX
 		~ParticleManager();
 
 		/* Initialize the manager */
-		void Initialize(const class Camera* camera, const int Pool);
+		void Initialize(const Ref<const Camera>& camera, const int Pool);
 
 		/* Renders the particles on the screen */
 		void RenderParticles();
@@ -22,7 +24,7 @@ namespace GraphX
 		void Update(float DeltaTime);
 
 		/* Adds a new particle to render */
-		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Whether more particles can be added or not */
 		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsUsed(); }
@@ -47,13 +49,13 @@ namespace GraphX
 
 	private:
 		/* Shader used to renderer the particles in this particle system*/
-		class Shader* m_ParticleShader;
+		Ref<Shader> m_ParticleShader;
 
 		/* Particles pool */
-		std::vector<Particle>* m_Particles;
+		Scope<std::vector<Particle>> m_Particles;
 
 		/* Main Camera of the engine */
-		const class Camera* m_Camera;
+		Ref<const Camera> m_Camera;
 
 		/* Current Index in the pool which is supposed to be un-used */
 		unsigned int m_Index;

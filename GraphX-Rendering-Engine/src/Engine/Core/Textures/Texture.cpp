@@ -7,8 +7,6 @@
 
 namespace GraphX
 {
-	MemoryManager<Texture> Texture::s_Manager;
-
 	Texture::Texture(const std::string& filePath, bool TileTexture, unsigned int RowsInTexAtlas)
 		: m_RendererID(0), m_FilePath(filePath), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
 	{
@@ -72,18 +70,6 @@ namespace GraphX
 	bool Texture::operator==(const Texture& OtherTex) const
 	{
 		return EngineUtil::ExtractFileName(OtherTex.GetFilePath()) == EngineUtil::ExtractFileName(m_FilePath) && OtherTex.m_Width == m_Width && OtherTex.m_Height == m_Height;
-	}
-
-	void* Texture::operator new(std::size_t size)
-	{
-		void* ptr = ::operator new(size);
-		s_Manager.AddObject((Texture*)ptr);
-		return ptr;
-	}
-
-	void Texture::operator delete(void* ptr)
-	{
-		s_Manager.RemoveObject((Texture*)ptr);
 	}
 
 	Texture::~Texture()

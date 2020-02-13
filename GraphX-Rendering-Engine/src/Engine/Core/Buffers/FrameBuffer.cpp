@@ -13,7 +13,7 @@ namespace GraphX
 		if (Type == FramebufferType::GX_FRAME_DEPTH)
 		{
 			GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID));
-			m_DepthMap = new Texture(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
+			m_DepthMap = CreateRef<Texture>(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
 			m_DepthMap->Bind();
 			GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMap->m_RendererID, 0));
 			GLCall(glDrawBuffer(GL_NONE));

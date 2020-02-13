@@ -118,12 +118,9 @@ namespace GraphX
 
 	class Keyboard
 	{
-		/* To use as a constructor argument to make it private */
-		struct ConstructorHelper {};
-
 	public:
 		/* Constructor helper is private to this class only, so the constructor cannot be invoked */
-		Keyboard(ConstructorHelper&& ch);
+		Keyboard();
 		
 		/* Initialize the keyboard */
 		static void Init();

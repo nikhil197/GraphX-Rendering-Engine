@@ -4,6 +4,9 @@
 
 namespace GraphX
 {
+	class Mesh2D;
+	class Shader;
+
 	class Renderer2D
 		: public Renderer2DCore
 	{
@@ -14,16 +17,16 @@ namespace GraphX
 
 	public:
 		/* Submit the mesh to be rendered to the render */
-		virtual void Submit(const class Mesh2D* mesh) override;
+		virtual void Submit(const Ref<Mesh2D>& mesh) override;
 
 		/* Renders the objects submitted to the renderer */
 		virtual void Render() override;
 
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
-		virtual void Render(class Shader& DepthShader) override;
+		virtual void Render(Shader& DepthShader) override;
 
 	private:
 		/* Queue containing the objects to be rendered */
-		std::deque<const class Mesh2D*> m_RenderQueue;
+		std::deque<Ref<Mesh2D>> m_RenderQueue;
 	};
 }

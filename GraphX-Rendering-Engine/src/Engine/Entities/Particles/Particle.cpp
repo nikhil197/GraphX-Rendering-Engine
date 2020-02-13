@@ -18,12 +18,12 @@ namespace GraphX
 	{
 	}
 
-	Particle::Particle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Tex, float Scale, float GravityEffect)
-		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f), m_Texture(&Tex), m_CurrentTexOffset(GM::Vector2()), m_NextTexOffset(GM::Vector2()), m_BlendFactor(0.0f), m_Used(false)
+	Particle::Particle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& Tex, float Scale, float GravityEffect)
+		: Entity(), m_Position(Position), m_Velocity(Velocity), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Rotation(Rotation), m_Scale(Scale), m_ElapsedTime(0.0f), m_Texture(Tex), m_CurrentTexOffset(GM::Vector2()), m_NextTexOffset(GM::Vector2()), m_BlendFactor(0.0f), m_Used(false)
 	{
 	}
 
-	void Particle::Init(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale, float GravityEffect)
+	void Particle::Init(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale, float GravityEffect)
 	{
 		m_ElapsedTime = 0.0f;
 		m_Position = Position;

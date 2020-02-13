@@ -13,7 +13,7 @@ namespace GraphX
 	//TODO: Zoom and Camera Rotation
 
 	CameraController::CameraController(const GM::Vector3& CameraPos, const GM::Vector3& LookAtPoint, const GM::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
-		: m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), m_AspectRatio(AspectRatio), m_NearClipPlane(Near), m_FarClipPlane(Far), m_FieldOfView(FOV), m_Camera(new Camera(CameraPos, LookAtPoint, UpAxis))
+		: m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), m_AspectRatio(AspectRatio), m_NearClipPlane(Near), m_FarClipPlane(Far), m_FieldOfView(FOV), m_Camera(CreateRef<Camera>(CameraPos, LookAtPoint, UpAxis))
 	{
 		m_ViewAxis = LookAtPoint - m_Camera->m_Position;
 		m_ViewAxis.Normalize();
@@ -23,7 +23,6 @@ namespace GraphX
 
 		m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 
-
 		// Calculate the view and projection matrices (Default projection mode is perspective)
 		UpdateProjectionViewMatrix();
 
@@ -32,7 +31,6 @@ namespace GraphX
 
 	CameraController::~CameraController()
 	{
-		delete m_Camera;
 	}
 
 	void CameraController::Update(float DeltaTime)

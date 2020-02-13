@@ -5,6 +5,9 @@
 
 namespace GraphX
 {
+	class Texture;
+	class Shader;
+
 	class Particle
 		: public Entity
 	{
@@ -16,15 +19,15 @@ namespace GraphX
 		/* Default Consturctor for the particle pool */
 		Particle();
 
-		Particle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		Particle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& Texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* To Initialise the particles that are defualt constructed */
-		void Init(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const class Texture* texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		void Init(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Entity Interface */
 		void Update(float DeltaTime, const GM::Matrix4& ViewMatrix, bool UpdateMatrix);
 
-		virtual void Enable(class Shader& shader, const std::string& EntityNameInShader = "") const override;
+		virtual void Enable(Shader& shader, const std::string& EntityNameInShader = "") const override;
 		
 		virtual void Disable() const override;
 
@@ -38,7 +41,7 @@ namespace GraphX
 		inline float GetScale() const { return m_Scale; }
 
 		/* Returns the texture(atlas) of the particle */
-		inline const class Texture& GetTexture() const { return *m_Texture; }
+		inline const Ref<Texture>& GetTexture() const { return m_Texture; }
 
 		/* Whether the particles is being used or not */
 		inline bool IsUsed() const { return m_Used; }
@@ -78,7 +81,7 @@ namespace GraphX
 		GM::Matrix4 m_Model;
 
 		/* Texture (Atlas) used for the particle */
-		const class Texture* m_Texture;
+		Ref<Texture> m_Texture;
 
 		/* Offset of the current texture to be used in the atlas */
 		GM::Vector2 m_CurrentTexOffset;

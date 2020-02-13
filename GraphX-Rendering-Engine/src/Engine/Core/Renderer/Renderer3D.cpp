@@ -1,15 +1,16 @@
 #include "pch.h"
 #include "Renderer3D.h"
-#include "ErrorHandler.h"
+#include "Renderer.h"
+
+#include "Engine/Core/ErrorHandler.h"
 
 #include "Model/Mesh/Mesh3D.h"
 #include "Model/Model3D.h"
-#include "Buffers/IndexBuffer.h"
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
 
-#include "Renderer.h"
 #include "VertexArray.h"
+#include "Buffers/IndexBuffer.h"
 #include "Buffers\VertexBuffer.h"
 #include "Buffers\VertexBufferLayout.h"
 #include "Buffers\IndexBuffer.h"
@@ -20,44 +21,44 @@ namespace GraphX
 {
 	using namespace GM;
 
-	void Renderer3D::Submit(const Mesh3D* mesh)
+	void Renderer3D::Submit(const Ref<Mesh3D>& mesh)
 	{
 		m_RenderQueue.emplace_back(mesh);
 	}
 
-	void Renderer3D::Submit(const Model3D* model)
+	void Renderer3D::Submit(const Ref<Model3D>& model)
 	{
-		const std::vector<Mesh3D*>& meshes = model->GetMeshes();
+		const Ref<std::vector<Ref<Mesh3D>>>& meshes = model->GetMeshes();
 		
-		for (unsigned int i = 0; i < meshes.size(); i++)
+		for (unsigned int i = 0; i < meshes->size(); i++)
 		{
-			const Mesh3D* mesh = meshes[i];
+			const Ref<Mesh3D>& mesh = meshes->at(i);
 			m_RenderQueue.emplace_back(mesh);
 		}
 	}
 
-	void Renderer3D::Submit(const Terrain* terrain)
+	void Renderer3D::Submit(const Ref<Terrain>& terrain)
 	{
-		m_RenderQueue.emplace_back(&terrain->GetMesh());
+		m_RenderQueue.emplace_back(terrain->GetMesh());
 	}
 
 	void Renderer3D::Render()
 	{
 		while (!m_RenderQueue.empty())
 		{
-			const Mesh3D* mesh = m_RenderQueue.front();
+			const Ref<Mesh3D>& mesh = m_RenderQueue.front();
 			m_RenderQueue.pop_front();
 
 			// Enable the object for rendering
 			mesh->Enable();
 
 			// Render the object
-			Material* Mat = mesh->GetMaterial();
+			const Ref<Material>& Mat = mesh->GetMaterial();
 			Mat->Bind();
-			Shader* shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
+			const Ref<Shader>& shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
 			
 			// Set the transformation matrix
-			Matrix4 Model = mesh->GetModelMatrix();
+			const Matrix4& Model = mesh->GetModelMatrix();
 			shader->SetUniformMat4f("u_Model", Model);
 
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
@@ -84,7 +85,7 @@ namespace GraphX
 
 		for (unsigned int i = 0; i < m_RenderQueue.size(); i++)
 		{
-			const Mesh3D* Mesh = m_RenderQueue.at(i);
+			const Ref<Mesh3D>& Mesh = m_RenderQueue.at(i);
 
 			Mesh->BindBuffers();
 
@@ -99,11 +100,11 @@ namespace GraphX
 		}
 	}
 
-	void Renderer3D::RenderDebugCollisions(const GM::BoundingBox* Box, const GM::Matrix4& Model)
+	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model)
 	{
 		// Todo: Figure out a better structure for debug drawing
 
-		Shader* DebugShader = Renderer::GetDebugCollisionsShader();
+		const Ref<Shader>& DebugShader = Renderer::GetDebugCollisionsShader();
 		if (DebugShader)
 		{
 			static std::vector<Vector3> VertexPositions(8);

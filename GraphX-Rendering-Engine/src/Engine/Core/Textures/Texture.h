@@ -1,13 +1,11 @@
 #pragma once
 
-#include "MemoryManager.h"
-
 namespace GraphX
 {
 	/* Type of the texture used for the frame buffer */
-	enum FramebufferAttachmentType
+	enum class FramebufferAttachmentType
 	{
-		GX_TEX_NONE = 0,	/* Normal Texture */
+		GX_TEX_NONE	,		/* Normal Texture */
 		GX_TEX_COLOR,		/* Texture is used as a color buffer for a framebuffer */
 		GX_TEX_DEPTH		/* Texture is used as a depth buffer for a framebuffer */
 	};
@@ -16,9 +14,6 @@ namespace GraphX
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
-
-	private:
-		static MemoryManager<Texture> s_Manager;
 
 	public:
 		/* Constructor */
@@ -48,12 +43,6 @@ namespace GraphX
 
 		/* Returns the number of rows in the texture atlas */
 		inline unsigned int GetRowsInTexAtlas() const { return m_RowsInTexAtlas; }
-
-		/* Custom allocation operator */
-		void* operator new (std::size_t size);
-
-		/* Custom De-allocation operator */
-		void operator delete(void* ptr);
 
 		/* Equality Test for the texture */
 		bool operator==(const Texture& OtherTex) const;

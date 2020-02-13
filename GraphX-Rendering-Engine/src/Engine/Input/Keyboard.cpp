@@ -5,9 +5,9 @@
 
 namespace GraphX
 {
-	std::shared_ptr<Keyboard> Keyboard::s_Keyboard;
+	std::shared_ptr<Keyboard> Keyboard::s_Keyboard = nullptr;
 
-	Keyboard::Keyboard(ConstructorHelper&& ch)
+	Keyboard::Keyboard()
 	{
 		constexpr int n = Keys::GX_F12;
 		m_Keys = new std::vector<bool>(n);
@@ -15,7 +15,7 @@ namespace GraphX
 
 	void Keyboard::Init()
 	{
-		s_Keyboard = std::make_shared<Keyboard>(ConstructorHelper());
+		s_Keyboard.reset(new Keyboard());
 	}
 
 	void Keyboard::OnEvent(KeyPressedEvent& e)

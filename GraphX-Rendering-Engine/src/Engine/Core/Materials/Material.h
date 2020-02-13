@@ -10,7 +10,9 @@ namespace GraphX
 	class Material
 	{
 	public:
-		Material(Shader* shader);
+		Material(const Shader& shader);
+
+		Material(const Ref<Shader>& shader);
 
 		/* Copy Constructor (For now, This doesn't copy the textues, For that Use Material Instance once created) */
 		Material(const Material& Other);
@@ -18,8 +20,8 @@ namespace GraphX
 		void Bind();
 
 		/* Add another texture to the material */
-		void AddTexture(const Texture* Tex);
-		void AddTexture(const std::vector<const Texture*>& Textures);
+		void AddTexture(const Ref<const Texture>& Tex);
+		void AddTexture(const std::vector<Ref<const Texture>>& Textures);
 
 		/* Sets a new value for Base Color */
 		inline void SetBaseColor(const Vector4& NewColor)
@@ -49,12 +51,12 @@ namespace GraphX
 		inline float GetShininess() const { return m_Shininess; }
 
 		/* Returns the shader of the material */
-		inline Shader* GetShader() const { return m_Shader; }
+		inline const Ref<Shader>& GetShader() const { return m_Shader; }
 
 		/* Returns textures used in the material */
-		inline const std::vector<const Texture*>& GetTextures() const { return m_Textures; }
+		inline const std::vector<Ref<const Texture>>& GetTextures() const { return m_Textures; }
 
-		~Material() = default;
+		~Material() {};
 
 	protected:
 		/* Base Material Color */
@@ -67,9 +69,9 @@ namespace GraphX
 		float m_Shininess = 32.0f;
 		
 		/* Shader */
-		Shader* m_Shader;
+		Ref<Shader> m_Shader;
 
 		/* Textures for the material */
-		std::vector<const Texture*> m_Textures;
+		std::vector<Ref<const Texture>> m_Textures;
 	};
 }

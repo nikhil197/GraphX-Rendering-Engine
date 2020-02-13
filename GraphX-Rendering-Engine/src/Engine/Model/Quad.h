@@ -29,6 +29,6 @@ namespace GraphX
 		static const unsigned int s_QuadVertexCount;
 
 		/* Vertex Array to store the vertices */
-		class VertexArray* m_VAO;
+		Scope<class VertexArray> m_VAO;
 	};
 }

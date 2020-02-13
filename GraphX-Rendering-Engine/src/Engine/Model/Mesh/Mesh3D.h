@@ -3,7 +3,10 @@
 namespace GraphX
 {
 	class Material;
-	
+	class VertexArray;
+	class VertexBuffer;
+	class IndexBuffer;
+
 	/* 3D Representation of an object in the scene */
 	class Mesh3D
 	{
@@ -16,7 +19,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat = nullptr);
+		Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -37,25 +40,25 @@ namespace GraphX
 		virtual void UnBindBuffers() const;
 
 		/* Returns the vao for the object */
-		inline const class VertexArray* GetVAO() const { return m_VAO; }
+		inline Ref<const VertexArray> GetVAO() const { return m_VAO; }
 
 		/* Returns the ibo for the object */
-		inline const class IndexBuffer* GetIBO() const { return m_IBO; }
+		inline Ref<const IndexBuffer> GetIBO() const { return m_IBO; }
 
 		/* Returns the vbo for the object */
-		inline const class VertexBuffer* GetVBO() const { return m_VBO; }
+		inline Ref<const VertexBuffer> GetVBO() const { return m_VBO; }
 
 		/* Returns the material used by the mesh */
-		inline class Material* GetMaterial() const { return m_Material; }
+		inline Ref<Material> GetMaterial() const { return m_Material; }
 
 		/* Sets a new material for the mesh */
-		inline void SetMaterial(Material* NewMat) { m_Material = NewMat; }
+		inline void SetMaterial(const Ref<Material>& NewMat) { m_Material = NewMat; }
 
 		/* Returns the model matrix for the mesh */
 		inline const GM::Matrix4& GetModelMatrix() const { return m_Model; }
 
 		/* Returns the bounding collision box */
-		inline const struct GM::BoundingBox* GetBoundingBox() const { return m_BoundingBox; }
+		inline const Ref<struct GM::BoundingBox>& GetBoundingBox() const { return m_BoundingBox; }
 
 		/* Sets new state for updating the model matrix */
 		inline void UpdateModelMatrix(bool bCalculateMatrix) { m_UpdateModelMatrix = bCalculateMatrix; }
@@ -77,16 +80,16 @@ namespace GraphX
 
 	protected:
 		/* Vertex Array Object for the Mesh */
-		class VertexArray* m_VAO;
+		Ref<VertexArray> m_VAO;
 
 		/* Vertex Buffer for the object */
-		class VertexBuffer* m_VBO;
+		Ref<VertexBuffer> m_VBO;
 
 		/* Index Buffer for the Mesh */
-		class IndexBuffer* m_IBO;
+		Ref<IndexBuffer> m_IBO;
 
 		/* Material used to render the mesh */
-		Material* m_Material;
+		Ref<Material> m_Material;
 
 		/* Vertex data */
 		std::vector<struct Vertex3D> m_Vertices;
@@ -98,7 +101,7 @@ namespace GraphX
 		GM::Matrix4 m_Model;
 
 		/* Box containing the whole object */
-		GM::BoundingBox* m_BoundingBox;
+		Ref<GM::BoundingBox> m_BoundingBox;
 
 		/* Whether the mesh needs to updated or not */
 		bool m_UpdateModelMatrix;

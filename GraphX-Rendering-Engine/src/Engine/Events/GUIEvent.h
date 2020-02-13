@@ -39,14 +39,14 @@ namespace GraphX
 	{
 	private:
 		/* Terrain Object */
-		class Terrain* m_Terrain;
+		Ref<Terrain> m_Terrain;
 	public:
-		CreateTerrainEvent(Terrain* terrain)
+		CreateTerrainEvent(const Ref<Terrain>& terrain)
 			: m_Terrain(terrain)
 		{}
 
 		/* Returns the terrain */
-		inline class Terrain* GetTerrain() const { return m_Terrain; }
+		inline const Ref<Terrain>& GetTerrain() const { return m_Terrain; }
 
 		EVENT_CLASS_TYPE(GX_CREATE_TERRAIN)
 		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)

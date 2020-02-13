@@ -5,15 +5,15 @@
 
 namespace GraphX
 {
-	std::shared_ptr<Mouse> Mouse::s_Mouse;
+	std::shared_ptr<Mouse> Mouse::s_Mouse = nullptr;
 
-	Mouse::Mouse(ConstructorHelper&& ch)
+	Mouse::Mouse()
 		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(0.1f), ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
 	{}
 
 	void Mouse::Init()
 	{
-		s_Mouse = std::make_shared<Mouse>(ConstructorHelper());
+		s_Mouse.reset(new Mouse());
 	}
 
 	void Mouse::OnEvent(MouseButtonPressedEvent& e)

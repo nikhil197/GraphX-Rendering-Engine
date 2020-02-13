@@ -16,7 +16,7 @@ namespace GraphX
 		Ref<Shader> Load(const std::string& name, const std::string& VertexSource, const std::string& FragSrc);
 
 		// Returns a shader with the given name
-		Ref<Shader> GetShader(const std::string& name);
+		Ref<Shader> GetShader(const std::string& name) const;
 
 		// Returns whether the shader with the give name exists or not
 		bool Exists(const std::string& name) const;

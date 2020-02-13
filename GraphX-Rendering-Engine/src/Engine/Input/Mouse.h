@@ -12,12 +12,9 @@ namespace GraphX
 	/* */
 	class Mouse
 	{
-		/* To use as a constructor argument to make it private */
-		struct ConstructorHelper{};
-
 	public:
-		/* Mouse Constructor is private (Constructor Helper is private) */
-		Mouse(ConstructorHelper&& ch);
+		/* Mouse Constructor is private */
+		Mouse();
 
 		/* Sensitivity of the mouse i.e. how much the pointer position in application units will be changed with a unit change in device position */
 		float Sensitivity;

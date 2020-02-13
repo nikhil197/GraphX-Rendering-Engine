@@ -3,6 +3,8 @@
 
 namespace GraphX
 {
+	// TODO: Change error handling.
+	// Preventing the application termination (Window and OpenGL context are destroyed before all OpenGL assets are destroyed)
 	void GLClearError()
 	{
 		while (glGetError() != GL_NO_ERROR);

@@ -11,15 +11,15 @@
 
 namespace GraphX
 {
-	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, Material* Mat)
+	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
 	{
-		m_VAO = new VertexArray();
-		m_VBO = new VertexBuffer(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex3D));
+		m_VAO = CreateRef<VertexArray>();
+		m_VBO = CreateRef<VertexBuffer>(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex3D));
 		const VertexBufferLayout& layout = Vertex3D::VertexLayout();
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 
-		m_IBO = new IndexBuffer(&m_Indices[0], m_Indices.size());
+		m_IBO = CreateRef<IndexBuffer>(&m_Indices[0], m_Indices.size());
 		m_VAO->AddIndexBuffer(*m_IBO);
 
 		std::vector<GM::Vector3> positions;
@@ -28,14 +28,14 @@ namespace GraphX
 			positions.push_back(m_Vertices[i].Position);
 		}
 
-		m_BoundingBox = new GM::BoundingBox(positions);
+		m_BoundingBox = CreateRef<GM::BoundingBox>(positions);
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
 		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), bShowDetails(Mesh.bShowDetails), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Material(Mesh.m_Material), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
 		const VertexBufferLayout& layout = Vertex3D::VertexLayout();
-		m_VAO = new VertexArray();
+		m_VAO = CreateRef<VertexArray>();
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 
@@ -45,7 +45,7 @@ namespace GraphX
 			positions.push_back(m_Vertices[i].Position);
 		}
 
-		m_BoundingBox = new GM::BoundingBox(positions);
+		m_BoundingBox = CreateRef<GM::BoundingBox>(positions);
 	}
 
 	void Mesh3D::Update(float DeltaTime)
@@ -84,20 +84,5 @@ namespace GraphX
 
 	Mesh3D::~Mesh3D()
 	{
-		if (m_VBO != nullptr)
-		{
-			delete m_VBO;
-			m_VBO = nullptr;
-		}
-		if (m_IBO != nullptr)
-		{
-			delete m_IBO;
-			m_IBO = nullptr;
-		}
-		if (m_VAO != nullptr)
-		{
-			delete m_VAO;
-			m_VAO = nullptr;
-		}
 	}
 }

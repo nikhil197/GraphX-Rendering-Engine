@@ -60,9 +60,6 @@ namespace GraphX
 		/* Point on which the camera is focussed */
 		GM::Vector3 m_LookAtPoint;
 
-		/* Whether the camera settings or orientation has changed */
-		bool m_RenderStateDirty = true;
-
 		/* The View matrix for the current camera orientation */
 		GM::Matrix4 m_ViewMatrix;
 
@@ -73,6 +70,9 @@ namespace GraphX
 		GM::Matrix4 m_ProjectionViewMatrix;
 
 		/* Controller of this camera */
-		CameraController* m_Controller = nullptr;
+		CameraController* m_Controller = nullptr;	// This is only a weak reference, no need to make this a ref
+		
+		/* Whether the camera settings or orientation has changed */
+		bool m_RenderStateDirty = true;
 	};
 }

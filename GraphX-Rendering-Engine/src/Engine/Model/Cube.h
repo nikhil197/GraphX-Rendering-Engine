@@ -10,7 +10,11 @@ namespace GraphX
 	{
 	public:
 		/* Color is the base color of the cube used in the absence of textures */
-		Cube(const GM::Vector3& Position, const GM::Vector3& Rotation, const GM::Vector3& Size, class Material* Mat = nullptr);
+		Cube(const GM::Vector3& Position, const GM::Vector3& Rotation, const GM::Vector3& Size, const Ref<Material>& Mat = nullptr);
+
+		Cube(const Cube&) = delete;
+
+		Cube(Cube&&) = delete;
 
 		virtual void Enable() const override;
 

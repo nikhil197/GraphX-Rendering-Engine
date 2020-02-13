@@ -26,7 +26,7 @@ namespace GraphX
 			{ BufferDataType::Float2 }
 		};
 
-		m_VAO = new VertexArray();
+		m_VAO = CreateScope<VertexArray>();
 		m_VAO->AddVertexBuffer(vbo, layout);
 		m_VAO->UnBind();
 	}
@@ -43,6 +43,5 @@ namespace GraphX
 
 	Quad::~Quad()
 	{
-		delete m_VAO;
 	}
 }

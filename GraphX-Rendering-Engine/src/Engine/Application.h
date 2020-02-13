@@ -3,6 +3,22 @@
 namespace GraphX
 {
 	class Window;
+	class Mesh2D;
+	class Mesh3D;
+	class Model3D;
+	class Material;
+	class Shader;
+	class Texture;
+	class Skybox;
+	class FrameBuffer;
+	class Terrain;
+	class CameraController;
+
+	class Light;
+	class PointLight;
+	class DirectionalLight;
+
+	class ParticleManager;
 
 	class Application
 	{
@@ -105,57 +121,57 @@ namespace GraphX
 		float m_EngineDayTime;
 
 		/* Collection of all the 2D objects in the scene */
-		std::vector<class Mesh2D*> m_Objects2D;
+		std::vector<Ref<Mesh2D>> m_Objects2D;
 
 		/* Collection of all the 3D objects in the scene */
-		std::vector<class Mesh3D*> m_Objects3D;
+		std::vector<Ref<Mesh3D>> m_Objects3D;
 
 		/* All the shaders used in the scene */
-		std::vector<class Shader*> m_Shaders;
+		std::vector<Ref<Shader>> m_Shaders;
 
 		/* All the lights in the scene */
-		std::vector<class Light*> m_Lights;
+		std::vector<Ref<Light>> m_Lights;
 
 		/* All the terrain in the scene */
-		std::vector<class Terrain*> m_Terrain;
+		std::vector<Ref<Terrain>> m_Terrain;
 
 		/* Current selected 2D object */
-		class Mesh2D* m_SelectedObject2D;
+		Ref<Mesh2D> m_SelectedObject2D;
 
 		/* Currently selected 3D object */
-		class Mesh3D* m_SelectedObject3D;
+		Ref<Mesh3D> m_SelectedObject3D;
 
 		/* Main light source for the scene */
-		class DirectionalLight* m_SunLight;
+		Ref<DirectionalLight> m_SunLight;
 
 		/* Depth Frame buffer for shadow calculation */
-		class FrameBuffer* m_ShadowBuffer;
+		Ref<FrameBuffer> m_ShadowBuffer;
 
 		/* Shader used for rendering to depth buffer */
-		class Shader* m_DepthShader;
+		Ref<Shader> m_DepthShader;
 
 		/* Main Camera for the application */
-		class CameraController* m_CameraController;
+		Ref<CameraController> m_CameraController;
 
 		/* SKybox for the day time */
-		class Skybox* m_DaySkybox;
+		Ref<Skybox> m_DaySkybox;
 
 		/* Skybox for the night time */
-		class Skybox* m_NightSkybox;
+		Ref<Skybox> m_NightSkybox;
 
 		/* Current active skybox */
-		class Skybox* m_CurrentSkybox;
+		Ref<Skybox> m_CurrentSkybox;
 
 		/* To handle all the particles generated */
-		class ParticleManager* m_ParticlesManager;
+		Ref<ParticleManager> m_ParticlesManager;
 
-		class Shader* m_Shader;
+		Ref<Shader> m_Shader;
 
 		/* Default Material used by objects */
-		class Material* m_DefaultMaterial;
+		Ref<Material> m_DefaultMaterial;
 
-		class PointLight* m_Light;
+		Ref<PointLight> m_Light;
 
-		class Texture* m_DefaultTexture;
+		Ref<Texture> m_DefaultTexture;
 	};
 }

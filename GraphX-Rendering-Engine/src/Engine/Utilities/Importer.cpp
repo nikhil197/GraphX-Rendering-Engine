@@ -14,19 +14,19 @@ namespace GraphX
 {
 	using namespace GM;
 
-	Importer* Importer::s_Importer = nullptr;
+	std::shared_ptr<Importer> Importer::s_Importer = nullptr;
 
-	Importer* Importer::Get()
+	const std::shared_ptr<Importer>& Importer::Get()
 	{
 		if (s_Importer == nullptr)
 		{
-			s_Importer = new Importer();
+			s_Importer.reset(new Importer());
 		}
 
 		return s_Importer;
 	}
 
-	bool Importer::ImportModel(const std::string& FilePath, std::vector<class Mesh3D*>& Meshes, std::vector<std::vector<const Texture*>>& Textures)
+	bool Importer::ImportModel(const std::string& FilePath, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture>>>& Textures)
 	{
 		Assimp::Importer AssimpImporter;
 		const aiScene* Scene = AssimpImporter.ReadFile(FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -40,7 +40,7 @@ namespace GraphX
 		return ProcessAssimpScene(FilePath, Scene, Meshes, Textures);
 	}
 
-	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Mesh3D*>& Meshes, std::vector<std::vector<const Texture*>>& Textures)
+	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture>>>& Textures)
 	{
 		if (!Scene->HasMeshes())
 			return false;
@@ -100,10 +100,10 @@ namespace GraphX
 			// TODO: Add for vertex colors
 
 			// Textures
-			std::vector<const Texture*>* textures = nullptr;
+			std::vector<Ref<const Texture>>* textures = nullptr;
 			if (Scene->HasMaterials())
 			{
-				textures = new std::vector<const Texture*>();
+				textures = new std::vector<Ref<const Texture>>();
 				aiMaterial* mat = Scene->mMaterials[Mesh->mMaterialIndex];
 				unsigned int TexCount = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE);
 				aiString* Path = new aiString();
@@ -132,10 +132,10 @@ namespace GraphX
 			}
 
 			// Create the mesh
-			Mesh3D* mMesh = nullptr;
+			Ref<Mesh3D> mMesh = nullptr;
 			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = new Mesh3D(Vector3::ZeroVector, Vector3::ZeroVector, Vector3::UnitVector, *vertices, *indices);
+				mMesh = CreateRef<Mesh3D>(Vector3::ZeroVector, Vector3::ZeroVector, Vector3::UnitVector, *vertices, *indices);
 			}
 
 			if (mMesh == nullptr)
@@ -145,7 +145,7 @@ namespace GraphX
 
 			// Store the mesh and the textures
 			Meshes.emplace_back(mMesh);
-			Textures.emplace_back(std::vector<const Texture*>());
+			Textures.emplace_back(std::vector<Ref<const Texture>>());
 			for (unsigned int index = 0; index < textures->size(); index++)
 			{
 				Textures[i].emplace_back(textures->at(index));

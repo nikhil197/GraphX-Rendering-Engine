@@ -25,19 +25,21 @@ namespace GraphX
 	Renderer2D* Renderer::s_Renderer2D = nullptr;
 	SimpleRenderer* Renderer::s_Renderer = nullptr;
 
+	ShaderLibrary Renderer::s_ShaderLibrary;
+
 	Renderer::SceneInfo* Renderer::s_SceneInfo = nullptr;
-	Shader* Renderer::s_DebugShader = nullptr;
+	Ref<Shader> Renderer::s_DebugShader = nullptr;
 
 	void Renderer::Initialize()
 	{
-		s_Renderer = new SimpleRenderer();
+		s_Renderer   = new SimpleRenderer();
 		s_Renderer2D = new Renderer2D();
 		s_Renderer3D = new Renderer3D();
 
 		s_SceneInfo = new Renderer::SceneInfo();
 
 		// TODO: Bind this to the GX_ENABLE_DEBUG_COLLISIONS_RENDERING
-		s_DebugShader = new Shader("res/Shaders/DebugCollisions.shader");
+		s_DebugShader = s_ShaderLibrary.Load("res/Shaders/DebugCollisions.shader", "Debug");
 	}
 
 	void Renderer::CleanUp()
@@ -70,12 +72,11 @@ namespace GraphX
 		}
 		if (s_DebugShader)
 		{
-			delete s_DebugShader;
-			s_DebugShader = nullptr;
+			s_DebugShader.reset();
 		}
 	}
 
-	void Renderer::BeginScene(const Camera* MainCamera)
+	void Renderer::BeginScene(const Ref<Camera>& MainCamera)
 	{
 		CheckRenderer();
 
@@ -94,22 +95,22 @@ namespace GraphX
 		s_SceneInfo->Reset();
 	}
 
-	void Renderer::Submit(const class Mesh2D* Mesh)
+	void Renderer::Submit(const Ref<Mesh2D>& Mesh)
 	{
 		s_Renderer2D->Submit(Mesh);
 	}
 
-	void Renderer::Submit(const class Mesh3D* Mesh)
+	void Renderer::Submit(const Ref<Mesh3D>& Mesh)
 	{
 		s_Renderer3D->Submit(Mesh);
 	}
 
-	void Renderer::Submit(const class Model3D* Model)
+	void Renderer::Submit(const Ref<Model3D>& Model)
 	{
 		s_Renderer3D->Submit(Model);
 	}
 
-	void Renderer::Submit(const class Terrain* Terr)
+	void Renderer::Submit(const Ref<Terrain>& Terr)
 	{
 		s_Renderer3D->Submit(Terr);
 	}

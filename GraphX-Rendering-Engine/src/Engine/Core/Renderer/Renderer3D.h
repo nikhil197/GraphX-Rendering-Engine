@@ -14,25 +14,25 @@ namespace GraphX
 
 	public:
 		/* Submit the object to be rendered */
-		virtual void Submit(const class Mesh3D* mesh) override;
+		virtual void Submit(const Ref<Mesh3D>& mesh) override;
 
 		/* Submit the model to be rendered */
-		virtual void Submit(const class Model3D* model) override;
+		virtual void Submit(const Ref<Model3D>& model) override;
 
 		/* Submit the terrain for rendering */
-		virtual void Submit(const class Terrain* terrain) override;
+		virtual void Submit(const Ref<Terrain>& terrain) override;
 
 		/* Renders the objects submitted to the rendered*/
 		virtual void Render() override;
 
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
-		virtual void Render(class Shader& DepthShader) override;
+		virtual void Render(Shader& DepthShader) override;
 
 		/* Renders the collision bounds for debugging */
-		virtual void RenderDebugCollisions(const GM::BoundingBox* Box, const GM::Matrix4& Model) override;
+		virtual void RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model) override;
 
 	private:
 		/* Queue containing the objects to be rendered */
-		std::deque<const class Mesh3D*> m_RenderQueue;
+		std::deque<Ref<Mesh3D>> m_RenderQueue;
 	};
 }

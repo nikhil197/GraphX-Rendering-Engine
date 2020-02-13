@@ -4,8 +4,6 @@
 
 namespace GraphX
 {
-#define BIT(x) (1 << x)
-
 	// Currently GraphX Rendering engine only supports Blocking events.
 	// Buffered events are further down the development pipeline.
 

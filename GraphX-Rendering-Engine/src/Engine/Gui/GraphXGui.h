@@ -21,25 +21,25 @@ namespace GraphX
 		static void Update();
 
 		/* Create a window showing Global Settings like Day Time and Skybox */
-		static void GlobalSettings(class Skybox& skybox, float& daytime, float& SunlightIntensity, bool& EnableParticles);
+		static void GlobalSettings(const Ref<class Skybox>& skybox, float& daytime, float& SunlightIntensity, bool& EnableParticles);
 
 		/* Create a window showing Add Terrain Button */
 		static void AddTerrain();
 
 		/* Create a window showing the details of the Mesh3D*/
-		static void DetailsWindow(class Mesh3D& mesh, const std::string& Name = "Details");
+		static void DetailsWindow(const Ref<class Mesh3D>& mesh, const std::string& Name = "Details");
 
 		/* Create a window showing the light properties */
-		static void LightProperties(class PointLight& light);
+		static void LightProperties(const Ref<class PointLight>& light);
 
 		/* Create a window showing the Camera properties */
-		static void CameraProperties(class CameraController& camera);
+		static void CameraProperties(const Ref<class CameraController>& camera);
 
 		/* Create a window showing the details of the Mesh2D */
-		static void DetailsWindow(class Mesh2D& mesh);
+		static void DetailsWindow(const Ref<class Mesh2D>& mesh);
 
 		/* Create a window showing the details of the Terrain */
-		static void TerrainDetails(class Terrain& terrain);
+		static void TerrainDetails(const Ref<class Terrain>& terrain);
 
 		/* Create a window for loading a model from directory */
 		static void Models();

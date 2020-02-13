@@ -23,30 +23,29 @@ namespace GraphX
 		: m_Mesh(nullptr), m_Material(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
 	{
 		BuildTerrain();
-
-		m_Material = new Material(new Shader("res/Shaders/Terrain.shader"));
-		Shader* shader = m_Material->GetShader();
+		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/Terrain.shader");
 		shader->Bind();
 		shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
 		shader->SetUniform1f("u_AmbientStrength", 0.01f);
 
+		m_Material = CreateRef<Material>(shader);
 		m_Material->SetSpecularStrength(1.0f);
 		m_Material->SetShininess(256.0f);
 		
-		m_BlendMap = new Texture(BlendMap);
+		m_BlendMap = CreateRef<const Texture>(BlendMap);
 		
 		if (TexNames.size() > 0)
 		{
 			for (unsigned int i = 0; i < TexNames.size(); i++)
 			{
-				Texture* tex = new Texture(TexNames[i], true); // All terrain textures will be tiled textures
+				Ref<const Texture> tex = CreateRef<const Texture>(TexNames[i], true); // All terrain textures will be tiled textures
 				m_Material->AddTexture(tex);
 			}
 		}
 		
 		if (m_Vertices && m_Indices)
 		{
-			m_Mesh = new Mesh3D(Position, Vector3::ZeroVector, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
+			m_Mesh = CreateRef<Mesh3D>(Position, Vector3::ZeroVector, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
 			
 			delete m_Vertices;
 			delete m_Indices;
@@ -188,9 +187,5 @@ namespace GraphX
 
 	Terrain::~Terrain()
 	{
-		delete m_Mesh;
-
-		delete m_Material->GetShader();
-		delete m_Material;
 	}
 }

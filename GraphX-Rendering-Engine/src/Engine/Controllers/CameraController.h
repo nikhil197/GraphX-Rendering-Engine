@@ -16,6 +16,8 @@ namespace GraphX
 	public:
 		CameraController(const GM::Vector3& CameraPos, const GM::Vector3& LookAtPoint, const GM::Vector3& UpAxis, float AspectRatio = (4.0f / 3.0f), float Near = 0.1f, float Far = 1000.0f, float FOV = 45.0f);
 
+		//CameraController(const CameraController&) = delete;
+
 		virtual ~CameraController();
 
 		/* Update the camera */
@@ -25,7 +27,7 @@ namespace GraphX
 		void OnEvent(class Event& e);
 
 		/* Returns the controlled camer */
-		inline Camera& GetCamera() { return *m_Camera; }
+		inline const Ref<Camera>& GetCamera() { return m_Camera; }
 		
 		inline const Camera& GetCamera() const { return *m_Camera; }
 
@@ -145,6 +147,6 @@ namespace GraphX
 		ProjectionMode m_CurrentProjectionMode = ProjectionMode::Perspective;
 
 		/* Camera To Control */
-		Camera* m_Camera;
+		Ref<Camera> m_Camera;
 	};
 }

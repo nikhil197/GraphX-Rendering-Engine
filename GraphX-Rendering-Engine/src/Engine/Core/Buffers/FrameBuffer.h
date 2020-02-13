@@ -3,7 +3,7 @@
 namespace GraphX
 {
 	/* What frame buffer will be used for */
-	enum FramebufferType
+	enum class FramebufferType
 	{
 		GX_FRAME_DEPTH		/* Framebuffer used for depth buffer */
 	};
@@ -45,6 +45,6 @@ namespace GraphX
 		int m_Width, m_Height;
 
 		/* Depth Texture attachment for the frame buffer */
-		class Texture* m_DepthMap;
+		Ref<class Texture> m_DepthMap;
 	};
 }

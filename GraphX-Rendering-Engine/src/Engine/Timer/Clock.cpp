@@ -8,7 +8,7 @@ namespace GraphX
 
 	Clock::Clock(ConstructorHelper&& ch)
 	{
-		m_Timer = new Timer("GraphX");
+		m_Timer = new Timer("GraphX Engine");
 	}
 
 	void Clock::Init()
@@ -33,12 +33,13 @@ namespace GraphX
 
 	void Clock::SetTimer(Timer* timer)
 	{
+		delete m_Timer;
 		m_Timer = timer;
 	}
 
 	Clock::~Clock()
 	{
-		std::cout << "destroy" << std::endl;
+		GX_ENGINE_INFO("Destroying Engine Clock");
 		delete m_Timer;
 	}
 }

@@ -4,6 +4,10 @@
 
 namespace GraphX
 {
+	class Mesh3D;
+	class Material;
+	class Texture;
+
 	class Terrain
 		: public Entity
 	{
@@ -27,10 +31,10 @@ namespace GraphX
 		virtual void Disable() const override;
 
 		/* Returns the mesh of the terrain */
-		const class Mesh3D& GetMesh() const { return *m_Mesh; }
+		inline const Ref<Mesh3D>& GetMesh() const { return m_Mesh; }
 
 		/* Returns the shader used for the terrain */
-		class Material* GetMaterial() const { return m_Material; }
+		inline const Ref<Material>& GetMaterial() const { return m_Material; }
 
 		/* Returns the Width of the terrain (x - direction) */
 		inline float GetWidth() const { return m_TileSize * m_Width; }
@@ -60,10 +64,10 @@ namespace GraphX
 
 	private:
 		/* Mesh to represent the terrain */
-		class Mesh3D* m_Mesh;
+		Ref<Mesh3D> m_Mesh;
 
 		/* Material used to render terrain */
-		class Material* m_Material;
+		Ref<Material> m_Material;
 
 		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
 		const int m_Width, m_Depth;
@@ -78,7 +82,7 @@ namespace GraphX
 		std::vector<unsigned int>* m_Indices;
 
 		/* Blendmap used to draw the terrain */
-		const class Texture* m_BlendMap;
+		Ref<const Texture> m_BlendMap;
 
 		/* Amplitude of the height map for the terrain */
 		static double s_Amplitude;
