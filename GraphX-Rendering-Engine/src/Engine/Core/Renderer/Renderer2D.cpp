@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ErrorHandler.h"
+#include "Gl/glew.h"
 
 #include "Renderer2D.h"
 #include "Shaders/Shader.h"
@@ -39,7 +39,7 @@ namespace GraphX
 			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
-			GLCall(glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// Disable the mesh after drawing
 			mesh->Disable();
@@ -59,7 +59,7 @@ namespace GraphX
 			DepthShader.SetUniformMat4f("u_Model", Model);
 
 			// Draw the object
-			GLCall(glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			Mesh->UnBindBuffers();
 		}

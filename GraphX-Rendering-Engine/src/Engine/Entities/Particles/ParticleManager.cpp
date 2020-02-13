@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ParticleManager.h"
 
-#include "ErrorHandler.h"	// TODO: This should not be included outside of Core Submodule
+#include "GL/glew.h"	// TODO: This should not be included outside of Core Submodule
 #include "Entities/Camera.h"
 #include "Model/Quad.h"
 #include "Shaders/Shader.h"
@@ -79,22 +79,22 @@ namespace GraphX
 	{
 		m_ParticleShader->Bind();
 		Particle::GetQuad().Enable();
-		GLCall(glDepthMask(false));	// Don't render the particles to the depth buffer
+		glDepthMask(false);	// Don't render the particles to the depth buffer
 		m_ParticleShader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
 
 		// To enable blending
-		GLCall(glEnable(GL_BLEND));
+		glEnable(GL_BLEND);
 
-		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE));
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	}
 
 	void ParticleManager::PostRender()
 	{
-		GLCall(glDepthMask(true));
+		glDepthMask(true);
 		Particle::GetQuad().Disable();
 		m_ParticleShader->UnBind();
 
-		GLCall(glDisable(GL_BLEND));
+		glDisable(GL_BLEND);
 	}
 
 	bool ParticleManager::IsInitialized()

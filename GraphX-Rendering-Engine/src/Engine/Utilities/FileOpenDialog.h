@@ -10,9 +10,9 @@ typedef struct _COMDLG_FILTERSPEC COMDLG_FILTERSPEC;
 namespace GraphX
 {
 	/* The type of resource to be opened */
-	enum ResourceType
+	enum class ResourceType
 	{
-		TEXTURES = 0,
+		TEXTURES,
 		MODELS
 	};
 

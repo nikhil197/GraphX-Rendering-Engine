@@ -44,6 +44,9 @@ namespace GraphX
 			return false;
 		}
 
+		// Requesting opengl debug context
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
 		// Create the window
 		m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), NULL, NULL);
 
@@ -56,7 +59,7 @@ namespace GraphX
 
 		// Make the context current
 		m_Context = new GraphicsContext(m_Window);
-		
+
 		bool success = m_Context->Init();
 		GX_ASSERT(success, "Failed to Intialize Graphics Context (OpenGL)");
 

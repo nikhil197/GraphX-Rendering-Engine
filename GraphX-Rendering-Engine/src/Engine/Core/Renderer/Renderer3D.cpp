@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "Renderer3D.h"
+#include "GL/glew.h"
+
 #include "Renderer.h"
-
-#include "Engine/Core/ErrorHandler.h"
-
 #include "Model/Mesh/Mesh3D.h"
 #include "Model/Model3D.h"
 #include "Shaders/Shader.h"
@@ -11,9 +10,9 @@
 
 #include "VertexArray.h"
 #include "Buffers/IndexBuffer.h"
-#include "Buffers\VertexBuffer.h"
-#include "Buffers\VertexBufferLayout.h"
-#include "Buffers\IndexBuffer.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/VertexBufferLayout.h"
+#include "Buffers/IndexBuffer.h"
 
 #include "Entities/Terrain.h"
 
@@ -66,7 +65,7 @@ namespace GraphX
 			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
-			GLCall(glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// Disable the mesh after drawing
 			mesh->Disable();
@@ -94,7 +93,7 @@ namespace GraphX
 			DepthShader.SetUniformMat4f("u_Model", Model);
 
 			// Draw the object
-			GLCall(glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			Mesh->UnBindBuffers();
 		}
@@ -149,7 +148,7 @@ namespace GraphX
 			DebugVAO.Bind();
 			DebugShader->Bind();
 			DebugShader->SetUniformMat4f("u_Model", Model);
-			GLCall(glDrawElements(GL_LINES, DebugIBO.GetCount(), GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_LINES, DebugIBO.GetCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}
 }

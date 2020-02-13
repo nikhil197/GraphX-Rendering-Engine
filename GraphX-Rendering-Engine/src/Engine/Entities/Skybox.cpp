@@ -2,7 +2,7 @@
 
 #include "Skybox.h"
 
-#include "ErrorHandler.h"	// TODO: This should not be included outside of Core Submodule
+#include "GL/glew.h"	// TODO: This should not be included outside of Core Submodule
 #include "Model/Cube.h"
 
 #include "Entities/Camera.h"
@@ -71,8 +71,8 @@ namespace GraphX
 
 	void Skybox::Enable() const
 	{
-		GLCall(glDepthMask(GL_FALSE));
-		GLCall(glDisable(GL_CULL_FACE));
+		glDepthMask(GL_FALSE);
+		glDisable(GL_CULL_FACE);
 
 		m_VAO->Bind();
 		
@@ -91,8 +91,8 @@ namespace GraphX
 
 	void Skybox::Disable() const
 	{
-		GLCall(glDepthMask(GL_TRUE));
-		GLCall(glEnable(GL_CULL_FACE));
+		glDepthMask(GL_TRUE);
+		glEnable(GL_CULL_FACE);
 
 		m_VAO->UnBind();
 		

@@ -193,7 +193,6 @@
     <ClCompile Include="src\Engine\Main.cpp" />
     <ClCompile Include="src\Engine\Entities\Camera.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\Light.cpp" />
-    <ClCompile Include="src\Engine\Core\ErrorHandler.cpp" />
     <ClCompile Include="src\Engine\Log.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
@@ -272,7 +271,6 @@
     <ClInclude Include="src\Engine\Entities\Particles\ParticleSystem.h" />
     <ClInclude Include="src\Engine\Entities\Skybox.h" />
     <ClInclude Include="src\Engine\Entities\Terrain.h" />
-    <ClInclude Include="src\Engine\Core\ErrorHandler.h" />
     <ClInclude Include="src\Engine\Events\Event.h" />
     <ClInclude Include="src\Engine\Events\GUIEvent.h" />
     <ClInclude Include="src\Engine\Events\KeyboardEvent.h" />

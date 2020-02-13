@@ -150,9 +150,6 @@
     <ClCompile Include="src\Engine\Core\GraphicsContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Core\ErrorHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -348,9 +345,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\EngineMacros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Core\ErrorHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\Materials\Material.h">

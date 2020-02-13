@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Shader.h"
-#include "ErrorHandler.h"
+#include "GL/glew.h"
 
 #include "Utilities/EngineUtil.h"
 #include "Timer/Timer.h"
@@ -31,7 +31,7 @@ namespace GraphX
 
 	Shader::~Shader()
 	{
-		GLCall(glDeleteProgram(m_RendererID));
+		glDeleteProgram(m_RendererID);
 	}
 
 	void Shader::Bind() const
@@ -39,72 +39,72 @@ namespace GraphX
 		if (m_RendererID == 0)
 			GX_ENGINE_ERROR("{0} could not be bound", m_Name);
 		else
-			GLCall(glUseProgram(m_RendererID));
+			glUseProgram(m_RendererID);
 	}
 
 	void Shader::UnBind() const
 	{
-		GLCall(glUseProgram(0));
+		glUseProgram(0);
 	}
 
 	void Shader::SetUniform1i(const char* Name, int Val)
 	{
-		GLCall(glUniform1i(GetLocation(Name), Val));
+		glUniform1i(GetLocation(Name), Val);
 	}
 
 	void Shader::SetUniform2i(const char* Name, int v1, int v2)
 	{
-		GLCall(glUniform2i(GetLocation(Name), v1, v2));
+		glUniform2i(GetLocation(Name), v1, v2);
 	}
 
 	void Shader::SetUniform1f(const char* Name, float Val)
 	{
-		GLCall(glUniform1f(GetLocation(Name), Val));
+		glUniform1f(GetLocation(Name), Val);
 	}
 
 	void Shader::SetUniform3f(const char* Name, float r, float g, float b)
 	{
-		GLCall(glUniform3f(GetLocation(Name), r, g, b));
+		glUniform3f(GetLocation(Name), r, g, b);
 	}
 
 	void Shader::SetUniform2f(const char* Name, float r, float g)
 	{
-		GLCall(glUniform2f(GetLocation(Name), r, g));
+		glUniform2f(GetLocation(Name), r, g);
 	}
 
 	void Shader::SetUniform2f(const char* Name, const GM::Vector2& Vec)
 	{
-		GLCall(glUniform2f(GetLocation(Name), Vec.x, Vec.y));
+		glUniform2f(GetLocation(Name), Vec.x, Vec.y);
 	}
 
 	void Shader::SetUniform3f(const char* Name, const GM::Vector3& Vec)
 	{
-		GLCall(glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z));
+		glUniform3f(GetLocation(Name), Vec.x, Vec.y, Vec.z);
 	}
 
 	void Shader::SetUniform4f(const char* Name, float r, float g, float b, float a)
 	{
-		GLCall(glUniform4f(GetLocation(Name), r, g, b, a));
+		glUniform4f(GetLocation(Name), r, g, b, a);
 	}
 
 	void Shader::SetUniform4f(const char* Name, const GM::Vector4& Vec)
 	{
-		GLCall(glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w));
+		glUniform4f(GetLocation(Name), Vec.x, Vec.y, Vec.z, Vec.w);
 	}
 
 	void Shader::SetUniform4f(const char* Name, const GM::Vector2& Vec1, const GM::Vector2& Vec2)
 	{
-		GLCall(glUniform4f(GetLocation(Name), Vec1.x, Vec1.y, Vec2.x, Vec2.y));
+		glUniform4f(GetLocation(Name), Vec1.x, Vec1.y, Vec2.x, Vec2.y);
 	}
 
 	void Shader::SetUniformMat3f(const char* Name, const GM::Matrix3& Mat)
 	{
-		GLCall(glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
+		glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
 	}
 
 	void Shader::SetUniformMat4f(const char* Name, const GM::Matrix4& Mat)
 	{
-		GLCall(glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]));
+		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
 	}
 
 	int Shader::GetLocation(const std::string& Name)
@@ -172,24 +172,24 @@ namespace GraphX
 
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
-		GLCall(glShaderSource(shaderID, 1, &src, nullptr));
-		GLCall(glCompileShader(shaderID));
+		glShaderSource(shaderID, 1, &src, nullptr);
+		glCompileShader(shaderID);
 
 		int result;
-		GLCall(glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result));
+		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
 
 		if (result == GL_FALSE)
 		{
 			int length;
-			GLCall(glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length));
+			glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
 
 			char* infoLog = (char*)alloca(length * sizeof(char));
-			GLCall(glGetShaderInfoLog(shaderID, length, &length, infoLog));
+			glGetShaderInfoLog(shaderID, length, &length, infoLog);
 
 			GX_ENGINE_ERROR("{0} : Failed to compile {1} shader",m_Name, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
 			GX_ENGINE_ERROR(infoLog);
 
-			GLCall(glDeleteShader(shaderID));
+			glDeleteShader(shaderID);
 			return 0;
 		}
 
@@ -202,13 +202,13 @@ namespace GraphX
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexSource);
 		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);
 
-		GLCall(glAttachShader(programID, vs));
-		GLCall(glAttachShader(programID, fs));
-		GLCall(glLinkProgram(programID));
-		GLCall(glValidateProgram(programID));
+		glAttachShader(programID, vs);
+		glAttachShader(programID, fs);
+		glLinkProgram(programID);
+		glValidateProgram(programID);
 
-		GLCall(glDeleteShader(vs));
-		GLCall(glDeleteShader(fs));
+		glDeleteShader(vs);
+		glDeleteShader(fs);
 
 		return programID;
 	}
