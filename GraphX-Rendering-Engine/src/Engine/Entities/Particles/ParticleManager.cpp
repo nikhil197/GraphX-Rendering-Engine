@@ -67,7 +67,7 @@ namespace GraphX
 		PostRender();
 	}
 
-	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale, float GravityEffect)
+	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale, float GravityEffect)
 	{
 		Check();
 

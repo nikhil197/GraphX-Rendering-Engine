@@ -2,7 +2,7 @@
 
 #include "Mesh2D.h"
 #include "VertexArray.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 #include "Vertex.h"
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"

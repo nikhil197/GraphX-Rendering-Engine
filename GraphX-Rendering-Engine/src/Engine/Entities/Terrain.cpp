@@ -6,7 +6,7 @@
 #include "Model/Mesh/Mesh3D.h"
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 
 #include "VertexArray.h"
 #include "Buffers/VertexBuffer.h"
@@ -32,13 +32,13 @@ namespace GraphX
 		m_Material->SetSpecularStrength(1.0f);
 		m_Material->SetShininess(256.0f);
 		
-		m_BlendMap = CreateRef<const Texture>(BlendMap);
+		m_BlendMap = CreateRef<const Texture2D>(BlendMap);
 		
 		if (TexNames.size() > 0)
 		{
 			for (unsigned int i = 0; i < TexNames.size(); i++)
 			{
-				Ref<const Texture> tex = CreateRef<const Texture>(TexNames[i], true); // All terrain textures will be tiled textures
+				Ref<const Texture2D> tex = CreateRef<const Texture2D>(TexNames[i], true); // All terrain textures will be tiled textures
 				m_Material->AddTexture(tex);
 			}
 		}

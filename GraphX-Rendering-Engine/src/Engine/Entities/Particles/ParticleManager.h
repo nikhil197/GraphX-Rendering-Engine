@@ -24,7 +24,7 @@ namespace GraphX
 		void Update(float DeltaTime);
 
 		/* Adds a new particle to render */
-		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
+		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Whether more particles can be added or not */
 		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsUsed(); }

@@ -214,7 +214,7 @@
     <ClCompile Include="src\Engine\Core\Renderer\SimpleRenderer.cpp" />
     <ClCompile Include="src\Engine\Core\Shaders\Shader.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\CubeMap.cpp" />
-    <ClCompile Include="src\Engine\Core\Textures\Texture.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
     <ClCompile Include="src\Engine\Gui\GraphXGui.cpp" />
@@ -295,7 +295,7 @@
     <ClInclude Include="src\Engine\Core\Renderer\SimpleRenderer.h" />
     <ClInclude Include="src\Engine\Core\Shaders\Shader.h" />
     <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />
-    <ClInclude Include="src\Engine\Core\Textures\Texture.h" />
+    <ClInclude Include="src\Engine\Core\Textures\Texture2D.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />

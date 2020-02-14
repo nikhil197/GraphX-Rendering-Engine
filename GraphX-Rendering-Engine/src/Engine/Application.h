@@ -8,7 +8,7 @@ namespace GraphX
 	class Model3D;
 	class Material;
 	class Shader;
-	class Texture;
+	class Texture2D;
 	class Skybox;
 	class FrameBuffer;
 	class Terrain;
@@ -92,6 +92,9 @@ namespace GraphX
 		/* Renders the scene */
 		void RenderScene(bool IsShadowPhase = false);
 
+		/* Separate method for rendering 2D stuff (Only for now - To be separated in to different layers later)*/
+		void Render2DScene();
+
 		/* Renders the terrain in the scene */
 		void RenderTerrain(bool IsShadowPhase);
 
@@ -172,6 +175,6 @@ namespace GraphX
 
 		Ref<PointLight> m_Light;
 
-		Ref<Texture> m_DefaultTexture;
+		Ref<Texture2D> m_DefaultTexture;
 	};
 }

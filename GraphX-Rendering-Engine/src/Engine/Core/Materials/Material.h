@@ -4,7 +4,7 @@ namespace GraphX
 {
 	using namespace GM;
 
-	class Texture;
+	class Texture2D;
 	class Shader;
 
 	class Material
@@ -20,8 +20,8 @@ namespace GraphX
 		void Bind();
 
 		/* Add another texture to the material */
-		void AddTexture(const Ref<const Texture>& Tex);
-		void AddTexture(const std::vector<Ref<const Texture>>& Textures);
+		void AddTexture(const Ref<const Texture2D>& Tex);
+		void AddTexture(const std::vector<Ref<const Texture2D>>& Textures);
 
 		/* Sets a new value for Base Color */
 		inline void SetBaseColor(const Vector4& NewColor)
@@ -54,7 +54,7 @@ namespace GraphX
 		inline const Ref<Shader>& GetShader() const { return m_Shader; }
 
 		/* Returns textures used in the material */
-		inline const std::vector<Ref<const Texture>>& GetTextures() const { return m_Textures; }
+		inline const std::vector<Ref<const Texture2D>>& GetTextures() const { return m_Textures; }
 
 		~Material() {};
 
@@ -72,6 +72,6 @@ namespace GraphX
 		Ref<Shader> m_Shader;
 
 		/* Textures for the material */
-		std::vector<Ref<const Texture>> m_Textures;
+		std::vector<Ref<const Texture2D>> m_Textures;
 	};
 }

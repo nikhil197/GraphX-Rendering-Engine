@@ -2,7 +2,7 @@
 #include "FrameBuffer.h"
 #include "GL/glew.h"
 
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 
 namespace GraphX
 {
@@ -13,7 +13,7 @@ namespace GraphX
 		if (Type == FramebufferType::GX_FRAME_DEPTH)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-			m_DepthMap = CreateRef<Texture>(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
+			m_DepthMap = CreateRef<Texture2D>(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
 			m_DepthMap->Bind();
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMap->m_RendererID, 0);
 			glDrawBuffer(GL_NONE);

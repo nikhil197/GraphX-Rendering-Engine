@@ -7,7 +7,7 @@
 #include "Model/Mesh/Mesh2D.h"
 #include "Model/Mesh/Mesh3D.h"
 
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 #include "Materials/Material.h"
 
 #include "Entities/Lights/PointLight.h"
@@ -172,7 +172,7 @@ namespace GraphX
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Texture Properties");
 
 			ImGui::BeginChild("Textures in current model");
-			std::vector<Ref<const Texture>> Textures = Mat->GetTextures();
+			std::vector<Ref<const Texture2D>> Textures = Mat->GetTextures();
 			int size = Textures.size();
 			for (int n = 0; n < size; n++)
 			{

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 
 namespace std
 {
 	template<>
-	struct hash<reference_wrapper<GraphX::Texture>>
+	struct hash<reference_wrapper<GraphX::Texture2D>>
 	{
 		std::size_t operator()(reference_wrapper<GraphX::Texture> const& Tex) const noexcept
 		{

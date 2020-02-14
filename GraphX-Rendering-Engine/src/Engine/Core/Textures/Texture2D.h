@@ -10,7 +10,7 @@ namespace GraphX
 		GX_TEX_DEPTH		/* Texture is used as a depth buffer for a framebuffer */
 	};
 
-	class Texture
+	class Texture2D
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
@@ -18,16 +18,22 @@ namespace GraphX
 	public:
 		/* Constructor */
 		/* @Param TileTexture - Whether the texture will be used for tilling or not */
-		Texture(const std::string& filePath, bool TileTexture = false, unsigned int RowsInTexAtlas = 1);
+		Texture2D(const std::string& filePath, bool TileTexture = false, unsigned int RowsInTexAtlas = 1);
 
 		/* Constructor for the framebuffer textures */
-		Texture(int width, int height, FramebufferAttachmentType texType);
+		Texture2D(int width, int height, FramebufferAttachmentType texType);
+
+		/* Constructor for creating texture by code (Data needs to be set manually) */
+		Texture2D(int width, int height);
 
 		/* Bind the texture to the indicated slot */
 		void Bind(unsigned int slot = 0) const;
 
 		/* Unbind the currently bound texture */
 		void UnBind() const;
+
+		// Set Data of the texture
+		void SetData(void* data, uint32_t size);
 
 		/* Returns the width of the texture */
 		inline int GetWidth() const { return m_Width; }
@@ -45,34 +51,31 @@ namespace GraphX
 		inline unsigned int GetRowsInTexAtlas() const { return m_RowsInTexAtlas; }
 
 		/* Equality Test for the texture */
-		bool operator==(const Texture& OtherTex) const;
+		bool operator==(const Texture2D& OtherTex) const;
 
 		/* Destroy the texture */
-		~Texture();
+		~Texture2D();
 
 	private:
 		/* ID For the texture */
-		unsigned int m_RendererID;
+		uint32_t m_RendererID;
 
 		/* Path to the texture file */
 		std::string m_FilePath;
 
-		/* To store the pixel data obtained from stb_image */
-		unsigned char* m_LocalBuffer;
-
 		/* Width and height of the texture */
 		int m_Width, m_Height;
 
-		/* Bits Per Pixel */
-		int m_BPP;
+		/* Format of the texture storage and the supplied data */
+		uint32_t m_InternalFormat, m_DataFormat;
 
 		/* Whether the texture will be used for tiling or not */
 		bool m_TileTexture;
 
 		/* Number of rows in texture atlas */
-		unsigned int m_RowsInTexAtlas;
+		uint32_t m_RowsInTexAtlas;
 	};
 
 	/* Equality test for a Texture wrapped in reference_wrapper */
-	bool operator==(const std::reference_wrapper<Texture>& Ref1, const std::reference_wrapper<Texture>& Ref2);
+	bool operator==(const std::reference_wrapper<Texture2D>& Ref1, const std::reference_wrapper<Texture2D>& Ref2);
 }

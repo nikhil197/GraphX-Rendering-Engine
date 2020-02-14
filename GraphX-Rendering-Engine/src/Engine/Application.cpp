@@ -11,7 +11,7 @@
 #include "Engine/Core/Buffers/IndexBuffer.h"
 #include "Engine/Core/Buffers/FrameBuffer.h"
 
-#include "Engine/Core/Textures/Texture.h"
+#include "Engine/Core/Textures/Texture2D.h"
 
 /* Renderer */
 #include "Renderer/Renderer.h"
@@ -108,7 +108,7 @@ namespace GraphX
 		m_ParticlesManager = CreateRef<ParticleManager>();
 		m_ParticlesManager->Initialize(m_CameraController->GetCamera(), 1000);	// TODO: Move to a suitable location
 
-		m_DefaultTexture  = CreateRef<Texture>("res/Textures/stone.jpg");
+		m_DefaultTexture  = CreateRef<Texture2D>("res/Textures/stone.jpg");
 	}
 
 	void Application::Run()
@@ -125,7 +125,7 @@ namespace GraphX
 		int times = 0;
 		float then = Clock::GetClock()->GetEngineTime();
 
-		std::vector<Ref<const Texture>> textures(0);
+		std::vector<Ref<const Texture2D>> textures(0);
 		textures.push_back(m_DefaultTexture);
 
 		Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
@@ -140,7 +140,7 @@ namespace GraphX
 
 		// Load Trees
 		Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
-		TreeMaterial->AddTexture(CreateRef<const Texture>("res/Textures/tree.png"));
+		TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
 
 		Model3D TreeModel("res/Models/tree.obj", TreeMaterial);
 		Ref<Mesh3D> TreeMesh = TreeModel.GetMeshes()->at(0);
@@ -155,7 +155,7 @@ namespace GraphX
 
 		// Load Low Poly Trees
 		Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
-		LowPolyTreeMaterial->AddTexture(CreateRef<const Texture>("res/Textures/lowPolyTree.png"));
+		LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
 		
 		Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
 		Ref<Mesh3D> LowPolyTreeMesh = LowPolyTreeModel.GetMeshes()->at(0);
@@ -170,7 +170,7 @@ namespace GraphX
 
 		// Load Stall
 		Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
-		StallMaterial->AddTexture(CreateRef<const Texture>("res/Textures/stallTexture.png"));
+		StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
 
 		Model3D StallModel("res/Models/stall.obj", StallMaterial);
 		StallModel.GetMeshes()->at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
@@ -178,7 +178,7 @@ namespace GraphX
 
 		m_Shader->UnBind();
 
-		Ref<Texture> particleTex = CreateRef<Texture>("res/Textures/Particles/particleAtlas.png", false, 4);
+		Ref<Texture2D> particleTex = CreateRef<Texture2D>("res/Textures/Particles/particleAtlas.png", false, 4);
 		ParticleSystem particleSys(m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
 
 		// Draw while the window doesn't close
@@ -348,6 +348,11 @@ namespace GraphX
 		}
 		
 		RenderTerrain(IsShadowPhase);
+	}
+
+	void Application::Render2DScene()
+	{
+
 	}
 
 	void Application::RenderTerrain(bool IsShadowPhase)
@@ -670,7 +675,7 @@ namespace GraphX
 		dialog.Show();
 
 		std::string TexName = EngineUtil::ToByteString(dialog.GetAbsolutePath());
-		Ref<Texture> texture = CreateRef<Texture>(TexName);
+		Ref<Texture2D> texture = CreateRef<Texture2D>(TexName);
 
 		if (m_SelectedObject3D)
 		{
@@ -749,6 +754,8 @@ namespace GraphX
 	{
 		GX_ENGINE_INFO("Application: Closing Application.");
 
+		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
+		// i.e. window destruction
 		Renderer::CleanUp();
 
 		delete m_Window;

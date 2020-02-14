@@ -3,11 +3,11 @@
 
 #include "ParticleManager.h"
 #include "Utilities/EngineUtil.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 
 namespace GraphX
 {
-	ParticleSystem::ParticleSystem(const Ref<ParticleManager>& Manager, const Ref<Texture>& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
+	ParticleSystem::ParticleSystem(const Ref<ParticleManager>& Manager, const Ref<Texture2D>& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
 		: m_Manager(Manager), m_Texture(ParticleTexture), m_ParticlesPerSec(ParticlesPerSec), m_Speed(Speed), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Scale(Scale), m_SpeedDeviation(SpeedDeviation), m_ScaleDeviation(ScaleDeviation), m_LifeSpanDeviation(LifeSpanDeviation), m_GravityEffectDeviation(GravityEffectDeviation)
 	{
 	}

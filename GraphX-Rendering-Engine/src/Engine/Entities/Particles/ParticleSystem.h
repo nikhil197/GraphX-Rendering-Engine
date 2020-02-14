@@ -3,13 +3,13 @@
 namespace GraphX
 {
 	class ParticleManager;
-	class Texture;
+	class Texture2D;
 
 	/* Generates and renders the particles in the scene */
 	class ParticleSystem
 	{
 	public:
-		ParticleSystem(const Ref<ParticleManager>& Manager, const Ref<Texture>& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation = 0.0f, float LifeSpanDeviation = 0.0f, float ScaleDeviation = 0.0f, float GravityEffectDeviation = 0.0f);
+		ParticleSystem(const Ref<ParticleManager>& Manager, const Ref<Texture2D>& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation = 0.0f, float LifeSpanDeviation = 0.0f, float ScaleDeviation = 0.0f, float GravityEffectDeviation = 0.0f);
 
 		/* Spawn Particles at the specified location */
 		void SpawnParticles(const GM::Vector3& SpawnLocation, float DeltaTime);
@@ -26,7 +26,7 @@ namespace GraphX
 		Ref<ParticleManager> m_Manager;
 
 		/* Texture used for the particles of this particle system */
-		Ref<Texture> m_Texture;
+		Ref<Texture2D> m_Texture;
 
 		/* Particles emitted per second */
 		float m_ParticlesPerSec;

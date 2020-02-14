@@ -6,7 +6,7 @@ namespace GraphX
 {
 	class Mesh3D;
 	class Material;
-	class Texture;
+	class Texture2D;
 
 	class Terrain
 		: public Entity
@@ -82,7 +82,7 @@ namespace GraphX
 		std::vector<unsigned int>* m_Indices;
 
 		/* Blendmap used to draw the terrain */
-		Ref<const Texture> m_BlendMap;
+		Ref<const Texture2D> m_BlendMap;
 
 		/* Amplitude of the height map for the terrain */
 		static double s_Amplitude;

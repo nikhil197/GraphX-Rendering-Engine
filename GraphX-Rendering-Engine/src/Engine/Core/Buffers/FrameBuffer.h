@@ -45,6 +45,6 @@ namespace GraphX
 		int m_Width, m_Height;
 
 		/* Depth Texture attachment for the frame buffer */
-		Ref<class Texture> m_DepthMap;
+		Ref<class Texture2D> m_DepthMap;
 	};
 }

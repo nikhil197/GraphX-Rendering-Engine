@@ -3,7 +3,7 @@
 
 #include "Model/Mesh/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 #include "Utilities/EngineUtil.h"
 
 #include "assimp/Importer.hpp"
@@ -26,7 +26,7 @@ namespace GraphX
 		return s_Importer;
 	}
 
-	bool Importer::ImportModel(const std::string& FilePath, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture>>>& Textures)
+	bool Importer::ImportModel(const std::string& FilePath, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture2D>>>& Textures)
 	{
 		Assimp::Importer AssimpImporter;
 		const aiScene* Scene = AssimpImporter.ReadFile(FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -40,7 +40,7 @@ namespace GraphX
 		return ProcessAssimpScene(FilePath, Scene, Meshes, Textures);
 	}
 
-	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture>>>& Textures)
+	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture2D>>>& Textures)
 	{
 		if (!Scene->HasMeshes())
 			return false;
@@ -100,10 +100,10 @@ namespace GraphX
 			// TODO: Add for vertex colors
 
 			// Textures
-			std::vector<Ref<const Texture>>* textures = nullptr;
+			std::vector<Ref<const Texture2D>>* textures = nullptr;
 			if (Scene->HasMaterials())
 			{
-				textures = new std::vector<Ref<const Texture>>();
+				textures = new std::vector<Ref<const Texture2D>>();
 				aiMaterial* mat = Scene->mMaterials[Mesh->mMaterialIndex];
 				unsigned int TexCount = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE);
 				aiString* Path = new aiString();
@@ -112,7 +112,7 @@ namespace GraphX
 				{
 					mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, i, Path);
 					std::string FileName = EngineUtil::ExtractFileName(Path->C_Str());
-					textures->emplace_back(new Texture(FileLocation + '\\' + FileName));
+					textures->emplace_back(new Texture2D(FileLocation + '\\' + FileName));
 				}
 			}
 
@@ -145,7 +145,7 @@ namespace GraphX
 
 			// Store the mesh and the textures
 			Meshes.emplace_back(mMesh);
-			Textures.emplace_back(std::vector<Ref<const Texture>>());
+			Textures.emplace_back(std::vector<Ref<const Texture2D>>());
 			for (unsigned int index = 0; index < textures->size(); index++)
 			{
 				Textures[i].emplace_back(textures->at(index));

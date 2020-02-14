@@ -2,7 +2,7 @@
 
 #include "Material.h"
 #include "Shaders/Shader.h"
-#include "Textures/Texture.h"
+#include "Textures/Texture2D.h"
 
 namespace GraphX
 {
@@ -31,20 +31,20 @@ namespace GraphX
 		int NumTex = m_Textures.size();
 		for (int i = 0; i < NumTex; i++)
 		{
-			const Ref<const Texture>& texture = m_Textures[i];
+			const Ref<const Texture2D>& texture = m_Textures[i];
 			texture->Bind(i);
 			m_Shader->SetUniform1i((std::string("u_Texture") + std::to_string(i)).c_str(), i);
 		}
 	}
 
-	void Material::AddTexture(const Ref<const Texture>& Tex)
+	void Material::AddTexture(const Ref<const Texture2D>& Tex)
 	{
 		m_Textures.emplace_back(Tex);
 	}
 
-	void Material::AddTexture(const std::vector<Ref<const Texture>>& Textures)
+	void Material::AddTexture(const std::vector<Ref<const Texture2D>>& Textures)
 	{
-		for (const Ref<const Texture>& Tex : Textures)
+		for (const Ref<const Texture2D>& Tex : Textures)
 		{
 			m_Textures.emplace_back(Tex);
 		}

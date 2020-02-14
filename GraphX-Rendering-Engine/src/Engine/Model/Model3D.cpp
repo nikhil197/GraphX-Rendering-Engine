@@ -12,7 +12,7 @@ namespace GraphX
 	{
 		Timer timer("Loading Model \"" + m_FilePath + "\"");
 
-		std::vector<std::vector<Ref<const Texture>>> Textures;
+		std::vector<std::vector<Ref<const Texture2D>>> Textures;
 
 		bool Loaded = Importer::Get()->ImportModel(m_FilePath, *m_Meshes, Textures);
 
