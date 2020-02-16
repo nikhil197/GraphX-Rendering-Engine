@@ -67,7 +67,7 @@ namespace GraphX
 		{
 			std::stringstream profile;
 
-			profile << "\"cat\" : \"Scope\", ";
+			profile << "{\"cat\" : \"Scope\", ";
 			profile << "\"dur\" : " << Result.Duration << ',';
 			profile << "\"name\" : \"" << Result.Name << "\", ";
 			profile << "\"ph\" : \"X\", ";
@@ -97,7 +97,7 @@ namespace GraphX
 	private:
 		void WriteHeader()
 		{
-			m_ProfilerStream << "{ \" otherData\" : { \" version\" : \" GraphX Engine v1.0 \"}, \"traceEvents\" : [{";
+			m_ProfilerStream << "{ \" otherData\" : { \" version\" : \" GraphX Engine v1.0 \"}, \"traceEvents\" : [";
 			m_ProfilerStream.flush();
 		}
 
