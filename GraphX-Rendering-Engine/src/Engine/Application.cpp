@@ -113,6 +113,8 @@ namespace GraphX
 
 	void Application::Run()
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_Shader->Bind();
 		m_Shader->SetUniform1f("u_AmbientStrength", 0.1f);
 		m_Shader->SetUniform1f("u_Shininess", 256.0f);

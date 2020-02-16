@@ -20,7 +20,14 @@ namespace GraphX
 }
 
 // Macros to use the logger
-#define GX_ENGINE_WARN(...)  ::GraphX::Log::GetEngineLogger()->warn(__VA_ARGS__)
-#define GX_ENGINE_INFO(...)  ::GraphX::Log::GetEngineLogger()->info(__VA_ARGS__)
-#define GX_ENGINE_TRACE(...) ::GraphX::Log::GetEngineLogger()->trace(__VA_ARGS__)
-#define GX_ENGINE_ERROR(...) ::GraphX::Log::GetEngineLogger()->error(__VA_ARGS__)
+#ifdef GX_LOGGING
+	#define GX_ENGINE_WARN(...)  ::GraphX::Log::GetEngineLogger()->warn(__VA_ARGS__)
+	#define GX_ENGINE_INFO(...)  ::GraphX::Log::GetEngineLogger()->info(__VA_ARGS__)
+	#define GX_ENGINE_TRACE(...) ::GraphX::Log::GetEngineLogger()->trace(__VA_ARGS__)
+	#define GX_ENGINE_ERROR(...) ::GraphX::Log::GetEngineLogger()->error(__VA_ARGS__)
+#elif
+	#define GX_ENGINE_WARN(...) 
+	#define GX_ENGINE_INFO(...) 
+	#define GX_ENGINE_TRACE(...)
+	#define GX_ENGINE_ERROR(...)
+#endif

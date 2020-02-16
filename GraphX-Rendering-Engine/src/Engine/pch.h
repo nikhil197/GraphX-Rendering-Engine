@@ -17,6 +17,10 @@
 #include <functional>
 
 /********************* Engine Files **************************/
+#include "Engine/EngineConfig.h"
+
+#include "Engine/Profiler/Profiler.h"
+
 #include "Engine/Core/AssetManager/Manager.h"
 
 /* Engine Global Headers */

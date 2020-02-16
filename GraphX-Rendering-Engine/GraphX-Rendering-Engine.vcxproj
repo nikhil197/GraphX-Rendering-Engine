@@ -260,6 +260,7 @@
     <ClInclude Include="src\Engine\Core\Materials\Material.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
+    <ClInclude Include="src\Engine\EngineConfig.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />
     <ClInclude Include="src\Engine\Controllers\CameraController.h" />
@@ -296,6 +297,7 @@
     <ClInclude Include="src\Engine\Core\Shaders\Shader.h" />
     <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />
     <ClInclude Include="src\Engine\Core\Textures\Texture2D.h" />
+    <ClInclude Include="src\Engine\Profiler\Profiler.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />
