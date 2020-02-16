@@ -13,8 +13,8 @@ namespace GraphX
 	{
 		std::string Name;
 
-		double StartTime;
-		double Duration;
+		long long StartTime;
+		long long Duration;
 	};
 
 	struct ProfilerSession
@@ -121,7 +121,7 @@ namespace GraphX
 
 	class ProfilerTimer
 	{
-		using HighResDuration = std::chrono::duration<double, std::micro>;
+		using HighResDuration = std::chrono::duration<long long int, std::micro>;
 	public:
 		ProfilerTimer(const char* name)
 			: m_Name(name), m_Stopped(false)
@@ -138,8 +138,8 @@ namespace GraphX
 		void Stop()
 		{
 			std::chrono::high_resolution_clock::time_point endPoint = std::chrono::high_resolution_clock::now();
-			double startTime = std::chrono::time_point_cast<HighResDuration>(m_StartTimePoint).time_since_epoch().count();
-			double duration = std::chrono::time_point_cast<HighResDuration>(endPoint).time_since_epoch().count() - startTime;
+			long long startTime = std::chrono::time_point_cast<HighResDuration>(m_StartTimePoint).time_since_epoch().count();
+			long long duration = std::chrono::time_point_cast<HighResDuration>(endPoint).time_since_epoch().count() - startTime;
 
 			Profiler::Get().WriteProfile({ m_Name, startTime, duration });
 
@@ -153,7 +153,7 @@ namespace GraphX
 	};
 }
 
-#ifdef GX_PROFILING
+#if GX_PROFILING
 	#define GX_PROFILER_BEGIN_SESSION(name, filePath)	::GraphX::Profiler::Get().BeginSession(name, filePath);
 	#define GX_PROFILER_END_SESISON()					::GraphX::Profiler::Get().EndSession();
 	#define GX_PROFILE_SCOPE(name)						::GraphX::ProfilerTimer timer##__LINE__(name);
