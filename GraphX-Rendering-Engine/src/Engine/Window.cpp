@@ -21,6 +21,8 @@ namespace GraphX
 
 	Window::Window(const WindowProps& props)
 	{
+		GX_PROFILE_FUNCTION()
+
 		Init(props);
 		
 		// Intialise the ImGui
@@ -31,35 +33,42 @@ namespace GraphX
 
 	void Window::Init(const WindowProps& props)
 	{
+		GX_ENGINE_INFO("Intialising Window");
+		
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
-		// To time the intialising sequence
-		Timer windowInit("Intialising Window");
-
-		if (!glfwInit())
 		{
-			GX_ASSERT(false, "Couldn't Initialise GLFW");
+			GX_PROFILE_SCOPE("glfwInit()")
+
+			if (!glfwInit())
+			{
+				GX_ASSERT(false, "Couldn't Initialise GLFW");
+			}
 		}
 
-		// Requesting opengl debug context
-		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-
-		// Create the window
-		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
-
-		if (!m_Window)
 		{
-			GX_ASSERT(false, "Window: Couldn't Create the GLFW window");
-			glfwTerminate();
+			GX_PROFILE_SCOPE("glfw Initialise")
+
+			// Requesting opengl debug context
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
+			// Create the window
+			m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
+
+			if (!m_Window)
+			{
+				GX_ASSERT(false, "Window: Couldn't Create the GLFW window");
+				glfwTerminate();
+			}
+
+			// Make the context current
+			m_Context = new GraphicsContext(m_Window);
+			m_Context->Init();
 		}
 
-		// Make the context current
-		m_Context = new GraphicsContext(m_Window);
-		m_Context->Init();
-
-		SetVSync(true);
+		SetVSync(false);
 
 		// Set the error callback for glfw
 		glfwSetErrorCallback(&GlfwErrorCallback);
@@ -185,11 +194,15 @@ namespace GraphX
 
 	void Window::SetClearColor(float r, float g, float b, float a)
 	{
+		GX_PROFILE_FUNCTION()
+
 		glClearColor(r, g, b, a);
 	}
 
 	void Window::SetVSync(bool enabled)
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else
@@ -205,17 +218,23 @@ namespace GraphX
 
 	void Window::Clear()
 	{
+		GX_PROFILE_FUNCTION()
+
 		/* Clear both color and depth buffer */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// More efficient to do in one function call
 	}
 
 	void Window::ClearDepthBuffer()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
 	void Window::OnUpdate()
 	{
+		::GraphX::ProfilerTimer timer(__FUNCSIG__);
+
 		/* Swap the front and back buffers */
 		glfwSwapBuffers(m_Window);
 
@@ -225,12 +244,15 @@ namespace GraphX
 
 	void Window::OnResize()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glViewport(0, 0, m_Data.Width, m_Data.Height);
 	}
 
 	Window::~Window()
 	{
 		GX_ENGINE_INFO("Window: Destroying window");
+		GX_PROFILE_FUNCTION()
 
 		/* Destroy the Graphics Context */
 		delete m_Context;

@@ -32,11 +32,15 @@ namespace GraphX
 
 	VertexArray::VertexArray()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glGenVertexArrays(1, &m_RendererID);
 	}
 
 	void VertexArray::AddVertexBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// Bind both the vertex array and the buffer before specifying the layout
 		glBindVertexArray(m_RendererID);
 		vbo.Bind();
@@ -59,6 +63,8 @@ namespace GraphX
 
 	void VertexArray::AddIndexBuffer(const IndexBuffer& IBO)
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindVertexArray(m_RendererID);
 		IBO.Bind();
 		glBindVertexArray(0);
@@ -66,16 +72,22 @@ namespace GraphX
 
 	void VertexArray::Bind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindVertexArray(m_RendererID);
 	}
 
 	void VertexArray::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindVertexArray(0);
 	}
 
 	VertexArray::~VertexArray()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteVertexArrays(1, &m_RendererID);
 	}
 }

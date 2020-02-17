@@ -35,6 +35,8 @@ namespace GraphX
 
 	void CameraController::Update(float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
+
 		ProcessKeyboardInput(DeltaTime);
 		ProcessMouseInput(DeltaTime);
 
@@ -43,6 +45,8 @@ namespace GraphX
 
 	void CameraController::ProcessKeyboardInput(float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// Update the camera position
 		if (Mouse::GetMouse()->IsRightButtonPressed())
 		{
@@ -113,6 +117,8 @@ namespace GraphX
 
 	void CameraController::ProcessMouseInput(float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (Mouse::GetMouse()->IsRightButtonPressed() && m_CurrentProjectionMode == ProjectionMode::Perspective)
 		{
 			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
@@ -145,6 +151,8 @@ namespace GraphX
 
 	void CameraController::UpdateProjectionViewMatrix()
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (m_CurrentProjectionMode == ProjectionMode::Perspective)
 		{
 			if (m_ProjDataChanged)
@@ -300,6 +308,8 @@ namespace GraphX
 
 	bool CameraController::OnViewPortResize(WindowResizedEvent& e)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_OrthoWidth = (float)e.GetWidth();
 		m_OrthoHeight = (float)e.GetHeight();
@@ -311,6 +321,8 @@ namespace GraphX
 
 	bool CameraController::OnMouseScroll(class MouseScrolledEvent& e)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_ZoomLevel -= e.GetYOffset() * .25f * Mouse::GetMouse()->ScrollSenstivity;
 
 		GM::Utility::Clamp(m_ZoomLevel, 0.2f, 16.0f);

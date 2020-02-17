@@ -14,6 +14,8 @@ namespace GraphX
 	Mesh2D::Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Material(Mat), m_Vertices(Vertices), m_Indices(Indices), m_Model(GM::Matrix4()), m_UpdateModelMatrix(true)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_VAO = CreateRef<VertexArray>();
 		m_VBO = CreateRef<VertexBuffer>(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex2D));
 		

@@ -7,6 +7,8 @@ namespace GraphX
 	IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 		:m_Count(count)
 	{
+		GX_PROFILE_FUNCTION()
+
 		glGenBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count * sizeof(unsigned int), data, GL_STATIC_DRAW);
@@ -17,6 +19,8 @@ namespace GraphX
 	IndexBuffer::IndexBuffer(const IndexBuffer& Other)
 		: m_Count(Other.m_Count)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// Bind source buffer
 		glBindBuffer(GL_COPY_READ_BUFFER, Other.m_RendererID);
 
@@ -35,16 +39,22 @@ namespace GraphX
 
 	void IndexBuffer::Bind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	}
 
 	void IndexBuffer::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteBuffers(1, &m_RendererID);
 	}
 }

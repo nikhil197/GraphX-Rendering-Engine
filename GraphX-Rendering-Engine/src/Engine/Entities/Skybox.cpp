@@ -21,6 +21,8 @@ namespace GraphX
 	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Ref<CameraController>& CameraController, const GM::Vector4& color, float factor, unsigned int slot, float Speed)
 		: m_VAO(CreateScope<VertexArray>()), m_VBO(nullptr), m_IBO(nullptr), m_Shader(CreateRef<Shader>(ShaderFilePath)), m_CubeMap(new CubeMap(FilePath, FileNames)), m_CameraController(CameraController), m_BindingSlot(slot), m_Rotation(0.0f), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
 	{
+		GX_PROFILE_FUNCTION()
+
 		std::vector<unsigned int> indices = Cube::GetIndices();
 		// Top face
 		indices[6]  = 7;
@@ -71,6 +73,8 @@ namespace GraphX
 
 	void Skybox::Enable() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDepthMask(GL_FALSE);
 		glDisable(GL_CULL_FACE);
 
@@ -91,6 +95,8 @@ namespace GraphX
 
 	void Skybox::Disable() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDepthMask(GL_TRUE);
 		glEnable(GL_CULL_FACE);
 

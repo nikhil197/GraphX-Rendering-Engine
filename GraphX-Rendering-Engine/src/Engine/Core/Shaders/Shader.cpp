@@ -10,6 +10,8 @@ namespace GraphX
 	Shader::Shader(const std::string& filePath, const std::string& name)
 		:m_Name(name), m_RendererID(0)
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (name == "")
 		{
 			m_Name = EngineUtil::ExtractFileName(filePath);
@@ -26,16 +28,22 @@ namespace GraphX
 	Shader::Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc)
 		: m_Name(name), m_RendererID(0)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_RendererID = CreateShader(vertexShaderSrc, fragShaderSrc);
 	}
 
 	Shader::~Shader()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteProgram(m_RendererID);
 	}
 
 	void Shader::Bind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (m_RendererID == 0)
 			GX_ENGINE_ERROR("{0} could not be bound", m_Name);
 		else
@@ -44,6 +52,8 @@ namespace GraphX
 
 	void Shader::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glUseProgram(0);
 	}
 
@@ -109,6 +119,8 @@ namespace GraphX
 
 	int Shader::GetLocation(const std::string& Name)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// First check if the uniform location is cached and return it
 		if (m_UniformLocations.find(Name) != m_UniformLocations.end())
 			return m_UniformLocations[Name];
@@ -120,7 +132,7 @@ namespace GraphX
 			//If the name is invalid
 			if (location == -1)
 			{
-				GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_Name, Name);
+				//GX_ENGINE_WARN("{0} : {1} uniform not present in the current bound shader", m_Name, Name);
 			}
 			// Cache the location
 			else
@@ -135,7 +147,7 @@ namespace GraphX
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 	{
 		GX_ENGINE_INFO("{0} : Parsing Shader source", m_Name);
-		Timer time(m_Name +" : Parsing Shader Source");
+		GX_PROFILE_FUNCTION()
 
 		enum class ShaderType
 		{
@@ -168,7 +180,7 @@ namespace GraphX
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
 		GX_ENGINE_INFO("{0} : Compiling {1} Shader", m_Name, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
-		Timer time(m_Name + " : Compiling " + (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") + " Shader");
+		GX_PROFILE_FUNCTION()
 
 		int shaderID = glCreateShader(type);
 		const char* src = source.c_str();
@@ -198,6 +210,8 @@ namespace GraphX
 
 	unsigned int Shader::CreateShader(const std::string& vertexSource, const std::string& fragmentSource)
 	{
+		GX_PROFILE_FUNCTION()
+
 		int programID = glCreateProgram();
 		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexSource);
 		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);

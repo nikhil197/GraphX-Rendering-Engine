@@ -7,8 +7,10 @@
 namespace GraphX
 {
 	CubeMap::CubeMap(const std::string& FilePath, const std::vector<std::string>& FileNames)
-		: m_FilePath(FilePath), m_FileNames(FileNames), m_LocalBuffer(nullptr)
+		: m_FilePath(FilePath), m_FileNames(FileNames)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// To flip the textures on load
 		stbi_set_flip_vertically_on_load(0);
 
@@ -24,14 +26,36 @@ namespace GraphX
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		stbi_uc* localBuffer = nullptr;
+
+		int channels;
+
 		for (unsigned int i = 0; i < m_FileNames.size(); i++)
 		{
-			m_LocalBuffer = stbi_load((m_FilePath + m_FileNames[i]).c_str(), &m_Width, &m_Height, &m_BPP, 4 /*RGBA*/);
+			{
+				GX_PROFILE_SCOPE("CubeMap::LoadTexFile")
 
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer);
+				localBuffer = stbi_load((m_FilePath + m_FileNames[i]).c_str(), &m_Width, &m_Height, &channels, 0);
+				GX_ASSERT(localBuffer, "Failed to load texture data!");
+			}
+
+			if (channels == 4)
+			{
+				m_InternalFormat = GL_RGBA8;
+				m_DataFormat = GL_RGBA;
+			}
+			else if (channels == 3)
+			{
+				m_InternalFormat = GL_RGB8;
+				m_DataFormat = GL_RGB;
+			}
+
+			GX_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, localBuffer);
 
 			// Free the texture data
-			stbi_image_free(m_LocalBuffer);
+			stbi_image_free(localBuffer);
 		}
 
 		UnBind();
@@ -39,17 +63,23 @@ namespace GraphX
 
 	void CubeMap::Bind(unsigned int slot) const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 	}
 
 	void CubeMap::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	CubeMap::~CubeMap()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 }

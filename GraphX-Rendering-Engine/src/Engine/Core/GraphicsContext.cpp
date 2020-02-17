@@ -22,20 +22,6 @@ namespace GraphX
 		return "";
 	}
 
-	const char* GetDebugMessageSeverity(GLenum severity)
-	{
-		switch (severity)
-		{
-			case GL_DEBUG_SEVERITY_HIGH:			return "High";
-			case GL_DEBUG_SEVERITY_MEDIUM:			return "Medium";
-			case GL_DEBUG_SEVERITY_LOW:				return "Low";
-			case GL_DEBUG_SEVERITY_NOTIFICATION:	return "Notification";
-		}
-
-		GX_ASSERT(false, "Unkown Debug Severity");
-		return "";
-	}
-
 	const char* GetDebugMessageType(GLenum type)
 	{
 		switch (type)
@@ -58,22 +44,28 @@ namespace GraphX
 	static void GLAPIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
 		const char* src = GetDebugMessageSource(source);
-		const char* severe = GetDebugMessageSeverity(severity);
 		const char* msgType = GetDebugMessageType(type);
 
-		if (type == GL_DEBUG_TYPE_ERROR || type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR)
+		switch (severity)
 		{
-			GX_ENGINE_ERROR("[OpenGL Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, severe);
-			GX_ASSERT(false, "Error");
+			case GL_DEBUG_SEVERITY_HIGH:
+				GX_ENGINE_CRITICAL("[OpenGL Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "High");
+				return;
+
+			case GL_DEBUG_SEVERITY_MEDIUM:
+				GX_ENGINE_ERROR("[OpenGL Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "Medium");
+				return;
+
+			case GL_DEBUG_SEVERITY_LOW:
+				GX_ENGINE_WARN("[OpenGL Warning] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "Medium");
+				return;
+
+			case GL_DEBUG_SEVERITY_NOTIFICATION:
+				//GX_ENGINE_TRACE("[OpenGL Debug Message] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "Notification");
+				return;
 		}
-		else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR || type == GL_DEBUG_TYPE_PERFORMANCE)
-		{
-			GX_ENGINE_WARN("[OpenGL Warning] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, severe);
-		}
-		else
-		{
-			GX_ENGINE_INFO("[OpenGL Debug Message] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, severe);
-		}
+
+		GX_ASSERT(false, "Unknown severity level!");
 	}
 
 	GraphicsContext::GraphicsContext(GLFWwindow* WindowHandle)
@@ -84,7 +76,7 @@ namespace GraphX
 	void GraphicsContext::Init()
 	{
 		GX_ENGINE_INFO("Initializing OpenGL");
-		Timer timer("Initializing OpenGL");
+		GX_PROFILE_FUNCTION()
 
 		glfwMakeContextCurrent(m_WindowHandle);
 

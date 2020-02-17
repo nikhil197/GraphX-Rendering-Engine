@@ -22,6 +22,8 @@ namespace GraphX
 
 	void ParticleManager::Initialize(const Ref<const Camera>& Camera, const int PoolCap)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_Camera = Camera;
 		m_PoolCap = PoolCap;
 
@@ -38,6 +40,7 @@ namespace GraphX
 
 	void ParticleManager::Update(float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
 		Check()
 
 		const GM::Matrix4& ViewMat = m_Camera->GetViewMatrix();
@@ -49,6 +52,8 @@ namespace GraphX
 
 	void ParticleManager::RenderParticles()
 	{
+		GX_PROFILE_FUNCTION()
+
 		Check()
 
 		PreRender();
@@ -69,6 +74,8 @@ namespace GraphX
 
 	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale, float GravityEffect)
 	{
+		GX_PROFILE_FUNCTION()
+
 		Check();
 
 		m_Particles->at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
@@ -77,6 +84,8 @@ namespace GraphX
 
 	void ParticleManager::PreRender()
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_ParticleShader->Bind();
 		Particle::GetQuad().Enable();
 		glDepthMask(false);	// Don't render the particles to the depth buffer
@@ -90,6 +99,8 @@ namespace GraphX
 
 	void ParticleManager::PostRender()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDepthMask(true);
 		Particle::GetQuad().Disable();
 		m_ParticleShader->UnBind();

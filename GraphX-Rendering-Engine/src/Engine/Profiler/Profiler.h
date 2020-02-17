@@ -67,14 +67,14 @@ namespace GraphX
 		{
 			std::stringstream profile;
 
-			profile << "{\"cat\" : \"Scope\", ";
+			profile << ",{\"cat\" : \"Scope\", ";
 			profile << "\"dur\" : " << Result.Duration << ',';
 			profile << "\"name\" : \"" << Result.Name << "\", ";
 			profile << "\"ph\" : \"X\", ";
 			profile << "\"pid\" : \"0\", ";
 			profile << "\"tid\" : \"0\", ";
 			profile << "\"ts\" : " << Result.StartTime;
-			profile << "},";
+			profile << "}";
 
 			if (m_CurrentSession)
 			{
@@ -97,13 +97,13 @@ namespace GraphX
 	private:
 		void WriteHeader()
 		{
-			m_ProfilerStream << "{ \" otherData\" : { \" version\" : \" GraphX Engine v1.0 \"}, \"traceEvents\" : [";
+			m_ProfilerStream << "{ \" otherData\" : { \" version\" : \" GraphX Engine v1.0 \"}, \"traceEvents\" : [{}";
 			m_ProfilerStream.flush();
 		}
 
 		void WriteFooter()
 		{
-			m_ProfilerStream << "{}]}";
+			m_ProfilerStream << "]}";
 			m_ProfilerStream.flush();
 		}
 

@@ -9,6 +9,8 @@ namespace GraphX
 	FrameBuffer::FrameBuffer(int width, int height, FramebufferType Type)
 		: m_RendererID(0), m_Width(width), m_Height(height)
 	{
+		GX_PROFILE_FUNCTION()
+
 		glGenFramebuffers(1, &m_RendererID);
 		if (Type == FramebufferType::GX_FRAME_DEPTH)
 		{
@@ -27,29 +29,39 @@ namespace GraphX
 	}
 
 	void FrameBuffer::Bind() const
-	{	
+	{
+		GX_PROFILE_FUNCTION()
+
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 	}
 
 	void FrameBuffer::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void FrameBuffer::BindDepthMap(unsigned int slot) const
 	{
+		GX_PROFILE_FUNCTION()
+
 		if(m_DepthMap)
 			m_DepthMap->Bind(slot);
 	}
 
 	void FrameBuffer::UnBindDepthMap() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		if(m_DepthMap)
 			m_DepthMap->UnBind();
 	}
 
 	FrameBuffer::~FrameBuffer()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteFramebuffers(1, &m_RendererID);
 	}
 }

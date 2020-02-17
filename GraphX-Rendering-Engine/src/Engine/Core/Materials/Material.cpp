@@ -22,6 +22,8 @@ namespace GraphX
 
 	void Material::Bind()
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_Shader->Bind();
 		m_Shader->SetUniform1f("u_Reflectivity", m_Specular);
 		m_Shader->SetUniform1f("u_Shininess", m_Shininess);

@@ -36,13 +36,13 @@ namespace GraphX
 		/* Names of the 6 textures located at the path specified in the file path */
 		std::vector<std::string> m_FileNames;
 
-		/* Local buffer to store the pixel data */
-		unsigned char* m_LocalBuffer;
-
 		/* Width and Height for each texture */
 		int m_Width, m_Height;
 
-		/* Bits per pixel for each texture */
-		int m_BPP;
+		// Internal format of opengl texture
+		uint32_t m_InternalFormat;
+
+		// Format of the data in the texture file
+		uint32_t m_DataFormat;
 	};
 }

@@ -41,6 +41,8 @@ namespace GraphX
 
 	void GraphXGui::Update()
 	{
+		GX_PROFILE_FUNCTION()
+
 		ImGui_ImplGlfwGL3_NewFrame();
 	}
 

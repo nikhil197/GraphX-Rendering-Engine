@@ -10,11 +10,17 @@ namespace GraphX
 	Model3D::Model3D(const std::string& FilePath, const Ref<Material>& Mat)
 		: m_Meshes(new std::vector<Ref<Mesh3D>>()), m_FilePath(FilePath)
 	{
-		Timer timer("Loading Model \"" + m_FilePath + "\"");
+		GX_ENGINE_INFO("Loading Model {0}", FilePath);
+		GX_PROFILE_FUNCTION()
 
 		std::vector<std::vector<Ref<const Texture2D>>> Textures;
 
-		bool Loaded = Importer::Get()->ImportModel(m_FilePath, *m_Meshes, Textures);
+		bool Loaded = false;
+		{
+			GX_PROFILE_SCOPE("Assimp-Load-Model")
+
+			Loaded = Importer::Get()->ImportModel(m_FilePath, *m_Meshes, Textures);
+		}
 
 		if (Loaded)
 		{

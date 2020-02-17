@@ -14,6 +14,8 @@ namespace GraphX
 
 	void ParticleSystem::SpawnParticles(const GM::Vector3& SpawnLocation, float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
+
 		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec;
 		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
 		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
@@ -26,6 +28,8 @@ namespace GraphX
 
 	void ParticleSystem::EmitParticle(const GM::Vector3& SpawnLocation)
 	{
+		GX_PROFILE_FUNCTION()
+
 		float LifeSpan = GenerateRandomValue(m_LifeSpan, m_LifeSpanDeviation);
 		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
 		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);

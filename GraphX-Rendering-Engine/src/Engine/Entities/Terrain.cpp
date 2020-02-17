@@ -22,6 +22,8 @@ namespace GraphX
 	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
 		: m_Mesh(nullptr), m_Material(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
 	{
+		GX_PROFILE_FUNCTION()
+
 		BuildTerrain();
 		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/Terrain.shader");
 		shader->Bind();
@@ -58,7 +60,8 @@ namespace GraphX
 
 	void Terrain::BuildTerrain()
 	{
-		Timer timer("Building Terrain");
+		GX_ENGINE_INFO("Building Terrain");
+		GX_PROFILE_FUNCTION()
 
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
@@ -128,6 +131,8 @@ namespace GraphX
 
 	double Terrain::InterpolatedNoise(double x, double z)
 	{
+		GX_PROFILE_FUNCTION()
+
 		int intX = (int)x;
 		int intZ = (int)z;
 		double fracX = x - intX;
@@ -145,6 +150,8 @@ namespace GraphX
 
 	void Terrain::CalculateNormal(int x, int z)
 	{
+		GX_PROFILE_FUNCTION()
+
 		float heightL = m_Vertices->at(Utility::Max((x - 1) + z * m_Width, 0)).Position.y;
 		float heightR = m_Vertices->at(Utility::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
 		float heightD = m_Vertices->at(Utility::Max(x + (z - 1) * m_Width, 0)).Position.y;
@@ -166,6 +173,8 @@ namespace GraphX
 
 	void Terrain::Enable() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_Material->Bind();
 		m_BlendMap->Bind(4);
 		m_Material->GetShader()->SetUniform1i("u_BlendMap", 4);
@@ -178,6 +187,8 @@ namespace GraphX
 
 	void Terrain::Disable() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_BlendMap->UnBind();
 		if (m_Mesh)
 		{

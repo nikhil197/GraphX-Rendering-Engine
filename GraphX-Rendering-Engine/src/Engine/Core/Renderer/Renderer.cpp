@@ -32,6 +32,8 @@ namespace GraphX
 
 	void Renderer::Initialize()
 	{
+		GX_PROFILE_FUNCTION()
+
 		s_Renderer   = new SimpleRenderer();
 		s_Renderer2D = new Renderer2D();
 		s_Renderer3D = new Renderer3D();

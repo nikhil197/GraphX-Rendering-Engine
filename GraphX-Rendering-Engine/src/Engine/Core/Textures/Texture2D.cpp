@@ -10,13 +10,19 @@ namespace GraphX
 	Texture2D::Texture2D(const std::string& filePath, bool TileTexture, unsigned int RowsInTexAtlas)
 		: m_RendererID(0), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
 	{
+		GX_PROFILE_FUNCTION()
+
 		// To flip the texture
 		stbi_set_flip_vertically_on_load(0);
 
 		int channels;
+		stbi_uc* localBuffer = nullptr;
+		{
+			GX_PROFILE_SCOPE("Texture2D::LoadTexFile")
 
-		unsigned char* localBuffer = stbi_load(m_FilePath.c_str(), &m_Width, &m_Height, &channels, 0);	// No desired channels 
-		GX_ASSERT(localBuffer, "Failed to load texture data!");
+			localBuffer = stbi_load(m_FilePath.c_str(), &m_Width, &m_Height, &channels, 0);	// No desired channels 
+			GX_ASSERT(localBuffer, "Failed to load texture data!");
+		}
 
 		if (channels == 4)
 		{
@@ -53,6 +59,8 @@ namespace GraphX
 	Texture2D::Texture2D(int width, int height, FramebufferAttachmentType texType)
 		: m_RendererID(0), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false), m_RowsInTexAtlas(1)
 	{
+		GX_PROFILE_FUNCTION()
+
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
@@ -84,6 +92,8 @@ namespace GraphX
 	Texture2D::Texture2D(int width, int height)
 		: m_RendererID(0), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false), m_RowsInTexAtlas(1)
 	{
+		GX_PROFILE_FUNCTION()
+
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
@@ -100,17 +110,23 @@ namespace GraphX
 
 	void Texture2D::Bind(unsigned int slot) const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 	}
 
 	void Texture2D::UnBind() const
 	{
+		GX_PROFILE_FUNCTION()
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture2D::SetData(void* data, uint32_t size)
 	{
+		GX_PROFILE_FUNCTION()
+
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		GX_ASSERT(size == bpp * m_Width * m_Height, "Data must be for entire texture!");
 
@@ -125,6 +141,8 @@ namespace GraphX
 
 	Texture2D::~Texture2D()
 	{
+		GX_PROFILE_FUNCTION()
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 
