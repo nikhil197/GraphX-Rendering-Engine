@@ -117,7 +117,7 @@ namespace GraphX
 		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
 	}
 
-	int Shader::GetLocation(const std::string& Name)
+	int Shader::GetLocation(const char* Name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -127,7 +127,7 @@ namespace GraphX
 		else
 		{
 			// Get the location of the uniform
-			int location = glGetUniformLocation(m_RendererID, Name.c_str());
+			int location = glGetUniformLocation(m_RendererID, Name);
 				
 			//If the name is invalid
 			if (location == -1)

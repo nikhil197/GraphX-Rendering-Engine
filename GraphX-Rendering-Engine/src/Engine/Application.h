@@ -23,7 +23,7 @@ namespace GraphX
 	class Application
 	{
 	public:
-		Application(std::string& title, int width, int height);
+		Application(const char* title, int width, int height);
 
 		/* Application main method */
 		void Run();
@@ -112,7 +112,7 @@ namespace GraphX
 		Window* m_Window;
 
 		/* Title of the application window */
-		std::string m_Title;
+		const char* m_Title;
 
 		/* Whether the application is running or not */
 		bool m_IsRunning;

@@ -5,7 +5,7 @@
 int main()
 {
 	//Title of the application
-	std::string title = "GraphX Rendering Engine";
+	const char* title = "GraphX Rendering Engine";
 	
 	GX_PROFILER_BEGIN_SESSION("Application::Initialise", "GraphX-Initialise.json")
 	GraphX::Application* app = new GraphX::Application(title, 1920, 1080);

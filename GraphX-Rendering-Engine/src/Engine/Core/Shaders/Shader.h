@@ -64,7 +64,7 @@ namespace GraphX
 		unsigned int CreateShader(const std::string& vertexSource, const std::string& fragmentSource);
 
 		/* Returns the location of the uniform with the given name */
-		int GetLocation(const std::string& Name);
+		int GetLocation(const char* Name);
 
 	private:
 		/* Name to the shader source file */
