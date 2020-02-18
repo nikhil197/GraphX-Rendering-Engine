@@ -27,9 +27,8 @@ namespace GraphX
 		* @param ShaderFilePath Path to the file containing the shader code for the skybox
 		* @param FilePath Path to the folder containing the textures to be used to draw the skybox
 		* @param FileNames names of the files to be used as textures for the six faces of the skybox. Order of the names should be right, left, top, bottom, front, back faces
-		* @param Camera Reference to the player camera
 		*/
-		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const Ref<CameraController>& CameraController, const GM::Vector4& color, float factor = 0.0f, unsigned int slot = 0, float Speed = 1.0f);
+		Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Matrix4& ViewMat, const GM::Vector4& color, float factor = 0.0f, unsigned int slot = 0, float Speed = 1.0f);
 
 		void Update(float DeltaTime) override;
 
@@ -67,9 +66,6 @@ namespace GraphX
 
 		/* Cubemap used to render the skybox */
 		Ref<CubeMap> m_CubeMap;
-
-		/* Reference to the player camera */
-		Ref<CameraController> m_CameraController;
 
 		/* Binding slot for the cubemap */
 		unsigned int m_BindingSlot;

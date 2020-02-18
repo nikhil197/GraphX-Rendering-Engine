@@ -86,9 +86,6 @@ namespace GraphX
 		/* Calculates the shadows */
 		void RenderShadowMap();
 
-		/* Renderes the skybox */
-		void RenderSkybox();
-
 		/* Renders the scene */
 		void RenderScene(bool IsShadowPhase = false);
 

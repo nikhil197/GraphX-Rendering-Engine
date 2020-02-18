@@ -88,8 +88,8 @@ namespace GraphX
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
+		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
 
@@ -252,8 +252,8 @@ namespace GraphX
 						RenderShadowDebugQuad();
 					}
 
-					RenderSkybox();
-
+					Renderer::RenderSkybox(m_CurrentSkybox);
+					
 					// Bind the shader and draw the objects
 					m_Shader->Bind();
 					m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
@@ -366,16 +366,6 @@ namespace GraphX
 		RenderScene(true);
 
 		m_ShadowBuffer->UnBind();
-	}
-
-	void Application::RenderSkybox()
-	{
-		GX_PROFILE_FUNCTION()
-
-		// Render the sky box
-		m_CurrentSkybox->Enable();
-		Renderer::RenderIndexed(*m_CurrentSkybox->GetIBO());	// Change this to directly submit skybox
-		m_CurrentSkybox->Disable();
 	}
 
 	void Application::RenderScene(bool IsShadowPhase)

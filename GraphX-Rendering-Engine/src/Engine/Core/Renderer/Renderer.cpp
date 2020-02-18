@@ -130,6 +130,7 @@ namespace GraphX
 
 		// Set the uniforms
 		Ref<Shader> shader = s_ShaderLibrary.GetShader("Skybox");
+		shader->Bind();
 		shader->SetUniformMat4f("u_View", skybox->GetView());
 
 		const CameraController* CamControl = s_SceneInfo->SceneCamera->GetCameraController();
@@ -139,6 +140,8 @@ namespace GraphX
 
 		shader->SetUniform1i("u_Skybox", skybox->GetBindingSlot());
 		shader->SetUniform1f("u_BlendFactor", skybox->BlendFactor);
+
+		RenderIndexed(*skybox->GetIBO());
 
 		skybox->Disable();
 
