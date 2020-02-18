@@ -1,8 +1,8 @@
 #shader vertex
 #version 330 core
 
-(location = 0) in vec3 vPosition;
-(location = 1) in vec2 vTexCoords;
+layout(location = 0) in vec3 vPosition;
+layout(location = 1) in vec2 vTexCoords;
 
 uniform mat4 u_ProjectionView = mat4(1.0f);
 uniform mat4 u_Model = mat4(1.0f);
@@ -16,13 +16,15 @@ void main()
 }
 
 #shader fragment
-out vec4 color;
 
+#version 330 core
 in vec2 v_TexCoords;
 
 uniform float u_Tiling = 1.0f;
 uniform vec4 u_Tint;
 uniform sampler2D u_Texture;
+
+out vec4 color;
 
 void main()
 {

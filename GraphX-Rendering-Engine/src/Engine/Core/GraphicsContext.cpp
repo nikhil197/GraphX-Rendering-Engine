@@ -49,7 +49,7 @@ namespace GraphX
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
-				GX_ENGINE_CRITICAL("[OpenGL Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "High");
+				GX_ENGINE_CRITICAL("[OpenGL Critical Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "High");
 				return;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:
