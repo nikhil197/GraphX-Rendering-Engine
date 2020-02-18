@@ -76,7 +76,7 @@ namespace GraphX
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
 
 		// Initialise the renderer
-		Renderer::Initialize();
+		Renderer::Init();
 
 		InitializeApplication();
 	}
@@ -88,8 +88,8 @@ namespace GraphX
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/Skybox.shader", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = CreateRef<Skybox>("res/Shaders/Skybox.shader", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
+		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
 
@@ -97,7 +97,7 @@ namespace GraphX
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
-		m_Shader = CreateRef<Shader>("res/Shaders/BasicLightingShader.shader");
+		m_Shader = CreateRef<Shader>("res/Shaders/BasicLightingShader.glsl");
 		m_Shader->Bind();
 		m_Shaders.push_back(m_Shader);
 
@@ -107,7 +107,7 @@ namespace GraphX
 		m_Lights.emplace_back(m_Light);
 
 		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
-		m_DepthShader = CreateRef<Shader>("res/Shaders/Depth.shader");
+		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
 		m_ParticlesManager = CreateRef<ParticleManager>();
 		m_ParticlesManager->Initialize(m_CameraController->GetCamera(), 1000);	// TODO: Move to a suitable location
@@ -349,9 +349,6 @@ namespace GraphX
 				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
 				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
 			}
-
-			// Set the state back to rendered
-			m_CameraController->GetCamera()->SetRenderStateDirty(false);
 		}
 	}
 
@@ -469,7 +466,7 @@ namespace GraphX
 			0, 2, 3
 		};
 
-		static Shader shader("res/shaders/Basic.shader");
+		static Shader shader("res/shaders/BasicShader.glsl");
 		static Ref<Material> DebugMat = CreateRef<Material>(shader);
 
 		static Ref<Mesh2D> QuadMesh = CreateRef<Mesh2D>(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector2::UnitVector, quadVertices, quadIndices, DebugMat);
@@ -816,7 +813,7 @@ namespace GraphX
 
 		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
 		// i.e. window destruction
-		Renderer::CleanUp();
+		Renderer::Shutdown();
 
 		delete m_Window;
 	}

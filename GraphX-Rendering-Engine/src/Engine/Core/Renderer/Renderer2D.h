@@ -1,32 +1,50 @@
 #pragma once
 
-#include "Renderer2DCore.h"
-
 namespace GraphX
 {
 	class Mesh2D;
 	class Shader;
+	class Texture2D;
 
 	class Renderer2D
-		: public Renderer2DCore
 	{
-		friend class Renderer;
-	private:
-		/* Renderer Class provides abstraction for Renderer. No instantiation required */
-		Renderer2D() = default;
-
 	public:
+		static void Init();
+		static void Shutdown();
+			   
+		static void BeginScene(const Ref<class Camera>& MainCamera);
+		static void EndScene();
+
+		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color);
+		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color);
+
+		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture);
+		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture);
+
 		/* Submit the mesh to be rendered to the render */
-		virtual void Submit(const Ref<Mesh2D>& mesh) override;
+		static void Submit(const Ref<Mesh2D>& mesh);
 
 		/* Renders the objects submitted to the renderer */
-		virtual void Render() override;
+		static void Render();
 
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
-		virtual void Render(Shader& DepthShader) override;
+		static void Render(Shader& DepthShader);
 
 	private:
-		/* Queue containing the objects to be rendered */
-		std::deque<Ref<Mesh2D>> m_RenderQueue;
+		struct Renderer2DStorage
+		{
+			Ref<class Camera> SceneCamera;
+
+			// One Shader for rendering all 2D stuff
+			Ref<Shader> TextureShader;
+
+			// White texture for rendering colored 2D stuff
+			Ref<Texture2D> WhiteTexture;
+
+			/* Queue containing the objects to be rendered */
+			std::deque<Ref<Mesh2D>> RenderQueue;
+		};
+
+		static Renderer2DStorage* s_Data;
 	};
 }

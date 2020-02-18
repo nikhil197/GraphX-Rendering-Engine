@@ -24,7 +24,7 @@ namespace GraphX
 		else
 			m_DepthMap = nullptr;
 
-		GX_ASSERT(m_DepthMap != nullptr && glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Unable to Create Framebuffer");
+		GX_ENGINE_ASSERT(m_DepthMap != nullptr && glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Unable to Create Framebuffer");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

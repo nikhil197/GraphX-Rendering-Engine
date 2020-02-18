@@ -21,7 +21,7 @@ namespace GraphX
 			GX_PROFILE_SCOPE("Texture2D::LoadTexFile")
 
 			localBuffer = stbi_load(m_FilePath.c_str(), &m_Width, &m_Height, &channels, 0);	// No desired channels 
-			GX_ASSERT(localBuffer, "Failed to load texture data!");
+			GX_ENGINE_ASSERT(localBuffer, "Failed to load texture data!");
 		}
 
 		if (channels == 4)
@@ -35,7 +35,7 @@ namespace GraphX
 			m_DataFormat = GL_RGB;
 		}
 
-		GX_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
+		GX_ENGINE_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
 
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
@@ -128,7 +128,7 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
-		GX_ASSERT(size == bpp * m_Width * m_Height, "Data must be for entire texture!");
+		GX_ENGINE_ASSERT(size == bpp * m_Width * m_Height, "Data must be for entire texture!");
 
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);

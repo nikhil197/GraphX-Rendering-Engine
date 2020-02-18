@@ -20,9 +20,42 @@ namespace GraphX
 {
 	using namespace GM;
 
+	Renderer3D::Renderer3DStorage* Renderer3D::s_Data = nullptr;
+
+	void Renderer3D::Init()
+	{
+		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer3D already Initialised");
+		s_Data = new Renderer3D::Renderer3DStorage();
+	}
+
+	void Renderer3D::Shutdown()
+	{
+		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer3D not Initialised!!");
+		delete s_Data;
+		s_Data = nullptr;
+	}
+
+	void Renderer3D::BeginScene(const Ref<class Camera>& MainCamera)
+	{
+		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer3D not Initialised!!");
+
+		s_Data->SceneCamera = MainCamera;
+	}
+
+	void Renderer3D::EndScene()
+	{
+		GX_PROFILE_FUNCTION()
+	}
+
 	void Renderer3D::Submit(const Ref<Mesh3D>& mesh)
 	{
-		m_RenderQueue.emplace_back(mesh);
+		s_Data->RenderQueue.emplace_back(mesh);
 	}
 
 	void Renderer3D::Submit(const Ref<Model3D>& model)
@@ -32,21 +65,21 @@ namespace GraphX
 		for (unsigned int i = 0; i < meshes->size(); i++)
 		{
 			const Ref<Mesh3D>& mesh = meshes->at(i);
-			m_RenderQueue.emplace_back(mesh);
+			s_Data->RenderQueue.emplace_back(mesh);
 		}
 	}
 
 	void Renderer3D::Submit(const Ref<Terrain>& terrain)
 	{
-		m_RenderQueue.emplace_back(terrain->GetMesh());
+		s_Data->RenderQueue.emplace_back(terrain->GetMesh());
 	}
 
 	void Renderer3D::Render()
 	{
-		while (!m_RenderQueue.empty())
+		while (!s_Data->RenderQueue.empty())
 		{
-			const Ref<Mesh3D>& mesh = m_RenderQueue.front();
-			m_RenderQueue.pop_front();
+			const Ref<Mesh3D>& mesh = s_Data->RenderQueue.front();
+			s_Data->RenderQueue.pop_front();
 
 			// Enable the object for rendering
 			mesh->Enable();
@@ -82,9 +115,9 @@ namespace GraphX
 	{
 		DepthShader.Bind();
 
-		for (unsigned int i = 0; i < m_RenderQueue.size(); i++)
+		for (unsigned int i = 0; i < s_Data->RenderQueue.size(); i++)
 		{
-			const Ref<Mesh3D>& Mesh = m_RenderQueue.at(i);
+			const Ref<Mesh3D>& Mesh = s_Data->RenderQueue.at(i);
 
 			Mesh->BindBuffers();
 

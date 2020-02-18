@@ -12,7 +12,7 @@ namespace GraphX
 #define Check() {															\
 		if(!IsInitialized())												\
 		{																	\
-			GX_ASSERT(false, "Particles Manager has not been Initialised");	\
+			GX_ENGINE_ASSERT(false, "Particles Manager has not been Initialised");	\
 		}																	\
 	}
 
@@ -27,7 +27,7 @@ namespace GraphX
 		m_Camera = Camera;
 		m_PoolCap = PoolCap;
 
-		m_ParticleShader = CreateRef<Shader>("res/Shaders/Particle.shader");
+		m_ParticleShader = CreateRef<Shader>("res/Shaders/ParticleShader.glsl");
 		if (m_Particles != nullptr)
 		{
 			m_Particles->resize(m_PoolCap);

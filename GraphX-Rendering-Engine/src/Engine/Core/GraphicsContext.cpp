@@ -18,7 +18,7 @@ namespace GraphX
 			case GL_DEBUG_SOURCE_OTHER:				return "Other";
 		}
 
-		GX_ASSERT(false, "Unknown Debug Source");
+		GX_ENGINE_ASSERT(false, "Unknown Debug Source");
 		return "";
 	}
 
@@ -37,7 +37,7 @@ namespace GraphX
 			case GL_DEBUG_TYPE_POP_GROUP:			return "Pop Group";
 		}
 
-		GX_ASSERT(false, "Unknown Message Type");
+		GX_ENGINE_ASSERT(false, "Unknown Message Type");
 		return "";
 	}
 
@@ -65,7 +65,7 @@ namespace GraphX
 				return;
 		}
 
-		GX_ASSERT(false, "Unknown severity level!");
+		GX_ENGINE_ASSERT(false, "Unknown severity level!");
 	}
 
 	GraphicsContext::GraphicsContext(GLFWwindow* WindowHandle)
@@ -83,7 +83,7 @@ namespace GraphX
 		// Initialise GLEW
 		if (glewInit() != GLEW_OK)
 		{
-			GX_ASSERT(false, "Failed to Intialize Graphics Context (OpenGL)");
+			GX_ENGINE_ASSERT(false, "Failed to Intialize Graphics Context (OpenGL)");
 			return;
 		}
 

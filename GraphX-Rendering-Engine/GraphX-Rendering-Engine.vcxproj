@@ -290,9 +290,7 @@
     <ClInclude Include="src\Engine\Entities\Particles\ParticleManager.h" />
     <ClInclude Include="src\Engine\pch.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Engine\Core\Renderer\Renderer2DCore.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer3D.h" />
-    <ClInclude Include="src\Engine\Core\Renderer\Renderer3DCore.h" />
     <ClInclude Include="src\Engine\Core\Renderer\SimpleRenderer.h" />
     <ClInclude Include="src\Engine\Core\Shaders\Shader.h" />
     <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />

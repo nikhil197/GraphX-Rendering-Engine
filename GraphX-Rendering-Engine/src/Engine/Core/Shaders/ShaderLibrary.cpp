@@ -7,7 +7,7 @@ namespace GraphX
 {
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 	{
-		GX_ASSERT(!Exists(name), "Shader {0} already exists in the library", shader->GetName());
+		GX_ENGINE_ASSERT(!Exists(name), "Shader {0} already exists in the library", shader->GetName());
 		m_Shaders[name] = shader;
 	}
 
@@ -33,7 +33,7 @@ namespace GraphX
 
 	Ref<Shader> ShaderLibrary::GetShader(const std::string& name)
 	{
-		GX_ASSERT(Exists(name), "Shader {0} not found", name);
+		GX_ENGINE_ASSERT(Exists(name), "Shader {0} not found", name);
 		return m_Shaders[name];
 	}
 

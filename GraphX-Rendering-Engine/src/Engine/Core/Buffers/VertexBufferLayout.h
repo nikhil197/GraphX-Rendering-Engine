@@ -27,7 +27,7 @@ namespace GraphX
 			case BufferDataType::Mat4:		return 4 * 4 * 4;
 		}
 
-		GX_ASSERT(false, "Unknown Buffer Data Type");
+		GX_ENGINE_ASSERT(false, "Unknown Buffer Data Type");
 		return 0;
 	}
 
@@ -61,7 +61,7 @@ namespace GraphX
 				case BufferDataType::Mat4:		return 4 * 4;
 			}
 
-			GX_ASSERT(false, "Unknown Buffer Data Type");
+			GX_ENGINE_ASSERT(false, "Unknown Buffer Data Type");
 			return 0;
 		}
 

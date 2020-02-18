@@ -25,7 +25,7 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		BuildTerrain();
-		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/Terrain.shader");
+		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/TerrainShader.glsl");
 		shader->Bind();
 		shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
 		shader->SetUniform1f("u_AmbientStrength", 0.01f);

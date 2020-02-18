@@ -26,7 +26,7 @@ namespace GraphX
 			case BufferDataType::Bool:		return GL_BOOL;
 		}
 
-		GX_ASSERT(false, "Unknown Buffer Data Type");
+		GX_ENGINE_ASSERT(false, "Unknown Buffer Data Type");
 		return 0;
 	}
 

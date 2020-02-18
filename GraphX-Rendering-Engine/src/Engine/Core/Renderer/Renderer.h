@@ -21,10 +21,10 @@ namespace GraphX
 	{
 	public:
 		/* Initializes the renderer */
-		static void Initialize();
+		static void Init();
 
 		/* Cleans up at application close */
-		static void CleanUp();
+		static void Shutdown();
 
 		/* Begin a Scene for rendering */
 		static void BeginScene(const Ref<Camera>& MainCamera);
@@ -43,6 +43,9 @@ namespace GraphX
 
 		/* Submit a terrain for rendering */
 		static void Submit(const Ref<Terrain>& terrain);
+
+		/* Render the skybox */
+		static void RenderSkybox(const Ref<class Skybox>& skybox);
 
 		/* Renders all the submitted meshes in the scene */
 		static void Render();
@@ -81,12 +84,6 @@ namespace GraphX
 
 		/* Info required for rendering current scene */
 		static SceneInfo* s_SceneInfo;
-
-		/* 3D Renderer for rendering 3D objects */
-		static Renderer3D* s_Renderer3D;
-
-		/* 2D Renderer for rendering 2D objects */
-		static Renderer2D* s_Renderer2D;
 
 		/* A Simple renderer to directly render stuff (without queuing) */
 		static SimpleRenderer* s_Renderer;

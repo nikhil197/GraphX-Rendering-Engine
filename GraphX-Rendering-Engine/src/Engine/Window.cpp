@@ -44,7 +44,7 @@ namespace GraphX
 
 			if (!glfwInit())
 			{
-				GX_ASSERT(false, "Couldn't Initialise GLFW");
+				GX_ENGINE_ASSERT(false, "Couldn't Initialise GLFW");
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace GraphX
 
 			if (!m_Window)
 			{
-				GX_ASSERT(false, "Window: Couldn't Create the GLFW window");
+				GX_ENGINE_ASSERT(false, "Window: Couldn't Create the GLFW window");
 				glfwTerminate();
 			}
 

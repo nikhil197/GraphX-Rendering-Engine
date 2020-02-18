@@ -36,7 +36,7 @@ namespace GraphX
 				GX_PROFILE_SCOPE("CubeMap::LoadTexFile")
 
 				localBuffer = stbi_load((m_FilePath + m_FileNames[i]).c_str(), &m_Width, &m_Height, &channels, 0);
-				GX_ASSERT(localBuffer, "Failed to load texture data!");
+				GX_ENGINE_ASSERT(localBuffer, "Failed to load texture data!");
 			}
 
 			if (channels == 4)
@@ -50,7 +50,7 @@ namespace GraphX
 				m_DataFormat = GL_RGB;
 			}
 
-			GX_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
+			GX_ENGINE_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
 
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, localBuffer);
 

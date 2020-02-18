@@ -42,6 +42,11 @@ namespace GraphX
 		/* Returns the index buffer of the skybox */
 		inline const Ref<IndexBuffer>& GetIBO() const { return m_IBO; }
 
+		/* Returns the skybox view */
+		inline const GM::Matrix4& GetView() const { return m_View; }
+
+		inline int GetBindingSlot() const { return m_BindingSlot; }
+
 		virtual ~Skybox();
 
 	private:

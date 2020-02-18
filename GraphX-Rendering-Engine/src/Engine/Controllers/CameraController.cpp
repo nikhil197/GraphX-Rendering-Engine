@@ -37,6 +37,9 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
+		// Previous update has already been processed by the application (saves one function call)
+		m_Camera->m_RenderStateDirty = false;
+
 		ProcessKeyboardInput(DeltaTime);
 		ProcessMouseInput(DeltaTime);
 
