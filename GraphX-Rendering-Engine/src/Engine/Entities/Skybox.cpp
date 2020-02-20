@@ -60,9 +60,6 @@ namespace GraphX
 		m_View[0][3] = 0.0f;
 		m_View[1][3] = 0.0f;
 		m_View[2][3] = 0.0f;
-
-		m_Shader->Bind();
-		m_Shader->SetUniform4f("u_BlendColor", m_BlendColor);
 	}
 
 	void Skybox::Update(float DeltaTime)

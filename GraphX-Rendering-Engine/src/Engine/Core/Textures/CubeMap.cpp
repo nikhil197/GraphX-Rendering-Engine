@@ -10,6 +10,7 @@ namespace GraphX
 		: m_FilePath(FilePath), m_FileNames(FileNames)
 	{
 		GX_PROFILE_FUNCTION()
+		GX_ENGINE_INFO("Loading CubeMap: {0}", FilePath);
 
 		// To flip the textures on load
 		stbi_set_flip_vertically_on_load(0);

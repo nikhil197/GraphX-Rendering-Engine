@@ -129,9 +129,10 @@ namespace GraphX
 		glDisable(GL_CULL_FACE);
 
 		// Set the uniforms
-		Ref<Shader> shader = s_ShaderLibrary.GetShader("Skybox");
+		const Ref<Shader>& shader = s_ShaderLibrary.GetShader("Skybox");
 		shader->Bind();
 		shader->SetUniformMat4f("u_View", skybox->GetView());
+		shader->SetUniform4f("u_BlendColor", skybox->GetBlendColor());
 
 		const CameraController* CamControl = s_SceneInfo->SceneCamera->GetCameraController();
 

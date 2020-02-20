@@ -11,6 +11,7 @@ namespace GraphX
 		: m_RendererID(0), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
 	{
 		GX_PROFILE_FUNCTION()
+		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
 
 		// To flip the texture
 		stbi_set_flip_vertically_on_load(0);

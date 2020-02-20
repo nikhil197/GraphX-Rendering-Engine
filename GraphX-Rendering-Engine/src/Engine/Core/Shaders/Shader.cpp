@@ -146,7 +146,7 @@ namespace GraphX
 
 	ShaderSource Shader::ParseShaderSource(const std::string& filePath)
 	{
-		GX_ENGINE_INFO("{0} : Parsing Shader source", m_Name);
+		GX_ENGINE_INFO("{0} Shader : Parsing Shader source", m_Name);
 		GX_PROFILE_FUNCTION()
 
 		enum class ShaderType
@@ -179,7 +179,7 @@ namespace GraphX
 
 	unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	{
-		GX_ENGINE_INFO("{0} : Compiling {1} Shader", m_Name, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
+		GX_ENGINE_INFO("{0} Shader : Compiling {1} Shader", m_Name, type == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
 		GX_PROFILE_FUNCTION()
 
 		int shaderID = glCreateShader(type);
@@ -198,7 +198,7 @@ namespace GraphX
 			char* infoLog = (char*)alloca(length * sizeof(char));
 			glGetShaderInfoLog(shaderID, length, &length, infoLog);
 
-			GX_ENGINE_ERROR("{0} : Failed to compile {1} shader",m_Name, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
+			GX_ENGINE_ERROR("{0} Shader : Failed to compile {1} shader",m_Name, (type == GL_VERTEX_SHADER) ? "Vertex " : "Fragment ");
 			GX_ENGINE_ERROR(infoLog);
 
 			glDeleteShader(shaderID);
