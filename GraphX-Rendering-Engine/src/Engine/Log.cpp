@@ -17,7 +17,7 @@ namespace GraphX
 		loggerSinks[0]->set_pattern("%^[%T] %n : %v%$");
 
 		// File Sink
-		loggerSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("GraphX.log", true));
+		loggerSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/GraphX.log", true));
 		loggerSinks[1]->set_pattern("[%T] [%l] %n : %v");
 
 		s_EngineLogger = std::make_shared<spdlog::logger>("GX-Engine", loggerSinks.begin(), loggerSinks.end());

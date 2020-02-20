@@ -50,6 +50,7 @@ namespace GraphX
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
 				GX_ENGINE_CRITICAL("[OpenGL Critical Error] : ( {0} ) -> {1} \n   Source: {2} \n   Type: {3} \n   Severity: {4}", id, message, src, msgType, "High");
+				GX_ENGINE_ASSERT(false,);
 				return;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:
