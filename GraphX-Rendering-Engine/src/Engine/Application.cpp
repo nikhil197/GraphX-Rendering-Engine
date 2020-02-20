@@ -14,7 +14,9 @@
 #include "Engine/Core/Textures/Texture2D.h"
 
 /* Renderer */
-#include "Renderer/Renderer.h"
+#include "Engine/Core/Renderer/Renderer.h"
+#include "Engine/Core/Renderer/Renderer2D.h"
+#include "Engine/Core/Renderer/Renderer3D.h"
 
 /* Controllers */
 #include "Engine/Controllers/CameraController.h"
@@ -240,6 +242,8 @@ namespace GraphX
 					// Start a scene
 					Renderer::BeginScene(m_CameraController->GetCamera());
 
+					Renderer2D::BeginScene(m_CameraController->GetCamera());
+
 					for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 						Renderer::Submit(m_Objects3D[i]);
 
@@ -247,10 +251,10 @@ namespace GraphX
 					if (GX_ENABLE_SHADOWS)
 					{
 						RenderShadowMap();
-
-						// Draw the debug quad to show the depth map
-						RenderShadowDebugQuad();
 					}
+
+					// Draw the debug quad to show the depth map
+					//Renderer2D::DrawQuad({ -10.0f, 10.0f, 0.0f }, 5 * GM::Vector2::UnitVector, m_DefaultTexture);
 
 					Renderer::RenderSkybox(m_CurrentSkybox);
 					
@@ -260,8 +264,12 @@ namespace GraphX
 					ConfigureShaderForRendering(*m_Shader);
 
 					RenderScene();
+					Render2DScene();
 
 					m_ParticlesManager->RenderParticles();
+
+
+					Renderer2D::EndScene();
 
 					// End the scene
 					Renderer::EndScene();
@@ -386,7 +394,13 @@ namespace GraphX
 
 	void Application::Render2DScene()
 	{
+		Renderer2D::DrawQuad({ 4.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, m_DefaultTexture);
 
+		if (GX_ENABLE_SHADOWS)
+		{
+			// Draw the debug quad to show the depth map
+			Renderer2D::DrawDebugQuad({-10.0f, 10.0f, 0.0f}, 5 * GM::Vector2::UnitVector, m_ShadowBuffer->GetDepthMap(), GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+		}
 	}
 
 	void Application::RenderTerrain(bool IsShadowPhase)
@@ -438,34 +452,6 @@ namespace GraphX
 		}
 		GraphXGui::GlobalSettings(m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity, GX_ENABLE_PARTICLE_EFFECTS);
 		GraphXGui::Render();
-	}
-
-	void Application::RenderShadowDebugQuad()
-	{
-		GX_PROFILE_FUNCTION()
-
-		static std::vector<Vertex2D> quadVertices = {
-			{ Vector2(-0.5f, -0.5f), Vector2(0.0f, 0.0f) },	//0
-			{ Vector2( 0.5f, -0.5f), Vector2(1.0f, 0.0f) },	//1
-			{ Vector2( 0.5f,  0.5f), Vector2(1.0f, 1.0f) },	//2
-			{ Vector2(-0.5f,  0.5f), Vector2(0.0f, 1.0f) }	//3
-		};
-
-		static std::vector<unsigned int> quadIndices = {
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		static Shader shader("res/shaders/BasicShader.glsl");
-		static Ref<Material> DebugMat = CreateRef<Material>(shader);
-
-		static Ref<Mesh2D> QuadMesh = CreateRef<Mesh2D>(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector2::UnitVector, quadVertices, quadIndices, DebugMat);
-
-		DebugMat->Bind();
-		m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
-		shader.SetUniform1i("u_Tex", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
-		Renderer::Submit(QuadMesh);
-		shader.UnBind();
 	}
 
 	void Application::ConfigureShaderForRendering(Shader& shader)

@@ -30,7 +30,7 @@ namespace GraphX
 	struct Vertex2D
 	{
 		// The Position of the vertex
-		GM::Vector2 Position;
+		GM::Vector3 Position;
 
 		// The texture coordinate for the vertex
 		GM::Vector2 TexCoord;
@@ -39,7 +39,7 @@ namespace GraphX
 		static const VertexBufferLayout& VertexLayout()
 		{
 			static VertexBufferLayout Layout = {
-				{ BufferDataType::Float2 },		// For positions
+				{ BufferDataType::Float3 },		// For positions
 				{ BufferDataType::Float2 }		// For texture coordinates
 			};
 

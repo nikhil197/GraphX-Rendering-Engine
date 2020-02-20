@@ -18,8 +18,11 @@ namespace GraphX
 		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color);
 		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color);
 
-		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture);
-		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture);
+		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot = 0);
+		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot = 0);
+
+		// Only for debug Purpose
+		static void DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot);
 
 		/* Submit the mesh to be rendered to the render */
 		static void Submit(const Ref<Mesh2D>& mesh);
@@ -35,11 +38,17 @@ namespace GraphX
 		{
 			Ref<class Camera> SceneCamera;
 
+			// Vertex Array to store the quad vertices and indices
+			Scope<class VertexArray> QuadVA;
+
 			// One Shader for rendering all 2D stuff
 			Ref<Shader> TextureShader;
 
+			// Debug shader for rendering depth map (TODO: Find a better place for this)
+			Ref<Shader> ShadowDebugShader;
+
 			// White texture for rendering colored 2D stuff
-			Ref<Texture2D> WhiteTexture;
+			Scope<Texture2D> WhiteTexture;
 
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh2D>> RenderQueue;

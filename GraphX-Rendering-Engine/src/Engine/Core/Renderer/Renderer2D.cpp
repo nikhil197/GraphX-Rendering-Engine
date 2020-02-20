@@ -1,13 +1,21 @@
 #include "pch.h"
+#include "Renderer2D.h"
 #include "Gl/glew.h"
 
-#include "Renderer/Renderer.h"
-#include "Renderer2D.h"
-#include "Shaders/Shader.h"
-#include "Materials/Material.h"
-#include "Model/Mesh/Mesh2D.h"
-#include "Buffers/IndexBuffer.h"
-#include "Textures/Texture2D.h"
+#include "Engine/Core/Renderer/Renderer.h"
+
+#include "Engine/Core/Shaders/Shader.h"
+#include "Engine/Core/Materials/Material.h"
+
+#include "Engine/Model/Mesh/Mesh2D.h"
+#include "Engine/Model/Mesh/Vertex.h"
+
+#include "Engine/Core/VertexArray.h"
+#include "Engine/Core/Buffers/VertexBuffer.h"
+#include "Engine/Core/Buffers/IndexBuffer.h"
+#include "Engine/Core/Textures/Texture2D.h"
+
+#include "Engine/Entities/Camera.h"
 
 namespace GraphX
 {
@@ -21,8 +29,27 @@ namespace GraphX
 		s_Data = new Renderer2D::Renderer2DStorage();
 
 		s_Data->TextureShader = Renderer::GetShaderLibrary().Load("res/Shaders/TextureShader2D.glsl", "Texture2D");
+		s_Data->ShadowDebugShader = Renderer::GetShaderLibrary().Load("res/Shaders/ShadowDebugShader.glsl", "ShadowDebug");
 
-		s_Data->WhiteTexture = CreateRef<Texture2D>(1, 1);
+		s_Data->WhiteTexture = CreateScope<Texture2D>(1, 1);
+		uint32_t data = 0xffffffff;
+		s_Data->WhiteTexture->SetData(&data, sizeof(data));
+
+		std::vector<Vertex2D> quadVertices = {
+			{ GM::Vector3(-0.5f, -0.5f, 0.0f), GM::Vector2(0.0f, 0.0f) },
+			{ GM::Vector3( 0.5f, -0.5f, 0.0f), GM::Vector2(1.0f, 0.0f) },
+			{ GM::Vector3( 0.5f,  0.5f, 0.0f), GM::Vector2(1.0f, 1.0f) },
+			{ GM::Vector3(-0.5f,  0.5f, 0.0f), GM::Vector2(0.0f, 1.0f) }
+		};
+
+		std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+
+		VertexBuffer vbo(&quadVertices[0], 4 * sizeof(Vertex2D));
+		IndexBuffer ibo(&indices[0], 6);
+
+		s_Data->QuadVA = CreateScope<VertexArray>();
+		s_Data->QuadVA->AddVertexBuffer(vbo, Vertex2D::VertexLayout());
+		s_Data->QuadVA->AddIndexBuffer(ibo);
 	}
 
 	void Renderer2D::Shutdown()
@@ -41,6 +68,13 @@ namespace GraphX
 		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer2D not Initialised!!");
 
 		s_Data->SceneCamera = MainCamera;
+
+		if (MainCamera->IsRenderStateDirty())
+		{
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniformMat4f("u_ProjectionView", MainCamera->GetProjectionViewMatrix());
+			s_Data->ShadowDebugShader->SetUniformMat4f("u_ProjectionView", MainCamera->GetProjectionViewMatrix());
+		}
 	}
 	
 	void Renderer2D::EndScene()
@@ -48,20 +82,64 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color) {
-
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color)
+	{
+		DrawQuad({ position, 0.0f }, size, color);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color){
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color)
+	{
+		s_Data->WhiteTexture->Bind();
 
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", color);
+		s_Data->TextureShader->SetUniform1i("u_Texture", 0);
+
+		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+		s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		s_Data->WhiteTexture->UnBind();
 	}
 		 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture){
-
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	{
+		DrawQuad({ position, 0.0f }, size, texture, slot);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture) {
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	{
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", GM::Vector4::UnitVector);
+		
+		texture->Bind(slot);
+		s_Data->TextureShader->SetUniform1i("u_Texture", slot);
+		
+		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+		s_Data->TextureShader->SetUniformMat4f("u_Model", model);
 
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		texture->UnBind();
+	}
+
+	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	{
+		s_Data->ShadowDebugShader->Bind();
+		
+		texture->Bind(slot);
+		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", slot);
+
+		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+		s_Data->ShadowDebugShader->SetUniformMat4f("u_Model", model);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		texture->UnBind();
 	}
 
 	void Renderer2D::Submit(const Ref<Mesh2D>& mesh)

@@ -98,9 +98,6 @@ namespace GraphX
 		/* Renders the GUI */
 		void RenderGui();
 
-		/* Renders a quad for debugging shadow map */
-		void RenderShadowDebugQuad();
-
 		/* All the calculations related to the day night cycle */
 		void DayNightCycleCalculations(float DeltaTime);
 
