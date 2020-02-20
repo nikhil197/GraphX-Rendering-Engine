@@ -62,7 +62,7 @@ namespace GraphX
 		static void RenderIndexed(const IndexBuffer& indexBuffer);
 
 		/* Returns the shader used for debug rendering */
-		static const Ref<Shader>& GetDebugCollisionsShader() { return s_DebugShader; }
+		static Ref<Shader> GetDebugCollisionsShader() { return s_DebugShader; }
 
 		/* Returns the shader library */
 		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }

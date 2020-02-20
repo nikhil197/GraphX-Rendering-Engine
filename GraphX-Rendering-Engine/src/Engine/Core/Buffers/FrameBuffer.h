@@ -35,6 +35,9 @@ namespace GraphX
 		/* Returns the height of the buffer used for the framebuffer */
 		inline int GetHeight() const { return m_Height; }
 
+		/* Returns the depth map for this framebuffer */
+		inline Ref<class Texture2D> GetDepthMap() const { return m_DepthMap; }
+
 		~FrameBuffer();
 
 	private:

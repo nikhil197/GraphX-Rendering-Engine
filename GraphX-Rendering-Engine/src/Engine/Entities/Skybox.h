@@ -39,12 +39,14 @@ namespace GraphX
 		virtual void Disable() const override;
 
 		/* Returns the index buffer of the skybox */
-		inline const Ref<IndexBuffer>& GetIBO() const { return m_IBO; }
+		inline Ref<IndexBuffer> GetIBO() const { return m_IBO; }
 
 		/* Returns the skybox view */
 		inline const GM::Matrix4& GetView() const { return m_View; }
 
 		inline int GetBindingSlot() const { return m_BindingSlot; }
+
+		inline const GM::Vector4& GetBlendColor() const { return m_BlendColor; }
 
 		virtual ~Skybox();
 

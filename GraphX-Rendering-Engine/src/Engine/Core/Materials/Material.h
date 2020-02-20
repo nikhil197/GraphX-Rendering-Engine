@@ -51,7 +51,7 @@ namespace GraphX
 		inline float GetShininess() const { return m_Shininess; }
 
 		/* Returns the shader of the material */
-		inline const Ref<Shader>& GetShader() const { return m_Shader; }
+		inline Ref<Shader> GetShader() const { return m_Shader; }
 
 		/* Returns textures used in the material */
 		inline const std::vector<Ref<const Texture2D>>& GetTextures() const { return m_Textures; }

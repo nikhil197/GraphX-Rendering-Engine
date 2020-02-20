@@ -14,7 +14,7 @@ namespace GraphX
 		Model3D(const std::string& FilePath, const Ref<Material>& Mat);
 
 		/* Returns the meshes of the model */
-		inline const Ref<std::vector<Ref<Mesh3D>>>& GetMeshes() const { return m_Meshes; }
+		inline Ref<std::vector<Ref<Mesh3D>>> GetMeshes() const { return m_Meshes; }
 
 	private:
 		/* Meshes making up the model */

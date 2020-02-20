@@ -31,10 +31,10 @@ namespace GraphX
 		virtual void Disable() const override;
 
 		/* Returns the mesh of the terrain */
-		inline const Ref<Mesh3D>& GetMesh() const { return m_Mesh; }
+		inline Ref<Mesh3D> GetMesh() const { return m_Mesh; }
 
 		/* Returns the shader used for the terrain */
-		inline const Ref<Material>& GetMaterial() const { return m_Material; }
+		inline Ref<Material> GetMaterial() const { return m_Material; }
 
 		/* Returns the Width of the terrain (x - direction) */
 		inline float GetWidth() const { return m_TileSize * m_Width; }

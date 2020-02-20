@@ -38,16 +38,16 @@ namespace GraphX
 		virtual void UnBindBuffers() const;
 
 		/* Returns the vao for the object */
-		inline const Ref<const VertexArray>& GetVAO() const { return m_VAO; }
+		inline Ref<const VertexArray> GetVAO() const { return m_VAO; }
 
 		/* Returns the ibo for the object */
-		inline const Ref<const IndexBuffer>& GetIBO() const { return m_IBO; }
+		inline Ref<const IndexBuffer> GetIBO() const { return m_IBO; }
 
 		/* Returns the vbo for the object */
-		inline const Ref<const VertexBuffer>& GetVBO() const { return m_VBO; }
+		inline Ref<const VertexBuffer> GetVBO() const { return m_VBO; }
 
 		/* Returns the shader for the object */
-		inline const Ref<Material>& GetMaterial() const { return m_Material; }
+		inline Ref<Material> GetMaterial() const { return m_Material; }
 
 		/* Sets new shader for the mesh */
 		inline void SetMaterial(const Ref<Material>& NewMat) { m_Material = NewMat; }

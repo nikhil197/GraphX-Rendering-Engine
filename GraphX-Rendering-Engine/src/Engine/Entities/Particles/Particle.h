@@ -41,7 +41,7 @@ namespace GraphX
 		inline float GetScale() const { return m_Scale; }
 
 		/* Returns the texture(atlas) of the particle */
-		inline const Ref<Texture2D>& GetTexture() const { return m_Texture; }
+		inline Ref<Texture2D> GetTexture() const { return m_Texture; }
 
 		/* Whether the particles is being used or not */
 		inline bool IsUsed() const { return m_Used; }
