@@ -154,5 +154,12 @@ namespace GM
 		{
 			return atan(Val) * 180 / PI;
 		}
+
+		// Linear Interpolation between A and B based on BlendFactor(B/W 0 and 1)
+		template<typename T>
+		static T Lerp(const T& A, const T& B, double BlendFactor)
+		{
+			return (1 - BlendFactor) * A + BlendFactor * B;
+		}
 	};
 }

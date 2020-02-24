@@ -52,12 +52,6 @@ namespace GraphX
 
 		/* Calculates the y - Coordinate for the vertices of the terrain mesh */
 		double GetYCoords(int x, int y);
-	    
-		double SmoothNoise(int x, int y);
-
-		double Interpolate(double a, double b, double blend);
-
-		double InterpolatedNoise(double x, double y);
 
 		/* Calculates normals for the created mesh of the terrain */
 		void CalculateNormal(int x, int y);

@@ -27,6 +27,6 @@ namespace GraphX
 	Timer::~Timer()
 	{
 		std::chrono::duration<float> duration = std::chrono::high_resolution_clock::now() - m_StartTimePoint;
-		GX_ENGINE_INFO("{0} took {1} ms.", m_Name, duration.count() * 1000.0f);
+		GX_ENGINE_INFO("'{0}' runtime {1} ms.", m_Name, duration.count() * 1000.0f);
 	}
 }
