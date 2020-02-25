@@ -12,7 +12,7 @@ namespace GraphX
 		static void Init();
 		static void Shutdown();
 			   
-		static void BeginScene(const Ref<class Camera>& MainCamera);
+		static void BeginScene();
 		static void EndScene();
 
 		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color);
@@ -39,8 +39,6 @@ namespace GraphX
 	private:
 		struct Renderer2DStorage
 		{
-			Ref<class Camera> SceneCamera;
-
 			// Vertex Array to store the quad vertices and indices
 			Scope<class VertexArray> QuadVA;
 

@@ -62,19 +62,17 @@ namespace GraphX
 		s_Data = nullptr;
 	}
 
-	void Renderer2D::BeginScene(const Ref<class Camera>& MainCamera)
+	void Renderer2D::BeginScene()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer2D not Initialised!!");
 
-		s_Data->SceneCamera = MainCamera;
-
-		if (MainCamera->IsRenderStateDirty())
+		if (Renderer::s_SceneInfo->SceneCamera->IsRenderStateDirty())
 		{
 			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniformMat4f("u_ProjectionView", MainCamera->GetProjectionViewMatrix());
-			s_Data->ShadowDebugShader->SetUniformMat4f("u_ProjectionView", MainCamera->GetProjectionViewMatrix());
+			s_Data->TextureShader->SetUniformMat4f("u_ProjectionView", Renderer::s_SceneInfo->SceneCamera->GetProjectionViewMatrix());
+			s_Data->ShadowDebugShader->SetUniformMat4f("u_ProjectionView", Renderer::s_SceneInfo->SceneCamera->GetProjectionViewMatrix());
 		}
 	}
 	

@@ -13,7 +13,7 @@ namespace GraphX
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const Ref<class Camera>& MainCamera);
+		static void BeginScene();
 		static void EndScene();
 		
 		/* Submit the object to be rendered */
@@ -38,8 +38,6 @@ namespace GraphX
 	private:
 		struct Renderer3DStorage
 		{
-			Ref<Camera> SceneCamera;
-
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh3D>> RenderQueue;
 

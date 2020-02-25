@@ -242,7 +242,8 @@ namespace GraphX
 					// Start a scene
 					Renderer::BeginScene(m_CameraController->GetCamera());
 
-					Renderer2D::BeginScene(m_CameraController->GetCamera());
+					Renderer2D::BeginScene();
+					Renderer3D::BeginScene();
 
 					for (unsigned int i = 0; i < m_Objects3D.size(); i++)
 						Renderer::Submit(m_Objects3D[i]);
@@ -270,6 +271,7 @@ namespace GraphX
 
 
 					Renderer2D::EndScene();
+					Renderer3D::EndScene();
 
 					// End the scene
 					Renderer::EndScene();

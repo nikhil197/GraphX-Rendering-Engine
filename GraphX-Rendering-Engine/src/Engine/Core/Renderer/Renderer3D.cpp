@@ -65,13 +65,11 @@ namespace GraphX
 		s_Data = nullptr;
 	}
 
-	void Renderer3D::BeginScene(const Ref<class Camera>& MainCamera)
+	void Renderer3D::BeginScene()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer3D not Initialised!!");
-
-		s_Data->SceneCamera = MainCamera;
 	}
 
 	void Renderer3D::EndScene()
@@ -163,8 +161,7 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 		// Todo: Figure out a better structure for debug drawing
 
-		const Ref<Shader>& DebugShader = Renderer::GetDebugCollisionsShader();
-		if (DebugShader)
+		if (Renderer::s_DebugShader)
 		{
 			static std::vector<Vector3> VertexPositions(8);
 
@@ -182,8 +179,8 @@ namespace GraphX
 			s_Data->DebugData.VBO->SetData(VertexPositions.data(), 8 * sizeof(Vector3));
 
 			s_Data->DebugData.VAO->Bind();
-			DebugShader->Bind();
-			DebugShader->SetUniformMat4f("u_Model", Model);
+			Renderer::s_DebugShader->Bind();
+			Renderer::s_DebugShader->SetUniformMat4f("u_Model", Model);
 			glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, nullptr);
 		}
 	}
