@@ -66,26 +66,22 @@ namespace GraphX
 		Renderer2D::RenderParticles(*m_Particles);
 	}
 
-	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale, float GravityEffect)
+	void ParticleManager::EmitParticle(const ParticleProps& props)
 	{
 		GX_PROFILE_FUNCTION()
 
 		Check();
 
-		m_Particles->at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
+		m_Particles->at(m_Index).Init(props);
 		m_Index = (m_Index + 1) % m_PoolCap;
 	}
 
 	bool ParticleManager::IsInitialized()
 	{
-		if (m_Camera == nullptr)
-			return false;
-		if (m_Particles == nullptr)
-			return false;
-		if (m_ParticleShader == nullptr)
-			return false;
+		if (m_Camera && m_Particles && m_ParticleShader)
+			return true;
 
-		return true;
+		return false;
 	}
 
 	ParticleManager::~ParticleManager()

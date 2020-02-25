@@ -7,8 +7,8 @@
 
 namespace GraphX
 {
-	ParticleSystem::ParticleSystem(const Ref<ParticleManager>& Manager, const Ref<Texture2D>& ParticleTexture, float ParticlesPerSec, float Speed, float GravityEffect, float LifeSpan, float Scale, float SpeedDeviation, float LifeSpanDeviation, float ScaleDeviation, float GravityEffectDeviation)
-		: m_Manager(Manager), m_Texture(ParticleTexture), m_ParticlesPerSec(ParticlesPerSec), m_Speed(Speed), m_GravityEffect(GravityEffect), m_LifeSpan(LifeSpan), m_Scale(Scale), m_SpeedDeviation(SpeedDeviation), m_ScaleDeviation(ScaleDeviation), m_LifeSpanDeviation(LifeSpanDeviation), m_GravityEffectDeviation(GravityEffectDeviation)
+	ParticleSystem::ParticleSystem(const Ref<ParticleManager>& Manager, const ParticleSystemConfig& Config)
+		: m_Manager(Manager), m_Config(Config)
 	{
 	}
 
@@ -16,25 +16,30 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		static int MaxParticlesPerFrame = (int) m_ParticlesPerSec;
-		static int MinParticlesPerFrame = (int) m_ParticlesPerSec / 2;
-		int ParticlesCount = (int)(m_ParticlesPerSec * DeltaTime);
+		static int MaxParticlesPerFrame = m_Config.ParticlesPerSec;
+		static int MinParticlesPerFrame = m_Config.ParticlesPerSec / 2;
+		int ParticlesCount = (int)(m_Config.ParticlesPerSec * DeltaTime);
 		GM::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
+
+		ParticleProps props = m_Config.ParticleProperties;
+		props.Position = SpawnLocation;
 		for (int i = 0; i < ParticlesCount && m_Manager->IsPoolEmpty(); i++)
 		{
-			EmitParticle(SpawnLocation);
+			EmitParticle(props);
 		}
 	}
 
-	void ParticleSystem::EmitParticle(const GM::Vector3& SpawnLocation)
+	void ParticleSystem::EmitParticle(ParticleProps& props)
 	{
 		GX_PROFILE_FUNCTION()
 
-		float LifeSpan = GenerateRandomValue(m_LifeSpan, m_LifeSpanDeviation);
-		float Scale = GenerateRandomValue(m_Scale, m_ScaleDeviation);
-		float GravityEffect = GenerateRandomValue(m_GravityEffect, m_GravityEffectDeviation);
-		GM::Vector3 Velocity = GM::Vector3((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f, 1.0f, (float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
-		m_Manager->AddParticle(SpawnLocation, Velocity, LifeSpan, 0.0f, m_Texture, Scale, GravityEffect);
+		props.LifeSpan = GenerateRandomValue(m_Config.ParticleProperties.LifeSpan, m_Config.LifeSpanVariation);
+		props.SizeBegin = GenerateRandomValue(m_Config.ParticleProperties.SizeBegin, m_Config.SizeVariation);
+		props.GravityEffect = GenerateRandomValue(m_Config.ParticleProperties.GravityEffect, m_Config.GravityVariation);
+		props.Velocity.x = m_Config.ParticleProperties.Velocity.x * m_Config.VelocityVariation.x * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		props.Velocity.y = m_Config.ParticleProperties.Velocity.y * m_Config.VelocityVariation.y;
+		props.Velocity.z = m_Config.ParticleProperties.Velocity.z * m_Config.VelocityVariation.z * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		m_Manager->EmitParticle(props);
 	}
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)

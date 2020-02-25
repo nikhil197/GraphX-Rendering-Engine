@@ -188,7 +188,22 @@ namespace GraphX
 		}
 		
 		Ref<Texture2D> particleTex = CreateRef<Texture2D>("res/Textures/Particles/particleAtlas.png", false, 4);
-		ParticleSystem particleSys(m_ParticlesManager, particleTex, 50.0f, 2.0f, 0.5f, 2.0f, 1.0f, 0.5f, 0.4f, 0.5f, 1.0f);
+		ParticleProps particleProperties;
+		particleProperties.Texture = particleTex;
+		particleProperties.Velocity = GM::Vector3(2.0f);
+		particleProperties.GravityEffect = 0.5f;
+		particleProperties.LifeSpan = 2.0f;
+		particleProperties.SizeBegin = particleProperties.SizeEnd = 1.0f;
+
+		ParticleSystemConfig config;
+		config.ParticleProperties = particleProperties;
+		config.ParticlesPerSec = 50;
+		config.VelocityVariation = GM::Vector3(0.5f);
+		config.LifeSpanVariation = 0.4f;
+		config.SizeVariation = 0.5f;
+		config.GravityVariation = 1.0f;
+
+		ParticleSystem particleSys(m_ParticlesManager, config);
 
 		// For the purpose of fps count
 		int times = 0;
