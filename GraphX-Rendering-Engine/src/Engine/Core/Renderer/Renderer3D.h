@@ -42,6 +42,13 @@ namespace GraphX
 
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh3D>> RenderQueue;
+
+			struct Debug
+			{
+				Scope<class VertexArray> VAO;
+				Scope<class VertexBuffer> VBO;
+			} DebugData;
+
 		};
 
 		static Renderer3DStorage* s_Data;

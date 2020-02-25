@@ -9,6 +9,9 @@ namespace GraphX
 		/*data is the collection of the vertices and size is the size of the collection in bytes */
 		VertexBuffer(const void* data, unsigned int size);
 		
+		/* Creates an empty vertex buffer of size 'size' (data to be specified later) */
+		VertexBuffer(unsigned int size);
+
 		/* Copy construct another buffer */
 		VertexBuffer(const VertexBuffer& Other);
 
@@ -17,6 +20,9 @@ namespace GraphX
 
 		/* Un Bind the buffer for the target */
 		void UnBind() const;
+
+		/* Sets new data for the verte buffer */
+		void SetData(const void* data, unsigned int size);
 
 		~VertexBuffer();
 

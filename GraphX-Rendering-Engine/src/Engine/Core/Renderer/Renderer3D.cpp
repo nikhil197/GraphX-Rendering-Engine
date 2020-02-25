@@ -28,6 +28,32 @@ namespace GraphX
 
 		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer3D already Initialised");
 		s_Data = new Renderer3D::Renderer3DStorage();
+
+		s_Data->DebugData.VAO = CreateScope<VertexArray>();
+		s_Data->DebugData.VBO = CreateScope<VertexBuffer>(8 * sizeof(Vector3));
+
+		std::vector<unsigned int> Indices = {
+				0, 1,
+				1, 2,
+				2, 3,
+				3, 0,
+				4, 5,
+				5, 6,
+				6, 7,
+				7, 4,
+				0, 4,
+				1, 5,
+				2, 6,
+				3, 7
+		};
+		IndexBuffer ibo(Indices.data(), Indices.size());
+
+		VertexBufferLayout layout = {
+				{ BufferDataType::Float3 }
+		};
+
+		s_Data->DebugData.VAO->AddVertexBuffer(*(s_Data->DebugData.VBO), layout);
+		s_Data->DebugData.VAO->AddIndexBuffer(ibo);
 	}
 
 	void Renderer3D::Shutdown()
@@ -134,27 +160,13 @@ namespace GraphX
 
 	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model)
 	{
+		GX_PROFILE_FUNCTION()
 		// Todo: Figure out a better structure for debug drawing
 
 		const Ref<Shader>& DebugShader = Renderer::GetDebugCollisionsShader();
 		if (DebugShader)
 		{
 			static std::vector<Vector3> VertexPositions(8);
-			
-			static std::vector<unsigned int> Indices = {
-				0, 1,
-				1, 2,
-				2, 3,
-				3, 0,
-				4, 5,
-				5, 6,
-				6, 7,
-				7, 4,
-				0, 4,
-				1, 5,
-				2, 6,
-				3, 7
-			};
 
 			// Update the vertices for current box
 			VertexPositions[0].x = Box->Min.x, VertexPositions[0].y = Box->Min.y, VertexPositions[0].z = Box->Max.z;
@@ -167,21 +179,12 @@ namespace GraphX
 			VertexPositions[6].x = Box->Max.x, VertexPositions[6].y = Box->Max.y, VertexPositions[6].z = Box->Min.z;
 			VertexPositions[7].x = Box->Min.x, VertexPositions[7].y = Box->Max.y, VertexPositions[7].z = Box->Min.z;
 
-			VertexArray DebugVAO;
-			VertexBuffer DebugVBO(&VertexPositions[0], 8 * sizeof(Vector3));
-			IndexBuffer DebugIBO(&Indices[0], Indices.size());
+			s_Data->DebugData.VBO->SetData(VertexPositions.data(), 8 * sizeof(Vector3));
 
-			VertexBufferLayout layout = {
-				{ BufferDataType::Float3 }
-			};
-
-			DebugVAO.AddVertexBuffer(DebugVBO, layout);
-			DebugVAO.AddIndexBuffer(DebugIBO);
-
-			DebugVAO.Bind();
+			s_Data->DebugData.VAO->Bind();
 			DebugShader->Bind();
 			DebugShader->SetUniformMat4f("u_Model", Model);
-			glDrawElements(GL_LINES, DebugIBO.GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, nullptr);
 		}
 	}
 }
