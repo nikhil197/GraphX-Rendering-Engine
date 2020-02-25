@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "ParticleManager.h"
 
-#include "GL/glew.h"	// TODO: This should not be included outside of Core Submodule
 #include "Entities/Camera.h"
-#include "Model/Quad.h"
 #include "Shaders/Shader.h"
-#include "Core/Renderer/Renderer.h"
+
+#include "Engine/Core/Renderer/Renderer.h"
+#include "Engine/Core/Renderer/Renderer2D.h"
 
 namespace GraphX
 {
@@ -27,14 +27,14 @@ namespace GraphX
 		m_Camera = Camera;
 		m_PoolCap = PoolCap;
 
-		m_ParticleShader = CreateRef<Shader>("res/Shaders/ParticleShader.glsl");
+		m_ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 		if (m_Particles != nullptr)
 		{
 			m_Particles->resize(m_PoolCap);
 		}
 		else
 		{
-			m_Particles = CreateScope<std::vector<Particle>>(PoolCap);
+			m_Particles = CreateScope<std::vector<Particle>>(m_PoolCap);
 		}
 	}
 
@@ -43,10 +43,17 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 		Check()
 
-		const GM::Matrix4& ViewMat = m_Camera->GetViewMatrix();
+		if (m_Camera->IsRenderStateDirty())
+		{
+			m_ParticleShader->Bind();
+			m_ParticleShader->SetUniformMat4f("u_Projection", m_Camera->GetProjectionMatrix());
+		}
+		
+		const GM::Matrix4& ViewMatrix = m_Camera->GetViewMatrix();
+		const GM::Vector3 CameraViewSpacePos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
 		for (unsigned int i = 0; i < m_PoolCap; i++)
 		{
-			m_Particles->at(i).Update(DeltaTime, ViewMat, m_Camera->IsRenderStateDirty());
+			m_Particles->at(i).Update(DeltaTime, CameraViewSpacePos, m_Camera->IsRenderStateDirty());
 		}
 	}
 
@@ -56,20 +63,7 @@ namespace GraphX
 
 		Check()
 
-		PreRender();
-
-		const GM::Matrix4 View = m_Camera->GetViewMatrix();
-
-		for (unsigned int i = 0; i < m_PoolCap; i++)
-		{
-			if (m_Particles->at(i).IsUsed())
-			{
-				m_Particles->at(i).Enable(*m_ParticleShader);
-				Renderer::Render(Quad::GetVerticesCount());
-			}
-		}
-
-		PostRender();
+		Renderer2D::RenderParticles(*m_Particles);
 	}
 
 	void ParticleManager::AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale, float GravityEffect)
@@ -80,32 +74,6 @@ namespace GraphX
 
 		m_Particles->at(m_Index).Init(Position, Velocity, LifeSpan, Rotation, texture, Scale, GravityEffect);
 		m_Index = (m_Index + 1) % m_PoolCap;
-	}
-
-	void ParticleManager::PreRender()
-	{
-		GX_PROFILE_FUNCTION()
-
-		m_ParticleShader->Bind();
-		Particle::GetQuad().Enable();
-		glDepthMask(false);	// Don't render the particles to the depth buffer
-		m_ParticleShader->SetUniformMat4f("u_ProjectionView", m_Camera->GetProjectionViewMatrix());
-
-		// To enable blending
-		glEnable(GL_BLEND);
-
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	}
-
-	void ParticleManager::PostRender()
-	{
-		GX_PROFILE_FUNCTION()
-
-		glDepthMask(true);
-		Particle::GetQuad().Disable();
-		m_ParticleShader->UnBind();
-
-		glDisable(GL_BLEND);
 	}
 
 	bool ParticleManager::IsInitialized()

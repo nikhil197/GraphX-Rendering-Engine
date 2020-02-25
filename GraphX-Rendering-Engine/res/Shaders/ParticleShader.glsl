@@ -7,12 +7,12 @@ out vec2 v_TexCoords;
 
 // Uniforms
 uniform mat4 u_Model;
-uniform mat4 u_ProjectionView;
+uniform mat4 u_Projection;
 
 void main()
 {
 	v_TexCoords = vPosition + vec2(0.5f, 0.5f);
-	gl_Position = u_ProjectionView * u_Model * vec4(vPosition, 0.0f, 1.0f);
+	gl_Position = u_Projection * u_Model * vec4(vPosition, 0.0f, 1.0f);
 }
 
 #shader fragment
@@ -22,8 +22,6 @@ in vec2 v_TexCoords;
 
 uniform sampler2D u_ParticleTexture;
 uniform vec4 u_TexCoordOffsets = vec4(0.0f);
-uniform vec2 u_TexCoordOffset1 = vec2(0.0f);
-uniform vec2 u_TexCoordOffset2 = vec2(0.0f);
 uniform int u_TexAtlasRows = 1;
 uniform float u_BlendFactor = 0.0f;
 

@@ -16,6 +16,7 @@
 #include "Engine/Core/Textures/Texture2D.h"
 
 #include "Engine/Entities/Camera.h"
+#include "Engine/Entities/Particles/Particle.h"
 
 namespace GraphX
 {
@@ -140,6 +141,51 @@ namespace GraphX
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		texture->UnBind();
+	}
+
+	void Renderer2D::RenderParticles(const std::vector<class Particle>& particles)
+	{
+		GX_PROFILE_FUNCTION()
+
+		const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
+		
+		{
+			GX_PROFILE_SCOPE("Particles - PreRender")
+			// Pre Render Stuff
+			ParticleShader->Bind();
+			s_Data->QuadVA->Bind();
+
+			glDepthMask(false);		// Don't render the particles to the depth buffer
+
+			glEnable(GL_BLEND);		// To enable blending
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		}
+
+		{
+			GX_PROFILE_SCOPE("Particles - Render")
+
+			// Render Particles
+			for (const Particle& particle : particles)
+			{
+				if (particle.IsActive())
+				{
+					particle.Enable(*ParticleShader);
+					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+				}
+			}
+		}
+
+		{
+			GX_PROFILE_SCOPE("Particles - PostRender")
+			// Post Render Stuff
+			
+			ParticleShader->UnBind();
+			s_Data->QuadVA->UnBind();
+				
+			glDepthMask(true);
+			glDisable(GL_BLEND);
+		}
 	}
 
 	void Renderer2D::Submit(const Ref<Mesh2D>& mesh)

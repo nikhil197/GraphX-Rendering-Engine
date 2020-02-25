@@ -27,7 +27,7 @@ namespace GraphX
 		void AddParticle(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Whether more particles can be added or not */
-		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsUsed(); }
+		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsActive(); }
 
 		void ResizeParticlesPool(const int NewPoolSize)
 		{
@@ -39,12 +39,6 @@ namespace GraphX
 		}
 
 	private:
-		/* Do Stuff before rendering the particles */
-		void PreRender();
-
-		/* Do Stuff after the particles are rendered*/
-		void PostRender();
-
 		bool IsInitialized();
 
 	private:

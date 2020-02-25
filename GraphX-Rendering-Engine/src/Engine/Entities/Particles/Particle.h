@@ -12,10 +12,6 @@ namespace GraphX
 		: public Entity
 	{
 	public:
-		/* Single quad to render all the particles */
-		static const Quad& GetQuad();
-
-	public:
 		/* Default Consturctor for the particle pool */
 		Particle();
 
@@ -25,7 +21,7 @@ namespace GraphX
 		void Init(const GM::Vector3& Position, const GM::Vector3& Velocity, float LifeSpan, float Rotation, const Ref<Texture2D>& texture, float Scale = 1.0f, float GravityEffect = 1.0f);
 
 		/* Entity Interface */
-		void Update(float DeltaTime, const GM::Matrix4& ViewMatrix, bool UpdateMatrix);
+		void Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix);
 
 		virtual void Enable(Shader& shader, const std::string& EntityNameInShader = "") const override;
 		
@@ -44,7 +40,7 @@ namespace GraphX
 		inline Ref<Texture2D> GetTexture() const { return m_Texture; }
 
 		/* Whether the particles is being used or not */
-		inline bool IsUsed() const { return m_Used; }
+		inline bool IsActive() const { return m_Active; }
 
 	private:
 		void Update(float DeltaTime) override;
@@ -61,6 +57,15 @@ namespace GraphX
 
 		/* Speed and the direction in which the particle is travelling */
 		GM::Vector3 m_Velocity;
+
+		/* Offset of the current texture to be used in the atlas */
+		GM::Vector2 m_CurrentTexOffset;
+
+		/* Offset of the next texture to be used in the atlas */
+		GM::Vector2 m_NextTexOffset;
+
+		/* Texture (Atlas) used for the particle */
+		Ref<Texture2D> m_Texture;
 
 		/* Effect of the gravity on the particle (1 means full effect of the gravity) */
 		float m_GravityEffect;
@@ -80,19 +85,10 @@ namespace GraphX
 		/* Model matrix for the particle */
 		GM::Matrix4 m_Model;
 
-		/* Texture (Atlas) used for the particle */
-		Ref<Texture2D> m_Texture;
-
-		/* Offset of the current texture to be used in the atlas */
-		GM::Vector2 m_CurrentTexOffset;
-
-		/* Offset of the next texture to be used in the atlas */
-		GM::Vector2 m_NextTexOffset;
-
 		/* Factor used to blend between the two textures */
 		float m_BlendFactor;
 
 		/* Whether the current particle is being used or not (Used specially for particles pool) */
-		bool m_Used;
+		bool m_Active;
 	};
 }
