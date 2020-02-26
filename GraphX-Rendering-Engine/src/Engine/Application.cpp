@@ -195,6 +195,14 @@ namespace GraphX
 		particleProperties.LifeSpan = 2.0f;
 		particleProperties.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
+		ParticleProps particleProperties2;
+		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		particleProperties2.ColorEnd = GM::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		particleProperties2.Velocity = GM::Vector3(2.0f);
+		particleProperties2.GravityEffect = 0.5f;
+		particleProperties2.LifeSpan = 2.0f;
+		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
+
 		ParticleSystemConfig config;
 		config.ParticleProperties = particleProperties;
 		config.ParticlesPerSec = 50;

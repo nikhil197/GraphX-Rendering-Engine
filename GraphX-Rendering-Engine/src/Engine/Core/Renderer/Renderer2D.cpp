@@ -151,6 +151,11 @@ namespace GraphX
 			GX_PROFILE_SCOPE("Particles - PreRender")
 			// Pre Render Stuff
 			ParticleShader->Bind();
+
+			// Bind the white texture in case the particle is using colors
+			s_Data->WhiteTexture->Bind();
+			ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+
 			s_Data->QuadVA->Bind();
 
 			glDepthMask(false);		// Don't render the particles to the depth buffer

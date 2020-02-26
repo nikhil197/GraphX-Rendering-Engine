@@ -84,6 +84,11 @@ namespace GraphX
 				shader.SetUniform4f("u_TexCoordOffsets", m_CurrentTexOffset, m_NextTexOffset);
 			}
 		}
+		else
+		{
+			GM::Vector4 color = GM::Utility::Lerp(m_Props.ColorBegin, m_Props.ColorEnd, m_ElapsedTime / m_Props.LifeSpan);
+			shader.SetUniform4f("u_Color", color);
+		}
 	}
 
 	void Particle::Disable() const
