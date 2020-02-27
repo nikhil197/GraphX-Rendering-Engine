@@ -16,7 +16,7 @@
 #include "Engine/Core/Textures/Texture2D.h"
 
 #include "Engine/Entities/Camera.h"
-#include "Engine/Entities/Particles/Particle.h"
+#include "Engine/Entities/Particles/ParticleSystem.h"
 
 namespace GraphX
 {
@@ -141,20 +141,16 @@ namespace GraphX
 		texture->UnBind();
 	}
 
-	void Renderer2D::RenderParticles(const std::vector<class Particle>& particles)
+	void Renderer2D::RenderParticles(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems)
 	{
 		GX_PROFILE_FUNCTION()
 
 		const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
 		
 		{
-			GX_PROFILE_SCOPE("Particles - PreRender")
 			// Pre Render Stuff
+			GX_PROFILE_SCOPE("Particles - PreRender")
 			ParticleShader->Bind();
-
-			// Bind the white texture in case the particle is using colors
-			s_Data->WhiteTexture->Bind();
-			ParticleShader->SetUniform1i("u_ParticleTexture", 0);
 
 			s_Data->QuadVA->Bind();
 
@@ -162,26 +158,44 @@ namespace GraphX
 
 			glEnable(GL_BLEND);		// To enable blending
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
 		}
 
 		{
+			// Render Particles
 			GX_PROFILE_SCOPE("Particles - Render")
 
-			// Render Particles
-			for (const Particle& particle : particles)
+			for (const auto& pair : ParticleSystems)
 			{
-				if (particle.IsActive())
+				const Ref<ParticleSystem>& System = pair.second;
+				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+				if (Texture)
 				{
-					particle.Enable(*ParticleShader);
-					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+					Texture->Bind();
+					ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+					ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInTexAtlas());
+				}
+				else
+				{
+					// Bind the white texture in case the particle is using colors
+					s_Data->WhiteTexture->Bind();
+					ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+					ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
+				}
+
+				for (const Particle& particle : System.operator*())
+				{
+					if (particle.IsActive())
+					{
+						particle.Enable(*ParticleShader);
+						glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+					}
 				}
 			}
 		}
 
 		{
-			GX_PROFILE_SCOPE("Particles - PostRender")
 			// Post Render Stuff
+			GX_PROFILE_SCOPE("Particles - PostRender")
 			
 			ParticleShader->UnBind();
 			s_Data->QuadVA->UnBind();

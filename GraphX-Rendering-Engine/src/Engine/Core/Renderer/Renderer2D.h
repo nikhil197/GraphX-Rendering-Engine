@@ -25,7 +25,7 @@ namespace GraphX
 		static void DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot);
 
 		/* Renders the active particles from the pool of particles */
-		static void RenderParticles(const std::vector<class Particle>& particles);
+		static void RenderParticles(const std::unordered_map<std::string, Ref<class ParticleSystem>>& ParticleSystems);
 
 		/* Submit the mesh to be rendered to the render */
 		static void Submit(const Ref<Mesh2D>& mesh);

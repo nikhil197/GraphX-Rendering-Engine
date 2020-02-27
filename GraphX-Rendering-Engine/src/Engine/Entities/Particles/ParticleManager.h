@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Particle.h"
-
 namespace GraphX
 {
 	class Camera;
 	class Shader;
+	class ParticleSystem;
 
 	class ParticleManager
 	{
@@ -15,7 +14,7 @@ namespace GraphX
 		~ParticleManager();
 
 		/* Initialize the manager */
-		void Initialize(const Ref<const Camera>& camera, const int Pool);
+		void Initialize(const Ref<const Camera>& camera);
 
 		/* Renders the particles on the screen */
 		void RenderParticles();
@@ -23,20 +22,17 @@ namespace GraphX
 		/* Updates all the particles */
 		void Update(float DeltaTime);
 
-		/* Adds a new particle to render */
-		void EmitParticle(const ParticleProps& props);
+		/* Spawn more particles for the current frame */
+		void SpawnParticles(float DeltaTime);
 
-		/* Whether more particles can be added or not */
-		bool IsPoolEmpty() const { return !m_Particles->at(m_Index).IsActive(); }
+		// Add a new particle system to the manager
+		void AddParticleSystem(const Ref<ParticleSystem>& System);
 
-		void ResizeParticlesPool(const int NewPoolSize)
-		{
-			if (NewPoolSize != m_PoolCap)
-			{
-				m_PoolCap = NewPoolSize;
-				m_Particles->resize(NewPoolSize);
-			}
-		}
+		// Returns a particle system with given name
+		Ref<ParticleSystem> GetParticleSystem(const std::string& name);
+
+		/* Returns true if a particle system exists */
+		bool Exists(const std::string& name) const;
 
 	private:
 		bool IsInitialized();
@@ -45,8 +41,8 @@ namespace GraphX
 		/* Shader used to renderer the particles in this particle system*/
 		Ref<Shader> m_ParticleShader;
 
-		/* Particles pool */
-		Scope<std::vector<Particle>> m_Particles;
+		/* All particle systems in the world */
+		std::unordered_map<std::string, Ref<ParticleSystem>> m_ParticleSystems;
 
 		/* Main Camera of the engine */
 		Ref<const Camera> m_Camera;

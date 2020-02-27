@@ -112,7 +112,7 @@ namespace GraphX
 		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
 		m_ParticlesManager = CreateRef<ParticleManager>();
-		m_ParticlesManager->Initialize(m_CameraController->GetCamera(), 1000);	// TODO: Move to a suitable location
+		m_ParticlesManager->Initialize(m_CameraController->GetCamera());	// TODO: Move to a suitable location
 
 		m_DefaultTexture  = CreateRef<Texture2D>("res/Textures/stone.jpg");
 	}
@@ -195,6 +195,17 @@ namespace GraphX
 		particleProperties.LifeSpan = 2.0f;
 		particleProperties.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
+		ParticleSystemConfig config;
+		config.ParticleProperties = particleProperties;
+		config.ParticlesPerSec = 50;
+		config.VelocityVariation = GM::Vector3(0.5f);
+		config.LifeSpanVariation = 0.4f;
+		config.SizeVariation = 0.5f;
+		config.GravityVariation = 1.0f;
+		
+		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3::ZeroVector);
+		m_ParticlesManager->AddParticleSystem(particleSys);
+		
 		ParticleProps particleProperties2;
 		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 		particleProperties2.ColorEnd = GM::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -203,15 +214,9 @@ namespace GraphX
 		particleProperties2.LifeSpan = 2.0f;
 		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
-		ParticleSystemConfig config;
-		config.ParticleProperties = particleProperties;
-		config.ParticlesPerSec = 50;
-		config.VelocityVariation = GM::Vector3(0.5f);
-		config.LifeSpanVariation = 0.4f;
-		config.SizeVariation = 0.5f;
-		config.GravityVariation = 1.0f;
-
-		ParticleSystem particleSys(m_ParticlesManager, config);
+		config.ParticleProperties = particleProperties2;
+		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3(50.0f, 0.0f, -70.0f));
+		m_ParticlesManager->AddParticleSystem(particleSys2);
 
 		// For the purpose of fps count
 		int times = 0;
@@ -246,7 +251,7 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						particleSys.SpawnParticles(GM::Vector3::ZeroVector, DeltaTime);
+						m_ParticlesManager->SpawnParticles(DeltaTime);
 					}
 					
 					// Update all the elements of the scene

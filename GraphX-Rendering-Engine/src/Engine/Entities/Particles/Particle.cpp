@@ -74,10 +74,6 @@ namespace GraphX
 		
 		if (m_Props.Texture)
 		{
-			m_Props.Texture->Bind();
-			shader.SetUniform1i("u_ParticleTexture", 0);
-			shader.SetUniform1i("u_TexAtlasRows", (int)m_Props.Texture->GetRowsInTexAtlas());
-			
 			if (m_Props.Texture->GetRowsInTexAtlas() > 1)
 			{
 				shader.SetUniform1f("u_BlendFactor", m_BlendFactor);

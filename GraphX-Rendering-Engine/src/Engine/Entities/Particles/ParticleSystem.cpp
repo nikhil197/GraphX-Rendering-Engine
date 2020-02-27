@@ -7,23 +7,35 @@
 
 namespace GraphX
 {
-	ParticleSystem::ParticleSystem(const Ref<ParticleManager>& Manager, const ParticleSystemConfig& Config)
-		: m_Manager(Manager), m_Config(Config)
+	ParticleSystem::ParticleSystem(const std::string& name, ParticleManager* Manager, const ParticleSystemConfig& Config, const GM::Vector3& Pos)
+		: Position(Pos), m_Name(name), m_Manager(Manager), m_Config(Config), m_Index(0)
 	{
+		m_Particles.resize(m_Config.PoolCap);
 	}
 
-	void ParticleSystem::SpawnParticles(const GM::Vector3& SpawnLocation, float DeltaTime)
+	void ParticleSystem::Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix)
+	{
+		GX_PROFILE_FUNCTION()
+
+		for (auto& Particle : m_Particles)
+		{
+			Particle.Update(DeltaTime, CameraViewSpacePos, UpdateMatrix);
+		}
+	}
+
+	void ParticleSystem::SpawnParticles(float DeltaTime)
 	{
 		GX_PROFILE_FUNCTION()
 
 		static int MaxParticlesPerFrame = m_Config.ParticlesPerSec;
 		static int MinParticlesPerFrame = m_Config.ParticlesPerSec / 2;
+		
 		int ParticlesCount = (int)(m_Config.ParticlesPerSec * DeltaTime);
 		GM::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
 
 		ParticleProps props = m_Config.ParticleProperties;
-		props.Position = SpawnLocation;
-		for (int i = 0; i < ParticlesCount && m_Manager->IsPoolEmpty(); i++)
+		props.Position = Position;
+		for (int i = 0; i < ParticlesCount && !m_Particles[m_Index].IsActive(); i++)
 		{
 			EmitParticle(props);
 		}
@@ -39,7 +51,9 @@ namespace GraphX
 		props.Velocity.x = m_Config.ParticleProperties.Velocity.x * m_Config.VelocityVariation.x * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
 		props.Velocity.y = m_Config.ParticleProperties.Velocity.y * m_Config.VelocityVariation.y;
 		props.Velocity.z = m_Config.ParticleProperties.Velocity.z * m_Config.VelocityVariation.z * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
-		m_Manager->EmitParticle(props);
+		
+		m_Particles[m_Index].Init(props);
+		m_Index = (m_Index + 1) % m_Config.PoolCap;
 	}
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)
