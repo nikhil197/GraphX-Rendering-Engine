@@ -2,8 +2,9 @@
 #include "Terrain.h"
 
 #include "Utilities/EngineUtil.h"
-#include "Model/Mesh/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
+
+#include "Engine/Core/Vertex.h"
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
 #include "Textures/Texture2D.h"
@@ -34,7 +35,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-			int intX = (int)x;
+		int intX = (int)x;
 		int intZ = (int)z;
 		double fracX = x - intX;
 		double fracZ = z - intZ;
@@ -44,11 +45,11 @@ namespace GraphX
 		double v3 = SmoothNoise(intX, intZ + 1);
 		double v4 = SmoothNoise(intX + 1, intZ + 1);
 
-		double blend = (1.0 - std::cos(fracX * PI)) * 0.5f;
+		float blend = (float)(1.0 - std::cos(fracX * PI)) * 0.5f;
 		double i1 = Utility::Lerp(v1, v2, blend);
 		double i2 = Utility::Lerp(v3, v4, blend);
 
-		blend = (1.0 - std::cos(fracZ * PI)) * 0.5f;
+		blend = (float)(1.0 - std::cos(fracZ * PI)) * 0.5f;
 		return Utility::Lerp(i1, i2, blend);
 	}
 
@@ -107,8 +108,8 @@ namespace GraphX
 			for (int x = 0; x < m_Width; x++)
 			{
 				// Calculate the vertices of the terrain
-				double yCoord = GetYCoords(x, z);
-				vertex.Position = Vector3(x * m_TileSize, (float)yCoord, -z * m_TileSize);
+				//double yCoord = GetYCoords(x, z);
+				vertex.Position = Vector3(x * m_TileSize, /*(float)yCoord*/-10.0f, -z * m_TileSize);
 				vertex.TexCoord = Vector2((float)x, (float)z);
 				m_Vertices->emplace_back(vertex);
 
