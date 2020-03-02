@@ -8,8 +8,8 @@
 #include "Engine/Core/Materials/Material.h"
 
 #include "Engine/Model/Mesh/Mesh2D.h"
-#include "Engine/Model/Mesh/Vertex.h"
 
+#include "Engine/Core/Vertex.h"
 #include "Engine/Core/VertexArray.h"
 #include "Engine/Core/Buffers/VertexBuffer.h"
 #include "Engine/Core/Buffers/IndexBuffer.h"

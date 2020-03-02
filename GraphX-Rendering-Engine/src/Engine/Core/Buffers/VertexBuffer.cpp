@@ -65,10 +65,17 @@ namespace GraphX
 
 	void VertexBuffer::SetData(const void* data, unsigned int size)
 	{
+		SetData(data, 0, size);
+	}
+
+	void VertexBuffer::SetData(const void* data, size_t offset, size_t size)
+	{
 		GX_PROFILE_FUNCTION()
 
+		GX_ENGINE_ASSERT(size - offset <= m_BufferSize, "Data not provided properly")
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 

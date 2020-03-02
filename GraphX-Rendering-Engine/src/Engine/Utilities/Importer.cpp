@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Importer.h"
 
-#include "Model/Mesh/Vertex.h"
+#include "Engine/Core/Vertex.h"
 #include "Model/Mesh/Mesh3D.h"
 #include "Textures/Texture2D.h"
 #include "Utilities/EngineUtil.h"

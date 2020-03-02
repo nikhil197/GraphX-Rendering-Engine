@@ -16,6 +16,17 @@ namespace GraphX
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
+	IndexBuffer::IndexBuffer(const uint32_t count)
+		: m_Count(count)
+	{
+		GX_PROFILE_FUNCTION()
+
+		glGenBuffers(1, &m_RendererID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count * sizeof(uint32_t), nullptr, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
 	IndexBuffer::IndexBuffer(const IndexBuffer& Other)
 		: m_Count(Other.m_Count)
 	{
@@ -48,6 +59,21 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	void IndexBuffer::SetData(const uint32_t* data, uint32_t count)
+	{
+		SetData(data, 0, count);
+	}
+
+	void IndexBuffer::SetData(const uint32_t* data, uint32_t offset, uint32_t count)
+	{
+		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(count - offset <= m_Count, "Data not provided properly");
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * sizeof(uint32_t), count * sizeof(uint32_t), data);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 

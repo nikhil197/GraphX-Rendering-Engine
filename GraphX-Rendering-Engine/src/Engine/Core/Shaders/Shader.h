@@ -28,6 +28,8 @@ namespace GraphX
 		/* Set uniforms */
 		void SetUniform1i(const char* Name, int val);
 
+		void SetUniform1iv(const char* Name, uint32_t count, const int* vals);
+
 		void SetUniform2i(const char* Name, int v1, int v2);
 
 		void SetUniform1f(const char* Name, float val);

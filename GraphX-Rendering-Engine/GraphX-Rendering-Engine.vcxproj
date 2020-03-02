@@ -283,7 +283,7 @@
     <ClInclude Include="src\Engine\Model\Cube.h" />
     <ClInclude Include="src\Engine\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Engine\Model\Mesh\Mesh3D.h" />
-    <ClInclude Include="src\Engine\Model\Mesh\Vertex.h" />
+    <ClInclude Include="src\Engine\Core\Vertex.h" />
     <ClInclude Include="src\Engine\Model\Model3D.h" />
     <ClInclude Include="src\Engine\Model\ModelTypes.h" />
     <ClInclude Include="src\Engine\Model\Quad.h" />

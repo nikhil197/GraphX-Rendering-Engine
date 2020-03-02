@@ -96,4 +96,32 @@ namespace GraphX
 			return Layout;
 		}
 	};
+
+	/* Structure to represent a vertex of 'Batch2D' */
+	struct VertexBatch2D
+	{
+		// Position of the vertex
+		GM::Vector3 Position;
+
+		// Color of the vertex
+		GM::Vector4 Color;
+		
+		// Texture coordinates of the vertex
+		GM::Vector2 TexCoords;
+		
+		// Texture slot used for this vertex
+		float TexIndex;
+
+		static const VertexBufferLayout& VertexLayout()
+		{
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float3 },	// For Position
+				{ BufferDataType::Float4 },	// For Color
+				{ BufferDataType::Float2 },	// For TexCoords
+				{ BufferDataType::Float }	// For TexIndex 
+			};
+
+			return Layout;
+		}
+	};
 }

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Mesh/Mesh3D.h"
-#include "Mesh/Vertex.h"
+
+#include "Engine/Core/Vertex.h"
 
 namespace GraphX
 {

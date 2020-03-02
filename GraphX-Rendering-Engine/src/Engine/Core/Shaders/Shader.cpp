@@ -62,6 +62,11 @@ namespace GraphX
 		glUniform1i(GetLocation(Name), Val);
 	}
 
+	void Shader::SetUniform1iv(const char* Name, uint32_t count, const int* vals)
+	{
+		glUniform1iv(GetLocation(Name), count, vals);
+	}
+
 	void Shader::SetUniform2i(const char* Name, int v1, int v2)
 	{
 		glUniform2i(GetLocation(Name), v1, v2);

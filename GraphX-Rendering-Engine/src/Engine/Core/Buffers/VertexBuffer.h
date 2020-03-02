@@ -21,8 +21,14 @@ namespace GraphX
 		/* Un Bind the buffer for the target */
 		void UnBind() const;
 
-		/* Sets new data for the verte buffer */
+		/* Sets new data for the vertex buffer */
 		void SetData(const void* data, unsigned int size);
+
+		/* Sets new data for the buffer over custom range
+		* Offset (in bytes) - where in buffer to start
+		* size (in bytes) - size of 'data' in bytes
+		*/
+		void SetData(const void* data, size_t offset, size_t size);
 
 		~VertexBuffer();
 

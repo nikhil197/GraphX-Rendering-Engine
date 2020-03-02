@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Application.h"
 
+#include "Engine/Core/Vertex.h"
 #include "Engine/Core/VertexArray.h"
 #include "Engine/Core/Shaders/Shader.h"
 #include "Engine/Core/Materials/Material.h"
@@ -46,7 +47,6 @@
 #include "Engine/Input/Mouse.h"
 
 /* Model */
-#include "Model/Mesh/Vertex.h"
 #include "Engine/Model/ModelTypes.h"
 #include "Engine/Model/Model3D.h"
 #include "Engine/Model/Mesh/Mesh2D.h"
