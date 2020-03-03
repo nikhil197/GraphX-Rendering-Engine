@@ -1,6 +1,6 @@
 #pragma once
 
-// Use Profiler of not
+// Use Profiler or not
 #define GX_PROFILING 0
 
 // Use Logger or not

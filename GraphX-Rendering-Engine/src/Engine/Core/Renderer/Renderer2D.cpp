@@ -18,8 +18,13 @@
 #include "Engine/Entities/Camera.h"
 #include "Engine/Entities/Particles/ParticleSystem.h"
 
+#include "Engine/Core/Batches/Batch2D.h"
+
 namespace GraphX
 {
+	// Max quads in a batch
+	static const uint32_t MaxQuadCount = 1000;
+
 	Renderer2D::Renderer2DStorage* Renderer2D::s_Data = nullptr;
 
 	void Renderer2D::Init()
@@ -51,6 +56,21 @@ namespace GraphX
 		s_Data->QuadVA = CreateScope<VertexArray>();
 		s_Data->QuadVA->AddVertexBuffer(vbo, Vertex2D::VertexLayout());
 		s_Data->QuadVA->AddIndexBuffer(ibo);
+
+		s_Data->Batch = CreateScope<Batch2D>(MaxQuadCount);
+		s_Data->Batch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
+
+		s_Data->BatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/BatchShader2D.glsl", "Batch2D");
+
+		// Setup texture slots in the shader
+		int samplers[32];
+		for (int i = 0; i < 32; i++)
+		{
+			samplers[i] = i;
+		}
+
+		s_Data->BatchShader->Bind();
+		s_Data->BatchShader->SetUniform1iv("u_Textures", 32, samplers);
 	}
 
 	void Renderer2D::Shutdown()
@@ -68,11 +88,23 @@ namespace GraphX
 
 		GX_ENGINE_ASSERT(s_Data != nullptr, "Renderer2D not Initialised!!");
 
-		if (Renderer::s_SceneInfo->SceneCamera->IsRenderStateDirty())
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->BeginBatch();
+		}
+
+		Ref<Camera> Cam = Renderer::s_SceneInfo->SceneCamera;
+		if (Cam->IsRenderStateDirty())
 		{
 			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniformMat4f("u_ProjectionView", Renderer::s_SceneInfo->SceneCamera->GetProjectionViewMatrix());
-			s_Data->ShadowDebugShader->SetUniformMat4f("u_ProjectionView", Renderer::s_SceneInfo->SceneCamera->GetProjectionViewMatrix());
+			s_Data->TextureShader->SetUniformMat4f("u_ProjectionView", Cam->GetProjectionViewMatrix());
+			s_Data->ShadowDebugShader->SetUniformMat4f("u_ProjectionView", Cam->GetProjectionViewMatrix());
+			
+			if (GX_ENABLE_BATCH_RENDERING)
+			{
+				s_Data->BatchShader->Bind();
+				s_Data->BatchShader->SetUniformMat4f("u_ProjectionView", Cam->GetProjectionViewMatrix());
+			}
 		}
 	}
 	
@@ -88,19 +120,26 @@ namespace GraphX
 
 	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color)
 	{
-		s_Data->WhiteTexture->Bind();
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, color);
+		}
+		else
+		{
+			s_Data->WhiteTexture->Bind();
 
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetUniform4f("u_Tint", color);
-		s_Data->TextureShader->SetUniform1i("u_Texture", 0);
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniform4f("u_Tint", color);
+			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
 
-		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
-		s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+			GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
 
-		s_Data->QuadVA->Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			s_Data->QuadVA->Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-		s_Data->WhiteTexture->UnBind();
+			s_Data->WhiteTexture->UnBind();
+		}
 	}
 		 
 	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
@@ -110,19 +149,27 @@ namespace GraphX
 
 	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
 	{
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetUniform4f("u_Tint", GM::Vector4::UnitVector);
-		
-		texture->Bind(slot);
-		s_Data->TextureShader->SetUniform1i("u_Texture", slot);
-		
-		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
-		s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, texture);
+		}
+		else
+		{
 
-		s_Data->QuadVA->Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniform4f("u_Tint", GM::Vector4::UnitVector);
 
-		texture->UnBind();
+			texture->Bind(slot);
+			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
+
+			GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+
+			s_Data->QuadVA->Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			texture->UnBind();
+		}
 	}
 
 	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
@@ -212,6 +259,13 @@ namespace GraphX
 
 	void Renderer2D::Render()
 	{
+		// Render the batch
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->EndBatch();
+			s_Data->Batch->Flush();
+		}
+
 		// While the queue is not empty
 		while (!s_Data->RenderQueue.empty())
 		{

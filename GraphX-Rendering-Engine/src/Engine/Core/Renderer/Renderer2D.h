@@ -51,6 +51,12 @@ namespace GraphX
 			// White texture for rendering colored 2D stuff
 			Scope<Texture2D> WhiteTexture;
 
+			// Batch object for batching quads / meshes together
+			Scope<class Batch2D> Batch;
+
+			// Shader used to render the batch
+			Ref<class Shader> BatchShader;
+
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh2D>> RenderQueue;
 		};

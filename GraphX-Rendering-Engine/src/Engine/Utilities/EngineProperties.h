@@ -10,4 +10,7 @@ namespace GraphX
 
 	// Whether to enable rendering of collisions for debugging
 	static bool GX_ENABLE_DEBUG_COLLISIONS_RENDERING = true;
+
+	// Wheter to enable batch rendering or not
+	static bool GX_ENABLE_BATCH_RENDERING = true;
 }

@@ -69,6 +69,10 @@ namespace GraphX
 		/* Returns the shader library */
 		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }
 
+	public:
+		// Maximum number of texture slots available for the renderer 
+		static constexpr uint32_t MaxTextureImageUnits = 32;	// TODO: Move this to a more appropriate location
+
 	private:
 		struct SceneInfo
 		{

@@ -292,8 +292,8 @@ namespace GraphX
 					m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
 					ConfigureShaderForRendering(*m_Shader);
 
-					RenderScene();
 					Render2DScene();
+					RenderScene();
 
 					m_ParticlesManager->RenderParticles();
 
@@ -424,6 +424,7 @@ namespace GraphX
 
 	void Application::Render2DScene()
 	{
+		Renderer2D::DrawQuad({ -4.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		Renderer2D::DrawQuad({ 4.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, m_DefaultTexture);
 
 		if (GX_ENABLE_SHADOWS)
