@@ -3,17 +3,20 @@
 namespace GraphX
 {
 	// Time of the day and Coresponding hours
-	enum DayTime
+	namespace DayTime
 	{
-		GX_START = 0,
-		GX_EARLY_MORNING = 3,
-		GX_SUNRISE = 6,
-		GX_MORNING = 9,
-		GX_NOON = 12,
-		GX_AFTERNOON = 15,
-		GX_EVENING = 18,
-		GX_NIGHT = 21
-	};
+		enum Type
+		{
+			GX_START = 0,
+			GX_EARLY_MORNING = 3,
+			GX_SUNRISE = 6,
+			GX_MORNING = 9,
+			GX_NOON = 12,
+			GX_AFTERNOON = 15,
+			GX_EVENING = 18,
+			GX_NIGHT = 21
+		};
+	}
 
 	class EngineUtil
 	{

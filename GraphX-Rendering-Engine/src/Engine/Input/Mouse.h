@@ -2,12 +2,15 @@
 
 namespace GraphX
 {
-	enum MouseButton
+	namespace MouseButton
 	{
-		GX_MOUSE_LEFT = 0,
-		GX_MOUSE_RIGHT = 1,
-		GX_MOUSE_MIDDLE = 2
-	};
+		enum Type
+		{
+			GX_MOUSE_LEFT = 0,
+			GX_MOUSE_RIGHT = 1,
+			GX_MOUSE_MIDDLE = 2
+		};
+	}
 
 	/* */
 	class Mouse
