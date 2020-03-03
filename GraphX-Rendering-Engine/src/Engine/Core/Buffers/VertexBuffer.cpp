@@ -74,6 +74,8 @@ namespace GraphX
 
 		GX_ENGINE_ASSERT(size - offset <= m_BufferSize, "Data not provided properly")
 
+		glBindVertexArray(0);	// To make sure buffer doesn't get bound to other vaos'
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
