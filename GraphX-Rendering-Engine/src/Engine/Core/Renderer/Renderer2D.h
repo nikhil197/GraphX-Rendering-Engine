@@ -57,6 +57,12 @@ namespace GraphX
 			// Shader used to render the batch
 			Ref<class Shader> BatchShader;
 
+			// Batch object for batching particles together
+			Scope<class ParticleBatch> ParticleBatch;
+
+			// Shader to render the paticle batch
+			Ref<class Shader> ParticleBatchShader;
+
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh2D>> RenderQueue;
 		};

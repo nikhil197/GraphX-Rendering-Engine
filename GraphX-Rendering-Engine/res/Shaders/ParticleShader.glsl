@@ -30,7 +30,7 @@ out vec4 fColor;
 
 void main()
 {
-	// Means texture is not used
+	// Means texture atlas is not used
 	if (u_TexAtlasRows == 0 || u_TexAtlasRows == 1)
 	{
 		fColor = texture(u_ParticleTexture, v_TexCoords) * u_Color;

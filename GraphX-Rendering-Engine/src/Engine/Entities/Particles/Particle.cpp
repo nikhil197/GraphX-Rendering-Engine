@@ -55,15 +55,19 @@ namespace GraphX
 			if (m_Props.Texture && m_Props.Texture->GetRowsInTexAtlas() > 1)
 				UpdateTexOffset();
 
-			// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
-			if (UpdateMatrix || m_ElapsedTime == DeltaTime)
+			// Change the model matrix only if batch rendering is not enabled
+			if (!GX_ENABLE_BATCH_RENDERING)
 			{
-				m_Model = GM::Scaling(scale) * GM::Rotation(m_Props.Rotation, GM::Vector3::ZAxis) 
-							* GM::Translation(m_Props.Position + CameraViewSpacePos);
-			}
-			else
-			{
-				m_Model *= GM::Scaling(scale) * GM::Translation(m_Props.Velocity * scale);
+				// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
+				if (UpdateMatrix || m_ElapsedTime == DeltaTime)
+				{
+					m_Model = GM::Scaling(scale) * GM::Rotation(m_Props.Rotation, GM::Vector3::ZAxis)
+						* GM::Translation(m_Props.Position + CameraViewSpacePos);
+				}
+				else
+				{
+					m_Model *= GM::Scaling(scale) * GM::Translation(m_Props.Velocity * scale);
+				}
 			}
 		}
 	}

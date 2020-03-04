@@ -295,7 +295,10 @@ namespace GraphX
 					Render2DScene();
 					RenderScene();
 
-					m_ParticlesManager->RenderParticles();
+					if (GX_ENABLE_PARTICLE_EFFECTS)
+					{
+						m_ParticlesManager->RenderParticles();
+					}
 
 
 					Renderer2D::EndScene();

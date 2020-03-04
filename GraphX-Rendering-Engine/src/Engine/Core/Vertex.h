@@ -124,4 +124,44 @@ namespace GraphX
 			return Layout;
 		}
 	};
+
+	/* Structure to represent a vertex of 'ParticleBatch' */
+	struct VertexParticleBatch
+	{
+		// Position of the vertex
+		GM::Vector3 Position;
+
+		// Color of the vertex
+		GM::Vector4 Color;
+
+		// Texture coordinates of the vertex
+		GM::Vector2 TexCoords;
+
+		// Texture offsets for the particle(In case the particle uses a texture atlas)
+		GM::Vector4 TexOffsets;
+
+		// No. of rows in the texture atlas
+		float TexAtlasRows;
+
+		// Blend factor for blending b/w two stages of the atlas
+		float BlendFactor;
+
+		// Texture slot used for this vertex
+		float TexIndex;
+
+		static const VertexBufferLayout& VertexLayout()
+		{
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Float3 },	// For Position
+				{ BufferDataType::Float4 },	// For Color
+				{ BufferDataType::Float2 },	// For TexCoords
+				{ BufferDataType::Float4 },	// For TexOffsets 
+				{ BufferDataType::Float },	// For TexAtlasRows 
+				{ BufferDataType::Float },	// For BlendFactor 
+				{ BufferDataType::Float },	// For TexIndex
+			};
+
+			return Layout;
+		}
+	};
 }

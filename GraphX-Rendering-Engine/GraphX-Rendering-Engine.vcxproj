@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClCompile Include="src\Engine\Application.cpp" />
     <ClCompile Include="src\Engine\Core\Batches\Batch2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Batches\ParticleBatch.cpp" />
     <ClCompile Include="src\Engine\Core\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Engine\Core\GraphicsContext.cpp" />
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="src\Engine\Core\AssetManager\Manager.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch2D.h" />
+    <ClInclude Include="src\Engine\Core\Batches\ParticleBatch.h" />
     <ClInclude Include="src\Engine\Core\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Engine\Core\GraphicsContext.h" />

@@ -45,7 +45,7 @@ namespace GraphX
 		
 		GX_ENGINE_ASSERT(IsInitialized(), "Particle Manager is not Initialised");
 
-		if (m_Camera->IsRenderStateDirty())
+		if (!GX_ENABLE_BATCH_RENDERING && m_Camera->IsRenderStateDirty())
 		{
 			m_ParticleShader->Bind();
 			m_ParticleShader->SetUniformMat4f("u_Projection", m_Camera->GetProjectionMatrix());

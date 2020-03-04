@@ -19,11 +19,15 @@
 #include "Engine/Entities/Particles/ParticleSystem.h"
 
 #include "Engine/Core/Batches/Batch2D.h"
+#include "Engine/Core/Batches/ParticleBatch.h"
 
 namespace GraphX
 {
 	// Max quads in a batch
 	static const uint32_t MaxQuadCount = 1000;
+
+	// Max Particles in a batch
+	static const uint32_t MaxParticlesCount = 5000;
 
 	Renderer2D::Renderer2DStorage* Renderer2D::s_Data = nullptr;
 
@@ -59,8 +63,12 @@ namespace GraphX
 
 		s_Data->Batch = CreateScope<Batch2D>(MaxQuadCount);
 		s_Data->Batch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
+		
+		s_Data->ParticleBatch = CreateScope<ParticleBatch>(MaxParticlesCount);
+		s_Data->ParticleBatch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
 
 		s_Data->BatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/BatchShader2D.glsl", "Batch2D");
+		s_Data->ParticleBatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleBatchShader.glsl", "ParticleBatch");
 
 		// Setup texture slots in the shader
 		int samplers[32];
@@ -71,6 +79,9 @@ namespace GraphX
 
 		s_Data->BatchShader->Bind();
 		s_Data->BatchShader->SetUniform1iv("u_Textures", 32, samplers);
+
+		s_Data->ParticleBatchShader->Bind();
+		s_Data->ParticleBatchShader->SetUniform1iv("u_Textures", 32, samplers);
 	}
 
 	void Renderer2D::Shutdown()
@@ -104,6 +115,9 @@ namespace GraphX
 			{
 				s_Data->BatchShader->Bind();
 				s_Data->BatchShader->SetUniformMat4f("u_ProjectionView", Cam->GetProjectionViewMatrix());
+
+				s_Data->ParticleBatchShader->Bind();
+				s_Data->ParticleBatchShader->SetUniformMat4f("u_Projection", Cam->GetProjectionMatrix());
 			}
 		}
 	}
@@ -192,63 +206,108 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
-		
+		if(GX_ENABLE_BATCH_RENDERING)
 		{
-			// Pre Render Stuff
-			GX_PROFILE_SCOPE("Particles - PreRender")
-			ParticleShader->Bind();
-
-			s_Data->QuadVA->Bind();
-
-			glDepthMask(false);		// Don't render the particles to the depth buffer
-
-			glEnable(GL_BLEND);		// To enable blending
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		}
-
-		{
-			// Render Particles
-			GX_PROFILE_SCOPE("Particles - Render")
+			const GM::Matrix4& ViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
+			const GM::Vector3 CamViewPos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
+			
+			s_Data->ParticleBatch->BeginBatch();
 
 			for (const auto& pair : ParticleSystems)
 			{
 				const Ref<ParticleSystem>& System = pair.second;
 				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+
 				if (Texture)
 				{
-					Texture->Bind();
-					ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-					ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInTexAtlas());
+					for (const Particle& particle : System.operator*())
+					{
+						if (particle.IsActive())
+						{
+							const ParticleProps& props = particle.GetProps();
+							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, Texture, particle.GetTexOffsets(), particle.GetBlendFactor());
+						}
+					}
 				}
 				else
 				{
-					// Bind the white texture in case the particle is using colors
-					s_Data->WhiteTexture->Bind();
-					ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-					ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
-				}
-
-				for (const Particle& particle : System.operator*())
-				{
-					if (particle.IsActive())
+					for (const Particle& particle : System.operator*())
 					{
-						particle.Enable(*ParticleShader);
-						glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+						if (particle.IsActive())
+						{
+							const ParticleProps& props = particle.GetProps();
+							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
+							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, color);
+						}
 					}
 				}
 			}
-		}
 
+			s_Data->ParticleBatch->EndBatch();
+			s_Data->ParticleBatch->Flush();
+		}
+		else
 		{
-			// Post Render Stuff
-			GX_PROFILE_SCOPE("Particles - PostRender")
-			
-			ParticleShader->UnBind();
-			s_Data->QuadVA->UnBind();
+			const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
+
+			{
+				// Pre Render Stuff
+				GX_PROFILE_SCOPE("Particles - PreRender")
 				
-			glDepthMask(true);
-			glDisable(GL_BLEND);
+				ParticleShader->Bind();
+				s_Data->QuadVA->Bind();
+
+				glDepthMask(false);		// Don't render the particles to the depth buffer
+
+				glEnable(GL_BLEND);		// To enable blending
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			}
+
+			{
+				// Render Particles
+				GX_PROFILE_SCOPE("Particles - Render")
+
+				for (const auto& pair : ParticleSystems)
+				{
+					const Ref<ParticleSystem>& System = pair.second;
+					const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+					if (Texture)
+					{
+						Texture->Bind();
+						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+						ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInTexAtlas());
+					}
+					else
+					{
+						// Bind the white texture in case the particle is using colors
+						s_Data->WhiteTexture->Bind();
+						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
+						ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
+					}
+
+					for (const Particle& particle : System.operator*())
+					{
+						if (particle.IsActive())
+						{
+							particle.Enable(*ParticleShader);
+							glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+						}
+					}
+				}
+			}
+
+			{
+				// Post Render Stuff
+				GX_PROFILE_SCOPE("Particles - PostRender")
+
+				ParticleShader->UnBind();
+				s_Data->QuadVA->UnBind();
+
+				glDepthMask(true);
+				glDisable(GL_BLEND);
+			}
 		}
 	}
 
