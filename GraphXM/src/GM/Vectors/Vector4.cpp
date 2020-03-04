@@ -32,6 +32,10 @@ namespace GM
 		: x(Vec.x), y(Vec.y), z(z), w(w)
 	{}
 
+	Vector4::Vector4(const Vector2& Vec1, const Vector2& Vec2)
+		: x(Vec1.x), y(Vec1.y), z(Vec2.x), w(Vec2.y)
+	{}
+
 	Vector4::Vector4(float x, const Vector2& Vec, float w)
 		: x(x), y(Vec.x), z(Vec.y), w(w)
 	{}

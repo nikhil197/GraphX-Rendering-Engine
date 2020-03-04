@@ -17,6 +17,8 @@ namespace GM
 		Vector4(float x, float y, float z, float w);
 
 		Vector4(const Vector2& Vec, float z, float w);
+		
+		Vector4(const Vector2& Vec1, const Vector2& Vec2);
 
 		Vector4(float x, const Vector2& Vec, float w);
 
