@@ -15,14 +15,14 @@
 
 namespace GraphX
 {
-	Batch2D::Batch2D(uint32_t size)
-		: Batch(size), m_MaxVerticesCount(4 * m_PrimitivesCount), m_MaxIndicesCount(6 * m_PrimitivesCount)
+	Batch2D::Batch2D(uint32_t QuadCount)
+		: Batch(QuadCount), m_MaxVerticesCount(4 * m_PrimitivesCount), m_MaxIndicesCount(6 * m_PrimitivesCount)
 	{
 		// NOTE: Vertices and indices counts are set according to the quad
 		
 		const VertexBufferLayout& Layout = VertexBatch2D::VertexLayout();
 		m_VAO = CreateScope<VertexArray>();
-		m_VBO = CreateScope<VertexBuffer>(m_MaxVerticesCount * sizeof(Layout));
+		m_VBO = CreateScope<VertexBuffer>(m_MaxVerticesCount * sizeof(VertexBatch2D));
 		m_VAO->AddVertexBuffer(*m_VBO, Layout);
 
 		m_IBO = CreateScope<IndexBuffer>(m_MaxIndicesCount);
@@ -76,6 +76,8 @@ namespace GraphX
 
 	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color)
 	{
+		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
+
 		if (IsFull())
 		{
 			EndBatch();
@@ -90,6 +92,8 @@ namespace GraphX
 
 	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Tex)
 	{
+		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
+
 		// If index buffer is full or all texture slots are used
 		if (IsFull() || m_TextureSlotIndex == Renderer::MaxTextureImageUnits)
 		{
@@ -167,6 +171,9 @@ namespace GraphX
 		m_VBO->SetData(m_VertexData, 0, size);
 
 		m_IBO->SetData(m_IndicesData, m_IndexCount);
+
+		m_VertexDataPtr = nullptr;
+		m_IndicesDataPtr = nullptr;
 	}
 
 }
