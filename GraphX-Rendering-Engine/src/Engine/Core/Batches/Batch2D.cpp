@@ -16,7 +16,7 @@
 namespace GraphX
 {
 	Batch2D::Batch2D(uint32_t QuadCount)
-		: Batch(QuadCount), m_MaxVerticesCount(4 * m_PrimitivesCount), m_MaxIndicesCount(6 * m_PrimitivesCount)
+		: Batch(QuadCount)
 	{
 		// NOTE: Vertices and indices counts are set according to the quad
 		
@@ -29,19 +29,11 @@ namespace GraphX
 		m_VAO->AddIndexBuffer(*m_IBO);
 
 		m_VertexData = new VertexBatch2D[m_MaxVerticesCount];
-		m_IndicesData = new uint32_t[m_MaxIndicesCount];
-
-		// TODO: Replace 32, get the actual count from the GPU
-		for (int i = 0; i < Renderer::MaxTextureImageUnits; i++)
-		{
-			m_TextureIDs[i] = 0;
-		}
 	}
 
 	Batch2D::~Batch2D()
 	{
 		delete[] m_VertexData;
-		delete[] m_IndicesData;
 	}
 
 	void Batch2D::BeginBatch()

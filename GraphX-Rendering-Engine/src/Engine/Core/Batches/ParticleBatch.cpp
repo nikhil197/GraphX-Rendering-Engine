@@ -17,7 +17,7 @@
 namespace GraphX
 {
 	ParticleBatch::ParticleBatch(uint32_t QuadCount)
-		: Batch(QuadCount), m_MaxVerticesCount(4 * m_PrimitivesCount), m_MaxIndicesCount(6 * m_PrimitivesCount)
+		: Batch(QuadCount)
 	{
 		const VertexBufferLayout& Layout = VertexParticleBatch::VertexLayout();
 		m_VAO = CreateScope<VertexArray>();
@@ -28,19 +28,11 @@ namespace GraphX
 		m_VAO->AddIndexBuffer(*m_IBO);
 
 		m_VertexData = new VertexParticleBatch[m_MaxVerticesCount];
-		m_IndicesData = new uint32_t[m_MaxIndicesCount];
-
-		// TODO: Replace 32, get the actual count from the GPU
-		for (int i = 0; i < Renderer::MaxTextureImageUnits; i++)
-		{
-			m_TextureIDs[i] = 0;
-		}
 	}
 
 	ParticleBatch::~ParticleBatch()
 	{
 		delete[] m_VertexData;
-		delete[] m_IndicesData;
 	}
 
 	void ParticleBatch::BeginBatch()
