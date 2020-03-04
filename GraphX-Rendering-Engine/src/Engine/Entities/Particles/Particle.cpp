@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Particle::Particle()
-		: Entity(), m_CurrentTexOffset(), m_NextTexOffset()
+		: Entity(), m_TexOffset()
 	{
 	}
 
@@ -77,7 +77,7 @@ namespace GraphX
 			if (m_Props.Texture->GetRowsInTexAtlas() > 1)
 			{
 				shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
-				shader.SetUniform4f("u_TexCoordOffsets", m_CurrentTexOffset, m_NextTexOffset);
+				shader.SetUniform4f("u_TexCoordOffsets", m_TexOffset);
 			}
 		}
 		else
@@ -102,15 +102,15 @@ namespace GraphX
 		int index2 = (index1 + 1 < TotalStages) ? index1 + 1 : index1;
 		m_BlendFactor = LifeProgress - index1;
 
-		CalculateOffset(index1, m_CurrentTexOffset);
-		CalculateOffset(index2, m_NextTexOffset);
+		CalculateOffset(index1, m_TexOffset.x, m_TexOffset.y);
+		CalculateOffset(index2, m_TexOffset.z, m_TexOffset.w);
 	}
 
-	void Particle::CalculateOffset(int index, GM::Vector2& TexOffset)
+	void Particle::CalculateOffset(int index, float& xTexOffset, float& yTexOffset)
 	{
 		int column = index % m_Props.Texture->GetRowsInTexAtlas();
 		int row = index / m_Props.Texture->GetRowsInTexAtlas();
-		TexOffset.x = (float) column / (float) m_Props.Texture->GetRowsInTexAtlas();
-		TexOffset.y = (float) row / (float) m_Props.Texture->GetRowsInTexAtlas();
+		xTexOffset = (float) column / (float) m_Props.Texture->GetRowsInTexAtlas();
+		yTexOffset = (float) row / (float) m_Props.Texture->GetRowsInTexAtlas();
 	}
 }

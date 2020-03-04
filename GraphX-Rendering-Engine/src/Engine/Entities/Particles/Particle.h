@@ -43,6 +43,12 @@ namespace GraphX
 		/* Returns the current properties of the particle */
 		inline const ParticleProps& GetProps() const { return m_Props; }
 
+		inline const GM::Vector4& GetTexOffsets() const { return m_TexOffset; }
+
+		inline float GetBlendFactor() const { return m_BlendFactor; }
+
+		inline float GetLifeProgress() const { return m_ElapsedTime / m_Props.LifeSpan; }
+
 		/* Whether the particles is being used or not */
 		inline bool IsActive() const { return m_Active; }
 
@@ -53,17 +59,14 @@ namespace GraphX
 		void UpdateTexOffset();
 
 		/* Calculates the offset for the given index */
-		void CalculateOffset(int index, GM::Vector2& TexOffset);
+		void CalculateOffset(int index, float& xTexOffset, float& yOffset);
 
 	private:
 		/* Current Properties of the particle */
 		ParticleProps m_Props;
 
-		/* Offset of the current texture to be used in the atlas */
-		GM::Vector2 m_CurrentTexOffset;
-
-		/* Offset of the next texture to be used in the atlas */
-		GM::Vector2 m_NextTexOffset;
+		/* Offsets of the current and next texture to be used in the atlas */
+		GM::Vector4 m_TexOffset;
 
 		/* Time elapsed since the creation of the particle */
 		float m_ElapsedTime = 0.0f;
