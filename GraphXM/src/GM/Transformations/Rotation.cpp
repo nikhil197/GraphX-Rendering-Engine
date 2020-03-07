@@ -24,22 +24,22 @@ namespace GM
 		Matrix4 resultZ;
 
 		// Rotating about x - axis
-		resultX[1][1] =  (float)Utility::Cos(Angles.x);
-		resultX[2][2] =  (float)Utility::Cos(Angles.x);
-		resultX[1][2] = -(float)Utility::Sin(Angles.x);
-		resultX[2][1] =  (float)Utility::Sin(Angles.x);
+		resultX(1, 1) =  (float)Utility::Cos(Angles.x);
+		resultX(2, 2) =  (float)Utility::Cos(Angles.x);
+		resultX(1, 2) = -(float)Utility::Sin(Angles.x);
+		resultX(2, 1) =  (float)Utility::Sin(Angles.x);
 
 		// Rotating about y - axis
-		resultY[0][0] =  (float)Utility::Cos(Angles.y);
-		resultY[0][2] =  (float)Utility::Sin(Angles.y);
-		resultY[2][2] =  (float)Utility::Cos(Angles.y);
-		resultY[2][0] = -(float)Utility::Sin(Angles.y);
+		resultY(0, 0) =  (float)Utility::Cos(Angles.y);
+		resultY(0, 2) =  (float)Utility::Sin(Angles.y);
+		resultY(2, 2) =  (float)Utility::Cos(Angles.y);
+		resultY(2, 0) = -(float)Utility::Sin(Angles.y);
 
 		// Rotating about z - axis
-		resultZ[0][0] =  (float)Utility::Cos(Angles.z);
-		resultZ[0][1] = -(float)Utility::Sin(Angles.z);
-		resultZ[1][0] =  (float)Utility::Sin(Angles.z);
-		resultZ[1][1] =  (float)Utility::Cos(Angles.z);
+		resultZ(0, 0) =  (float)Utility::Cos(Angles.z);
+		resultZ(0, 1) = -(float)Utility::Sin(Angles.z);
+		resultZ(1, 0) =  (float)Utility::Sin(Angles.z);
+		resultZ(1, 1) =  (float)Utility::Cos(Angles.z);
 
 		*this = resultZ * resultY * resultX;
 	}

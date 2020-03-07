@@ -27,7 +27,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				M[i][j] = OtherMat[i][j];
+				M[i][j] = OtherMat(i, j);
 			}
 		}
 	}
@@ -80,7 +80,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				if (M[i][j] != OtherMat[i][j])
+				if (M[i][j] != OtherMat(i, j))
 					return false;
 			}
 		}
@@ -100,7 +100,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = M[i][j] + OtherMat[i][j];
+				result(i, j) = M[i][j] + OtherMat(i, j);
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = M[i][j] - OtherMat[i][j];
+				result(i, j) = M[i][j] - OtherMat(i, j);
 			}
 		}
 
@@ -132,9 +132,9 @@ namespace GM
 
 				for (int k = 0; k < 3; k++)
 				{
-					val += M[i][k] * OtherMat[k][j];
+					val += M[i][k] * OtherMat(k, j);
 				}
-				result[i][j] = val;
+				result(i, j) = val;
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = M[i][j] + Value;
+				result(i, j) = M[i][j] + Value;
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = M[i][j] - Value;
+				result(i, j) = M[i][j] - Value;
 			}
 		}
 
@@ -179,7 +179,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = M[i][j] * Value;
+				result(i, j) = M[i][j] * Value;
 			}
 		}
 
@@ -194,7 +194,7 @@ namespace GM
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				result[i][j] = (Value == 0) ? FLT_MAX : M[i][j] / Value;
+				result(i, j) = (Value == 0) ? FLT_MAX : M[i][j] / Value;
 			}
 		}
 
@@ -295,19 +295,19 @@ namespace GM
 		Matrix3 mat;
 
 		// First Row
-		mat[0][0] = +(M[1][1] * M[2][2] - M[1][2] * M[2][1]);
-		mat[0][1] = -(M[1][0] * M[2][2] - M[1][2] * M[2][0]);
-		mat[0][2] = +(M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+		mat(0, 0) = +(M[1][1] * M[2][2] - M[1][2] * M[2][1]);
+		mat(0, 1) = -(M[1][0] * M[2][2] - M[1][2] * M[2][0]);
+		mat(0, 2) = +(M[1][0] * M[2][1] - M[1][1] * M[2][0]);
 		
 		// Second Row
-		mat[1][0] = -(M[0][1] * M[2][2] - M[0][2] * M[2][1]);
-		mat[1][1] = +(M[0][0] * M[2][2] - M[0][2] * M[2][0]);
-		mat[1][2] = -(M[0][0] * M[2][1] - M[0][1] * M[2][0]);
+		mat(1, 0) = -(M[0][1] * M[2][2] - M[0][2] * M[2][1]);
+		mat(1, 1) = +(M[0][0] * M[2][2] - M[0][2] * M[2][0]);
+		mat(1, 2) = -(M[0][0] * M[2][1] - M[0][1] * M[2][0]);
 
 		// Third Row
-		mat[2][0] = +(M[0][1] * M[1][2] - M[0][2] * M[1][1]);
-		mat[2][1] = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
-		mat[2][2] = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
+		mat(2, 0) = +(M[0][1] * M[1][2] - M[0][2] * M[1][1]);
+		mat(2, 1) = -(M[0][0] * M[1][2] - M[0][2] * M[1][0]);
+		mat(2, 2) = +(M[0][0] * M[1][1] - M[0][1] * M[1][0]);
 
 		return mat;
 	}
@@ -339,7 +339,7 @@ namespace GM
 		for (int i = 0; i < 3; i++)
 		{
 			for (int j = 0; j < 3; j++)
-				Out << Mat[i][j] << ' ';
+				Out << Mat(i, j) << ' ';
 
 			Out << '\n';
 		}

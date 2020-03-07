@@ -57,9 +57,9 @@ namespace GraphX
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
 
-		m_View[0][3] = 0.0f;
-		m_View[1][3] = 0.0f;
-		m_View[2][3] = 0.0f;
+		m_View(0, 3) = 0.0f;
+		m_View(1, 3) = 0.0f;
+		m_View(2, 3) = 0.0f;
 	}
 
 	void Skybox::Update(float DeltaTime)

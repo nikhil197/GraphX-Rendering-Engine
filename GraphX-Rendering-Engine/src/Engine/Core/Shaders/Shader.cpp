@@ -114,12 +114,12 @@ namespace GraphX
 
 	void Shader::SetUniformMat3f(const char* Name, const GM::Matrix3& Mat)
 	{
-		glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
+		glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat(0, 0));
 	}
 
 	void Shader::SetUniformMat4f(const char* Name, const GM::Matrix4& Mat)
 	{
-		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
+		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat(0, 0));
 	}
 
 	int Shader::GetLocation(const char* Name)
