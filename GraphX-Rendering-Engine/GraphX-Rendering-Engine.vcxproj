@@ -217,6 +217,7 @@
     <ClCompile Include="src\Engine\Core\Shaders\Shader.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\CubeMap.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\Texture2D.cpp" />
+    <ClCompile Include="src\Engine\Profiler\Profiler.cpp" />
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
     <ClCompile Include="src\Engine\Gui\GraphXGui.cpp" />

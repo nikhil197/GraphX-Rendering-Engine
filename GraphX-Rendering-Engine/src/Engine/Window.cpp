@@ -233,7 +233,7 @@ namespace GraphX
 
 	void Window::OnUpdate()
 	{
-		::GraphX::ProfilerTimer timer(__FUNCSIG__);
+		GX_PROFILE_FUNCTION()
 
 		/* Swap the front and back buffers */
 		glfwSwapBuffers(m_Window);

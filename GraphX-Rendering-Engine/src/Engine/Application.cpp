@@ -225,6 +225,7 @@ namespace GraphX
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
+			GX_PROFILER_NEW_FRAME()
 			GX_PROFILE_SCOPE("Application::Frame")
 
 			// Frame Time in seconds
@@ -299,7 +300,6 @@ namespace GraphX
 					{
 						m_ParticlesManager->RenderParticles();
 					}
-
 
 					Renderer2D::EndScene();
 					Renderer3D::EndScene();

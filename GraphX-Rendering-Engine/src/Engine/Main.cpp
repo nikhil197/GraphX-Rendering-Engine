@@ -12,9 +12,9 @@ int main()
 	GX_PROFILER_END_SESISON()
 
 		// Run the application
-	GraphX::Profiler::Get().BeginSession("Application::Run", "logs/Profiling/GraphX-Run.json");
+	GX_PROFILER_BEGIN_SESSION("Application::Run", "logs/Profiling/GraphX-Run.json");
 	app->Run();
-	GraphX::Profiler::Get().EndSession();
+	GX_PROFILER_END_SESISON();
 
 	GX_PROFILER_BEGIN_SESSION("Application::Shutdown", "logs/Profiling/GraphX-Shutdown.json")
 	delete app;
