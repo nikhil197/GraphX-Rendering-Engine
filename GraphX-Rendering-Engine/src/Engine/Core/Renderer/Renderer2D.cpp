@@ -29,14 +29,14 @@ namespace GraphX
 	// Max Particles in a batch
 	static const uint32_t MaxParticlesCount = 5000;
 
-	Renderer2D::Renderer2DStorage* Renderer2D::s_Data = nullptr;
+	Renderer2D::Renderer2DData* Renderer2D::s_Data = nullptr;
 
 	void Renderer2D::Init()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer2D already Initialised");
-		s_Data = new Renderer2D::Renderer2DStorage();
+		s_Data = new Renderer2D::Renderer2DData();
 
 		s_Data->TextureShader = Renderer::GetShaderLibrary().Load("res/Shaders/TextureShader2D.glsl", "Texture2D");
 		s_Data->ShadowDebugShader = Renderer::GetShaderLibrary().Load("res/Shaders/ShadowDebugShader.glsl", "ShadowDebug");

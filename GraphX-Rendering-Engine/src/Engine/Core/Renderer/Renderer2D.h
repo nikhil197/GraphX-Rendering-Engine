@@ -37,7 +37,7 @@ namespace GraphX
 		static void Render(Shader& DepthShader);
 
 	private:
-		struct Renderer2DStorage
+		struct Renderer2DData
 		{
 			// Vertex Array to store the quad vertices and indices
 			Scope<class VertexArray> QuadVA;
@@ -67,6 +67,6 @@ namespace GraphX
 			std::deque<Ref<Mesh2D>> RenderQueue;
 		};
 
-		static Renderer2DStorage* s_Data;
+		static Renderer2DData* s_Data;
 	};
 }

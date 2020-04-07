@@ -2,6 +2,8 @@
 #include "BoundingBox.h"
 
 #include "MathUtility.h"
+#include "Matrices/Matrix4.h"
+#include "Vectors/Vector4.h"
 
 namespace GM
 {
@@ -85,5 +87,12 @@ namespace GM
 		Max += Offset;
 	}
 
+	void BoundingBox::Transform(const class Matrix4& TransformationMat)
+	{
+		Vector4 Transform = TransformationMat * Vector4(Min, 1.0f);
+		Min = Vector3(Transform.x, Transform.y, Transform.z);
 
+		Transform = TransformationMat * Vector4(Max, 1.0f);
+		Max = Vector3(Transform.x, Transform.y, Transform.z);
+	}
 }

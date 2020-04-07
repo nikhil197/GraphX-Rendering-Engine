@@ -20,14 +20,14 @@ namespace GraphX
 {
 	using namespace GM;
 
-	Renderer3D::Renderer3DStorage* Renderer3D::s_Data = nullptr;
+	Renderer3D::Renderer3DData* Renderer3D::s_Data = nullptr;
 
 	void Renderer3D::Init()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer3D already Initialised");
-		s_Data = new Renderer3D::Renderer3DStorage();
+		s_Data = new Renderer3D::Renderer3DData();
 
 		s_Data->DebugData.VAO = CreateScope<VertexArray>();
 		s_Data->DebugData.VBO = CreateScope<VertexBuffer>(8 * sizeof(Vector3));
@@ -130,7 +130,7 @@ namespace GraphX
 			// Draw debug collision box
 			if (GX_ENABLE_DEBUG_COLLISIONS_RENDERING)
 			{
-				RenderDebugCollisions(mesh->GetBoundingBox(), Model);
+				RenderDebugCollisions(mesh->GetBoundingBox());
 			}
 		}
 	}
@@ -156,7 +156,7 @@ namespace GraphX
 		}
 	}
 
-	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model)
+	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box)
 	{
 		GX_PROFILE_FUNCTION()
 		// Todo: Figure out a better structure for debug drawing
@@ -180,7 +180,6 @@ namespace GraphX
 
 			s_Data->DebugData.VAO->Bind();
 			Renderer::s_DebugShader->Bind();
-			Renderer::s_DebugShader->SetUniformMat4f("u_Model", Model);
 			glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, nullptr);
 		}
 	}

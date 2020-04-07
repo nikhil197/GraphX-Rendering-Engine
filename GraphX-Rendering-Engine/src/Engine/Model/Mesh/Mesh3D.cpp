@@ -62,6 +62,9 @@ namespace GraphX
 
 			m_Model = translation * rotation * scale;
 
+			// Update the bounding box here, instead of during the rendering process
+			m_BoundingBox->Transform(m_Model);
+
 			m_UpdateModelMatrix = false;
 		}
 	}

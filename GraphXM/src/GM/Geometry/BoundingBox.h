@@ -92,6 +92,9 @@ namespace GM
 		/* Moves the box's center to the Location */
 		void MoveTo(const Vector3& Location);
 
+		/* Transforms the bounding box using given transformation matrix */
+		void Transform(const class Matrix4& TransformationMat);
+
 	public:
 		/* Stores the minimun extents of the bounding box */
 		Vector3 Min;
