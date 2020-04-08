@@ -28,6 +28,9 @@ namespace GraphX
 		/* Sets the new render state */
 		inline void SetRenderStateDirty(bool NewRenderState) { m_RenderStateDirty = NewRenderState; }
 
+		/* Returns the position of the camera */
+		inline const GM::Vector3& GetPosition() const { return m_Position; }
+
 		/* Returns a view matrix for the camera */
 		inline const GM::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
 

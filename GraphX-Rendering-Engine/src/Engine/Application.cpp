@@ -56,6 +56,7 @@
 /* Utils */
 #include "Engine/Utilities/EngineUtil.h"
 #include "Engine/Utilities/FileOpenDialog.h"
+#include "Engine/Utilities/MousePicker.h"
 
 namespace GraphX
 {
@@ -115,6 +116,9 @@ namespace GraphX
 		m_ParticlesManager->Initialize(m_CameraController->GetCamera());	// TODO: Move to a suitable location
 
 		m_DefaultTexture  = CreateRef<Texture2D>("res/Textures/stone.jpg");
+
+		// Initialise the mouse picker
+		MousePicker::Init(m_CameraController->GetCamera(), m_Window->GetWidth(), m_Window->GetHeight());
 	}
 
 	void Application::Run()
@@ -656,6 +660,29 @@ namespace GraphX
 		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
+	void Application::PickObject()
+	{
+		const GM::Vector3& ForwardAxis = m_CameraController->GetForwardAxis();
+		const GM::Vector3& CameraPos = m_CameraController->GetCamera()->GetPosition();
+		const GM::Vector3& PickerRay = MousePicker::Get()->GetPickerRay();
+		m_SelectedObject3D = nullptr;
+		for (size_t i = 0; i < m_Objects3D.size(); i++)
+		{
+			const Ref<Mesh3D>& Mesh = m_Objects3D[i];
+			// Ignore if the object is behind the camera
+			if (GM::Vector3::DotProduct(Mesh->Position - CameraPos, PickerRay) <= 0)
+				continue;
+
+			// Check for the Picker Ray and Bounding box intersection
+			if (BoundingBox::RayIntersectionTest(*(Mesh->GetBoundingBox()), CameraPos, PickerRay))
+			{
+				Mesh->bShowDetails = true;
+				m_SelectedObject3D = Mesh;
+				break;
+			}
+		}
+	}
+
 #pragma region eventHandlers
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
@@ -702,6 +729,15 @@ namespace GraphX
 	bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
 		Mouse::GetMouse()->OnEvent(e);
+
+		// DO MOUSE PICKING HERE
+		if (e.GetButton() == MouseButton::GX_MOUSE_LEFT)
+		{
+			PickObject();
+
+			// TODO: Terrain and skybox picking logic
+		}
+
 		return true;
 	}
 

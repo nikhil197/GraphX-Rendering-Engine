@@ -96,6 +96,10 @@ namespace GM
 		void Transform(const class Matrix4& TransformationMat);
 
 	public:
+		/* Checks whether the Box intersects with the given ray (starting at Origin, heading in Direction) */
+		static bool RayIntersectionTest(const BoundingBox& Box, const Vector3& Origin, const Vector3& Direction);
+
+	public:
 		/* Stores the minimun extents of the bounding box */
 		Vector3 Min;
 

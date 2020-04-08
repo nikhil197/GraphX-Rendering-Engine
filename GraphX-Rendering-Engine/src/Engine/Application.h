@@ -101,6 +101,9 @@ namespace GraphX
 		/* All the calculations related to the day night cycle */
 		void DayNightCycleCalculations(float DeltaTime);
 
+		/* Mouse pick logic*/
+		void PickObject();
+
 	private:
 		/* Application window */
 		Window* m_Window;

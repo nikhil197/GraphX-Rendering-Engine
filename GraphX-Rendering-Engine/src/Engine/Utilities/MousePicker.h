@@ -5,28 +5,36 @@ namespace GraphX
 	class MousePicker
 	{
 	public:
-		MousePicker(const class Camera& camera, float width, float height);
+		static void Init(const Ref<class Camera>& camera, int width, int height);
 
-		/* Updates the casting ray of the mouse picker */
-		void Update();
+		static void SetNewCamera(const Ref<class Camera>& NewCamera);
 
+		static const std::shared_ptr<MousePicker>& Get() { return s_MousePicker; }
+
+	private:
+		MousePicker(const Ref<class Camera>& camera, int width, int height);
+
+	public:
 		/* Converts the given screen coordinates to normalised screen coordinates */
-		GM::Vector2 ToNormalisedScreenCoordinates(const GM::Vector2& ScreenCoords);
+		void ToNormalScreenCoords(const GM::Vector2& ScreenCoords, /* out */GM::Vector2& NormalCoords);
 
 		/* Convertes the given normalised screen coordinates to world coordinates */
-		GM::Vector3 ToWorldCoordinates(const GM::Vector2& NormalisedCoords);
+		void ToWorldCoords(const GM::Vector2& NormalCoords, /* out */GM::Vector3& WorldCoords);
 
 		/* Returns the picker ray */
-		inline const GM::Vector3& GetPickerRay() const { return m_PickerRay; }
+		const GM::Vector3& GetPickerRay();
 
 	private:
 		/* Ray used to pick the intersecting object in the scene */
 		GM::Vector3 m_PickerRay;
 
 		/* Main Camera of the renderer */
-		const class Camera& m_Camera;
+		Ref<class Camera> m_Camera;
 
 		/* Width and Height of the Main window of the renderer */
-		float m_Width, m_Height;
+		int m_Width, m_Height;
+
+		/* Static instance for the mouse picker */
+		static std::shared_ptr<MousePicker> s_MousePicker;
 	};;
 }

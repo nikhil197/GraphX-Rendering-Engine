@@ -95,4 +95,75 @@ namespace GM
 		Transform = TransformationMat * Vector4(Max, 1.0f);
 		Max = Vector3(Transform.x, Transform.y, Transform.z);
 	}
+
+	bool BoundingBox::RayIntersectionTest(const BoundingBox& Box, const Vector3& Origin, const Vector3& Direction)
+	{
+		/**
+			Using the equation ax + by + cz - d = 0 for a plane,
+			<a, b, c> is the normal vector to the plane
+			d is the perpendicular distance from origin (0, 0, 0) to the plane
+		*/
+
+		float t;
+		Vector3 IntersectionPoint;
+		
+		// Top & Bottom Face
+		float DotProduct = Vector3::DotProduct(Direction, Vector3::YAxis);
+		if (DotProduct != 0)
+		{
+			// Top Face
+			t = -(Origin.y - Box.Max.y) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.x >= Box.Min.x && IntersectionPoint.x <= Box.Max.x
+				&& IntersectionPoint.z >= Box.Min.z && IntersectionPoint.y <= Box.Max.z)
+				return true;
+
+			// Bottom Face
+			t = -(Origin.y - Box.Min.y) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.x >= Box.Min.x && IntersectionPoint.x <= Box.Max.x
+				&& IntersectionPoint.z >= Box.Min.z && IntersectionPoint.y <= Box.Max.z)
+				return true;
+		}
+
+		// Left & Right Face
+		DotProduct = Vector3::DotProduct(Direction, Vector3::XAxis);
+		if (DotProduct != 0)
+		{
+			// Left Face
+			t = -(Origin.x - Box.Min.x) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.z >= Box.Min.z && IntersectionPoint.z <= Box.Max.z
+				&& IntersectionPoint.y >= Box.Min.y && IntersectionPoint.y <= Box.Max.y)
+				return true;
+
+			// Right Face
+			t = -(Origin.x - Box.Max.x) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.z >= Box.Min.z && IntersectionPoint.z <= Box.Max.z
+				&& IntersectionPoint.y >= Box.Min.y && IntersectionPoint.y <= Box.Max.y)
+				return true;
+		}
+
+		// Front & Back Face
+		DotProduct = Vector3::DotProduct(Direction, Vector3::ZAxis);
+		if (DotProduct != 0)
+		{
+			// Front Face
+			t = -(Origin.z - Box.Max.z) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.x >= Box.Min.x && IntersectionPoint.x <= Box.Max.x
+				&& IntersectionPoint.y >= Box.Min.y && IntersectionPoint.y <= Box.Max.y)
+				return true;
+
+			// Back Face
+			t = -(Origin.z - Box.Min.z) / DotProduct;
+			IntersectionPoint = Origin + Direction * t;
+			if (IntersectionPoint.x >= Box.Min.x && IntersectionPoint.x <= Box.Max.x
+				&& IntersectionPoint.y >= Box.Min.y && IntersectionPoint.y <= Box.Max.y)
+				return true;
+		}
+
+		return false;
+	}
 }

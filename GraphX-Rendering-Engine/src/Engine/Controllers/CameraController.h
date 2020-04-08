@@ -83,6 +83,9 @@ namespace GraphX
 		/* Sets new height for the viewport */
 		void SetOrthoHeight(float NewHeight);
 
+		// Returns the forward (view) axis of the camera
+		const GM::Vector3& GetForwardAxis() const { return m_ViewAxis; }
+
 	private:
 		/* Process the input from the keyboard */
 		void ProcessKeyboardInput(float DeltaTime);
