@@ -510,7 +510,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		// Send the event to all the layers (once the layer system is in place)
+		// TODO: Send the event to all the layers (once the layer system is in place)
 		m_CameraController->OnEvent(e);
 
 		bool handled = false;
@@ -553,6 +553,9 @@ namespace GraphX
 		}
 		else if (e.IsInCategory(GX_EVENT_CATEGORY_MOUSE))
 		{
+			// TODO: Find a better way to do this
+			if (GraphXGui::WantsMouseInput())
+				return;
 			if (!handled)
 			{
 				handled = dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(Application::OnMouseButtonPressed));

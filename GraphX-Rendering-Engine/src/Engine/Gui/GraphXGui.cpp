@@ -330,6 +330,11 @@ namespace GraphX
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
+	bool GraphXGui::WantsMouseInput()
+	{
+		return ImGui::GetIO().WantCaptureMouse;
+	}
+
 	void GraphXGui::Cleanup()
 	{
 		GX_ENGINE_INFO("GraphXGui: Cleaning up ImGui");

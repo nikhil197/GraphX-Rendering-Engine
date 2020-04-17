@@ -47,6 +47,9 @@ namespace GraphX
 		/* Render the UI */
 		static void Render();
 
+		/* Returns if ImGui wants to use mouse input */
+		static bool WantsMouseInput();
+
 		/* Cleanup the GUI at the close */
 		static void Cleanup();
 	};
