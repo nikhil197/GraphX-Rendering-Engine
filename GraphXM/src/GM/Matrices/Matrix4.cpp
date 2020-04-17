@@ -3,6 +3,8 @@
 
 #include "Vectors/Vector4.h"
 
+#include "MathUtility.h"
+
 namespace GM
 {
 	Matrix4::Matrix4()
@@ -392,6 +394,21 @@ namespace GM
 		mat /= this->Determinant();
 
 		return mat;
+	}
+
+	Vector3 Matrix4::ExtractTranslation(const Matrix4& Mat)
+	{
+		return Vector3(Mat(0, 3), Mat(1, 3), Mat(2, 3));
+	}
+
+	Vector3 Matrix4::ExtractScale(const Matrix4& Mat)
+	{
+		GM::Vector3 ScaleVector;
+		ScaleVector.x = Utility::Sqrt(Mat(0, 0) * Mat(0, 0) + Mat(1, 0) * Mat(1, 0) + Mat(2, 0) * Mat(2, 0));
+		ScaleVector.y = Utility::Sqrt(Mat(0, 1) * Mat(0, 1) + Mat(1, 1) * Mat(1, 1) + Mat(2, 1) * Mat(2, 1));
+		ScaleVector.z = Utility::Sqrt(Mat(0, 2) * Mat(0, 2) + Mat(1, 2) * Mat(1, 2) + Mat(2, 2) * Mat(2, 2));
+
+		return ScaleVector;
 	}
 
 	/* Non Member functions */

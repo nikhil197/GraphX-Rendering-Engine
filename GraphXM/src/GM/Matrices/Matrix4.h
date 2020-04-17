@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vectors/Vector3.h"
+
 namespace GM
 {
 	// Forward Declaration
@@ -105,6 +107,13 @@ namespace GM
 
 		/* Returns an inverse matrix of this matrix */
 		virtual Matrix4 Inverse() const;
+
+	public:
+		/* Extracts the translation vector from the transform matrix */
+		static Vector3 ExtractTranslation(const Matrix4& Mat);
+
+		/* Extracts the scale vector from the transform matrix */
+		static Vector3 ExtractScale(const Matrix4& Mat);
 
 	private:
 		/* Initialise the matrix with Value */
