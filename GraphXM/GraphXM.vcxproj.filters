@@ -57,6 +57,9 @@
     <ClCompile Include="src\GM\GMPch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GM\Geometry\BoxBounds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GM\MathUtility.h">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphX_Maths.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GM\Geometry\BoxBounds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

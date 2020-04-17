@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GM\Geometry\BoxBounds.h" />
     <ClInclude Include="src\GM\GraphX_Geometry.h" />
     <ClInclude Include="src\GM\GMPch.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\GM\Vectors\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GM\Geometry\BoxBounds.cpp" />
     <ClCompile Include="src\GM\GMPch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
