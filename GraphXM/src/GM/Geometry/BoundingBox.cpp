@@ -5,12 +5,13 @@
 #include "Matrices/Matrix4.h"
 #include "Vectors/Vector4.h"
 
+#include "BoxBounds.h"
+
 namespace GM
 {
 	BoundingBox::BoundingBox(const std::vector<Vector3>& Points)
 		: Min(Vector3()),
-		Max(Vector3()),
-		IsValid(false)
+		Max(Vector3())
 	{
 		for (const Vector3& Point : Points)
 		{
@@ -89,11 +90,55 @@ namespace GM
 
 	void BoundingBox::Transform(const class Matrix4& TransformationMat)
 	{
-		Vector4 Transform = TransformationMat * Vector4(Min, 1.0f);
-		Min = Vector3(Transform.x, Transform.y, Transform.z);
+		static Vector3 VertexPositions[8];
+		VertexPositions[0].x = Min.x, VertexPositions[0].y = Min.y, VertexPositions[0].z = Max.z;
+		VertexPositions[1].x = Max.x, VertexPositions[1].y = Min.y, VertexPositions[1].z = Max.z;
+		VertexPositions[2].x = Max.x, VertexPositions[2].y = Max.y, VertexPositions[2].z = Max.z;
+		VertexPositions[3].x = Min.x, VertexPositions[3].y = Max.y, VertexPositions[3].z = Max.z;
 
-		Transform = TransformationMat * Vector4(Max, 1.0f);
-		Max = Vector3(Transform.x, Transform.y, Transform.z);
+		VertexPositions[4].x = Min.x, VertexPositions[4].y = Min.y, VertexPositions[4].z = Min.z;
+		VertexPositions[5].x = Max.x, VertexPositions[5].y = Min.y, VertexPositions[5].z = Min.z;
+		VertexPositions[6].x = Max.x, VertexPositions[6].y = Max.y, VertexPositions[6].z = Min.z;
+		VertexPositions[7].x = Min.x, VertexPositions[7].y = Max.y, VertexPositions[7].z = Min.z;
+
+		BoundingBox NewBox;
+		for (int i = 0; i < 8; i++)
+		{
+			Vector4 TransformedVector = TransformationMat * Vector4(VertexPositions[i], 1.0f);
+			NewBox += Vector3(TransformedVector.x, TransformedVector.y, TransformedVector.z);
+		}
+
+		Min = NewBox.Min;
+		Max = NewBox.Max;
+	}
+
+	void BoundingBox::Transform(const struct BoxBounds& Bounds, const Matrix4& TransformationMat)
+	{
+		static Vector3 VertexPositions[8];
+		Vector3 OriginalMin = Bounds.Origin - Bounds.Extent;
+		Vector3 OriginalMax = Bounds.Origin + Bounds.Extent;
+
+
+		VertexPositions[0].x = OriginalMin.x, VertexPositions[0].y = OriginalMin.y, VertexPositions[0].z = OriginalMax.z;
+		VertexPositions[1].x = OriginalMax.x, VertexPositions[1].y = OriginalMin.y, VertexPositions[1].z = OriginalMax.z;
+		VertexPositions[2].x = OriginalMax.x, VertexPositions[2].y = OriginalMax.y, VertexPositions[2].z = OriginalMax.z;
+		VertexPositions[3].x = OriginalMin.x, VertexPositions[3].y = OriginalMax.y, VertexPositions[3].z = OriginalMax.z;
+
+		VertexPositions[4].x = OriginalMin.x, VertexPositions[4].y = OriginalMin.y, VertexPositions[4].z = OriginalMin.z;
+		VertexPositions[5].x = OriginalMax.x, VertexPositions[5].y = OriginalMin.y, VertexPositions[5].z = OriginalMin.z;
+		VertexPositions[6].x = OriginalMax.x, VertexPositions[6].y = OriginalMax.y, VertexPositions[6].z = OriginalMin.z;
+		VertexPositions[7].x = OriginalMin.x, VertexPositions[7].y = OriginalMax.y, VertexPositions[7].z = OriginalMin.z;
+
+		BoundingBox NewBox;
+		for (int i = 0; i < 8; i++)
+		{
+			Vector4 TransformedVector = TransformationMat * Vector4(VertexPositions[i], 1.0f);
+			NewBox += Vector3(TransformedVector.x, TransformedVector.y, TransformedVector.z);
+		}
+
+		Min = NewBox.Min;
+		Max = NewBox.Max;
+
 	}
 
 	bool BoundingBox::RayIntersectionTest(const BoundingBox& Box, const Vector3& Origin, const Vector3& Direction)

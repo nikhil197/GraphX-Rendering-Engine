@@ -57,6 +57,9 @@ namespace GraphX
 		/* Returns the model matrix for the mesh */
 		inline const GM::Matrix4& GetModelMatrix() const { return m_Model; }
 
+		/* Returns the original bounds of the mesh */
+		inline const GM::BoxBounds& GetBounds() const { return m_Bounds; }
+		
 		/* Returns the bounding collision box */
 		inline const Ref<struct GM::BoundingBox>& GetBoundingBox() const { return m_BoundingBox; }
 
@@ -100,7 +103,10 @@ namespace GraphX
 		/* Model matrix for the mesh */
 		GM::Matrix4 m_Model;
 
-		/* Box containing the whole object */
+		/* Bounds of the box */
+		GM::BoxBounds m_Bounds;
+
+		/* AABB containing the whole object (independent of transformation) */
 		Ref<GM::BoundingBox> m_BoundingBox;
 
 		/* Whether the mesh needs to updated or not */

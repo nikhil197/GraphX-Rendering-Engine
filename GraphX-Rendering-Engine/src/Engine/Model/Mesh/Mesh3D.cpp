@@ -31,6 +31,7 @@ namespace GraphX
 		}
 
 		m_BoundingBox = CreateRef<GM::BoundingBox>(positions);
+		m_Bounds = GM::BoxBounds(positions);
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
@@ -50,6 +51,7 @@ namespace GraphX
 		}
 
 		m_BoundingBox = CreateRef<GM::BoundingBox>(positions);
+		m_Bounds = GM::BoxBounds(positions);
 	}
 
 	void Mesh3D::Update(float DeltaTime)
@@ -59,11 +61,11 @@ namespace GraphX
 			GM::Translation translation(Position);
 			GM::Rotation rotation(Rotation);
 			GM::Scaling scale(Scale);
-
+			
 			m_Model = translation * rotation * scale;
 
 			// Update the bounding box here, instead of during the rendering process
-			m_BoundingBox->Transform(m_Model);
+			m_BoundingBox->Transform(m_Bounds, m_Model);
 
 			m_UpdateModelMatrix = false;
 		}
