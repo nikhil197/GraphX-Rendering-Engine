@@ -75,6 +75,11 @@ namespace GraphX
 		ProfilerSession* m_CurrentSession;
 		std::ofstream m_ProfilerStream;
 
+		/* For preventing string allocations while writing profiles */
+		static const char s_ProfileFormat[];
+		static std::vector<char> s_ProfileString;
+		static uint32_t s_FormatStringLen;
+
 	public:
 		RunTimeProfiler()
 			: m_CurrentSession(nullptr)
@@ -105,6 +110,11 @@ namespace GraphX
 	private:
 		ProfilerSession* m_CurrentSession;
 		std::ofstream m_ProfilerStream;
+
+		/* For preventing string allocations for profiling use */
+		static const char s_ProfileFormat[];
+		static std::vector<char> s_ProfileString;
+		static uint32_t s_FormatStringLen;
 
 	public:
 		MemoryCounters MemCounters;

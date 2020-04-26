@@ -20,6 +20,13 @@
 namespace GraphX
 {
 	/******************* RunTime Profiler *********************/
+
+	const char RunTimeProfiler::s_ProfileFormat[] = ", { \"cat\" : \"Scope\", \"dur\" : %lld, \"name\": \"%s\", \"ph\" : \"X\", \"pid\" : \"0\", \"tid\" : \"0\", \"ts\" : %lld}";
+	
+	uint32_t RunTimeProfiler::s_FormatStringLen = strlen(s_ProfileFormat);
+
+	std::vector<char> RunTimeProfiler::s_ProfileString(s_FormatStringLen);
+
 	void RunTimeProfiler::BeginSession(const char* name, const std::string& filePath)
 	{
 		if (m_CurrentSession)
@@ -55,20 +62,17 @@ namespace GraphX
 
 	void RunTimeProfiler::WriteProfile(const RunTimeProfilerResult&& Result)
 	{
-		std::stringstream profile;
+		uint32_t requiredBufferSize = s_FormatStringLen + strlen(Result.Name) + 40; /* 40 for 40 possible characters of the durations in the result */
+		if (s_ProfileString.size() < requiredBufferSize)
+		{
+			s_ProfileString.resize(requiredBufferSize);
+		}
 
-		profile << ",{\"cat\" : \"Scope\", ";
-		profile << "\"dur\" : " << Result.Duration << ',';
-		profile << "\"name\" : \"" << Result.Name << "\", ";
-		profile << "\"ph\" : \"X\", ";
-		profile << "\"pid\" : \"0\", ";
-		profile << "\"tid\" : \"0\", ";
-		profile << "\"ts\" : " << Result.StartTime;
-		profile << "}";
+		std::snprintf(s_ProfileString.data(), s_ProfileString.size(), s_ProfileFormat, Result.Duration, Result.Name, Result.StartTime);
 
 		if (m_CurrentSession)
 		{
-			m_ProfilerStream << profile.str();
+			m_ProfilerStream << s_ProfileString.data();
 			m_ProfilerStream.flush();
 		}
 	}
@@ -96,12 +100,19 @@ namespace GraphX
 		{
 			WriteFooter();
 			m_ProfilerStream.close();
+
 			delete m_CurrentSession;
 			m_CurrentSession = nullptr;
 		}
 	}
 
 	/******************* Memory Profiler *********************/
+	const char MemoryProfiler::s_ProfileFormat[] = ", { \"cat\" : \"Scope\", \"id\" : \"%s\", \"name\": \"%s\", \"ph\" : \"O\", \"pid\" : \"0\", \"tid\" : \"0\", \"ts\" : %lld, \"args\" : {\"snapshot\" : { \"Memory Allocated (in bytes)\" : %u,  \"Memory Freed (in bytes)\" : %u}}}";
+
+	uint32_t MemoryProfiler::s_FormatStringLen = strlen(s_ProfileFormat);
+
+	std::vector<char> MemoryProfiler::s_ProfileString(s_FormatStringLen);
+
 	void MemoryProfiler::BeginSession(const char* name, const std::string& filePath)
 	{
 		if (m_CurrentSession)
@@ -137,22 +148,17 @@ namespace GraphX
 
 	void MemoryProfiler::WriteProfile(MemoryProfilerResut&& Result)
 	{
-		std::stringstream profile;
+		uint32_t requiredBufferSize = s_FormatStringLen + strlen(Result.Name) * 2 + 40; /* 40 for 40 possible characters of the durations and sizes in the result */
+		if (s_ProfileString.size() < requiredBufferSize)
+		{
+			s_ProfileString.resize(requiredBufferSize);
+		}
 
-		profile << ",{\"cat\" : \"Scope\", ";
-		profile << "\"id\" : \"" << Result.Name << "\",";
-		profile << "\"name\" : \"" << Result.Name << "\", ";
-		profile << "\"ph\" : \"O\", ";
-		profile << "\"pid\" : \"0\", ";
-		profile << "\"tid\" : \"0\", ";
-		profile << "\"ts\" : " << Result.Time << ", ";
-		profile << "\"args\" : {\"snapshot\": { \"Memory Allocated (in bytes)\" : " << Result.MemAllocated;
-		profile << ", \"Memory Freed (in bytes)\" : " << Result.MemFreed;
-		profile << "}}}";
+		std::snprintf(s_ProfileString.data(), s_ProfileString.size(), s_ProfileFormat, Result.Name, Result.Name, Result.Time, Result.MemAllocated, Result.MemFreed);
 
 		if (m_CurrentSession)
 		{
-			m_ProfilerStream << profile.str();
+			m_ProfilerStream << s_ProfileString.data();
 			m_ProfilerStream.flush();
 		}
 	}
@@ -187,6 +193,7 @@ namespace GraphX
 		{
 			WriteFooter();
 			m_ProfilerStream.close();
+
 			delete m_CurrentSession;
 			m_CurrentSession = nullptr;
 		}
