@@ -3,7 +3,7 @@
 
 namespace GraphX
 {
-	Timer::Timer(const std::string& name)
+	Timer::Timer(const char* name)
 		:m_Name(name), m_StartTimePoint(std::chrono::high_resolution_clock::now()), m_LastUpdateTimePoint(std::chrono::high_resolution_clock::now())
 	{}
 

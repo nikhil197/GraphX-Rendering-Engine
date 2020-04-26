@@ -110,7 +110,7 @@ namespace GraphX
 		GM::Vector2 TexCoords;
 		
 		// Texture slot used for this vertex
-		float TexIndex;
+		float TexIndex = 0.0f;
 
 		static const VertexBufferLayout& VertexLayout()
 		{
@@ -141,13 +141,13 @@ namespace GraphX
 		GM::Vector4 TexOffsets;
 
 		// No. of rows in the texture atlas
-		float TexAtlasRows;
+		float TexAtlasRows = 1.0f;
 
 		// Blend factor for blending b/w two stages of the atlas
-		float BlendFactor;
+		float BlendFactor = 0.0f;
 
 		// Texture slot used for this vertex
-		float TexIndex;
+		float TexIndex = 0.0f;
 
 		static const VertexBufferLayout& VertexLayout()
 		{

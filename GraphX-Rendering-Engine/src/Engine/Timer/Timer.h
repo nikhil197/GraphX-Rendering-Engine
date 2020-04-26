@@ -6,7 +6,7 @@ namespace GraphX
 	{
 	public:
 		/* Constructor */
-		explicit Timer(const std::string& name);
+		explicit Timer(const char* name);
 
 		/* Update the timer */
 		void Update();
@@ -22,7 +22,7 @@ namespace GraphX
 
 	private:
 		/* Name of the timer */
-		std::string m_Name;
+		const char* m_Name;
 
 		/* To store the time point of the last update */
 		std::chrono::time_point<std::chrono::steady_clock> m_LastUpdateTimePoint;
