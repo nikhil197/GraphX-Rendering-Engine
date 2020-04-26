@@ -4,16 +4,16 @@
 
 namespace GraphX
 {
-	std::shared_ptr<Clock> Clock::s_Clock;
+	std::shared_ptr<Clock> Clock::s_Clock = nullptr;
 
-	Clock::Clock(ConstructorHelper&& ch)
+	Clock::Clock()
 	{
 		m_Timer = new Timer("GraphX Engine");
 	}
 
 	void Clock::Init()
 	{
-		s_Clock = std::make_shared<Clock>(ConstructorHelper());
+		s_Clock.reset(new Clock());
 	}
 
 	void Clock::Tick()
