@@ -146,7 +146,7 @@ namespace GraphX
 				GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
 
 				m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-				m_ViewAxis = GM::Vector3(GM::Rotation(xOffset, m_UpAxis) * GM::Rotation(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+				m_ViewAxis = GM::Vector3(GM::Rotation(-xOffset, m_UpAxis) * GM::Rotation(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
 				m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 			}
 		}

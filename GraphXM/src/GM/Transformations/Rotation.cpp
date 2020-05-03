@@ -19,6 +19,8 @@ namespace GM
 		: Matrix4(),
 		m_Angles(Angles)
 	{
+		/*  OPTIMISATION: Preventing Matrix multiplications
+		
 		Matrix4 resultX;
 		Matrix4 resultY;
 		Matrix4 resultZ;
@@ -42,13 +44,50 @@ namespace GM
 		resultZ(1, 1) =  (float)Utility::Cos(Angles.z);
 
 		*this = resultZ * resultY * resultX;
+		*/
+
+		/*
+		* A - Angle to be rotated about x - axis
+		* B - Angle to be rotated about y - axis
+		* C - Angle to be rotated about z - axis
+		*/
+
+		float cosA = (float)Utility::Cos(Angles.x);
+		float cosB = (float)Utility::Cos(Angles.y);
+		float cosC = (float)Utility::Cos(Angles.z);
+
+		float sinA = (float)Utility::Sin(Angles.x);
+		float sinB = (float)Utility::Sin(Angles.y);
+		float sinC = (float)Utility::Sin(Angles.z);
+
+		M[0][0] = cosB * cosC;
+		M[0][1] = sinA * sinB * cosC - cosA * sinC;
+		M[0][2] = cosA * sinB * cosC + sinA * sinC;
+		M[0][3] = 0.0f;
+
+		M[1][0] = cosB * sinC;
+		M[1][1] = sinA * sinB * sinC + cosA * cosC;
+		M[1][2] = cosA * sinB * sinC - sinA * cosC;
+		M[1][3] = 0.0f;
+
+		M[2][0] = -sinB;
+		M[2][1] = sinA * cosB;
+		M[2][2] = cosA * cosB;
+		M[2][3] = 0.0f;
+
+		M[3][0] = 0.0f;
+		M[3][1] = 0.0f;
+		M[3][2] = 0.0f;
+		M[3][3] = 1.0f;
 	}
 
 	Rotation::Rotation(float Angle, const Vector3& Axis)
 	{
 		// Get the normalized Axis
-		Vector3 l_Axis = Axis.Normal();
+		Vector3 nAxis = Axis.Normal();
 
+		/*  OPTIMISATION: Preventing Matrix multiplications
+		*
 		// Get the projection of Axis on the XZ - plane and the YZ - plane
 		Vector3 ProjXY = l_Axis * Vector3(1, 1, 0);
 		Vector3 ProjXZ = l_Axis * Vector3(1, 0, 1);
@@ -71,6 +110,35 @@ namespace GM
 
 		// Rotate the axes back to the original orientation
 		*this = rotate.Inverse() * (*this) * rotate;
+		*/
+
+		float cos = (float)Utility::Cos(Angle);
+		float sin = (float)Utility::Sin(Angle);
+		float oneMinusCos = 1 - cos;
+
+		float xy = nAxis.x * nAxis.y;
+		float yz = nAxis.y * nAxis.z;
+		float zx = nAxis.z * nAxis.x;
+
+		M[0][0] = cos + (nAxis.x * nAxis.x) * oneMinusCos;
+		M[0][1] = xy * oneMinusCos - nAxis.z * sin;
+		M[0][2] = zx * oneMinusCos + nAxis.y * sin;
+		M[0][3] = 0.0f;
+
+		M[1][0] = xy * oneMinusCos + nAxis.z * sin;
+		M[1][1] = cos + (nAxis.y * nAxis.y) * oneMinusCos;
+		M[1][2] = yz * oneMinusCos - nAxis.x * sin;
+		M[1][3] = 0.0f;
+
+		M[2][0] = zx * oneMinusCos - nAxis.y * sin;
+		M[2][1] = yz * oneMinusCos + nAxis.x * sin;
+		M[2][2] = cos + (nAxis.z * nAxis.z) * oneMinusCos;
+		M[2][3] = 0.0f;
+
+		M[3][0] = 0.0f;
+		M[3][1] = 0.0f;
+		M[3][2] = 0.0f;
+		M[3][3] = 1.0f;
 	}
 
 	const Rotation& Rotation::operator=(const Matrix4& OtherMat)
