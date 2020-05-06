@@ -146,7 +146,7 @@ namespace GraphX
 				GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
 
 				m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-				m_ViewAxis = GM::Vector3(GM::Rotation(-xOffset, m_UpAxis) * GM::Rotation(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+				m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
 				m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 			}
 		}
@@ -160,13 +160,13 @@ namespace GraphX
 		{
 			if (m_ProjDataChanged)
 			{
-				GM::Projection::Perspective(m_Camera->m_ProjectionMatrix, m_FieldOfView * m_ZoomLevel, m_AspectRatio, m_NearClipPlane, m_FarClipPlane);
+				GM::ProjectionMatrix::Perspective(m_Camera->m_ProjectionMatrix, m_FieldOfView * m_ZoomLevel, m_AspectRatio, m_NearClipPlane, m_FarClipPlane);
 				m_ProjDataChanged = false;
 			}
 
 			if (m_ViewChanged)
 			{
-				GM::View::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_ViewAxis, m_RightAxis, m_UpAxis);
+				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_ViewAxis, m_RightAxis, m_UpAxis);
 				m_ViewChanged = false;
 			}
 		}
@@ -176,13 +176,13 @@ namespace GraphX
 			{
 				float HalfOrthoWidth = m_OrthoWidth * m_ZoomLevel / 2.0f;
 				float HalfOrthoHeight = m_OrthoHeight * m_ZoomLevel / 2.0f;
-				GM::Projection::Ortho(m_Camera->m_ProjectionMatrix, -HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_NearClipPlane, m_FarClipPlane);
+				GM::ProjectionMatrix::Ortho(m_Camera->m_ProjectionMatrix, -HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_NearClipPlane, m_FarClipPlane);
 				m_ProjDataChanged = false;
 			}
 
 			if (m_ViewChanged)
 			{
-				GM::View::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(0.f, 0.f, -3.0f), GM::Vector3::YAxis);
+				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(0.f, 0.f, -3.0f), GM::Vector3::YAxis);
 				m_ViewChanged = false;
 			}
 		}
@@ -223,7 +223,7 @@ namespace GraphX
 			//TODO: Also change the roll
 
 			m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-			m_ViewAxis = GM::Vector3(GM::Rotation(xOffset, m_UpAxis) * GM::Rotation(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+			m_ViewAxis = GM::Vector3(GM::RotationMatrix(xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
 			m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 
 			m_ViewChanged = true;

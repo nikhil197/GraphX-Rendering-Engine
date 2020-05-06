@@ -5,10 +5,10 @@ namespace GM
 	// Forward declarations
 	class Matrix4;
 
-	class Projection
+	class ProjectionMatrix
 	{
 	private:
-		Projection();
+		ProjectionMatrix();
 
 	public:
 		static Matrix4 Ortho(float left, float right, float bottom, float top);

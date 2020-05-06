@@ -18,7 +18,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
+		Mesh2D(const GM::Vector3& Pos, const GM::Vector3& RotationMatrix, const GM::Vector2& Scale, const std::vector<struct Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
 
 		Mesh2D(const Mesh2D& Other);
 
@@ -68,7 +68,7 @@ namespace GraphX
 		GM::Vector3 Position;
 
 		/* Rotation of the object */
-		GM::Vector3 Rotation;
+		GM::Vector3 RotationMatrix;
 
 		/* Scale of the object */
 		GM::Vector2 Scale;

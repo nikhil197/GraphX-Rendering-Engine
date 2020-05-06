@@ -5,7 +5,7 @@
 
 namespace GM
 {
-	class Scaling
+	class ScaleMatrix
 		: public Matrix4
 	{
 	private:
@@ -14,14 +14,14 @@ namespace GM
 
 	public:
 		/* Construct a scaling matrix to scale by value in all directions */
-		explicit Scaling(float Value);
+		explicit ScaleMatrix(float Value);
 
 		/* Construct a scaling matrix to scale by given vector */
-		explicit Scaling(const Vector3& Vec);
+		explicit ScaleMatrix(const Vector3& Vec);
 
 	public:
 		/* Assignment Operator */
-		const Scaling& operator=(const Matrix4& OtherMat);
+		const ScaleMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Inverse of the scale matrix */
 		Matrix4 Inverse() const override;

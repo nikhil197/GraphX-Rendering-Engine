@@ -1,11 +1,11 @@
 #include "GMPch.h"
-#include "Rotation.h"
+#include "RotationMatrix.h"
 
 #include "MathUtility.h"
 
 namespace GM
 {
-	Rotation::Rotation(float Value)
+	RotationMatrix::RotationMatrix(float Value)
 		:Matrix4(),
 		m_Angles(Vector3(Value))
 	{
@@ -15,7 +15,7 @@ namespace GM
 		M[1][1] =  (float)Utility::Cos(Value);
 	}
 
-	Rotation::Rotation(const Vector3& Angles)
+	RotationMatrix::RotationMatrix(const Vector3& Angles)
 		: Matrix4(),
 		m_Angles(Angles)
 	{
@@ -81,7 +81,7 @@ namespace GM
 		M[3][3] = 1.0f;
 	}
 
-	Rotation::Rotation(float Angle, const Vector3& Axis)
+	RotationMatrix::RotationMatrix(float Angle, const Vector3& Axis)
 	{
 		// Get the normalized Axis
 		Vector3 nAxis = Axis.Normal();
@@ -141,34 +141,34 @@ namespace GM
 		M[3][3] = 1.0f;
 	}
 
-	const Rotation& Rotation::operator=(const Matrix4& OtherMat)
+	const RotationMatrix& RotationMatrix::operator=(const Matrix4& OtherMat)
 	{
 		Matrix4::operator=(OtherMat);
 		return *this;
 	}
 
-	Matrix4 Rotation::Inverse() const
+	Matrix4 RotationMatrix::Inverse() const
 	{
 		// For rotation the inverse is the transpose of the matrix
 		return Transpose();
 	}
 
 	/* Static Members */
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, const Vector3& Angles)
+	Matrix4 RotationMatrix::Rotate(const Matrix4& Mat, const Vector3& Angles)
 	{
-		Rotation result(Angles);
+		RotationMatrix result(Angles);
 
 		return Mat * result;
 	}
 
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Angle, const Vector3& Axis)
+	Matrix4 RotationMatrix::Rotate(const Matrix4& Mat, float Angle, const Vector3& Axis)
 	{
-		return Mat * Rotation(Angle, Axis);
+		return Mat * RotationMatrix(Angle, Axis);
 	}
 
-	Matrix4 Rotation::Rotate(const Matrix4& Mat, float Value)
+	Matrix4 RotationMatrix::Rotate(const Matrix4& Mat, float Value)
 	{
-		Rotation result(Value);
+		RotationMatrix result(Value);
 
 		return Mat * result;
 	}

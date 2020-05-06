@@ -15,7 +15,7 @@ namespace GraphX
 		GM::Vector4 ColorBegin = GM::Vector4::UnitVector;
 		GM::Vector4 ColorEnd = GM::Vector4::UnitVector;
 		Ref<Texture2D> Texture = nullptr;
-		float Rotation = 0.0f;
+		float RotationMatrix = 0.0f;
 		float SizeBegin = 1.0f, SizeEnd = 1.0f;
 		float LifeSpan = 1.0f;
 		float GravityEffect = 1.0f;

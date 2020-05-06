@@ -5,7 +5,7 @@
 
 namespace GM
 {
-	class Translation
+	class TranslationMatrix
 		:public Matrix4
 	{
 	private:
@@ -14,13 +14,13 @@ namespace GM
 
 	public:
 		/* Constructs a translation matrix to translate by given Value */
-		explicit Translation(float Value);
+		explicit TranslationMatrix(float Value);
 
 		/* Constructs a translation matrix to translate by given vector */
-		explicit Translation(const Vector3& Vec);
+		explicit TranslationMatrix(const Vector3& Vec);
 	public:
 		/* Assignment operator */
-		const Translation& operator=(const Matrix4& OtherMat);
+		const TranslationMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Returns the inverse of the translation matrix */
 		Matrix4 Inverse() const override;

@@ -135,7 +135,7 @@ namespace GraphX
 			{
 				mesh->UpdateModelMatrix(true);
 			}
-			if (ImGui::DragFloat3("Rotation", (float*)& mesh->Rotation, 1.0f, -359.0f, 359.f))
+			if (ImGui::DragFloat3("Rotation", (float*)& mesh->RotationMatrix, 1.0f, -359.0f, 359.f))
 			{
 				mesh->UpdateModelMatrix(true);
 			}
@@ -253,7 +253,7 @@ namespace GraphX
 
 			ImGui::Text("Transformations");
 			ImGui::SliderFloat3("Translation", (float*)&mesh->Position.x, -1000.0f, 1000.0f);
-			ImGui::SliderFloat3("Rotation", (float*)(&mesh->Rotation), 0.0f, 359.f);
+			ImGui::SliderFloat3("Rotation", (float*)(&mesh->RotationMatrix), 0.0f, 359.f);
 			ImGui::SliderFloat2("Scale", (float*)(&mesh->Scale.x), 0.0001f, 10.f);
 
 			ImGui::Text("Color and Properties");

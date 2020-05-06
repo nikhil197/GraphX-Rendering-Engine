@@ -1,12 +1,12 @@
 #include "GMPch.h"
-#include "View.h"
+#include "ViewMatrix.h"
 
 #include "Vectors/Vector3.h"
 #include "Matrices/Matrix4.h"
 
 namespace GM
 {
-	Matrix4 View::LookAt(const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector)
+	Matrix4 ViewMatrix::LookAt(const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector)
 	{
 		Matrix4 result;
 		
@@ -15,7 +15,7 @@ namespace GM
 		return result;
 	}
 
-	Matrix4 View::LookAt(const Vector3& CameraPosition, const Vector3& ViewAxis, const Vector3& RightAxis, const Vector3& UpAxis)
+	Matrix4 ViewMatrix::LookAt(const Vector3& CameraPosition, const Vector3& ViewAxis, const Vector3& RightAxis, const Vector3& UpAxis)
 	{
 		Matrix4 result;
 
@@ -24,7 +24,7 @@ namespace GM
 		return result;
 	}
 
-	void View::LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector)
+	void ViewMatrix::LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& LookAtPoint, const Vector3& UpVector)
 	{
 		// New z - axis after the camera transformations (View Vector i.e. from target to camera)
 		Vector3 ViewVector = (LookAtPoint - CameraPosition);
@@ -40,7 +40,7 @@ namespace GM
 		LookAt(Mat, CameraPosition, ViewVector, RightVector, NewUpVector);
 	}
 
-	void View::LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& ViewAxis, const Vector3& RightAxis, const Vector3& UpAxis)
+	void ViewMatrix::LookAt(Matrix4& Mat, const Vector3& CameraPosition, const Vector3& ViewAxis, const Vector3& RightAxis, const Vector3& UpAxis)
 	{
 		Mat(0, 0) = RightAxis.x;
 		Mat(0, 1) = RightAxis.y;

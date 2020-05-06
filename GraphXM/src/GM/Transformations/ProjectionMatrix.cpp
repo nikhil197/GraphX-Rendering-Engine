@@ -1,12 +1,12 @@
 #include "GMPch.h"
-#include "Projection.h"
+#include "ProjectionMatrix.h"
 
 #include "Matrices/Matrix4.h"
 #include "MathUtility.h"
 
 namespace GM
 {
-	Matrix4 Projection::Ortho(float left, float right, float bottom, float top)
+	Matrix4 ProjectionMatrix::Ortho(float left, float right, float bottom, float top)
 	{
 		Matrix4 result;
 
@@ -15,7 +15,7 @@ namespace GM
 		return result;
 	}
 
-	void Projection::Ortho(Matrix4& Mat, float left, float right, float bottom, float top)
+	void ProjectionMatrix::Ortho(Matrix4& Mat, float left, float right, float bottom, float top)
 	{
 		// Scale the matrix
 		Mat(0, 0) = (right == left) ? right : 2 / (right - left);
@@ -28,7 +28,7 @@ namespace GM
 		Mat(2, 3) = 0.0f;
 	}
 
-	Matrix4 Projection::Ortho(float left, float right, float bottom, float top, float near, float far)
+	Matrix4 ProjectionMatrix::Ortho(float left, float right, float bottom, float top, float near, float far)
 	{
 		Matrix4 result;
 
@@ -37,7 +37,7 @@ namespace GM
 		return result;
 	}
 
-	void Projection::Ortho(Matrix4& Mat, float left, float right, float bottom, float top, float near, float far)
+	void ProjectionMatrix::Ortho(Matrix4& Mat, float left, float right, float bottom, float top, float near, float far)
 	{
 		// Scale the matrix
 		Mat(0, 0) = (right == left) ? right : 2 / (right - left);
@@ -50,7 +50,7 @@ namespace GM
 		Mat(2, 3) = (near == far) ? 0.0f : -((far + near) / (far - near));
 	}
 
-	Matrix4 Projection::Frustum(float left, float right, float bottom, float top, float near, float far)
+	Matrix4 ProjectionMatrix::Frustum(float left, float right, float bottom, float top, float near, float far)
 	{
 		Matrix4 result;
 		
@@ -59,7 +59,7 @@ namespace GM
 		return result;
 	}
 
-	void Projection::Frustum(Matrix4& Mat, float left, float right, float bottom, float top, float near, float far)
+	void ProjectionMatrix::Frustum(Matrix4& Mat, float left, float right, float bottom, float top, float near, float far)
 	{
 		Mat(0, 0) = 2 * near / (right - left);
 		Mat(0, 2) = (right + left) / (right - left);
@@ -74,17 +74,17 @@ namespace GM
 		Mat(3, 3) = 0;
 	}
 
-	Matrix4 Projection::Perspective(float FieldOfView, float width, float height, float near, float far)
+	Matrix4 ProjectionMatrix::Perspective(float FieldOfView, float width, float height, float near, float far)
 	{
 		return Perspective(FieldOfView, width / height, near, far);
 	}
 
-	void Projection::Perspective(Matrix4& Mat, float FieldOfView, float width, float height, float near, float far)
+	void ProjectionMatrix::Perspective(Matrix4& Mat, float FieldOfView, float width, float height, float near, float far)
 	{
 		return Perspective(Mat, FieldOfView, width / height, near, far);
 	}
 
-	Matrix4 Projection::Perspective(float FieldOfView, float AspectRatio, float near, float far)
+	Matrix4 ProjectionMatrix::Perspective(float FieldOfView, float AspectRatio, float near, float far)
 	{
 		Matrix4 result;
 
@@ -93,7 +93,7 @@ namespace GM
 		return result;
 	}
 
-	void Projection::Perspective(Matrix4& Mat, float FieldOfView, float AspectRatio, float near, float far)
+	void ProjectionMatrix::Perspective(Matrix4& Mat, float FieldOfView, float AspectRatio, float near, float far)
 	{
 		// Calculate the dimensions of the bounding frustum
 		float tanOfFov = (float)Utility::Tan(FieldOfView / 2);

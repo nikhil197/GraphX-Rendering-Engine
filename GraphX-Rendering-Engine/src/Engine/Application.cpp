@@ -659,7 +659,7 @@ namespace GraphX
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		GM::Rotation rotation(angle, GM::Vector3::YAxis);
+		GM::RotationMatrix rotation(angle, GM::Vector3::YAxis);
 		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
 	}
 

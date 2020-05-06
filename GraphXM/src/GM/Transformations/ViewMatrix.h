@@ -7,11 +7,11 @@ namespace GM
 
 	struct Vector3;
 
-	class View
+	class ViewMatrix
 	{
 	private:
 		/* Private constructor to make sure no instance of this class is created */
-		View();
+		ViewMatrix();
 
 	public:
 		/* Returns a view matrix representing a camera at CameraPosition, focused at LookAtPoint with UpVector as up direction (This matrix is considers the right handed coordinate system i.e. outward is +ve z-axis) */

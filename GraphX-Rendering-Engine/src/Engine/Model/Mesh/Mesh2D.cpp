@@ -11,8 +11,8 @@
 
 namespace GraphX
 {
-	Mesh2D::Mesh2D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector2& Scale, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
-		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Material(Mat), m_Vertices(Vertices), m_Indices(Indices), m_Model(GM::Matrix4()), m_UpdateModelMatrix(true)
+	Mesh2D::Mesh2D(const GM::Vector3& Pos, const GM::Vector3& RotationMatrix, const GM::Vector2& Scale, const std::vector<Vertex2D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
+		: Position(Pos), RotationMatrix(RotationMatrix), Scale(Scale), bShowDetails(0), m_Material(Mat), m_Vertices(Vertices), m_Indices(Indices), m_Model(GM::Matrix4()), m_UpdateModelMatrix(true)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -27,7 +27,7 @@ namespace GraphX
 	}
 
 	Mesh2D::Mesh2D(const Mesh2D& Mesh)
-		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), bShowDetails(Mesh.bShowDetails), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Material(Mesh.m_Material), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
+		: Position(Mesh.Position), RotationMatrix(Mesh.RotationMatrix), Scale(Mesh.Scale), bShowDetails(Mesh.bShowDetails), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Material(Mesh.m_Material), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
 		const VertexBufferLayout& layout = Vertex2D::VertexLayout();
 		m_VAO = CreateRef<VertexArray>();
@@ -38,9 +38,9 @@ namespace GraphX
 	void Mesh2D::Update(float DeltaTime)
 	{
 		// Update the model matrix
-		GM::Translation translation(Position);
-		GM::Rotation rotation(Rotation);
-		GM::Scaling scale(GM::Vector3(Scale, 1.0f));
+		GM::TranslationMatrix translation(Position);
+		GM::RotationMatrix rotation(RotationMatrix);
+		GM::ScaleMatrix scale(GM::Vector3(Scale, 1.0f));
 
 		m_Model = translation * rotation * scale;
 	}

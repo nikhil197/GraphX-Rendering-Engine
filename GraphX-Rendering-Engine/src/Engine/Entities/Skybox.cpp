@@ -66,7 +66,7 @@ namespace GraphX
 	{
 		m_Rotation += RotationSpeed * DeltaTime;
 		GM::Utility::ClampAngle(m_Rotation);
-		m_View = m_View * GM::Rotation(RotationSpeed * DeltaTime, GM::Vector3::YAxis);
+		m_View = m_View * GM::RotationMatrix(RotationSpeed * DeltaTime, GM::Vector3::YAxis);
 	}
 
 	void Skybox::Enable(class Shader& shader, const std::string& Name) const

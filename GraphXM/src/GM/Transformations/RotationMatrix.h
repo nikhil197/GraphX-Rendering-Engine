@@ -5,7 +5,7 @@
 
 namespace GM
 {
-	class Rotation
+	class RotationMatrix
 		: public Matrix4
 	{
 	private:
@@ -14,17 +14,17 @@ namespace GM
 
 	public:
 		/* Construct a Rotation matrix using the value as Angles for rotation about z-axis */
-		explicit Rotation(float Value);
+		explicit RotationMatrix(float Value);
 
 		/* Construct a Rotation matrix to rotate specified angles using the Angles */
-		explicit Rotation(const Vector3& Angles);
+		explicit RotationMatrix(const Vector3& Angles);
 
 		/* Construct a Rotation matrix to rotate specified angle about an axis */
-		Rotation(float Angle, const Vector3& Axis);
+		RotationMatrix(float Angle, const Vector3& Axis);
 
 	public:
 		/* Assignment operator */
-		const Rotation& operator=(const Matrix4& OtherMat);
+		const RotationMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Member functions */
 		Matrix4 Inverse() const override;

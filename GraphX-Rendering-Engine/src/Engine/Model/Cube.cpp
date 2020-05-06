@@ -79,8 +79,8 @@ namespace GraphX
 		3, 4, 0
 	};
 
-	Cube::Cube(const GM::Vector3& Position, const GM::Vector3& Rotation, const GM::Vector3& Size, const Ref<Material>& Mat)
-		: Mesh3D(Position, Rotation, Size, s_Vertices, s_Indices, Mat)
+	Cube::Cube(const GM::Vector3& Position, const GM::Vector3& RotationMatrix, const GM::Vector3& Size, const Ref<Material>& Mat)
+		: Mesh3D(Position, RotationMatrix, Size, s_Vertices, s_Indices, Mat)
 	{
 	}
 
