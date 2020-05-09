@@ -146,7 +146,7 @@ namespace GraphX
 			s_Data->TextureShader->SetUniform4f("u_Tint", color);
 			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
 
-			GM::Matrix4 model = GM::TranslationMatrix(position) * GM::ScaleMatrix({ size, 1.0f });
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
 			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
 
 			s_Data->QuadVA->Bind();
@@ -176,7 +176,7 @@ namespace GraphX
 			texture->Bind(slot);
 			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
 
-			GM::Matrix4 model = GM::TranslationMatrix(position) * GM::ScaleMatrix({ size, 1.0f });
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
 			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
 
 			s_Data->QuadVA->Bind();
@@ -193,7 +193,7 @@ namespace GraphX
 		texture->Bind(slot);
 		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", slot);
 
-		GM::Matrix4 model = GM::TranslationMatrix(position) * GM::ScaleMatrix({ size, 1.0f });
+		GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
 		s_Data->ShadowDebugShader->SetUniformMat4f("u_Model", model);
 
 		s_Data->QuadVA->Bind();

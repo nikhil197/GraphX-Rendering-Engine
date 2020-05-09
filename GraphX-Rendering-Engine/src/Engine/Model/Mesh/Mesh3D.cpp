@@ -58,11 +58,7 @@ namespace GraphX
 	{
 		if (m_UpdateModelMatrix)
 		{
-			GM::TranslationMatrix translation(Position);
-			GM::RotationMatrix rotation(Rotation);
-			GM::ScaleMatrix scale(Scale);
-			
-			m_Model = translation * rotation * scale;
+			GM::ScaleRotationTranslationMatrix::Make(m_Model, Scale, Rotation, Position);
 
 			// Update the bounding box here, instead of during the rendering process
 			m_BoundingBox->Transform(m_Bounds, m_Model);

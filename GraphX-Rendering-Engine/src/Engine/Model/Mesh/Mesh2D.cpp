@@ -38,11 +38,7 @@ namespace GraphX
 	void Mesh2D::Update(float DeltaTime)
 	{
 		// Update the model matrix
-		GM::TranslationMatrix translation(Position);
-		GM::RotationMatrix rotation(Rotation);
-		GM::ScaleMatrix scale(GM::Vector3(Scale, 1.0f));
-
-		m_Model = translation * rotation * scale;
+		GM::ScaleRotationTranslationMatrix::Make(m_Model, GM::Vector3(Scale, 1.0f), Rotation, Position);
 	}
 
 	void Mesh2D::Enable() const

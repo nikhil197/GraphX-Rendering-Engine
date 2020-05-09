@@ -61,12 +61,14 @@ namespace GraphX
 				// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
 				if (UpdateMatrix || m_ElapsedTime == DeltaTime)
 				{
-					m_Model = GM::ScaleMatrix(scale) * GM::RotationMatrix(m_Props.Rotation, GM::Vector3::ZAxis)
-						* GM::TranslationMatrix(m_Props.Position + CameraViewSpacePos);
+					GM::ScaleRotationTranslationMatrix::Make(m_Model, GM::Vector3(scale), m_Props.Rotation, GM::Vector3::ZAxis, m_Props.Position + CameraViewSpacePos);
+					/*m_Model = GM::ScaleMatrix(scale) * GM::RotationMatrix(m_Props.Rotation, GM::Vector3::ZAxis)
+						* GM::TranslationMatrix(m_Props.Position + CameraViewSpacePos);*/
 				}
 				else
 				{
-					m_Model *= GM::ScaleMatrix(scale) * GM::TranslationMatrix(m_Props.Velocity * scale);
+					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Vector3::ZeroVector, m_Props.Velocity * scale); 
+					/*GM::ScaleMatrix(scale)* GM::TranslationMatrix(m_Props.Velocity * scale);*/
 				}
 			}
 		}

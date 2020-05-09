@@ -2,6 +2,7 @@
 #include "RotationMatrix.h"
 
 #include "MathUtility.h"
+#include "RotationTranslationMatrix.h"
 
 namespace GM
 {
@@ -52,40 +53,11 @@ namespace GM
 		* C - Angle to be rotated about z - axis
 		*/
 
-		float cosA = (float)Utility::Cos(Angles.x);
-		float cosB = (float)Utility::Cos(Angles.y);
-		float cosC = (float)Utility::Cos(Angles.z);
-
-		float sinA = (float)Utility::Sin(Angles.x);
-		float sinB = (float)Utility::Sin(Angles.y);
-		float sinC = (float)Utility::Sin(Angles.z);
-
-		M[0][0] = cosB * cosC;
-		M[0][1] = sinA * sinB * cosC - cosA * sinC;
-		M[0][2] = cosA * sinB * cosC + sinA * sinC;
-		M[0][3] = 0.0f;
-
-		M[1][0] = cosB * sinC;
-		M[1][1] = sinA * sinB * sinC + cosA * cosC;
-		M[1][2] = cosA * sinB * sinC - sinA * cosC;
-		M[1][3] = 0.0f;
-
-		M[2][0] = -sinB;
-		M[2][1] = sinA * cosB;
-		M[2][2] = cosA * cosB;
-		M[2][3] = 0.0f;
-
-		M[3][0] = 0.0f;
-		M[3][1] = 0.0f;
-		M[3][2] = 0.0f;
-		M[3][3] = 1.0f;
+		RotationTranslationMatrix::Make(*this, Angles, Vector3::ZeroVector);
 	}
 
 	RotationMatrix::RotationMatrix(float Angle, const Vector3& Axis)
 	{
-		// Get the normalized Axis
-		Vector3 nAxis = Axis.Normal();
-
 		/*  OPTIMISATION: Preventing Matrix multiplications
 		*
 		// Get the projection of Axis on the XZ - plane and the YZ - plane
@@ -112,33 +84,7 @@ namespace GM
 		*this = rotate.Inverse() * (*this) * rotate;
 		*/
 
-		float cos = (float)Utility::Cos(Angle);
-		float sin = (float)Utility::Sin(Angle);
-		float oneMinusCos = 1 - cos;
-
-		float xy = nAxis.x * nAxis.y;
-		float yz = nAxis.y * nAxis.z;
-		float zx = nAxis.z * nAxis.x;
-
-		M[0][0] = cos + (nAxis.x * nAxis.x) * oneMinusCos;
-		M[0][1] = xy * oneMinusCos - nAxis.z * sin;
-		M[0][2] = zx * oneMinusCos + nAxis.y * sin;
-		M[0][3] = 0.0f;
-
-		M[1][0] = xy * oneMinusCos + nAxis.z * sin;
-		M[1][1] = cos + (nAxis.y * nAxis.y) * oneMinusCos;
-		M[1][2] = yz * oneMinusCos - nAxis.x * sin;
-		M[1][3] = 0.0f;
-
-		M[2][0] = zx * oneMinusCos - nAxis.y * sin;
-		M[2][1] = yz * oneMinusCos + nAxis.x * sin;
-		M[2][2] = cos + (nAxis.z * nAxis.z) * oneMinusCos;
-		M[2][3] = 0.0f;
-
-		M[3][0] = 0.0f;
-		M[3][1] = 0.0f;
-		M[3][2] = 0.0f;
-		M[3][3] = 1.0f;
+		RotationTranslationMatrix::Make(*this, Angle, Axis, Vector3::ZeroVector);
 	}
 
 	const RotationMatrix& RotationMatrix::operator=(const Matrix4& OtherMat)
