@@ -161,6 +161,8 @@
     <ClInclude Include="src\GM\Geometry\BoundingBox.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox2D.h" />
     <ClInclude Include="src\GM\Geometry\Plane.h" />
+    <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
     <ClInclude Include="src\GM\GraphX_Matrices.h" />
     <ClInclude Include="src\GM\GraphX_Transform.h" />

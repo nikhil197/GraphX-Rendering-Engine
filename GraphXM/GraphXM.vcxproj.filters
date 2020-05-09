@@ -125,5 +125,11 @@
     <ClInclude Include="src\GM\Transformations\ViewMatrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
