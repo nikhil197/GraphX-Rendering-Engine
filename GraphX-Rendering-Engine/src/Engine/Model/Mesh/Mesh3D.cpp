@@ -11,8 +11,8 @@
 
 namespace GraphX
 {
-	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& RotationMatrix, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
-		: Position(Pos), RotationMatrix(RotationMatrix), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
+	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
+		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -35,7 +35,7 @@ namespace GraphX
 	}
 
 	Mesh3D::Mesh3D(const Mesh3D& Mesh)
-		: Position(Mesh.Position), RotationMatrix(Mesh.RotationMatrix), Scale(Mesh.Scale), bShowDetails(Mesh.bShowDetails), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Material(Mesh.m_Material), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
+		: Position(Mesh.Position), Rotation(Mesh.Rotation), Scale(Mesh.Scale), bShowDetails(Mesh.bShowDetails), m_VAO(nullptr), m_VBO(new VertexBuffer(*Mesh.m_VBO)), m_IBO(new IndexBuffer(*Mesh.m_IBO)), m_Vertices(Mesh.m_Vertices), m_Indices(Mesh.m_Indices), m_Material(Mesh.m_Material), m_Model(Mesh.m_Model), m_UpdateModelMatrix(Mesh.m_UpdateModelMatrix)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -59,7 +59,7 @@ namespace GraphX
 		if (m_UpdateModelMatrix)
 		{
 			GM::TranslationMatrix translation(Position);
-			GM::RotationMatrix rotation(RotationMatrix);
+			GM::RotationMatrix rotation(Rotation);
 			GM::ScaleMatrix scale(Scale);
 			
 			m_Model = translation * rotation * scale;

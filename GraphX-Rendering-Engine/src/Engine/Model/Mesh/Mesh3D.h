@@ -19,7 +19,7 @@ namespace GraphX
 		@param Indices indices into the vertices vector
 		@param Mat Material used to render the mesh
 		*/
-		Mesh3D(const GM::Vector3& Pos, const GM::Vector3& RotationMatrix, const GM::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
+		Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<struct Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat = nullptr);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -73,7 +73,7 @@ namespace GraphX
 		GM::Vector3 Position;
 
 		/* Rotation (Euler Angles) of the object about each axis */
-		GM::Vector3 RotationMatrix;
+		GM::Vector3 Rotation;
 
 		/* Scale of the object */
 		GM::Vector3 Scale;

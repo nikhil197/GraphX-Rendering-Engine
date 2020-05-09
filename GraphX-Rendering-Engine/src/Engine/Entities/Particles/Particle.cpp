@@ -26,7 +26,7 @@ namespace GraphX
 		m_Props.Position		= props.Position;
 		m_Props.Velocity		= props.Velocity;
 		m_Props.LifeSpan		= props.LifeSpan;
-		m_Props.RotationMatrix		= props.RotationMatrix;
+		m_Props.Rotation		= props.Rotation;
 		m_Props.Texture			= props.Texture;
 		m_Props.SizeBegin		= props.SizeBegin;
 		m_Props.SizeEnd			= props.SizeEnd;
@@ -61,7 +61,7 @@ namespace GraphX
 				// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
 				if (UpdateMatrix || m_ElapsedTime == DeltaTime)
 				{
-					m_Model = GM::ScaleMatrix(scale) * GM::RotationMatrix(m_Props.RotationMatrix, GM::Vector3::ZAxis)
+					m_Model = GM::ScaleMatrix(scale) * GM::RotationMatrix(m_Props.Rotation, GM::Vector3::ZAxis)
 						* GM::TranslationMatrix(m_Props.Position + CameraViewSpacePos);
 				}
 				else
