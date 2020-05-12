@@ -174,4 +174,7 @@ namespace GraphX
 
 		Ref<Texture2D> m_DefaultTexture;
 	};
+
+	// To be defined in GraphX CLIENTS
+	Application* CreateApplication();
 }
