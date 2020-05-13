@@ -263,6 +263,13 @@ namespace GM
 		return result;
 	}
 
+	const Vector3 Matrix4::operator*(const Vector3& Vec) const
+	{
+		Vector4 result(Vec, 1.0f);
+		result = *this * result;
+		return Vector3(result);
+	}
+
 	float* const Matrix4::operator[](int index) const
 	{
 		if (index < 0)
