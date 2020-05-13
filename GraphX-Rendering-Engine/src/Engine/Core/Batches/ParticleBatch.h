@@ -22,7 +22,7 @@ namespace GraphX
 		void Flush() override;
 
 		void AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color);
-		void AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<class Texture2D>& Texture, const GM::Vector4& TexOffsets, float BlendFactor);
+		void AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<class Texture2D>& Texture, const GM::Vector4& TintColor, const GM::Vector4& TexOffsets, float BlendFactor);
 
 		bool IsFull() const override;
 	private:

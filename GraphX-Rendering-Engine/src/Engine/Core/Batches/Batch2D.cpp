@@ -79,10 +79,10 @@ namespace GraphX
 
 		float textureIndex = 0.0f;		// White Texture Index
 
-		AddQuad_Internal(Position, Size, Color, textureIndex);
+		AddQuad_Internal(Position, Size, Color, 1.0f, textureIndex);
 	}
 
-	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Tex)
+	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Tex, const GM::Vector4& TintColor, float tiling)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -112,32 +112,36 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Tex->GetID();
 		}
 
-		AddQuad_Internal(Position, Size, GM::Vector4::UnitVector, textureIndex);
+		AddQuad_Internal(Position, Size, TintColor, tiling, textureIndex);
 	}
 
-	void Batch2D::AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, float textureIndex)
+	void Batch2D::AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, float tiling, float textureIndex)
 	{
 		m_VertexDataPtr->Position = { Position.x, Position.y, Position.z };
 		m_VertexDataPtr->Color = Color;
 		m_VertexDataPtr->TexCoords = { 0.0f, 0.0f };
+		m_VertexDataPtr->TexCoords *= tiling;
 		m_VertexDataPtr->TexIndex = textureIndex;
 		m_VertexDataPtr++;
 
 		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y, Position.z };
 		m_VertexDataPtr->Color = Color;
 		m_VertexDataPtr->TexCoords = { 1.0f, 0.0f };
+		m_VertexDataPtr->TexCoords *= tiling;
 		m_VertexDataPtr->TexIndex = textureIndex;
 		m_VertexDataPtr++;
 
 		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y + Size.y, Position.z };
 		m_VertexDataPtr->Color = Color;
 		m_VertexDataPtr->TexCoords = { 1.0f, 1.0f };
+		m_VertexDataPtr->TexCoords *= tiling;
 		m_VertexDataPtr->TexIndex = textureIndex;
 		m_VertexDataPtr++;
 
 		m_VertexDataPtr->Position = { Position.x, Position.y + Size.y, Position.z };
 		m_VertexDataPtr->Color = Color;
 		m_VertexDataPtr->TexCoords = { 0.0f, 1.0f };
+		m_VertexDataPtr->TexCoords *= tiling;
 		m_VertexDataPtr->TexIndex = textureIndex;
 		m_VertexDataPtr++;
 

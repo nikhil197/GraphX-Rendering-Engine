@@ -102,7 +102,7 @@ namespace GraphX
 		AddParticle_Internal(Position, Size, Color, GM::Vector4::ZeroVector, 0.0f, 0, textureIndex);
 	}
 
-	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Texture, const GM::Vector4& TexOffsets, float BlendFactor)
+	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Texture, const GM::Vector4& TintColor, const GM::Vector4& TexOffsets, float BlendFactor)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -132,7 +132,7 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Texture->GetID();
 		}
 
-		AddParticle_Internal(Position, Size, GM::Vector4::UnitVector, TexOffsets, BlendFactor, (float)Texture->GetRowsInTexAtlas(), textureIndex);
+		AddParticle_Internal(Position, Size, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInTexAtlas(), textureIndex);
 	}
 
 	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, const GM::Vector4& TexOffsets, float BlendFactor, float TexAtlasRows, float TextureIndex)

@@ -46,11 +46,5 @@ namespace GraphX
 
 		/* Main Camera of the engine */
 		Ref<const Camera> m_Camera;
-
-		/* Current Index in the pool which is supposed to be un-used */
-		unsigned int m_Index;
-
-		/* Capacity of the pool */
-		unsigned int m_PoolCap;
 	};
 }

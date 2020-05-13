@@ -11,7 +11,7 @@
 namespace GraphX
 {
 	ParticleManager::ParticleManager()
-		: m_ParticleShader(nullptr), m_Camera(nullptr), m_Index(0), m_PoolCap(0)
+		: m_ParticleShader(nullptr), m_Camera(nullptr)
 	{ }
 
 	void ParticleManager::Initialize(const Ref<const Camera>& Camera)

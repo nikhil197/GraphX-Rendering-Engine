@@ -156,22 +156,22 @@ namespace GraphX
 		}
 	}
 		 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
 	{
-		DrawQuad({ position, 0.0f }, size, texture, slot);
+		DrawQuad({ position, 0.0f }, size, texture, TintColor, tiling, slot);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
 	{
 		if (GX_ENABLE_BATCH_RENDERING)
 		{
-			s_Data->Batch->AddQuad(position, size, texture);
+			s_Data->Batch->AddQuad(position, size, texture, TintColor, tiling);
 		}
 		else
 		{
 
 			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", GM::Vector4::UnitVector);
+			s_Data->TextureShader->SetUniform4f("u_Tint", TintColor);
 
 			texture->Bind(slot);
 			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
@@ -226,7 +226,7 @@ namespace GraphX
 						{
 							const ParticleProps& props = particle.GetProps();
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, Texture, particle.GetTexOffsets(), particle.GetBlendFactor());
+							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
 						}
 					}
 				}
