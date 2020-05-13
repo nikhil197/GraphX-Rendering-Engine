@@ -14,6 +14,8 @@
 #include "Engine/Core/Shaders/Shader.h"
 #include "Engine/Core/Textures/Texture2D.h"
 
+#include "Engine/Model/Quad.h"
+
 namespace GraphX
 {
 	ParticleBatch::ParticleBatch(uint32_t QuadCount)
@@ -86,7 +88,7 @@ namespace GraphX
 		m_TextureSlotIndex = 1;
 	}
 
-	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color)
+	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const GM::Vector4& Color)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -99,10 +101,10 @@ namespace GraphX
 
 		float textureIndex = 0.0f;		// White Texture Index
 
-		AddParticle_Internal(Position, Size, Color, GM::Vector4::ZeroVector, 0.0f, 0, textureIndex);
+		AddParticle_Internal(Position, Size, Rotation, Color, GM::Vector4::ZeroVector, 0.0f, 0, textureIndex);
 	}
 
-	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Texture, const GM::Vector4& TintColor, const GM::Vector4& TexOffsets, float BlendFactor)
+	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const Ref<Texture2D>& Texture, const GM::Vector4& TintColor, const GM::Vector4& TexOffsets, float BlendFactor)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -132,54 +134,31 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Texture->GetID();
 		}
 
-		AddParticle_Internal(Position, Size, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInTexAtlas(), textureIndex);
+		AddParticle_Internal(Position, Size, Rotation, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInTexAtlas(), textureIndex);
 	}
 
-	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, const GM::Vector4& TexOffsets, float BlendFactor, float TexAtlasRows, float TextureIndex)
+	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const GM::Vector4& Color, const GM::Vector4& TexOffsets, float BlendFactor, float TexAtlasRows, float TextureIndex)
 	{
-		m_VertexDataPtr->Position = { Position.x, Position.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 0.0f, 0.0f };
-		m_VertexDataPtr->TexOffsets = TexOffsets;
-		m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
-		m_VertexDataPtr->BlendFactor = BlendFactor;
-		m_VertexDataPtr->TexIndex = TextureIndex;
-		m_VertexDataPtr++;
+		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, GM::Vector3::ZAxis, Position);
 
-		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 1.0f, 0.0f };
-		m_VertexDataPtr->TexIndex = TextureIndex;
-		m_VertexDataPtr->TexOffsets = TexOffsets;
-		m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
-		m_VertexDataPtr->BlendFactor = BlendFactor;
-		m_VertexDataPtr->TexIndex = TextureIndex;
-		m_VertexDataPtr++;
+		for (int i = 0; i < 4; i++)
+		{
+			m_VertexDataPtr->Position = transform * Quad::s_QuadVertexPositions[i];
+			m_VertexDataPtr->Color = Color;
+			m_VertexDataPtr->TexCoords = Quad::s_QuadVertexTexCoords[i];
+			m_VertexDataPtr->TexOffsets = TexOffsets;
+			m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
+			m_VertexDataPtr->BlendFactor = BlendFactor;
+			m_VertexDataPtr->TexIndex = TextureIndex;
+			m_VertexDataPtr++;
+		}
 
-		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y + Size.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 1.0f, 1.0f };
-		m_VertexDataPtr->TexOffsets = TexOffsets;
-		m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
-		m_VertexDataPtr->BlendFactor = BlendFactor;
-		m_VertexDataPtr->TexIndex = TextureIndex;
-		m_VertexDataPtr++;
+		for (int i = 0; i < 6; i++)
+		{
+			*m_IndicesDataPtr = m_Offset + Quad::s_QuadIndices[i];
+			m_IndicesDataPtr++;
+		}
 
-		m_VertexDataPtr->Position = { Position.x, Position.y + Size.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 0.0f, 1.0f };
-		m_VertexDataPtr->TexOffsets = TexOffsets;
-		m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
-		m_VertexDataPtr->BlendFactor = BlendFactor;
-		m_VertexDataPtr->TexIndex = TextureIndex;
-		m_VertexDataPtr++;
-
-		*m_IndicesDataPtr = 0 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 1 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 2 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 2 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 3 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 0 + m_Offset; m_IndicesDataPtr++;
 		m_Offset += 4;
 		m_IndexCount += 6;
 	}

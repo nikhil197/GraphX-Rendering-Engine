@@ -285,7 +285,7 @@ namespace GraphX
 						{
 							const ParticleProps& props = particle.GetProps();
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
+							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, props.Rotation, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
 						}
 					}
 				}
@@ -298,7 +298,7 @@ namespace GraphX
 							const ParticleProps& props = particle.GetProps();
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, color);
+							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, props.Rotation, color);
 						}
 					}
 				}
