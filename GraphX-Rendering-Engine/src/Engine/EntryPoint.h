@@ -7,9 +7,6 @@ extern GraphX::Application* GraphX::CreateApplication();
 
 int main(int argc, char** argv)
 {
-	//Title of the application
-	const char* title = "GraphX Rendering Engine";
-
 	GX_PROFILER_BEGIN_SESSION("Application::Initialise", "logs/Profiling/GraphX-Initialise.json")
 	GraphX::Application* app = GraphX::CreateApplication();
 	GX_PROFILER_END_SESISON()
