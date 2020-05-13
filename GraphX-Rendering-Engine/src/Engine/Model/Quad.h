@@ -5,6 +5,17 @@ namespace GraphX
 	class Quad
 	{
 	public:
+		/* Number of vertices and indices for a quad */
+		static constexpr uint32_t s_QuadVertexCount = 4;
+		static constexpr uint32_t s_QuadIndicesCount = 6;
+
+		/* Vertex positions and texture coords of a quad */
+		static const GM::Vector3 s_QuadVertexPositions[4];
+		static const GM::Vector2 s_QuadVertexTexCoords[4];
+
+		/* Indices of a quad */
+		static const uint32_t s_QuadIndices[6];
+	public:
 		Quad();
 
 		/* Enables the quad for rendering */
@@ -15,19 +26,7 @@ namespace GraphX
 
 		~Quad();
 
-		/* Returns the vertices of the quad */
-		static const std::vector<GM::Vector2>& GetVertices() { return s_Vertices; }
-
-		/* Returns the vertices count for the quad */
-		static const unsigned int GetVerticesCount() { return s_QuadVertexCount; }
-
 	private:
-		/* Vertices of the quad used to represent the particle */
-		static std::vector<GM::Vector2> s_Vertices;
-
-		/* Number of vertices in the quad */
-		static const unsigned int s_QuadVertexCount;
-
 		/* Vertex Array to store the vertices */
 		Scope<class VertexArray> m_VAO;
 	};
