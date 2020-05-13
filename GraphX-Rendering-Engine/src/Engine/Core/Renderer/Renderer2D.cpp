@@ -156,27 +156,86 @@ namespace GraphX
 		}
 	}
 		 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
 	{
-		DrawQuad({ position, 0.0f }, size, texture, TintColor, tiling, slot);
+		DrawQuad({ position, 0.0f }, size, texture, tintColor, tiling, slot);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
 	{
 		if (GX_ENABLE_BATCH_RENDERING)
 		{
-			s_Data->Batch->AddQuad(position, size, texture, TintColor, tiling);
+			s_Data->Batch->AddQuad(position, size, texture, tintColor, tiling);
 		}
 		else
 		{
-
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", TintColor);
-
 			texture->Bind(slot);
+			
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniform4f("u_Tint", tintColor);
+			s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
 			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
 
 			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
+			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+
+			s_Data->QuadVA->Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			texture->UnBind();
+		}
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color)
+	{
+		DrawRotatedQuad({ position, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color)
+	{
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, rotation, color);
+		}
+		else
+		{
+			s_Data->WhiteTexture->Bind();
+			
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniform4f("u_Tint", color);
+			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
+
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
+			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
+
+			s_Data->QuadVA->Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			s_Data->WhiteTexture->UnBind();
+		}
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
+	{
+		DrawRotatedQuad({ position, 0.0f }, size, rotation, texture, TintColor, tiling, slot);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
+	{
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, rotation, texture, tintColor, tiling);
+		}
+		else
+		{
+			texture->Bind(slot);
+			
+			s_Data->TextureShader->Bind();
+			s_Data->TextureShader->SetUniform4f("u_Tint", tintColor);
+			s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
+			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
+
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
 			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
 
 			s_Data->QuadVA->Bind();

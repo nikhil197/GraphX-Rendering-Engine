@@ -18,8 +18,14 @@ namespace GraphX
 		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color);
 		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color);
 
-		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
-		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& TintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+
+		static void DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color);
+		static void DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color);
+
+		static void DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+		static void DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
 
 		// Only for debug Purpose
 		static void DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot);
