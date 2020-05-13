@@ -28,6 +28,12 @@ namespace GraphX
 		/* Application main method */
 		void Run();
 
+		/* Returns the window of the engine */
+		Window* GetWindow() const { return m_Window; }
+
+		/* Returns the current application instance */
+		static Application& Get() { return *s_Instance; }
+
 		~Application();
 
 	private:
@@ -105,6 +111,9 @@ namespace GraphX
 		void PickObject();
 
 	private:
+		/* Current instance of the application using the engine */
+		static Application* s_Instance;
+
 		/* Application window */
 		Window* m_Window;
 

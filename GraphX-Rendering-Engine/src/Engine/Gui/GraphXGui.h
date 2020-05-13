@@ -15,7 +15,7 @@ namespace GraphX
 
 	public:
 		/* Initialize the GUI */
-		static void Init(GLFWwindow* window, const std::function<void(class Event&)>& callback, bool bSetupCallbacks = false);
+		static void Init(const std::function<void(class Event&)>& callback, bool bSetupCallbacks = false);
 
 		/* Update the UI frame */
 		static void Update();

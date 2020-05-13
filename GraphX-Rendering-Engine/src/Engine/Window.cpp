@@ -25,9 +25,6 @@ namespace GraphX
 
 		Init(props);
 		
-		// Intialise the ImGui
-		GraphXGui::Init(m_Window, BIND_EVENT_FUNC(Window::OnEvent));
-		
 		GX_ENGINE_INFO("Window: Successfully Created window");
 	}
 
@@ -256,9 +253,6 @@ namespace GraphX
 
 		/* Destroy the Graphics Context */
 		delete m_Context;
-
-		/* Cleanup the ImGui */
-		GraphXGui::Cleanup();
 
 		/* Destroy the window */
 		glfwDestroyWindow(m_Window);

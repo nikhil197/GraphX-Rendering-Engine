@@ -51,6 +51,9 @@ namespace GraphX
 		/* Resize the window */
 		void OnResize();
 
+		/* Returns the underlying native window */
+		inline void* GetNativeWindow() const { return m_Window; }
+
 		/* Returns the width of the window */
 		inline int GetWidth() const { return m_Data.Width; }
 

@@ -62,10 +62,15 @@ namespace GraphX
 {
 	using namespace GM;
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application(const char* title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(!s_Instance, "An Instance is already running!");
+		s_Instance = this;
 
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
@@ -77,6 +82,9 @@ namespace GraphX
 		
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
+
+		// Intialise the ImGui
+		GraphXGui::Init(BIND_EVENT_FUNC(Application::OnEvent));
 
 		// Initialise the renderer
 		Renderer::Init();
@@ -863,6 +871,9 @@ namespace GraphX
 		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
 		// i.e. window destruction
 		Renderer::Shutdown();
+
+		/* Cleanup the ImGui */
+		GraphXGui::Cleanup();
 
 		delete m_Window;
 	}

@@ -4,6 +4,9 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw_gl3.h"
 
+#include "Application.h"
+#include "Window.h"
+
 #include "Model/Mesh/Mesh2D.h"
 #include "Model/Mesh/Mesh3D.h"
 
@@ -27,11 +30,15 @@ namespace GraphX
 {
 	std::function<void(Event&)> GraphXGui::s_GuiEventCallback = nullptr;
 
-	void GraphXGui::Init(GLFWwindow* window, const std::function<void(Event&)>& callback, bool bSetupCallbacks)
+	void GraphXGui::Init(const std::function<void(Event&)>& callback, bool bSetupCallbacks)
 	{
 		Timer timer("Initialising ImGui");
 
 		ImGui::CreateContext();
+
+		Application& app = Application::Get();
+		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow()->GetNativeWindow());
+
 		ImGui_ImplGlfwGL3_Init(window, bSetupCallbacks);
 
 		ImGui::StyleColorsDark();
