@@ -11,9 +11,11 @@ namespace GraphX
 	{
 		ParticleProps ParticleProperties;
 		GM::Vector3 VelocityVariation;
-		unsigned int ParticlesPerSec;
-		unsigned int PoolCap = 1000;
-		float SizeVariation, LifeSpanVariation, GravityVariation;
+		uint32_t ParticlesPerSec = 50;
+		uint32_t PoolCap = 1000;
+		float SizeVariation = 0.0f;
+		float LifeSpanVariation = 0.0f;
+		float GravityVariation = 0.0f;
 	};
 
 	/* Generates and renders the particles in the scene */

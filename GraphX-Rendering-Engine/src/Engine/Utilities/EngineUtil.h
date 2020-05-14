@@ -59,10 +59,11 @@ namespace GraphX
 			return InMin + (InMax - InMin) * Rand<float>();
 		}
 
-		/* Returns a random integer value in the range [Min, Max) */
+		/* Returns a random integer value in the range [Min, Max] */
 		static int RandRange(int InMin, int InMax)
 		{
-			return InMin + TruncToInt<float>((InMax - InMin) * Rand<float>());
+			const int Range = (InMax - InMin) + 1;
+			return Range > 0 ? InMin + TruncToInt<float>(Range * Rand<float>()) : 0;
 		}
 
 		/* Returns the file name from the absolute file path */

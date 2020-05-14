@@ -182,8 +182,8 @@ namespace GraphX
 
 			ImGui::BeginChild("Textures in current model");
 			std::vector<Ref<const Texture2D>> Textures = Mat->GetTextures();
-			int size = Textures.size();
-			for (int n = 0; n < size; n++)
+			size_t size = Textures.size();
+			for (size_t n = 0; n < size; n++)
 			{
 				ImGui::Text("%s", Textures.at(n)->GetFilePath().c_str());
 			}

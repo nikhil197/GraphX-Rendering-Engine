@@ -7,10 +7,10 @@ namespace GraphX
 	{
 	public:
 		/*data is the collection of the vertices and size is the size of the collection in bytes */
-		VertexBuffer(const void* data, unsigned int size);
+		VertexBuffer(const void* data, uint32_t size);
 		
 		/* Creates an empty vertex buffer of size 'size' (data to be specified later) */
-		VertexBuffer(unsigned int size);
+		VertexBuffer(uint32_t size);
 
 		/* Copy construct another buffer */
 		VertexBuffer(const VertexBuffer& Other);
@@ -22,7 +22,7 @@ namespace GraphX
 		void UnBind() const;
 
 		/* Sets new data for the vertex buffer */
-		void SetData(const void* data, unsigned int size);
+		void SetData(const void* data, uint32_t size);
 
 		/* Sets new data for the buffer over custom range
 		* Offset (in bytes) - where in buffer to start
@@ -34,9 +34,9 @@ namespace GraphX
 
 	private:
 		/* ID for the buffer */
-		unsigned int m_RendererID;
+		uint32_t m_RendererID;
 
 		/* Total Size (in bytes) of the data stored in the buffer */
-		unsigned int m_BufferSize;
+		uint32_t m_BufferSize;
 	};
 }

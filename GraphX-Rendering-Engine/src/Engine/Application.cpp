@@ -523,7 +523,7 @@ namespace GraphX
 		bool handled = false;
 		EventDispatcher dispatcher(e);
 
-		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
+		if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_WINDOW))
 		{
 			// handle the window events
 			if (!handled)
@@ -547,7 +547,7 @@ namespace GraphX
 				handled = dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_KEYBOARD))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_KEYBOARD))
 		{
 			if (!handled)
 			{
@@ -558,7 +558,7 @@ namespace GraphX
 				handled = dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FUNC(Application::OnKeyReleased));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_MOUSE))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_MOUSE))
 		{
 			// TODO: Find a better way to do this
 			if (GraphXGui::WantsMouseInput())
@@ -580,7 +580,7 @@ namespace GraphX
 				handled = dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(Application::OnMouseScrolled));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_GUI))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_GUI))
 		{
 			if (!handled)
 			{

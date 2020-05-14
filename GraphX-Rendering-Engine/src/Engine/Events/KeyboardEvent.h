@@ -29,7 +29,7 @@ namespace GraphX
 		inline int GetKeyCode() const { return m_KeyCode; }
 
 		/* Category of the event type */
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_KEYBOARD | GX_EVENT_CATEGORY_INPUT)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_KEYBOARD | EventCategory::GX_EVENT_CATEGORY_INPUT)
 	};
 
 	class KeyPressedEvent

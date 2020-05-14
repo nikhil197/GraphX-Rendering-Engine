@@ -23,7 +23,7 @@ namespace GraphX
 
 	const char RunTimeProfiler::s_ProfileFormat[] = ", { \"cat\" : \"Scope\", \"dur\" : %lld, \"name\": \"%s\", \"ph\" : \"X\", \"pid\" : \"0\", \"tid\" : \"0\", \"ts\" : %lld}";
 	
-	uint32_t RunTimeProfiler::s_FormatStringLen = strlen(s_ProfileFormat);
+	uint32_t RunTimeProfiler::s_FormatStringLen = (uint32_t)strlen(s_ProfileFormat);
 
 	std::vector<char> RunTimeProfiler::s_ProfileString(s_FormatStringLen);
 
@@ -62,7 +62,7 @@ namespace GraphX
 
 	void RunTimeProfiler::WriteProfile(const RunTimeProfilerResult&& Result)
 	{
-		uint32_t requiredBufferSize = s_FormatStringLen + strlen(Result.Name) + 40; /* 40 for 40 possible characters of the durations in the result */
+		uint32_t requiredBufferSize = s_FormatStringLen + (uint32_t)strlen(Result.Name) + 40; /* 40 for 40 possible characters of the durations in the result */
 		if (s_ProfileString.size() < requiredBufferSize)
 		{
 			s_ProfileString.resize(requiredBufferSize);
@@ -109,7 +109,7 @@ namespace GraphX
 	/******************* Memory Profiler *********************/
 	const char MemoryProfiler::s_ProfileFormat[] = ", { \"cat\" : \"Scope\", \"id\" : \"%s\", \"name\": \"%s\", \"ph\" : \"O\", \"pid\" : \"0\", \"tid\" : \"0\", \"ts\" : %lld, \"args\" : {\"snapshot\" : { \"Memory Allocated (in bytes)\" : %u,  \"Memory Freed (in bytes)\" : %u}}}";
 
-	uint32_t MemoryProfiler::s_FormatStringLen = strlen(s_ProfileFormat);
+	uint32_t MemoryProfiler::s_FormatStringLen = (uint32_t)strlen(s_ProfileFormat);
 
 	std::vector<char> MemoryProfiler::s_ProfileString(s_FormatStringLen);
 
@@ -148,7 +148,7 @@ namespace GraphX
 
 	void MemoryProfiler::WriteProfile(MemoryProfilerResut&& Result)
 	{
-		uint32_t requiredBufferSize = s_FormatStringLen + strlen(Result.Name) * 2 + 40; /* 40 for 40 possible characters of the durations and sizes in the result */
+		uint32_t requiredBufferSize = s_FormatStringLen + (uint32_t)strlen(Result.Name) * 2 + 40; /* 40 for 40 possible characters of the durations and sizes in the result */
 		if (s_ProfileString.size() < requiredBufferSize)
 		{
 			s_ProfileString.resize(requiredBufferSize);
