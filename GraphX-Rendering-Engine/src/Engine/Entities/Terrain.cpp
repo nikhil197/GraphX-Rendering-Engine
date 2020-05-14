@@ -21,13 +21,13 @@ namespace GraphX
 	double SmoothNoise(int x, int z)
 	{
 		static unsigned long long seed = 7436767332u;
-		double corners = EngineUtil::GetRandomValue(x - 1, z - 1, seed) + EngineUtil::GetRandomValue(x + 1, z - 1, seed)
-			+ EngineUtil::GetRandomValue(x - 1, z + 1, seed) + EngineUtil::GetRandomValue(x + 1, z + 1, seed) / 16.0;
+		double corners = EngineUtil::Rand(x - 1, z - 1, seed) + EngineUtil::Rand(x + 1, z - 1, seed)
+			+ EngineUtil::Rand(x - 1, z + 1, seed) + EngineUtil::Rand(x + 1, z + 1, seed) / 16.0;
 
-		double sides = EngineUtil::GetRandomValue(x - 1, z, seed) + EngineUtil::GetRandomValue(x + 1, z, seed)
-			+ EngineUtil::GetRandomValue(x, z + 1, seed) + EngineUtil::GetRandomValue(x, z - 1, seed) / 8.0;
+		double sides = EngineUtil::Rand(x - 1, z, seed) + EngineUtil::Rand(x + 1, z, seed)
+			+ EngineUtil::Rand(x, z + 1, seed) + EngineUtil::Rand(x, z - 1, seed) / 8.0;
 
-		double center = EngineUtil::GetRandomValue(x, z, seed) / 4.0;
+		double center = EngineUtil::Rand(x, z, seed) / 4.0;
 		return corners + sides + center;
 	}
 

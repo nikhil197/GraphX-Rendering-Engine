@@ -6,6 +6,7 @@
 #include <memory>
 #include <random>
 #include <limits>
+#include <cmath>
 
 /* STL */
 #include <array>

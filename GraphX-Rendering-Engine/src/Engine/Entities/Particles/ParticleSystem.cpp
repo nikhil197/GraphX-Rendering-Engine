@@ -50,9 +50,9 @@ namespace GraphX
 		props.LifeSpan = GenerateRandomValue(m_Config.ParticleProperties.LifeSpan, m_Config.LifeSpanVariation);
 		props.SizeBegin = GenerateRandomValue(m_Config.ParticleProperties.SizeBegin, m_Config.SizeVariation);
 		props.GravityEffect = GenerateRandomValue(m_Config.ParticleProperties.GravityEffect, m_Config.GravityVariation);
-		props.Velocity.x = m_Config.ParticleProperties.Velocity.x * m_Config.VelocityVariation.x * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		props.Velocity.x = m_Config.ParticleProperties.Velocity.x * m_Config.VelocityVariation.x * (EngineUtil::Rand<float>() * 2.0f - 1.0f);
 		props.Velocity.y = m_Config.ParticleProperties.Velocity.y * m_Config.VelocityVariation.y;
-		props.Velocity.z = m_Config.ParticleProperties.Velocity.z * m_Config.VelocityVariation.z * ((float)EngineUtil::GetRandomValue() * 2.0f - 1.0f);
+		props.Velocity.z = m_Config.ParticleProperties.Velocity.z * m_Config.VelocityVariation.z * (EngineUtil::Rand<float>() * 2.0f - 1.0f);
 		
 		m_Particles[m_Index].Init(props);
 		m_Index = (m_Index + 1) % m_Config.PoolCap;
@@ -60,7 +60,7 @@ namespace GraphX
 
 	float ParticleSystem::GenerateRandomValue(float Average, float Deviation)
 	{
-		float Offset = Deviation * Average * ((float) EngineUtil::GetRandomValue() * 2 - 1.0f);
+		float Offset = Deviation * Average * (EngineUtil::Rand<float>() * 2 - 1.0f);
 		return Average + Offset;
 	}
 }

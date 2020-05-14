@@ -166,7 +166,7 @@ namespace GraphX
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
+				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				TreeMesh->Position = Position;
 				m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
 			}
@@ -181,7 +181,7 @@ namespace GraphX
 			NumTree = 10;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
+				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				LowPolyTreeMesh->Position = Position;
 				m_Objects3D.emplace_back(new Mesh3D(*LowPolyTreeMesh));
 			}
