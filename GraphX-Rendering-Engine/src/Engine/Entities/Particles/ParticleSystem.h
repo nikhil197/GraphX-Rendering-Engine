@@ -20,7 +20,7 @@ namespace GraphX
 	class ParticleSystem
 	{
 	public:
-		ParticleSystem(const std::string& name, ParticleManager* Manager, const ParticleSystemConfig& props, const GM::Vector3& Pos);
+		ParticleSystem(const std::string& name, const ParticleSystemConfig& props, const GM::Vector3& Pos);
 
 		void Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix);
 
@@ -70,9 +70,6 @@ namespace GraphX
 	private:
 		/* Used by particle manager */
 		std::string m_Name;
-
-		/* To handle all the generated particles (Only a weak ref) */
-		ParticleManager* m_Manager;
 
 		/* Current Configuration of the system */
 		ParticleSystemConfig m_Config;

@@ -65,7 +65,7 @@ namespace GraphX
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application(const char* title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -120,8 +120,7 @@ namespace GraphX
 		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
 		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
-		m_ParticlesManager = CreateRef<ParticleManager>();
-		m_ParticlesManager->Initialize(m_CameraController->GetCamera());	// TODO: Move to a suitable location
+		ParticleManager::Init(m_CameraController->GetCamera());
 
 		m_DefaultTexture  = CreateRef<Texture2D>("res/Textures/stone.jpg");
 
@@ -215,8 +214,8 @@ namespace GraphX
 		config.SizeVariation = 0.5f;
 		config.GravityVariation = 1.0f;
 		
-		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3::ZeroVector);
-		m_ParticlesManager->AddParticleSystem(particleSys);
+		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", config, GM::Vector3::ZeroVector);
+		ParticleManager::AddParticleSystem(particleSys);
 		
 		ParticleProps particleProperties2;
 		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -227,8 +226,8 @@ namespace GraphX
 		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
 		config.ParticleProperties = particleProperties2;
-		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3(50.0f, 0.0f, -70.0f));
-		m_ParticlesManager->AddParticleSystem(particleSys2);
+		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 0.0f, -70.0f));
+		ParticleManager::AddParticleSystem(particleSys2);
 
 		// For the purpose of fps count
 		int times = 0;
@@ -264,7 +263,7 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						m_ParticlesManager->SpawnParticles(DeltaTime);
+						ParticleManager::SpawnParticles(DeltaTime);
 					}
 					
 					// Update all the elements of the scene
@@ -310,7 +309,7 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						m_ParticlesManager->RenderParticles();
+						ParticleManager::RenderParticles();
 					}
 
 					Renderer2D::EndScene();
@@ -369,7 +368,7 @@ namespace GraphX
 				m_Terrain[i]->Update(DeltaTime);
 		}
 
-		m_ParticlesManager->Update(DeltaTime);
+		ParticleManager::Update(DeltaTime);
 
 		DayNightCycleCalculations(DeltaTime);
 
@@ -870,6 +869,8 @@ namespace GraphX
 
 		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
 		// i.e. window destruction
+		ParticleManager::Shutdown();
+		
 		Renderer::Shutdown();
 
 		/* Cleanup the ImGui */

@@ -10,61 +10,63 @@
 
 namespace GraphX
 {
-	ParticleManager::ParticleManager()
-		: m_ParticleShader(nullptr), m_Camera(nullptr)
-	{ }
+	ParticleManager::ParticleManagerData* ParticleManager::s_Data = nullptr;
 
-	void ParticleManager::Initialize(const Ref<const Camera>& Camera)
+	void ParticleManager::Init(const Ref<const Camera>& Camera)
 	{
 		GX_PROFILE_FUNCTION()
 
-		GX_ENGINE_ASSERT(!IsInitialized(), "Particle Manager already initialised");
+		GX_ENGINE_ASSERT(s_Data == nullptr, "Particle Manager already initialised");
 
-		m_Camera = Camera;
-
-		m_ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
+		s_Data = new ParticleManager::ParticleManagerData();
+		s_Data->Camera = Camera;
+		s_Data->ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 	}
 
+	void ParticleManager::Shutdown()
+	{
+		GX_ENGINE_ASSERT(s_Data != nullptr, "Particle Manager already shutdown");
+		delete s_Data;
+	}
 
 	void ParticleManager::AddParticleSystem(const Ref<ParticleSystem>& System)
 	{
 		const std::string& name = System->GetName();
 		GX_ENGINE_ASSERT(!Exists(name), "Particle System {0} already exists.", name);
-		m_ParticleSystems.emplace(name, System);
+		s_Data->ParticleSystems.emplace(name, System);
 	}
 
 	Ref<ParticleSystem> ParticleManager::GetParticleSystem(const std::string& name)
 	{
 		GX_ENGINE_ASSERT(Exists(name), "Particle System {0} does not exist.", name);
-		return m_ParticleSystems[name];
+		return s_Data->ParticleSystems[name];
 	}
 
 	void ParticleManager::Update(float DeltaTime)
 	{
 		GX_PROFILE_FUNCTION()
 		
-		GX_ENGINE_ASSERT(IsInitialized(), "Particle Manager is not Initialised");
+		GX_ENGINE_ASSERT(s_Data != nullptr, "Particle Manager is not Initialised");
 
-		if (!GX_ENABLE_BATCH_RENDERING && m_Camera->IsRenderStateDirty())
+		if (!GX_ENABLE_BATCH_RENDERING && s_Data->Camera->IsRenderStateDirty())
 		{
-			m_ParticleShader->Bind();
-			m_ParticleShader->SetUniformMat4f("u_Projection", m_Camera->GetProjectionMatrix());
+			s_Data->ParticleShader->Bind();
+			s_Data->ParticleShader->SetUniformMat4f("u_Projection", s_Data->Camera->GetProjectionMatrix());
 		}
 		
-		const GM::Matrix4& ViewMatrix = m_Camera->GetViewMatrix();
+		const GM::Matrix4& ViewMatrix = s_Data->Camera->GetViewMatrix();
 		const GM::Vector3 CameraViewSpacePos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
-		for (const auto& System : m_ParticleSystems)
+		for (const auto& System : s_Data->ParticleSystems)
 		{
-			System.second->Update(DeltaTime, CameraViewSpacePos, m_Camera->IsRenderStateDirty());
+			System.second->Update(DeltaTime, CameraViewSpacePos, s_Data->Camera->IsRenderStateDirty());
 		}
-		
 	}
 
 	void ParticleManager::SpawnParticles(float DeltaTime)
 	{
 		GX_PROFILE_FUNCTION()
 
-		for (const auto& System : m_ParticleSystems)
+		for (const auto& System : s_Data->ParticleSystems)
 		{
 			if(System.second->IsActive())
 				System.second->SpawnParticles(DeltaTime);
@@ -75,26 +77,13 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		GX_ENGINE_ASSERT(IsInitialized(), "Particle Manager is not Initialised");
+		GX_ENGINE_ASSERT(s_Data != nullptr, "Particle Manager is not Initialised");
 
-		Renderer2D::RenderParticles(m_ParticleSystems);
+		Renderer2D::RenderParticles(s_Data->ParticleSystems);
 	}
 
-	bool ParticleManager::Exists(const std::string& name) const
+	bool ParticleManager::Exists(const std::string& name)
 	{
-		return m_ParticleSystems.find(name) != m_ParticleSystems.end();
-	}
-
-	bool ParticleManager::IsInitialized()
-	{
-		if (m_Camera && m_ParticleShader)
-			return true;
-
-		return false;
-	}
-
-	ParticleManager::~ParticleManager()
-	{
-		
+		return s_Data->ParticleSystems.find(name) != s_Data->ParticleSystems.end();
 	}
 }

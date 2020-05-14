@@ -9,42 +9,44 @@ namespace GraphX
 	class ParticleManager
 	{
 	public:
-		ParticleManager();
-
-		~ParticleManager();
-
 		/* Initialize the manager */
-		void Initialize(const Ref<const Camera>& camera);
+		static void Init(const Ref<const Camera>& camera);
+
+		/* Shutdown the particle manager */
+		static void Shutdown();
 
 		/* Renders the particles on the screen */
-		void RenderParticles();
+		static void RenderParticles();
 
 		/* Updates all the particles */
-		void Update(float DeltaTime);
+		static void Update(float DeltaTime);
 
 		/* Spawn more particles for the current frame */
-		void SpawnParticles(float DeltaTime);
+		static void SpawnParticles(float DeltaTime);
 
 		// Add a new particle system to the manager
-		void AddParticleSystem(const Ref<ParticleSystem>& System);
+		static void AddParticleSystem(const Ref<ParticleSystem>& System);
 
 		// Returns a particle system with given name
-		Ref<ParticleSystem> GetParticleSystem(const std::string& name);
+		static Ref<ParticleSystem> GetParticleSystem(const std::string& name);
 
 		/* Returns true if a particle system exists */
-		bool Exists(const std::string& name) const;
+		static bool Exists(const std::string& name);
 
 	private:
-		bool IsInitialized();
+		struct ParticleManagerData
+		{
+			/* Shader used to renderer the particles in this particle system*/
+			Ref<Shader> ParticleShader;
 
-	private:
-		/* Shader used to renderer the particles in this particle system*/
-		Ref<Shader> m_ParticleShader;
+			/* All particle systems in the world */
+			std::unordered_map<std::string, Ref<ParticleSystem>> ParticleSystems;
 
-		/* All particle systems in the world */
-		std::unordered_map<std::string, Ref<ParticleSystem>> m_ParticleSystems;
+			/* Main Camera of the engine */
+			Ref<const Camera> Camera;
+		};
 
-		/* Main Camera of the engine */
-		Ref<const Camera> m_Camera;
+		/* Particle Manager Data */
+		static ParticleManagerData* s_Data;
 	};
 }

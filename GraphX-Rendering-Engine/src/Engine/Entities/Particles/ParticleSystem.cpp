@@ -7,8 +7,8 @@
 
 namespace GraphX
 {
-	ParticleSystem::ParticleSystem(const std::string& name, ParticleManager* Manager, const ParticleSystemConfig& Config, const GM::Vector3& Pos)
-		: Position(Pos), m_Name(name), m_Manager(Manager), m_Config(Config), m_Index(0)
+	ParticleSystem::ParticleSystem(const std::string& name, const ParticleSystemConfig& Config, const GM::Vector3& Pos)
+		: Position(Pos), m_Name(name), m_Config(Config), m_Index(0)
 	{
 		m_Particles.resize(m_Config.PoolCap);
 	}
@@ -30,6 +30,8 @@ namespace GraphX
 		static int MaxParticlesPerFrame = m_Config.ParticlesPerSec;
 		static int MinParticlesPerFrame = m_Config.ParticlesPerSec / 2;
 		
+
+		// TODO: Fix this
 		int ParticlesCount = (int)(m_Config.ParticlesPerSec * DeltaTime);
 		GM::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
 

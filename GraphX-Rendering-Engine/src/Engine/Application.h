@@ -171,9 +171,6 @@ namespace GraphX
 		/* Current active skybox */
 		Ref<Skybox> m_CurrentSkybox;
 
-		/* To handle all the particles generated */
-		Ref<ParticleManager> m_ParticlesManager;
-
 		Ref<Shader> m_Shader;
 
 		/* Default Material used by objects */
