@@ -140,32 +140,17 @@ namespace GraphX
 		}
 		else
 		{
-			s_Data->WhiteTexture->Bind();
-
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", color);
-			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
-
 			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			// Maintain stats
-			s_Data->Stats.QuadCount++;
-			s_Data->Stats.DrawCalls++;
-
-			s_Data->WhiteTexture->UnBind();
+			DrawQuad_Internal(model, color);
 		}
 	}
 		 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
 	{
-		DrawQuad({ position, 0.0f }, size, texture, tintColor, tiling, slot);
+		DrawQuad({ position, 0.0f }, size, texture, tintColor, tiling, textureSlot);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
 	{
 		if (GX_ENABLE_BATCH_RENDERING)
 		{
@@ -173,24 +158,8 @@ namespace GraphX
 		}
 		else
 		{
-			texture->Bind(slot);
-			
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", tintColor);
-			s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
-			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
-
 			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			// Maintain stats
-			s_Data->Stats.DrawCalls++;
-			s_Data->Stats.QuadCount++;
-
-			texture->UnBind();
+			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
 		}
 	}
 
@@ -207,32 +176,17 @@ namespace GraphX
 		}
 		else
 		{
-			s_Data->WhiteTexture->Bind();
-			
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", color);
-			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
-
 			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			// Maintain stats
-			s_Data->Stats.QuadCount++;
-			s_Data->Stats.DrawCalls++;
-
-			s_Data->WhiteTexture->UnBind();
+			DrawQuad_Internal(model, color);
 		}
 	}
 
-	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t textureSlot)
 	{
-		DrawRotatedQuad({ position, 0.0f }, size, rotation, texture, TintColor, tiling, slot);
+		DrawRotatedQuad({ position, 0.0f }, size, rotation, texture, TintColor, tiling, textureSlot);
 	}
 
-	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t slot)
+	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
 	{
 		if (GX_ENABLE_BATCH_RENDERING)
 		{
@@ -240,33 +194,56 @@ namespace GraphX
 		}
 		else
 		{
-			texture->Bind(slot);
-			
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", tintColor);
-			s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
-			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
-
 			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			// Maintain stats
-			s_Data->Stats.QuadCount++;
-			s_Data->Stats.DrawCalls++;
-
-			texture->UnBind();
+			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
 		}
 	}
 
-	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawQuad_Internal(const GM::Matrix4& transform, const GM::Vector4& color)
+	{
+		s_Data->WhiteTexture->Bind();
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", color);
+		s_Data->TextureShader->SetUniform1i("u_Texture", 0);
+		s_Data->TextureShader->SetUniformMat4f("u_Model", transform);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
+
+		s_Data->WhiteTexture->UnBind();
+	}
+
+	void Renderer2D::DrawQuad_Internal(const Ref<Texture2D>& texture, const GM::Matrix4& transform, const GM::Vector4& color, float tiling, uint32_t textureSlot)
+	{
+		texture->Bind(textureSlot);
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", color);
+		s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
+		s_Data->TextureShader->SetUniform1i("u_Texture", textureSlot);
+		s_Data->TextureShader->SetUniformMat4f("u_Model", transform);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
+
+		texture->UnBind();
+	}
+
+	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, uint32_t textureSlot)
 	{
 		s_Data->ShadowDebugShader->Bind();
 		
-		texture->Bind(slot);
-		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", slot);
+		texture->Bind(textureSlot);
+		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", textureSlot);
 
 		GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
 		s_Data->ShadowDebugShader->SetUniformMat4f("u_Model", model);

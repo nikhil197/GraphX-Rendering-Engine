@@ -31,17 +31,17 @@ namespace GraphX
 		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector4& color);
 		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector4& color);
 
-		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
-		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+		static void DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t textureSlot = 0);
+		static void DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t textureSlot = 0);
 
 		static void DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color);
 		static void DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color);
 
-		static void DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
-		static void DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t slot = 0);
+		static void DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t textureSlot = 0);
+		static void DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor = GM::Vector4::UnitVector, float tiling = 1.0f, uint32_t textureSlot = 0);
 
 		// Only for debug Purpose
-		static void DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot);
+		static void DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, uint32_t textureSlot);
 
 		/* Renders the active particles from the pool of particles */
 		static void RenderParticles(const std::unordered_map<std::string, Ref<class ParticleSystem>>& ParticleSystems);
@@ -60,6 +60,11 @@ namespace GraphX
 
 		/* Returns the renderer stats */
 		static Renderer2D::Statistics GetStats();
+
+	private:
+		/* Internal method to draw quad - Reduce code repition */
+		static void DrawQuad_Internal(const GM::Matrix4& transform, const GM::Vector4& color);
+		static void DrawQuad_Internal(const Ref<Texture2D>& texture, const GM::Matrix4& transform, const GM::Vector4& color, float tiling, uint32_t textureSlot);
 
 	private:
 		struct Renderer2DData
