@@ -253,11 +253,17 @@ namespace GraphX
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
+
+				Renderer2D::Statistics Stats = Renderer2D::GetStats();
+				GX_ENGINE_INFO("Renderer2D Stats: {0} Draw Calls, {1} Quad Count", Stats.DrawCalls, Stats.QuadCount);
 			}
 
 			// No need to update or render stuff if the application (window) is minimised
 			if (!m_IsMinimised)
 			{
+				// Reset Stats at the beginning of the frame 
+				Renderer2D::ResetStats();
+
 				{
 					GX_PROFILE_SCOPE("Frame-Update")
 

@@ -13,6 +13,8 @@
 #include "Engine/Core/Shaders/Shader.h"
 #include "Engine/Core/Textures/Texture2D.h"
 
+#include "Engine/Core/Renderer/Renderer2D.h"
+
 #include "Engine/Model/Quad.h"
 
 namespace GraphX
@@ -62,6 +64,9 @@ namespace GraphX
 		m_VAO->Bind();
 
 		glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		Renderer2D::s_Data->Stats.DrawCalls++;
 
 		m_Offset = 0;
 		m_IndexCount = 0;
@@ -148,6 +153,9 @@ namespace GraphX
 
 		m_Offset += 4;
 		m_IndexCount += 6;
+
+		// Maintain stats
+		Renderer2D::s_Data->Stats.QuadCount++;
 	}
 
 

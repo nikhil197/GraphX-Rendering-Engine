@@ -152,6 +152,10 @@ namespace GraphX
 			s_Data->QuadVA->Bind();
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
+			// Maintain stats
+			s_Data->Stats.QuadCount++;
+			s_Data->Stats.DrawCalls++;
+
 			s_Data->WhiteTexture->UnBind();
 		}
 	}
@@ -182,6 +186,10 @@ namespace GraphX
 			s_Data->QuadVA->Bind();
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
+			// Maintain stats
+			s_Data->Stats.DrawCalls++;
+			s_Data->Stats.QuadCount++;
+
 			texture->UnBind();
 		}
 	}
@@ -210,6 +218,10 @@ namespace GraphX
 
 			s_Data->QuadVA->Bind();
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			// Maintain stats
+			s_Data->Stats.QuadCount++;
+			s_Data->Stats.DrawCalls++;
 
 			s_Data->WhiteTexture->UnBind();
 		}
@@ -241,6 +253,10 @@ namespace GraphX
 			s_Data->QuadVA->Bind();
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
+			// Maintain stats
+			s_Data->Stats.QuadCount++;
+			s_Data->Stats.DrawCalls++;
+
 			texture->UnBind();
 		}
 	}
@@ -257,6 +273,10 @@ namespace GraphX
 
 		s_Data->QuadVA->Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
 
 		texture->UnBind();
 	}
@@ -352,6 +372,10 @@ namespace GraphX
 						{
 							particle.Enable(*ParticleShader);
 							glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+							
+							// Maintain stats
+							s_Data->Stats.QuadCount++;
+							s_Data->Stats.DrawCalls++;
 						}
 					}
 				}
@@ -408,6 +432,10 @@ namespace GraphX
 
 			// Draw the object
 			glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			
+			// Maintain Stats
+			s_Data->Stats.QuadCount++;
+			s_Data->Stats.DrawCalls++;
 
 			// Disable the mesh after drawing
 			mesh->Disable();
@@ -431,5 +459,15 @@ namespace GraphX
 
 			Mesh->UnBindBuffers();
 		}
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_Data->Stats, 0, sizeof(Renderer2D::Statistics));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return s_Data->Stats;
 	}
 }

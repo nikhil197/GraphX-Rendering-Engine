@@ -8,6 +8,19 @@ namespace GraphX
 
 	class Renderer2D
 	{
+		friend class Batch2D;
+		friend class ParticleBatch;
+	public:
+		/* Renderer2D Statistics */
+		struct Statistics
+		{
+			uint32_t DrawCalls = 0;
+			uint32_t QuadCount = 0;
+
+			uint32_t GetVertexCount() const { return QuadCount * 4; }
+			uint32_t GetIndexCount() const { return QuadCount * 6; }
+		};
+
 	public:
 		static void Init();
 		static void Shutdown();
@@ -42,6 +55,12 @@ namespace GraphX
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
 		static void Render(Shader& DepthShader);
 
+		/* Resets the stats back to 0 */
+		static void ResetStats();
+
+		/* Returns the renderer stats */
+		static Renderer2D::Statistics GetStats();
+
 	private:
 		struct Renderer2DData
 		{
@@ -71,6 +90,9 @@ namespace GraphX
 
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh2D>> RenderQueue;
+			
+			/* Renderer Draw statistics */
+			Renderer2D::Statistics Stats;
 		};
 
 		static Renderer2DData* s_Data;
