@@ -27,14 +27,13 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		static int MaxParticlesPerFrame = m_Config.ParticlesPerSec;
-		static int MinParticlesPerFrame = m_Config.ParticlesPerSec / 2;
+		DeltaTime *= 10;
 		
+		float MinParticles = 0.5f * m_Config.ParticlesPerSec * DeltaTime;
+		float MaxParticles = m_Config.ParticlesPerSec * DeltaTime;
 
-		// TODO: Fix this
-		int ParticlesCount = (int)(m_Config.ParticlesPerSec * DeltaTime);
-		GM::Utility::Clamp<int>(ParticlesCount, MinParticlesPerFrame, MaxParticlesPerFrame);
-
+		int ParticlesCount = (int)EngineUtil::RandRange(MinParticles, MaxParticles);
+		
 		ParticleProps props = m_Config.ParticleProperties;
 		props.Position = Position;
 		for (int i = 0; i < ParticlesCount && !m_Particles[m_Index].IsActive(); i++)
