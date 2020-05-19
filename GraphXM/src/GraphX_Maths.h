@@ -16,3 +16,6 @@
 
 // ---------- Maths Util ---------------
 #include "MathUtility.h"
+
+// -------------- Misc ----------------
+#include "Misc/Quat.h"

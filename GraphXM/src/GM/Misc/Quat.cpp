@@ -19,6 +19,8 @@ namespace GM
         Result.W = (Q1.W * Q2.W) - Vector3::DotProduct(Axis1, Axis2);
     }
 
+    const Quat Quat::Identity(0, 0, 0, 1);
+
     Quat::Quat(float InX, float InY, float InZ, float InW)
         : X(InX), Y(InY), Z(InZ), W(InW)
     { }
