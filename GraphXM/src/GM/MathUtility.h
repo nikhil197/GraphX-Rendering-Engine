@@ -8,7 +8,13 @@
 namespace GM
 {
 	// Define the value of PI (static to make it private to this translation unit i.e. the translation unit in which this header file will be included)
-	static const double PI = 3.14159265;
+	static constexpr float PI = 3.14159265f;
+
+	// Multiplier used to convert angles from degree to radians
+	static constexpr float DEG_TO_RADS = PI / 180;
+
+	// Multiplier used to convert angles from degree to radians
+	static constexpr float RADS_TO_DEG = 1 / DEG_TO_RADS;
 
 	struct Utility
 	{
@@ -20,11 +26,10 @@ namespace GM
 		}
 
 		/* Returns the sqrt of the value */
-		template<typename T>
-		static float Sqrt(const T Value)
+		static float Sqrt(const float Value)
 		{
 			if (Value > 0)
-				return std::sqrt(Value);
+				return std::sqrtf(Value);
 			else
 				return 0;
 		}
@@ -72,58 +77,52 @@ namespace GM
 		/************ Trignometric functions  **************/
 
 		// Cosine Function
-		template <typename T>
-		static double Cos(T angleInDegrees)
+		static float Cos(float angleInDegrees)
 		{
-			return cos(angleInDegrees * PI / 180);
+			return cosf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Secant Function
-		template <typename T>
-		static double Sec(T angleInDegrees)
+		static float Sec(float angleInDegrees)
 		{
-			double val = Cos(angleInDegrees);
+			float val = Cos(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
 
 		// Sine Function
-		template <typename T>
-		static double Sin(T angleInDegrees)
+		static float Sin(float angleInDegrees)
 		{
-			return sin(angleInDegrees * PI / 180);
+			return sinf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Cosecant Function
-		template <typename T>
-		static double Csc(T angleInDegrees)
+		static float Csc(float angleInDegrees)
 		{
-			double val = Sin(angleInDegrees);
+			float val = Sin(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
 
 		// Tangent Function
-		template <typename T>
-		static double Tan(T angleInDegrees)
+		static float Tan(float angleInDegrees)
 		{
-			return tan(angleInDegrees * PI / 180);
+			return tanf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Cotangent Function
-		template <typename T>
-		static double Cot(T angleInDegrees)
+		static float Cot(float angleInDegrees)
 		{
-			double val = Tan(angleInDegrees);
+			float val = Tan(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
@@ -131,28 +130,25 @@ namespace GM
 		/************ Inverse Trignometric functions  **************/
 
 		// Inverse Cosine Function
-		template <typename T>
-		static double ACos(T Val)
+		static float ACos(float Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
-			return acos(Val) * 180 / PI;
+			return acosf(Val) * RADS_TO_DEG;
 		}
 
 		// Inverse Sine Function
-		template <typename T>
-		static double ASin(T Val)
+		static float ASin(float Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
-			return asin(Val) * 180 / PI;
+			return asinf(Val) * RADS_TO_DEG;
 		}
 
 		// Inverse Tangent Function
-		template <typename T>
-		static double ATan(T Val)
+		static float ATan(float Val)
 		{
-			return atan(Val) * 180 / PI;
+			return atanf(Val) * RADS_TO_DEG;
 		}
 
 		// Linear Interpolation between A and B based on BlendFactor(B/W 0 and 1)

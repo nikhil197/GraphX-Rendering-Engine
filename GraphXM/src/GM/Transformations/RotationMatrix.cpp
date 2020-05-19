@@ -10,10 +10,10 @@ namespace GM
 		:Matrix4(),
 		m_Angles(Vector3(Value))
 	{
-		M[0][0] =  (float)Utility::Cos(Value);
-		M[0][1] = -(float)Utility::Sin(Value);
-		M[1][0] =  (float)Utility::Sin(Value);
-		M[1][1] =  (float)Utility::Cos(Value);
+		M[0][0] =  Utility::Cos(Value);
+		M[0][1] = -Utility::Sin(Value);
+		M[1][0] =  Utility::Sin(Value);
+		M[1][1] =  Utility::Cos(Value);
 	}
 
 	RotationMatrix::RotationMatrix(const Vector3& Angles)

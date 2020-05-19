@@ -36,13 +36,13 @@ namespace GM
 		/* Convert the given matrix into a combined rotation and translation matrix based on the given values */
 		static void Make(Matrix4& Mat, const Vector3& Rot, const Vector3& Origin)
 		{
-			float cosA = (float)Utility::Cos(Rot.x);
-			float cosB = (float)Utility::Cos(Rot.y);
-			float cosC = (float)Utility::Cos(Rot.z);
+			float cosA = Utility::Cos(Rot.x);
+			float cosB = Utility::Cos(Rot.y);
+			float cosC = Utility::Cos(Rot.z);
 
-			float sinA = (float)Utility::Sin(Rot.x);
-			float sinB = (float)Utility::Sin(Rot.y);
-			float sinC = (float)Utility::Sin(Rot.z);
+			float sinA = Utility::Sin(Rot.x);
+			float sinB = Utility::Sin(Rot.y);
+			float sinC = Utility::Sin(Rot.z);
 
 			Mat(0, 0) = cosB * cosC;
 			Mat(0, 1) = sinA * sinB * cosC - cosA * sinC;
@@ -71,8 +71,8 @@ namespace GM
 			// Get the normalized Axis
 			Vector3 nAxis = RotAxis.Normal();
 
-			float cos = (float)Utility::Cos(Angle);
-			float sin = (float)Utility::Sin(Angle);
+			float cos = Utility::Cos(Angle);
+			float sin = Utility::Sin(Angle);
 			float oneMinusCos = 1 - cos;
 
 			float xy = nAxis.x * nAxis.y;

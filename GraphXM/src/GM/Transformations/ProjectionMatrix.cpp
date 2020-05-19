@@ -96,7 +96,7 @@ namespace GM
 	void ProjectionMatrix::Perspective(Matrix4& Mat, float FieldOfView, float AspectRatio, float near, float far)
 	{
 		// Calculate the dimensions of the bounding frustum
-		float tanOfFov = (float)Utility::Tan(FieldOfView / 2);
+		float tanOfFov = Utility::Tan(FieldOfView / 2);
 
 		Mat(0, 0) = 1 / (AspectRatio * tanOfFov);
 		Mat(1, 1) = 1 / tanOfFov;
