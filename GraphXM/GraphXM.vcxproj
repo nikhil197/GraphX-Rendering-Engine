@@ -92,6 +92,7 @@
     <ClInclude Include="src\GM\Geometry\BoundingBox.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox2D.h" />
     <ClInclude Include="src\GM\Geometry\Plane.h" />
+    <ClInclude Include="src\GM\Misc\Quat.h" />
     <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h" />
     <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="src\GM\Geometry\Plane.cpp" />
     <ClCompile Include="src\GM\Matrices\Matrix3.cpp" />
     <ClCompile Include="src\GM\Matrices\Matrix4.cpp" />
+    <ClCompile Include="src\GM\Misc\Quat.cpp" />
     <ClCompile Include="src\GM\Transformations\ProjectionMatrix.cpp" />
     <ClCompile Include="src\GM\Transformations\RotationMatrix.cpp" />
     <ClCompile Include="src\GM\Transformations\ScaleMatrix.cpp" />

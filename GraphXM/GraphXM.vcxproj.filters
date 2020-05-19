@@ -60,6 +60,9 @@
     <ClCompile Include="src\GM\Transformations\ViewMatrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GM\Misc\Quat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GM\MathUtility.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GM\Misc\Quat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

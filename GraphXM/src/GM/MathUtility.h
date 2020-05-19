@@ -75,6 +75,11 @@ namespace GM
 		}
 
 		/************ Trignometric functions  **************/
+		static void SinAndCos(float& OutSin, float& OutCos, float AngleInDegrees)
+		{
+			OutSin = Sin(AngleInDegrees);
+			OutCos = Cos(AngleInDegrees);
+		}
 
 		// Cosine Function
 		static float Cos(float angleInDegrees)
