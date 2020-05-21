@@ -146,7 +146,8 @@ namespace GraphX
 				GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
 
 				m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-				m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+				m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
+				//m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
 				m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 			}
 		}
@@ -221,9 +222,10 @@ namespace GraphX
 			float yOffset = NewOrientation.y - m_Camera->m_EulerAngles.y;
 
 			//TODO: Also change the roll
-
+			
 			m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-			m_ViewAxis = GM::Vector3(GM::RotationMatrix(xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+			m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
+			//m_ViewAxis = GM::Vector3(GM::RotationMatrix(xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
 			m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
 
 			m_ViewChanged = true;
