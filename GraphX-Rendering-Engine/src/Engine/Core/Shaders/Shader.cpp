@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Shader::Shader(const std::string& filePath, const std::string& name)
-		:m_Name(name), m_RendererID(0)
+		: RendererAsset(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -26,7 +26,7 @@ namespace GraphX
 	}
 
 	Shader::Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc)
-		: m_Name(name), m_RendererID(0)
+		: RendererAsset(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 

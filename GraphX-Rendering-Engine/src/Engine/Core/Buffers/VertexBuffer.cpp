@@ -5,7 +5,7 @@
 namespace GraphX
 {
 	VertexBuffer::VertexBuffer(const void* data, uint32_t size)
-		: m_BufferSize(size)
+		: RendererAsset(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -17,7 +17,7 @@ namespace GraphX
 	}
 
 	VertexBuffer::VertexBuffer(uint32_t size)
-		: m_BufferSize(size)
+		: RendererAsset(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -29,7 +29,7 @@ namespace GraphX
 	}
 
 	VertexBuffer::VertexBuffer(const VertexBuffer& Other)
-		: m_BufferSize(Other.m_BufferSize)
+		: RendererAsset(), m_BufferSize(Other.m_BufferSize)
 	{
 		GX_PROFILE_FUNCTION()
 

@@ -389,5 +389,8 @@
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Core\RendererAsset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

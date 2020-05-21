@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	/* Class to represent the buffers */
 	class VertexBuffer
+		: public RendererAsset
 	{
 	public:
 		/*data is the collection of the vertices and size is the size of the collection in bytes */
@@ -33,9 +36,6 @@ namespace GraphX
 		~VertexBuffer();
 
 	private:
-		/* ID for the buffer */
-		uint32_t m_RendererID;
-
 		/* Total Size (in bytes) of the data stored in the buffer */
 		uint32_t m_BufferSize;
 	};

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	/* Type of the texture used for the frame buffer */
@@ -11,6 +13,7 @@ namespace GraphX
 	};
 
 	class Texture2D
+		: public RendererAsset
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
@@ -35,9 +38,6 @@ namespace GraphX
 		// Set Data of the texture
 		void SetData(void* data, uint32_t size);
 
-		// GPU Texture ID
-		inline uint32_t GetID() const { return m_RendererID; }
-
 		/* Returns the width of the texture */
 		inline int GetWidth() const { return m_Width; }
 
@@ -60,9 +60,6 @@ namespace GraphX
 		~Texture2D();
 
 	private:
-		/* ID For the texture */
-		uint32_t m_RendererID;
-
 		/* Path to the texture file */
 		std::string m_FilePath;
 

@@ -5,7 +5,7 @@
 namespace GraphX
 {
 	IndexBuffer::IndexBuffer(const uint32_t* data, uint32_t count)
-		:m_Count(count)
+		: RendererAsset(), m_Count(count)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -17,7 +17,7 @@ namespace GraphX
 	}
 
 	IndexBuffer::IndexBuffer(const uint32_t count)
-		: m_Count(count)
+		: RendererAsset(), m_Count(count)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -28,7 +28,7 @@ namespace GraphX
 	}
 
 	IndexBuffer::IndexBuffer(const IndexBuffer& Other)
-		: m_Count(Other.m_Count)
+		: RendererAsset(), m_Count(Other.m_Count)
 	{
 		GX_PROFILE_FUNCTION()
 

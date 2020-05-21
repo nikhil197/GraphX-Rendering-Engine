@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Texture2D::Texture2D(const std::string& filePath, bool TileTexture, unsigned int RowsInTexAtlas)
-		: m_RendererID(0), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
+		: RendererAsset(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
@@ -58,7 +58,7 @@ namespace GraphX
 	}
 
 	Texture2D::Texture2D(int width, int height, FramebufferAttachmentType texType)
-		: m_RendererID(0), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false), m_RowsInTexAtlas(1)
+		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false), m_RowsInTexAtlas(1)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -91,7 +91,7 @@ namespace GraphX
 	}
 
 	Texture2D::Texture2D(int width, int height)
-		: m_RendererID(0), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false), m_RowsInTexAtlas(1)
+		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false), m_RowsInTexAtlas(1)
 	{
 		GX_PROFILE_FUNCTION()
 

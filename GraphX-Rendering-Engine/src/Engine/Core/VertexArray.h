@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	class VertexBuffer;
@@ -7,6 +9,7 @@ namespace GraphX
 	class IndexBuffer;
 
 	class VertexArray
+		: public RendererAsset
 	{
 	public:
 		VertexArray();
@@ -23,9 +26,5 @@ namespace GraphX
 
 		/* UnBind the vao */
 		void UnBind() const;
-	
-	private:
-		/* Identifier for the vao */
-		unsigned int m_RendererID;
 	};
 }

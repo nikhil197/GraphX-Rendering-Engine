@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	// Struct to hold the both the shaders' source
@@ -10,6 +12,7 @@ namespace GraphX
 	};
 
 	class Shader
+		: public RendererAsset
 	{
 	public:
 		/* filePath is the path to the source file */
@@ -71,9 +74,6 @@ namespace GraphX
 	private:
 		/* Name to the shader source file */
 		std::string m_Name;
-
-		/* ID of the shader */
-		unsigned int m_RendererID;
 
 		/* To cache the uniform locations */
 		std::unordered_map<std::string, int> m_UniformLocations;

@@ -7,7 +7,7 @@
 namespace GraphX
 {
 	CubeMap::CubeMap(const std::string& FilePath, const std::vector<std::string>& FileNames)
-		: m_FilePath(FilePath), m_FileNames(FileNames)
+		: RendererAsset(), m_FilePath(FilePath), m_FileNames(FileNames)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading CubeMap: {0}", FilePath);
