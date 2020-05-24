@@ -96,6 +96,9 @@ namespace GraphX
 		/* Updates the projection view matrix if the camera configuration changes */
 		void UpdateProjectionViewMatrix();
 
+		/* Rotates the camera by xOffset around Up-axis and yOffset around right-axis */
+		void UpdateCameraOrientation(float xOffset, float yOffset);
+
 		/*  Updates the camera on window / viewport resize */ 
 		bool OnViewPortResize(class WindowResizedEvent& e);
 

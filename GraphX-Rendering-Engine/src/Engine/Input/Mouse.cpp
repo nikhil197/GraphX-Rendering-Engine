@@ -8,7 +8,7 @@ namespace GraphX
 	std::shared_ptr<Mouse> Mouse::s_Mouse = nullptr;
 
 	Mouse::Mouse()
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(0.1f), ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(1.0f), ScrollSenstivity(0.1f), m_Position(0), m_PositionDelta(0), m_ScrollOffset(0)
 	{}
 
 	void Mouse::Init()
@@ -38,13 +38,11 @@ namespace GraphX
 
 	void Mouse::OnEvent(MouseMovedEvent& e)
 	{
-		m_LastPosition = m_Position;
-
-		float xOffset = e.GetX() - m_Position.x;
-		float yOffset = e.GetY() - m_Position.y;
-
-		m_Position.x += xOffset * Sensitivity;
-		m_Position.y += yOffset * Sensitivity;
+		m_PositionDelta.x = (e.GetX() - m_Position.x) * Sensitivity;
+		m_PositionDelta.y = (e.GetY() - m_Position.y) * Sensitivity;
+		
+		m_Position.x = e.GetX();
+		m_Position.y = e.GetY();
 	}
 
 	void Mouse::OnEvent(MouseScrolledEvent& e)
@@ -55,10 +53,8 @@ namespace GraphX
 
 	void Mouse::Update()
 	{
-		// Update the last mouse position to the current at the end of every frame
-		m_LastPosition = m_Position;
-		
-		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
+		// Set the position delta and scroll offset back to zero, the event must be handled by the application before updating the mouse
+		m_PositionDelta = GM::Vector2::ZeroVector;
 		m_ScrollOffset = GM::Vector2::ZeroVector;
 	}
 }

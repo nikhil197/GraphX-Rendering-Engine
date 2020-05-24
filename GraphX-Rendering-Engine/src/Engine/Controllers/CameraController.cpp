@@ -125,30 +125,19 @@ namespace GraphX
 		if (Mouse::GetMouse()->IsRightButtonPressed() && m_CurrentProjectionMode == ProjectionMode::Perspective)
 		{
 			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
-			const GM::Vector2& LastPosition = mouse->GetLastPosition();
-			const GM::Vector2& CurrentPosition = mouse->GetPosition();
-
+			
 			// Calculate the Yaw and the Pitch offset
-			float xOffset = CurrentPosition.x - LastPosition.x;
-			float yOffset = CurrentPosition.y - LastPosition.y;
+			float xOffset = mouse->GetPositionDelta().x;
+			float yOffset = mouse->GetPositionDelta().y;
 
-			if ((xOffset != 0 && GM::Utility::Abs(xOffset) < 20.0f) || (yOffset != 0 && GM::Utility::Abs(yOffset) < 20.0f))
+			if (xOffset != 0.0f || yOffset != 0.0f)
 			{
 				xOffset *= DeltaTime;
 				yOffset *= DeltaTime;
 
 				m_ViewChanged = true;
 
-				m_Camera->m_EulerAngles.x += yOffset;
-				m_Camera->m_EulerAngles.y += xOffset;
-
-				GM::Utility::Clamp(m_Camera->m_EulerAngles.x, -89.0f, 89.0f);
-				GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
-
-				m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-				m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
-				//m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
-				m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+				UpdateCameraOrientation(xOffset, yOffset);
 			}
 		}
 	}
@@ -192,6 +181,21 @@ namespace GraphX
 		m_Camera->m_RenderStateDirty = true;
 	}
 
+	void CameraController::UpdateCameraOrientation(float xOffset, float yOffset)
+	{
+		m_Camera->m_EulerAngles.x += yOffset;
+		m_Camera->m_EulerAngles.y += xOffset;
+
+		//TODO: Also change the roll
+		GM::Utility::ClampAngle(m_Camera->m_EulerAngles.x, -89.0f, 89.0f);
+		GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
+
+		m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_UpAxis);
+		m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
+		//m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
+		m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+	}
+
 	void CameraController::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
@@ -221,12 +225,7 @@ namespace GraphX
 			float xOffset = NewOrientation.x - m_Camera->m_EulerAngles.x;
 			float yOffset = NewOrientation.y - m_Camera->m_EulerAngles.y;
 
-			//TODO: Also change the roll
-			
-			m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_Camera->m_UpAxis);
-			m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
-			//m_ViewAxis = GM::Vector3(GM::RotationMatrix(xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
-			m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+			UpdateCameraOrientation(xOffset, yOffset);
 
 			m_ViewChanged = true;
 			UpdateProjectionViewMatrix();

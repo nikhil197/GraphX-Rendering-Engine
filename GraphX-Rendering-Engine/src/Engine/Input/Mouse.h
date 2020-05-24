@@ -47,7 +47,7 @@ namespace GraphX
 		inline const GM::Vector2& GetPosition() const { return m_Position; }
 
 		/* Returns the last frame mouse position */
-		inline const GM::Vector2& GetLastPosition() const { return m_LastPosition; }
+		inline const GM::Vector2& GetPositionDelta() const { return m_PositionDelta; }
 
 		/* Returns the current scroll offset */
 		inline const GM::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
@@ -74,8 +74,8 @@ namespace GraphX
 		/* Position of the mouse */
 		GM::Vector2 m_Position;
 
-		/* Position of the mouse in the last frame */
-		GM::Vector2 m_LastPosition;
+		/* Position delta of the mouse in current frame */
+		GM::Vector2 m_PositionDelta;
 
 		/* Current frame offset of the mouse scroll */
 		GM::Vector2 m_ScrollOffset;

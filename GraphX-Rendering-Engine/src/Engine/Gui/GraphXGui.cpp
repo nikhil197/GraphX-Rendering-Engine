@@ -230,7 +230,7 @@ namespace GraphX
 			}
 		}
 		
-		ImGui::DragFloat("Mouse Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.01f, 1.0f);
+		ImGui::DragFloat("Mouse Sensitivity", (float*)&Mouse::GetMouse()->Sensitivity, 0.01f, 0.5f, 2.5f);
 
 		if (ImGui::RadioButton("Perspective", bPerspectiveMode))
 		{
