@@ -44,13 +44,78 @@ namespace GM
 				Val = Max;
 		}
 
-		template<typename T>
-		static void ClampAngle(T& Val)
+		/* Returns floating point remainder of X / Y */
+		static float Mod(float X, float Y)
 		{
-			if (Val > 360)
-				Val = Val - 360;
-			else if (Val < 0)
-				Val = Val + 360;
+			float Quotient = X / Y;
+			float Div = Quotient * Y;
+
+			// Rounding and imprecision could cause Div to exceed X and cause the result to be outside the expected range.
+			if (fabsf(Div) > fabsf(X))
+				Div = X;
+
+			return X - Div;
+		}
+
+		/* Clamps an angle to the range [0, 360) */
+		static float ClampAngle(float Angle)
+		{
+			Angle = Mod(Angle, 360.0f);
+			if (Angle < 0.0f)
+			{
+				// shift to [0,360) range
+				Angle += 360.0f;
+			}
+
+			return Angle;
+		}
+
+		/**
+		* Clamps an arbitrary angle to be between the given angles.  Will clamp to nearest boundary.
+		*
+		* @param MinAngleDegrees	"from" angle that defines the beginning of the range of valid angles (sweeping clockwise)
+		* @param MaxAngleDegrees	"to" angle that defines the end of the range of valid angles
+		* @return Returns clamped angle in the range -180..180.
+		*/
+		static float ClampAngle(float Angle, const float Min, const float Max)
+		{
+			// Extent of the range
+			const float Extent = ClampAngle(Max - Min) * 0.5f;
+
+			// Center of the range [Min, Max]
+			const float RangeCenter = ClampAngle(Min + Extent);
+
+			// Offset of 'Angle' from the RangeCenter
+			const float CenterOffset = ClampAngle(Angle - RangeCenter);
+
+			// Greater than Max
+			if (CenterOffset > Extent)
+			{
+				return NormalizeAngle(RangeCenter + Extent);
+			}
+			// Less than Min
+			else if(CenterOffset < -Extent)
+			{
+				return NormalizeAngle(RangeCenter - Extent);
+			}
+			
+			// In Range
+			return NormalizeAngle(Angle);
+		}
+
+		/* Clamps an angle to the range [-180, 180) */
+		static float NormalizeAngle(float Angle)
+		{
+			// returns Angle in the range [0,360)
+			Angle = ClampAngle(Angle);
+
+			if (Angle > 180.f)
+			{
+				// shift to (-180,180]
+				Angle -= 360.f;
+			}
+
+			return Angle;
 		}
 
 		/* Returns min of the two values */

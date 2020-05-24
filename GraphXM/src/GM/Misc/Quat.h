@@ -89,6 +89,38 @@ namespace GM
         Vector3 operator*(const Vector3& V) const;
 
         /**
+         * Get the result of scaling this quaternion.
+         *
+         * @param Scale The scaling factor.
+         * @return The result of scaling.
+         */
+        const Quat operator*(const float Scale) const;
+        
+        /**
+        * Multiply this quaternion by a scaling factor.
+        *
+        * @param Scale The scaling factor.
+        * @return a reference to this after scaling.
+        */
+        Quat& operator*=(const float Scale);
+
+        /**
+         * Divide this quaternion by scale.
+         *
+         * @param Scale What to divide by.
+         * @return new Quaternion of this after division by scale.
+         */
+        const Quat operator/(const float Scale) const;
+        
+        /**
+         * Divide this quaternion by scale.
+         *
+         * @param Scale What to divide by.
+         * @return a reference to this after scaling.
+         */
+        Quat& operator/=(const float Scale);
+
+        /**
         * Checks whether two quaternions are identical.
         * This is an exact comparison per-component
         *
@@ -139,6 +171,9 @@ namespace GM
          */
         float SizeSquared() const;
 
+        /* Returns the inverse of this quaternion */
+        Quat Inverse() const;
+
         /**
         * get the axis and angle of rotation of this quaternion
         *
@@ -164,4 +199,7 @@ namespace GM
          */
         Vector3 UnrotateVector(Vector3 V) const;
     };
+
+    /* Premultiplies the vector with a quaterion */
+    const Vector3 operator*(const Vector3& V, const Quat& Q);
 }

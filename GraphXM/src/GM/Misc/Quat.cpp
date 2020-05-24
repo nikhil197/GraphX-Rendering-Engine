@@ -106,6 +106,38 @@ namespace GM
         return RotateVector(V);
     }
 
+    const Quat Quat::operator*(const float Scale) const
+    {
+        return Quat(X * Scale, Y * Scale, Z * Scale, W * Scale);
+    }
+
+    Quat& Quat::operator*=(const float Scale)
+    {
+        X *= Scale;
+        Y *= Scale;
+        Z *= Scale;
+        W *= Scale;
+
+        return *this;
+    }
+
+    const Quat Quat::operator/(const float Scale) const
+    {
+        const float Reciprocal = 1.0f / Scale;
+        return Quat(X * Reciprocal, Y * Reciprocal, Z * Reciprocal, W * Reciprocal);
+    }
+
+    Quat& Quat::operator/=(const float Scale)
+    {
+        const float Reciprocal = 1.0f / Scale;
+        X *= Reciprocal;
+        Y *= Reciprocal;
+        Z *= Reciprocal;
+        W *= Reciprocal;
+
+        return *this;
+    }
+
     bool Quat::operator==(const Quat& Q) const
     {
         return (X == Q.X && Y == Q.Y && Z == Q.Z && W == Q.W);
@@ -163,6 +195,13 @@ namespace GM
         return (X * X + Y * Y + Z * Z + W * W);
     }
 
+    Quat Quat::Inverse() const
+    {
+        const float scale = 1 / SizeSquared();
+
+        return Quat(-X * scale, -Y * scale, -Z * scale, W * scale);
+    }
+
     void Quat::ToAxisAndAngle(Vector3& Axis, float& Angle) const
     {
         Axis = GetRotationAxis();
@@ -183,5 +222,10 @@ namespace GM
         const Vector3 Cross = 2 * Vector3::CrossProduct(Axis, V);
         const Vector3 Result = V + (W * Cross) + Vector3::CrossProduct(Axis, Cross);
         return Result;
+    }
+
+    const Vector3 operator*(const Vector3& V, const Quat& Q)
+    {
+        return Q.UnrotateVector(V);
     }
 }
