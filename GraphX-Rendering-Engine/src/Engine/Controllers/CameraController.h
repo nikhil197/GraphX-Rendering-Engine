@@ -39,7 +39,7 @@ namespace GraphX
 		/* Returns the current orientation of the camera */
 		inline const GM::Vector3& GetCameraOrientation() const;
 
-		void SetCameraOrientation(const GM::Vector3& NewOrientation);
+		void SetCameraOrientation(const GM::Rotator& NewOrientation);
 
 		/* Returns the current aspect ratio of the camera */
 		inline float GetAspectRatio() const { return m_AspectRatio; }

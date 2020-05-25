@@ -183,17 +183,17 @@ namespace GraphX
 
 	void CameraController::UpdateCameraOrientation(float xOffset, float yOffset)
 	{
-		m_Camera->m_EulerAngles.x += yOffset;
-		m_Camera->m_EulerAngles.y += xOffset;
-
+		m_Camera->m_Rotation.Pitch -= yOffset;
+		m_Camera->m_Rotation.Yaw -= xOffset;
+		
 		//TODO: Also change the roll
-		GM::Utility::ClampAngle(m_Camera->m_EulerAngles.x, -89.0f, 89.0f);
-		GM::Utility::ClampAngle(m_Camera->m_EulerAngles.y);
+		m_Camera->m_Rotation.Pitch = GM::Utility::ClampAngle(m_Camera->m_Rotation.Pitch, -89.9f, 89.9f);
+		m_Camera->m_Rotation.Yaw = GM::Utility::ClampAngle(m_Camera->m_Rotation.Yaw, 0.0f, 359.999f);
 
-		m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_UpAxis);
-		m_ViewAxis = GM::Quat(m_UpAxis, -xOffset) * (GM::Quat(m_RightAxis, -yOffset) * m_ViewAxis);
-		//m_ViewAxis = GM::Vector3(GM::RotationMatrix(-xOffset, m_UpAxis) * GM::RotationMatrix(-yOffset, m_RightAxis) * GM::Vector4(m_ViewAxis, 1.0f));
-		m_UpAxis = GM::Vector3::CrossProduct(m_RightAxis, m_ViewAxis);
+		GM::RotationMatrix RotationMat(m_Camera->m_Rotation);
+		m_RightAxis = RotationMat * EngineConstants::RightAxis;
+		m_ViewAxis = RotationMat * EngineConstants::ForwardAxis;
+		m_UpAxis = RotationMat * EngineConstants::UpAxis;
 	}
 
 	void CameraController::OnEvent(Event& e)
@@ -218,23 +218,22 @@ namespace GraphX
 		}
 	}
 
-	void CameraController::SetCameraOrientation(const GM::Vector3& NewOrientation)
+	void CameraController::SetCameraOrientation(const GM::Rotator& NewOrientation)
 	{
-		if (NewOrientation != m_Camera->m_EulerAngles)
+		if (NewOrientation != m_Camera->m_Rotation)
 		{
-			float xOffset = NewOrientation.x - m_Camera->m_EulerAngles.x;
-			float yOffset = NewOrientation.y - m_Camera->m_EulerAngles.y;
+			m_Camera->m_Rotation = NewOrientation;
 
-			UpdateCameraOrientation(xOffset, yOffset);
-
+			UpdateCameraOrientation(0, 0);
 			m_ViewChanged = true;
+
 			UpdateProjectionViewMatrix();
 		}
 	}
 
 	const GM::Vector3& CameraController::GetCameraOrientation() const
 	{ 
-		return m_Camera->m_EulerAngles;
+		//return m_Camera->m_EulerAngles;
 	}
 
 	void CameraController::SetAspectRatio(float NewRatio)

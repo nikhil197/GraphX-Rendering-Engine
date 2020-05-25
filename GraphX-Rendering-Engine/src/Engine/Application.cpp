@@ -96,7 +96,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
+		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -307,7 +307,7 @@ namespace GraphX
 					
 					// Bind the shader and draw the objects
 					m_Shader->Bind();
-					m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+					m_ShadowBuffer->BindDepthMap(EngineConstants::ShadowMapTextureSlot);
 					ConfigureShaderForRendering(*m_Shader);
 
 					Render2DScene();
@@ -451,7 +451,7 @@ namespace GraphX
 		if (GX_ENABLE_SHADOWS)
 		{
 			// Draw the debug quad to show the depth map
-			Renderer2D::DrawDebugQuad({-10.0f, 10.0f, 0.0f}, 5 * GM::Vector2::UnitVector, m_ShadowBuffer->GetDepthMap(), GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+			Renderer2D::DrawDebugQuad({-10.0f, 10.0f, 0.0f}, 5 * GM::Vector2::UnitVector, m_ShadowBuffer->GetDepthMap(), EngineConstants::ShadowMapTextureSlot);
 		}
 	}
 
@@ -510,7 +510,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		shader.SetUniform1i("u_ShadowMap", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+		shader.SetUniform1i("u_ShadowMap", EngineConstants::ShadowMapTextureSlot);
 		shader.SetUniform3f("u_LightPos", m_Light->Position);
 		shader.SetUniform4f("u_LightColor", m_Light->Color);
 

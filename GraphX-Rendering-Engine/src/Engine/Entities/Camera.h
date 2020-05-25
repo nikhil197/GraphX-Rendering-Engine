@@ -54,9 +54,9 @@ namespace GraphX
 		/* Position of the camera */
 		GM::Vector3 m_Position;
 
-		/** Note: Euler angles should not be modified directly */
-		/* Pitch, Yaw and Roll of the camera */
-		GM::Vector3 m_EulerAngles;
+		/** Note: Rotation should not be modified directly */
+		/* Orientation of the camera */
+		GM::Rotator m_Rotation;
 
 		/* Up Axis for the whole world */
 		GM::Vector3 m_UpAxis;
