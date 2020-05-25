@@ -25,6 +25,8 @@ namespace GM
 	}
 
 	RotationMatrix::RotationMatrix(const Rotator& Rot)
+		: Matrix4(),
+		m_Rotation(Rot)
 	{
 		RotationTranslationMatrix::Make(*this, m_Rotation, Vector3::ZeroVector);
 	}

@@ -48,7 +48,7 @@ namespace GM
 		static float Mod(float X, float Y)
 		{
 			float Quotient = X / Y;
-			float Div = Quotient * Y;
+			float Div = (float)((int)Quotient) * Y;
 
 			// Rounding and imprecision could cause Div to exceed X and cause the result to be outside the expected range.
 			if (fabsf(Div) > fabsf(X))
@@ -86,7 +86,7 @@ namespace GM
 			const float RangeCenter = ClampAngle(Min + Extent);
 
 			// Offset of 'Angle' from the RangeCenter
-			const float CenterOffset = ClampAngle(Angle - RangeCenter);
+			const float CenterOffset = NormalizeAngle(Angle - RangeCenter);
 
 			// Greater than Max
 			if (CenterOffset > Extent)
