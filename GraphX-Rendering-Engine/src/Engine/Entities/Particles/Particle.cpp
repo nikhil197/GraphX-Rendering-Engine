@@ -67,7 +67,7 @@ namespace GraphX
 				}
 				else
 				{
-					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Vector3::ZeroVector, m_Props.Velocity * scale); 
+					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Rotator::ZeroRotator, m_Props.Velocity * scale); 
 					/*GM::ScaleMatrix(scale)* GM::TranslationMatrix(m_Props.Velocity * scale);*/
 				}
 			}

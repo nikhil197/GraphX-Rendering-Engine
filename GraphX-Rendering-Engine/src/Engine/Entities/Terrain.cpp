@@ -55,15 +55,15 @@ namespace GraphX
 
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
-		: m_Mesh(nullptr), m_Material(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
+	Terrain::Terrain(int TilesX, int TilesZ, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
+		: m_Mesh(nullptr), m_Material(nullptr), m_TilesX(TilesX), m_TilesZ(TilesZ), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
 	{
 		GX_PROFILE_FUNCTION()
 
 		BuildTerrain();
 		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/TerrainShader.glsl");
 		shader->Bind();
-		shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
+		shader->SetUniform2i("u_TerrainDimensions", m_TilesX, m_TilesZ);
 		shader->SetUniform1f("u_AmbientStrength", 0.01f);
 
 		m_Material = CreateRef<Material>(shader);
@@ -83,7 +83,7 @@ namespace GraphX
 		
 		if (m_Vertices && m_Indices)
 		{
-			m_Mesh = CreateRef<Mesh3D>(Position, Vector3::ZeroVector, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
+			m_Mesh = CreateRef<Mesh3D>(Position, Rotator::ZeroRotator, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
 			
 			delete m_Vertices;
 			delete m_Indices;
@@ -103,9 +103,9 @@ namespace GraphX
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
 		Vertex3D vertex;
-		for (int z = 0; z < m_Depth; z++)
+		for (int z = 0; z < m_TilesZ; z++)
 		{
-			for (int x = 0; x < m_Width; x++)
+			for (int x = 0; x < m_TilesX; x++)
 			{
 				// Calculate the vertices of the terrain
 				//double yCoord = GetYCoords(x, z);
@@ -114,24 +114,24 @@ namespace GraphX
 				m_Vertices->emplace_back(vertex);
 
 				// Calculate the indices for the vertices of the terrain
-				if (x != m_Width - 1 && z != m_Depth - 1)
+				if (x != m_TilesX - 1 && z != m_TilesZ - 1)
 				{
 					// Lower triangle
-					m_Indices->push_back(z * m_Width + x);
-					m_Indices->push_back(z * m_Width + x + 1);
-					m_Indices->push_back(((z + 1) * m_Width) + x + 1);
+					m_Indices->push_back(z * m_TilesX + x);
+					m_Indices->push_back(z * m_TilesX + x + 1);
+					m_Indices->push_back(((z + 1) * m_TilesX) + x + 1);
 
 					// Upper triangle
-					m_Indices->push_back(((z + 1) * m_Width) + x + 1);
-					m_Indices->push_back(((z + 1) * m_Width) + x);
-					m_Indices->push_back(z * m_Width + x);
+					m_Indices->push_back(((z + 1) * m_TilesX) + x + 1);
+					m_Indices->push_back(((z + 1) * m_TilesX) + x);
+					m_Indices->push_back(z * m_TilesX + x);
 				}
 			}
 		}
 
-		for (int z = 0; z < m_Depth; z++)
+		for (int z = 0; z < m_TilesZ; z++)
 		{
-			for (int x = 0; x < m_Width; x++)
+			for (int x = 0; x < m_TilesX; x++)
 			{
 				CalculateNormal(x, z);
 			}
@@ -154,11 +154,11 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		float heightL = m_Vertices->at(Utility::Max((x - 1) + z * m_Width, 0)).Position.y;
-		float heightR = m_Vertices->at(Utility::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		float heightD = m_Vertices->at(Utility::Max(x + (z - 1) * m_Width, 0)).Position.y;
-		float heightU = m_Vertices->at(Utility::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		m_Vertices->at(x + z * m_Width).Normal = Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
+		float heightL = m_Vertices->at(Utility::Max((x - 1) + z * m_TilesX, 0)).Position.y;
+		float heightR = m_Vertices->at(Utility::Min((x + 1) + z * m_TilesX, (int)m_Vertices->size() - 1)).Position.y;
+		float heightD = m_Vertices->at(Utility::Max(x + (z - 1) * m_TilesX, 0)).Position.y;
+		float heightU = m_Vertices->at(Utility::Min(x + (z + 1) * m_TilesX, (int)m_Vertices->size() - 1)).Position.y;
+		m_Vertices->at(x + z * m_TilesX).Normal = Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
 	}
 	
 	void Terrain::Update(float DeltaTime)

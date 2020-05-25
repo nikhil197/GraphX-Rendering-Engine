@@ -135,7 +135,7 @@ namespace GraphX
 			Ref<Mesh3D> mMesh = nullptr;
 			if (vertices != nullptr && textures != nullptr)
 			{
-				mMesh = CreateRef<Mesh3D>(Vector3::ZeroVector, Vector3::ZeroVector, Vector3::UnitVector, *vertices, *indices);
+				mMesh = CreateRef<Mesh3D>(Vector3::ZeroVector, Rotator::ZeroRotator, Vector3::UnitVector, *vertices, *indices);
 			}
 
 			if (mMesh == nullptr)

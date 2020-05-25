@@ -149,7 +149,7 @@ namespace GraphX
 			Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
 			CubeMaterial->AddTexture(m_DefaultTexture);
 
-			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, -5.0f), GM::Vector3::ZeroVector, GM::Vector3::UnitVector, CubeMaterial);
+			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, -5.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
 			m_Objects3D.emplace_back(cube);
 			cube->bShowDetails = true;
 
@@ -814,7 +814,7 @@ namespace GraphX
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector3::UnitVector, m_DefaultMaterial));
+			m_Objects3D.emplace_back(new Cube(GM::Vector3::ZeroVector, GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, m_DefaultMaterial));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)

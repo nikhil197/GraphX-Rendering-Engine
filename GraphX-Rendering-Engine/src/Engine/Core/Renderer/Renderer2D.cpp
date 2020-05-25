@@ -140,7 +140,7 @@ namespace GraphX
 		}
 		else
 		{
-			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
 			DrawQuad_Internal(model, color);
 		}
 	}
@@ -158,7 +158,7 @@ namespace GraphX
 		}
 		else
 		{
-			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
 			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
 		}
 	}
@@ -176,7 +176,7 @@ namespace GraphX
 		}
 		else
 		{
-			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::MakeFromEuler(rotation), position);
 			DrawQuad_Internal(model, color);
 		}
 	}
@@ -194,7 +194,7 @@ namespace GraphX
 		}
 		else
 		{
-			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), rotation, position);
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::MakeFromEuler(rotation), position);
 			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
 		}
 	}
@@ -245,7 +245,7 @@ namespace GraphX
 		texture->Bind(textureSlot);
 		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", textureSlot);
 
-		GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Vector3::ZeroVector, position);
+		GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
 		s_Data->ShadowDebugShader->SetUniformMat4f("u_Model", model);
 
 		s_Data->QuadVA->Bind();

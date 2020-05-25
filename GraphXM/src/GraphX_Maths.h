@@ -19,3 +19,4 @@
 
 // -------------- Misc ----------------
 #include "Misc/Quat.h"
+#include "Misc/Rotator.h"

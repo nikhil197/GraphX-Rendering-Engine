@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Matrices/Matrix4.h"
+#include "Misc/Rotator.h"
 #include "MathUtility.h"
 
 namespace GM
@@ -10,7 +11,7 @@ namespace GM
 	{
 	public:
 		/* Construct a combined rotation translaiton matrix based on the given values */
-		RotationTranslationMatrix(const Vector3& Rot, const Vector3& Origin)
+		RotationTranslationMatrix(const Rotator& Rot, const Vector3& Origin)
 		{
 			Make(*this, Rot, Origin);
 		}
@@ -22,7 +23,7 @@ namespace GM
 		}
 
 		/* Returns a combined matrix for given rotation and translation values */
-		static Matrix4 Make(const Vector3& Rot, const Vector3& Origin)
+		static Matrix4 Make(const Rotator& Rot, const Vector3& Origin)
 		{
 			return RotationTranslationMatrix(Rot, Origin);
 		}
@@ -34,29 +35,29 @@ namespace GM
 		}
 
 		/* Convert the given matrix into a combined rotation and translation matrix based on the given values */
-		static void Make(Matrix4& Mat, const Vector3& Rot, const Vector3& Origin)
+		static void Make(Matrix4& Mat, const Rotator& Rot, const Vector3& Origin)
 		{
-			float cosA = Utility::Cos(Rot.x);
-			float cosB = Utility::Cos(Rot.y);
-			float cosC = Utility::Cos(Rot.z);
+			float CP = Utility::Cos(Rot.Pitch);
+			float CY = Utility::Cos(Rot.Yaw);
+			float CR = Utility::Cos(Rot.Roll);
 
-			float sinA = Utility::Sin(Rot.x);
-			float sinB = Utility::Sin(Rot.y);
-			float sinC = Utility::Sin(Rot.z);
+			float SP = Utility::Sin(Rot.Pitch);
+			float SY = Utility::Sin(Rot.Yaw);
+			float SR = Utility::Sin(Rot.Roll);
 
-			Mat(0, 0) = cosB * cosC;
-			Mat(0, 1) = sinA * sinB * cosC - cosA * sinC;
-			Mat(0, 2) = cosA * sinB * cosC + sinA * sinC;
+			Mat(0, 0) = CY * CR;
+			Mat(0, 1) = SP * SY * CR - CP * SR;
+			Mat(0, 2) = CP * SY * CR + SP * SR;
 			Mat(0, 3) = Origin.x;
 
-			Mat(1, 0) = cosB * sinC;
-			Mat(1, 1) = sinA * sinB * sinC + cosA * cosC;
-			Mat(1, 2) = cosA * sinB * sinC - sinA * cosC;
+			Mat(1, 0) = CY * SR;
+			Mat(1, 1) = SP * SY * SR + CP * CR;
+			Mat(1, 2) = CP * SY * SR - SP * CR;
 			Mat(1, 3) = Origin.y;
 
-			Mat(2, 0) = -sinB;
-			Mat(2, 1) = sinA * cosB;
-			Mat(2, 2) = cosA * cosB;
+			Mat(2, 0) = -SY;
+			Mat(2, 1) = SP * CY;
+			Mat(2, 2) = CP * CY;
 			Mat(2, 3) = Origin.z;
 
 			Mat(3, 0) = 0.0f;

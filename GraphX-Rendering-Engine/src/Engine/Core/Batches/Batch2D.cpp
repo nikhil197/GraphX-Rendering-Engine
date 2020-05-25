@@ -134,7 +134,7 @@ namespace GraphX
 
 	void Batch2D::AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const GM::Vector4& Color, float tiling, float textureIndex)
 	{
-		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, Position);
+		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, GM::Rotator::MakeFromEuler(Rotation), Position);
 
 		for (int i = 0; i < 4; i++)
 		{

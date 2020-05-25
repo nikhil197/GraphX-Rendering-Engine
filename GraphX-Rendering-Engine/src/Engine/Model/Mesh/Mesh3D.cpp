@@ -11,7 +11,7 @@
 
 namespace GraphX
 {
-	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Vector3& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
+	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
 	{
 		GX_PROFILE_FUNCTION()

@@ -13,13 +13,13 @@ namespace GraphX
 	{
 	public:
 		/* Constructs a new terrain */
-		/* @Param Width  - # of tiles in the x - direction */
-		/* @Param Depth - # of tiles in the negative z - direction */
+		/* @Param TilesX  - # of tiles in the x - direction */
+		/* @Param TilesZ - # of tiles in the negative z - direction */
 		/* @Param TexNames - Names of the textures to be used for the terrain */
 		/* @Param BlendMap - Name of the blend map used to sample the textures specified in TexNames */
 		/* @Param Pos - Position of the terrain in the world */
 		/* @Param Scale - Scale of the mesh in the x and z direction */
-		Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
+		Terrain(int TilesX, int TilesZ, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
 
 		/** Entity Interface **/
 		void Update(float DeltaTime) override;
@@ -37,10 +37,10 @@ namespace GraphX
 		inline Ref<Material> GetMaterial() const { return m_Material; }
 
 		/* Returns the Width of the terrain (x - direction) */
-		inline float GetWidth() const { return m_TileSize * m_Width; }
+		inline float GetWidth() const { return m_TileSize * m_TilesX; }
 
 		/* Returns the depth of the terrain (z - direction) */
-		inline float GetDepth() const { return m_TileSize * m_Depth; }
+		inline float GetDepth() const { return m_TileSize * m_TilesZ; }
 
 		virtual ~Terrain();
 
@@ -63,8 +63,8 @@ namespace GraphX
 		/* Material used to render terrain */
 		Ref<Material> m_Material;
 
-		/* Width and depth of the terrain (no of tiles in X and Z direction respectively) */
-		const int m_Width, m_Depth;
+		/* # tiles in X and Z direction respectively */
+		const int m_TilesX, m_TilesZ;
 
 		/* Tile size for the terrain */
 		float m_TileSize;
