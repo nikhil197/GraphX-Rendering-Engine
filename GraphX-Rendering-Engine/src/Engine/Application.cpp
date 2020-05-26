@@ -748,7 +748,7 @@ namespace GraphX
 		Mouse::GetMouse()->OnEvent(e);
 
 		// DO MOUSE PICKING HERE
-		if (e.GetButton() == MouseButton::GX_MOUSE_LEFT)
+		if (e.GetButton() == MouseButton::GX_MOUSE_LEFT && !Mouse::GetMouse()->IsRightButtonPressed())
 		{
 			PickObject();
 

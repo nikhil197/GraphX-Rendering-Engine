@@ -246,6 +246,11 @@ namespace GraphX
 		glViewport(0, 0, m_Data.Width, m_Data.Height);
 	}
 
+	void Window::SetCursorInputMode(CursorInputMode InputMode)
+	{
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL + (int)InputMode);
+	}
+
 	Window::~Window()
 	{
 		GX_ENGINE_INFO("Window: Destroying window");

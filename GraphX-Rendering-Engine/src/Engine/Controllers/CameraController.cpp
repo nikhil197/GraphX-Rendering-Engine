@@ -10,7 +10,7 @@
 
 namespace GraphX
 {
-	//TODO: Zoom and Camera Rotation
+	//TODO: Zoom
 
 	CameraController::CameraController(const GM::Vector3& CameraPos, const GM::Vector3& LookAtPoint, const GM::Vector3& UpAxis, float AspectRatio, float Near, float Far, float FOV)
 		: m_ViewAxis(0), m_RightAxis(0), m_UpAxis(0), m_AspectRatio(AspectRatio), m_NearClipPlane(Near), m_FarClipPlane(Far), m_FieldOfView(FOV), m_Camera(CreateRef<Camera>(CameraPos, LookAtPoint, UpAxis))
@@ -122,22 +122,37 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		if (Mouse::GetMouse()->IsRightButtonPressed() && m_CurrentProjectionMode == ProjectionMode::Perspective)
+		if (m_CurrentProjectionMode == ProjectionMode::Perspective)
 		{
-			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
-			
 			// Calculate the Yaw and the Pitch offset
-			float xOffset = mouse->GetPositionDelta().x;
-			float yOffset = mouse->GetPositionDelta().y;
+			const std::shared_ptr<Mouse>& mouse = Mouse::GetMouse();
+			float xOffset = mouse->GetPositionDelta().x;	// Yaw
+			float yOffset = mouse->GetPositionDelta().y;	// Pitch
+			
+			float OrbitSensitivity = 10.0f;
+			DeltaTime *= OrbitSensitivity;
+
+			xOffset *= DeltaTime;
+			yOffset *= DeltaTime;
+
+			GM::Utility::Clamp(xOffset, -10.0f, 10.0f);
+			GM::Utility::Clamp(yOffset, -10.0f, 10.0f);
 
 			if (xOffset != 0.0f || yOffset != 0.0f)
 			{
-				xOffset *= DeltaTime;
-				yOffset *= DeltaTime;
+				// Orbit around the current location
+				if (mouse->IsRightButtonPressed() && mouse->IsMouseDragged())
+				{
+					UpdateCameraOrientation(xOffset, yOffset);
+				}
+				else if (mouse->IsLeftButtonPressed() && mouse->IsMouseDragged())
+				{
+					// TODO: Orbit and move
+					UpdateCameraOrientation(xOffset, 0);
 
-				m_ViewChanged = true;
-
-				UpdateCameraOrientation(xOffset, yOffset);
+					float CurrentCameraSpeed = TranslationSpeed * DeltaTime * m_ZoomLevel;
+					m_Camera->m_Position -= yOffset * CurrentCameraSpeed * m_ViewAxis;
+				}
 			}
 		}
 	}
@@ -183,6 +198,8 @@ namespace GraphX
 
 	void CameraController::UpdateCameraOrientation(float xOffset, float yOffset)
 	{
+		m_ViewChanged = true;
+
 		m_Camera->m_Rotation.Pitch -= yOffset;
 		m_Camera->m_Rotation.Yaw -= xOffset;
 		
@@ -225,7 +242,6 @@ namespace GraphX
 			m_Camera->m_Rotation = NewOrientation;
 
 			UpdateCameraOrientation(0, 0);
-			m_ViewChanged = true;
 
 			UpdateProjectionViewMatrix();
 		}

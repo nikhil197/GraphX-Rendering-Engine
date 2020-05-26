@@ -61,6 +61,9 @@ namespace GraphX
 		/* Returns if the middle mouse button is pressed */
 		inline bool IsMiddleButtonPressed() const { return m_MiddleButtonPressed; }
 
+		/* Returns if the mouse is being dragged (Any Button Pressed + Move) */
+		inline bool IsMouseDragged() const { return m_MouseDragged; }
+
 	private:
 		/* Whether the left mouse button is pressed or not */
 		bool m_LeftButtonPressed : 1;
@@ -70,6 +73,9 @@ namespace GraphX
 
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
+
+		/* Whether the mouse is being dragged */
+		bool m_MouseDragged : 1;
 
 		/* Position of the mouse */
 		GM::Vector2 m_Position;
