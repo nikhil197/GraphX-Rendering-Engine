@@ -41,7 +41,6 @@
 // Model
 #include "Model/Mesh/Mesh2D.h"
 #include "Model/Mesh/Mesh3D.h"
-#include "Model/Model3D.h"
 #include "Model/Cube.h"
 
 

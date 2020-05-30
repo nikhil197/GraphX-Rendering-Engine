@@ -4,7 +4,6 @@
 
 #include "Renderer.h"
 #include "Model/Mesh/Mesh3D.h"
-#include "Model/Model3D.h"
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
 
@@ -80,17 +79,6 @@ namespace GraphX
 	void Renderer3D::Submit(const Ref<Mesh3D>& mesh)
 	{
 		s_Data->RenderQueue.emplace_back(mesh);
-	}
-
-	void Renderer3D::Submit(const Ref<Model3D>& model)
-	{
-		const Ref<std::vector<Ref<Mesh3D>>>& meshes = model->GetMeshes();
-		
-		for (unsigned int i = 0; i < meshes->size(); i++)
-		{
-			const Ref<Mesh3D>& mesh = meshes->at(i);
-			s_Data->RenderQueue.emplace_back(mesh);
-		}
 	}
 
 	void Renderer3D::Submit(const Ref<Terrain>& terrain)

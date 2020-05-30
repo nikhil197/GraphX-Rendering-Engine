@@ -108,11 +108,6 @@ namespace GraphX
 		Renderer3D::Submit(Mesh);
 	}
 
-	void Renderer::Submit(const Ref<Model3D>& Model)
-	{
-		Renderer3D::Submit(Model);
-	}
-
 	void Renderer::Submit(const Ref<Terrain>& Terr)
 	{
 		Renderer3D::Submit(Terr);

@@ -11,6 +11,14 @@ namespace GraphX
 	class Mesh3D
 	{
 	public:
+		/* Loads meshes from a file 
+		*  @param FilePath Asset file path
+		*  @param Mat Material to be used for the meshes
+		*  @param Meshes (out) Container to load the meshes in
+		*/
+		static void Load(const std::string& FilePath, const Ref<Material>& Mat, std::vector<Ref<Mesh3D>>& Meshes);
+
+	public:
 		/**
 		@param Pos Position of the mesh in the world
 		@param Rotation Rotation of the mesh in the world

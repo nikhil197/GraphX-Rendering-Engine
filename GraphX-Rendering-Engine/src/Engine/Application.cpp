@@ -48,7 +48,6 @@
 
 /* Model */
 #include "Engine/Model/ModelTypes.h"
-#include "Engine/Model/Model3D.h"
 #include "Engine/Model/Mesh/Mesh2D.h"
 #include "Engine/Model/Mesh/Mesh3D.h"
 #include "Engine/model/Cube.h"
@@ -160,8 +159,9 @@ namespace GraphX
 			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
 			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
 
-			Model3D TreeModel("res/Models/tree.obj", TreeMaterial);
-			Ref<Mesh3D> TreeMesh = TreeModel.GetMeshes()->at(0);
+			std::vector<Ref<Mesh3D>> TreeModel;
+			Mesh3D::Load("res/Models/tree.obj", TreeMaterial, TreeModel);
+			Ref<Mesh3D> TreeMesh = TreeModel.at(0);
 			TreeMesh->Scale = 2.5f * Vector3::UnitVector;
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
@@ -175,8 +175,9 @@ namespace GraphX
 			Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
 			LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
 
-			Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
-			Ref<Mesh3D> LowPolyTreeMesh = LowPolyTreeModel.GetMeshes()->at(0);
+			std::vector<Ref<Mesh3D>> LowPolyTreeModel;
+			Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial, LowPolyTreeModel);
+			Ref<Mesh3D> LowPolyTreeMesh = LowPolyTreeModel.at(0);
 			LowPolyTreeMesh->Scale = Vector3::UnitVector;
 			NumTree = 10;
 			for (unsigned int i = 0; i < NumTree; i++)
@@ -190,9 +191,10 @@ namespace GraphX
 			Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
 			StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
 
-			Model3D StallModel("res/Models/stall.obj", StallMaterial);
-			StallModel.GetMeshes()->at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
-			m_Objects3D.emplace_back(StallModel.GetMeshes()->at(0));
+			std::vector<Ref<Mesh3D>> StallModel;
+			Mesh3D::Load("res/Models/stall.obj", StallMaterial, StallModel);
+			StallModel.at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
+			m_Objects3D.emplace_back(StallModel.at(0));
 
 			m_Shader->UnBind();
 
@@ -822,13 +824,7 @@ namespace GraphX
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			Ref<Model3D> model = CreateRef<Model3D>(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial);
-			const Ref<std::vector<Ref<Mesh3D>>>& meshes = model->GetMeshes();
-			
-			for(unsigned int i = 0; i < meshes->size(); i++)
-				m_Objects3D.emplace_back(meshes->at(i));
-
-			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
+			Mesh3D::Load(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial, m_Objects3D);
 		}
 		// Add more model types once added
 

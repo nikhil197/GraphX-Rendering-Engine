@@ -138,7 +138,6 @@
     <ClCompile Include="src\Engine\Model\Cube.cpp" />
     <ClCompile Include="src\Engine\Model\Mesh\Mesh2D.cpp" />
     <ClCompile Include="src\Engine\Model\Mesh\Mesh3D.cpp" />
-    <ClCompile Include="src\Engine\Model\Model3D.cpp" />
     <ClCompile Include="src\Engine\Model\Quad.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\ParticleManager.cpp" />
     <ClCompile Include="src\Engine\pch.cpp">
@@ -223,7 +222,6 @@
     <ClInclude Include="src\Engine\Model\Mesh\Mesh2D.h" />
     <ClInclude Include="src\Engine\Model\Mesh\Mesh3D.h" />
     <ClInclude Include="src\Engine\Core\Vertex.h" />
-    <ClInclude Include="src\Engine\Model\Model3D.h" />
     <ClInclude Include="src\Engine\Model\ModelTypes.h" />
     <ClInclude Include="src\Engine\Model\Quad.h" />
     <ClInclude Include="src\Engine\Entities\Particles\ParticleManager.h" />

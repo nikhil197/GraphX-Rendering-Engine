@@ -6,7 +6,6 @@ namespace GraphX
 {
 	class Mesh2D;
 	class Mesh3D;
-	class Model3D;
 	class Shader;
 	class IndexBuffer;
 
@@ -39,9 +38,6 @@ namespace GraphX
 
 		/* Submit a 3D mesh for rendering */
 		static void Submit(const Ref<Mesh3D>& mesh);
-
-		/* Submit a 3D model for rendering */
-		static void Submit(const Ref<Model3D>& model);
 
 		/* Submit a terrain for rendering */
 		static void Submit(const Ref<Terrain>& terrain);

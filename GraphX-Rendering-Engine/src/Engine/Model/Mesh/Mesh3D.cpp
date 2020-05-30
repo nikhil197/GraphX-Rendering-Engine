@@ -9,8 +9,48 @@
 #include "Buffers/IndexBuffer.h"
 #include "Materials/Material.h"
 
+#include "Utilities/Importer.h"
+
 namespace GraphX
 {
+	void Mesh3D::Load(const std::string& FilePath, const Ref<Material>& Mat, std::vector<Ref<Mesh3D>>& Meshes)
+	{
+		GX_ENGINE_INFO("Loading Model {0}", FilePath);
+		GX_PROFILE_FUNCTION()
+
+		std::vector<std::vector<Ref<const Texture2D>>> Textures;
+		std::size_t InitialSize = Meshes.size() == 0 ? 0 : Meshes.size() - 1;
+
+		bool Loaded = false;
+		{
+			GX_PROFILE_SCOPE("Assimp-Load-Model")
+
+			Loaded = Importer::Get()->ImportModel(FilePath, Meshes, Textures);
+		}
+
+		if (Loaded)
+		{
+			// Set the shader for each mesh
+			unsigned int i = 0;
+			std::vector<Ref<Mesh3D>>::iterator itr = Meshes.begin() + InitialSize;
+			std::vector<Ref<Mesh3D>>::iterator end = Meshes.end();
+
+			while (itr != end)
+			{
+				Ref<Material> NewMat = Mat;
+				NewMat->AddTexture(Textures[i]);
+
+				(*itr)->SetMaterial(NewMat);
+				itr++;
+				i++;
+			}
+		}
+		else
+		{
+			GX_ENGINE_ERROR("Failed to load Model {0}", FilePath);
+		}
+	}
+
 	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, const std::vector<Vertex3D>& Vertices, const std::vector<unsigned int>& Indices, const Ref<Material>& Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Vertices(Vertices), m_Indices(Indices), m_Material(Mat), m_Model(), m_UpdateModelMatrix(true)
 	{

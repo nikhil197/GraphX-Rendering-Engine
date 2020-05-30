@@ -5,7 +5,6 @@ namespace GraphX
 	class Window;
 	class Mesh2D;
 	class Mesh3D;
-	class Model3D;
 	class Material;
 	class Shader;
 	class Texture2D;
