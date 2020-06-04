@@ -237,6 +237,7 @@
     <ClInclude Include="src\Engine\Profiler\Profiler.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\Runnable.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\RunnableThread.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\ThreadManager.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />

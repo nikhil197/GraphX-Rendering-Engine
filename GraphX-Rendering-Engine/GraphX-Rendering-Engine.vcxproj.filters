@@ -401,5 +401,8 @@
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\ThreadManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
