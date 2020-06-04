@@ -8,7 +8,16 @@ namespace GraphX
 		: public IThread
 	{
 	public:
-		virtual void Suspend(bool ShouldPause) override;
+		RunnableThread();
+
+		~RunnableThread();
+
+		// IThread Interface
+		virtual void Suspend(bool ShouldPause = true) override;
+
+		virtual bool Kill(bool ShouldWait = true) override;
+
+		virtual void WaitForCompletion() override;
 
 	private:
 		virtual bool CreateInternal(IRunnable* InRunnable, const std::string& ThreadName) override;
