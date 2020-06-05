@@ -5,6 +5,8 @@
 #include "RunnableThread.h"
 #include "ThreadManager.h"
 
+#include "Subsystems/Multithreading/Async/AsyncTask.h"
+
 namespace GraphX
 {
 	IThread::IThread()
@@ -23,7 +25,7 @@ namespace GraphX
 	{
 		// TODO: First check if multithread is supported
 		
-		IThread* Thread = new RunnableThread();;
+		IThread* Thread = new RunnableThread();
 
 		if (Thread->CreateInternal(InRunnable, ThreadName) == false)
 		{
@@ -63,6 +65,7 @@ namespace GraphX
 
 	void RunnableThread::Suspend(bool ShouldPause)
 	{
+		GX_ENGINE_ASSERT(m_Thread != nullptr, "Thread not created properly!!");
 		// Using the WinAPI directly here to pause / resume threads (Might need to change this, as the standard might not work properly with platform specific API)
 		// (OR use only the Win32API in place of c++ standard for the windows platform)
 		if (ShouldPause)
@@ -115,6 +118,11 @@ namespace GraphX
 			ExitCode = m_Runnable->Run();
 			// Allow any allocated resources to be cleaned up
 			m_Runnable->Exit();
+		}
+
+		if (m_AutoDelete)
+		{
+			delete this;
 		}
 
 		return ExitCode;

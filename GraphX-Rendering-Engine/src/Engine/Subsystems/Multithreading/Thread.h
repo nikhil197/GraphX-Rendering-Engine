@@ -9,6 +9,8 @@ namespace GraphX
 	*/
 	class IThread
 	{
+		template<typename Type>
+		friend class AsyncRunnableTask;
 	public:
 		/**
 		 * Factory method to create a thread.
@@ -66,5 +68,9 @@ namespace GraphX
 
 		/** ID set during thread creation. */
 		std::thread::id m_ThreadID;
+
+		/* Whether to automatrically delete the thread after execution */
+		/* Note: If required, Should be set to true before Runnable::Exit() finishes execution */
+		bool m_AutoDelete = false;
 	};
 }

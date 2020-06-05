@@ -235,6 +235,7 @@
     <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />
     <ClInclude Include="src\Engine\Core\Textures\Texture2D.h" />
     <ClInclude Include="src\Engine\Profiler\Profiler.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\Runnable.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\RunnableThread.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h" />

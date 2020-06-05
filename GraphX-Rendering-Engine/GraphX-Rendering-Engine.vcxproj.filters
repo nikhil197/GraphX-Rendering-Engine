@@ -404,5 +404,8 @@
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
