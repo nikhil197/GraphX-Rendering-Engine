@@ -55,7 +55,8 @@ namespace GraphX
 
 	void GraphXGui::GlobalSettings(const Ref<Skybox>& skybox, float& daytime, float& SunLightIntensity, bool& EnableParticles)
 	{
-		ImGui::Begin("Global Settings", (bool*)true);
+		static bool ShowGlobalSettingsWindow = true;
+		ImGui::Begin("Global Settings", &ShowGlobalSettingsWindow);
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Skybox Details");
 		ImGui::DragFloat("Rotation Speed", &skybox->RotationSpeed, 0.1f, 0.0f, 2.0f);
@@ -69,66 +70,6 @@ namespace GraphX
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Enable Particle Effects");
 		ImGui::Checkbox("Enable Particle Effects", &EnableParticles);
 		ImGui::End();
-	}
-
-	void GraphXGui::AddTerrain()
-	{
-		if (ImGui::Button("Add Terrain"))
-		{
-			ImGui::OpenPopup("Terrain");
-		}
-
-		if (ImGui::BeginPopupModal("Terrain", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Separator();
-
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-			ImGui::PopStyleVar();
-
-			static GM::Vector3 postion;
-			static GM::Vector2 scale(1);
-			static int x = 0, z = 0;
-			static float tileSize = 0.0f;
-			static std::vector<std::string> textures;
-			ImGui::Text("Terrain Attributes");
-			ImGui::InputInt("No. of Tiles in X", &x);
-			ImGui::InputInt("No. of Tiles in Z", &z);
-			ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
-			if (ImGui::Button("Add Texture"))
-			{
-				FileOpenDialog dialogBox(ResourceType::TEXTURES);
-				dialogBox.Show();
-
-				const std::string& Tex = EngineUtil::ToByteString(dialogBox.GetAbsolutePath());
-				textures.push_back(Tex);
-			}
-			ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
-			ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
-
-			if (ImGui::Button("Create Terrain", ImVec2(120, 0))) 
-			{
-				if (x > 0 && z > 0 && tileSize > 0.0f)
-				{
-					if (s_GuiEventCallback)
-					{
-						CreateTerrainEvent e(CreateRef<Terrain>(x, z, tileSize, textures, "res/Textures/Terrain/BlendMap.png", postion, scale));
-						textures.clear();
-						s_GuiEventCallback(e);
-					}
-				}
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::SetItemDefaultFocus();
-			ImGui::SameLine();
-			if (ImGui::Button("Cancel", ImVec2(120, 0)))
-			{ 
-				textures.clear();
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::EndPopup();
-		}
 	}
 
 	void GraphXGui::DetailsWindow(const Ref<Mesh3D>& mesh, const std::string& Name)
@@ -201,6 +142,43 @@ namespace GraphX
 		}
 	}
 
+	void GraphXGui::DetailsWindow(const Ref<Mesh2D>& mesh)
+	{
+		if (mesh->bShowDetails)
+		{
+			ImGui::Begin("Details", (bool*)mesh->bShowDetails);
+
+			ImGui::Text("Transformations");
+			ImGui::SliderFloat3("Translation", (float*)&mesh->Position.x, -1000.0f, 1000.0f);
+			ImGui::SliderFloat3("Rotation", (float*)(&mesh->Rotation), 0.0f, 359.f);
+			ImGui::SliderFloat2("Scale", (float*)(&mesh->Scale.x), 0.0001f, 10.f);
+
+			ImGui::Text("Color and Properties");
+
+			Ref<Material> Mat = mesh->GetMaterial();
+			GM::Vector4 BaseColor = Mat->GetBaseColor();
+			float Reflectivity = Mat->GetSpecularStrength();
+			float Shininess = Mat->GetShininess();
+
+			if (ImGui::DragFloat("Shininess", (float*)&Shininess, 1.0f, 2.0f, 256.0f))
+			{
+				Mat->SetShininess(Shininess);
+			}
+
+			if (ImGui::DragFloat("Reflectivity", (float*)&Reflectivity, 1.0f, 0.0f, 1.0f))
+			{
+				Mat->SetSpecularStrength(Reflectivity);
+			}
+
+			if (ImGui::ColorEdit4("Tint Color", (float*)&BaseColor))
+			{
+				Mat->SetBaseColor(BaseColor);
+			}
+
+			ImGui::End();
+		}
+	}
+
 	void GraphXGui::LightProperties(const Ref<PointLight>& light)
 	{
 		if (light->bShowDetails)
@@ -215,9 +193,11 @@ namespace GraphX
 
 	void GraphXGui::CameraProperties(const Ref<CameraController>& cameraController)
 	{
+		static bool ShowCameraPropertiesWindow = true;
+
 		float FOV = cameraController->GetFieldOfView();
 		bool bPerspectiveMode = cameraController->GetProjectionMode() == ProjectionMode::Perspective;
-		ImGui::Begin("Camera Properties", (bool*)true);
+		ImGui::Begin("Camera Properties", &ShowCameraPropertiesWindow);
 		ImGui::DragFloat("Camera Translation Speed", (float*)&cameraController->TranslationSpeed, 1.0f, 0.0f, 100.0f);
 		ImGui::DragFloat("Camera Roll Speed", (float*)&cameraController->RollSpeed, 1.0f, 30.0f, 360.0f);
 
@@ -252,57 +232,19 @@ namespace GraphX
 		ImGui::End();
 	}
 
-	void GraphXGui::DetailsWindow(const Ref<Mesh2D>& mesh)
-	{
-		if (mesh->bShowDetails)
-		{
-			ImGui::Begin("Details", (bool*)mesh->bShowDetails);
-
-			ImGui::Text("Transformations");
-			ImGui::SliderFloat3("Translation", (float*)&mesh->Position.x, -1000.0f, 1000.0f);
-			ImGui::SliderFloat3("Rotation", (float*)(&mesh->Rotation), 0.0f, 359.f);
-			ImGui::SliderFloat2("Scale", (float*)(&mesh->Scale.x), 0.0001f, 10.f);
-
-			ImGui::Text("Color and Properties");
-			
-			Ref<Material> Mat = mesh->GetMaterial();
-			GM::Vector4 BaseColor = Mat->GetBaseColor();
-			float Reflectivity = Mat->GetSpecularStrength();
-			float Shininess = Mat->GetShininess();
-
-			if (ImGui::DragFloat("Shininess", (float*)&Shininess, 1.0f, 2.0f, 256.0f))
-			{
-				Mat->SetShininess(Shininess);
-			}
-
-			if (ImGui::DragFloat("Reflectivity", (float*)&Reflectivity, 1.0f, 0.0f, 1.0f))
-			{
-				Mat->SetSpecularStrength(Reflectivity);
-			}
-
-			if (ImGui::ColorEdit4("Tint Color", (float*)&BaseColor))
-			{
-				Mat->SetBaseColor(BaseColor);
-			}
-
-			ImGui::End();
-		}
-	}
-
 	void GraphXGui::TerrainDetails(const Ref<Terrain>& terrain)
 	{
-		if (true)
+		static bool ShowTerrainDetailsWindow = true;
+
+		ImGui::Begin("Terrain Details", &ShowTerrainDetailsWindow);
+		if (ImGui::DragFloat3("Position", (float*)&terrain->GetMesh()->Position.x, 1.0f, -1000.0f, 1000.0f))
 		{
-			ImGui::Begin("Terrain Details", (bool*)true);
-			if (ImGui::DragFloat3("Position", (float*)&terrain->GetMesh()->Position.x, 1.0f, -1000.0f, 1000.0f))
-			{
-				Mesh3D& mesh = const_cast<Mesh3D&>(*terrain->GetMesh());
-				mesh.UpdateModelMatrix(true);
-			}
-			ImGui::DragFloat3("Scale in X & Z", (float*)&terrain->GetMesh()->Scale.x, 1.0f, 0.0001f, 10.f);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Note: Scaling in y - direction is not advised ");
-			ImGui::End();
+			Mesh3D& mesh = const_cast<Mesh3D&>(*terrain->GetMesh());
+			mesh.UpdateModelMatrix(true);
 		}
+		ImGui::DragFloat3("Scale in X & Z", (float*)&terrain->GetMesh()->Scale.x, 1.0f, 0.0001f, 10.f);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Note: Scaling in y - direction is not advised ");
+		ImGui::End();
 	}
 
 	void GraphXGui::Models()
@@ -329,6 +271,66 @@ namespace GraphX
 		AddTerrain();
 
 		ImGui::End();
+	}
+
+	void GraphXGui::AddTerrain()
+	{
+		if (ImGui::Button("Add Terrain"))
+		{
+			ImGui::OpenPopup("Terrain");
+		}
+
+		if (ImGui::BeginPopupModal("Terrain", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Separator();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::PopStyleVar();
+
+			static GM::Vector3 postion;
+			static GM::Vector2 scale(1);
+			static int x = 0, z = 0;
+			static float tileSize = 0.0f;
+			static std::vector<std::string> textures;
+			ImGui::Text("Terrain Attributes");
+			ImGui::InputInt("No. of Tiles in X", &x);
+			ImGui::InputInt("No. of Tiles in Z", &z);
+			ImGui::DragFloat("Tile Size", &tileSize, 0.5f, 1.0f, 10.f);
+			if (ImGui::Button("Add Texture"))
+			{
+				FileOpenDialog dialogBox(ResourceType::TEXTURES);
+				dialogBox.Show();
+
+				const std::string& Tex = EngineUtil::ToByteString(dialogBox.GetAbsolutePath());
+				textures.push_back(Tex);
+			}
+			ImGui::DragFloat3("Position", &postion.x, 1.0f, -1000.0f, 1000.0f);
+			ImGui::DragFloat2("Scale X and Z", &scale.x, 0.5f, 0.5f, 10.0f);
+
+			if (ImGui::Button("Create Terrain", ImVec2(120, 0)))
+			{
+				if (x > 0 && z > 0 && tileSize > 0.0f)
+				{
+					if (s_GuiEventCallback)
+					{
+						CreateTerrainEvent e(CreateRef<Terrain>(x, z, tileSize, textures, "res/Textures/Terrain/BlendMap.png", postion, scale));
+						textures.clear();
+						s_GuiEventCallback(e);
+					}
+				}
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0)))
+			{
+				textures.clear();
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	void GraphXGui::Render()

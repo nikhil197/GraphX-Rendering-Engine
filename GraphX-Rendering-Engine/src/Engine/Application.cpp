@@ -874,6 +874,12 @@ namespace GraphX
 		return true;
 	}
 
+	bool Application::Exit()
+	{
+		m_IsRunning = false;
+		return true;
+	}
+
 #pragma endregion
 
 	Application::~Application()

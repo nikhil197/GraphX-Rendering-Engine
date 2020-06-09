@@ -77,6 +77,11 @@ namespace GraphX
 
 		bool OnCreateTerrain(class CreateTerrainEvent& e);
 
+		/* Other Events */
+
+		// Exits out of the game loop (or closes the engine)
+		bool Exit();
+
 #pragma endregion
 
 		/* Initializes all the components of the application */
