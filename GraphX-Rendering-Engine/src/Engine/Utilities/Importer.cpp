@@ -5,6 +5,7 @@
 #include "Model/Mesh/Mesh3D.h"
 #include "Textures/Texture2D.h"
 #include "Utilities/EngineUtil.h"
+#include "Engine/Core/Materials/Material.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
@@ -26,7 +27,7 @@ namespace GraphX
 		return s_Importer;
 	}
 
-	bool Importer::ImportModel(const std::string& FilePath, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture2D>>>& Textures)
+	bool Importer::ImportMesh(const std::string& FilePath, Mesh3D* InMesh, const Ref<Material>& Mat)
 	{
 		Assimp::Importer AssimpImporter;
 		const aiScene* Scene = AssimpImporter.ReadFile(FilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -37,128 +38,156 @@ namespace GraphX
 		}
 
 		// Extract meshes from the Scene object
-		return ProcessAssimpScene(FilePath, Scene, Meshes, Textures);
+		return BuildMeshFromAssimpScene(FilePath, Scene, InMesh, Mat);
 	}
 
-	bool Importer::ProcessAssimpScene(const std::string& FilePath, const aiScene* Scene, std::vector<Ref<Mesh3D>>& Meshes, std::vector<std::vector<Ref<const Texture2D>>>& Textures)
+	bool Importer::BuildMeshFromAssimpScene(const std::string& FilePath, const aiScene* Scene, Mesh3D* InMesh, const Ref<Material>& InMat)
 	{
 		if (!Scene->HasMeshes())
 			return false;
 
+		RawMeshData* RawData = InMesh->GetRawData();
+		const MaterialToSectionMap& MaterialMap = InMesh->GetMaterialMap();
+		std::vector<Vertex3D>& Vertices = RawData->Vertices;
+		std::vector<uint32_t>& Indices = RawData->Indices;
+		std::vector<RawMeshData::MeshSectionInfo>& Infos = RawData->SectionInfos;
+		
+		std::unordered_map<unsigned int, uint32_t> AssimpMaterialIndexMap;
+
+		uint32_t VerticesOffset = 0;
+
+		uint32_t VerticesCount = 0;
+		uint32_t IndicesCount = 0;
+		uint32_t SectionCount = Scene->mNumMeshes;
+
+		// Get the count of vertices and indices in this mesh
 		for (unsigned int i = 0; i < Scene->mNumMeshes; i++)
 		{
 			aiMesh* Mesh = Scene->mMeshes[i];
-
-			// Extract the Vertex positions
-			std::vector<Vector3>* vertexPositions = nullptr;
-			if (Mesh->HasPositions())
+			if(Mesh->HasPositions())
 			{
-				vertexPositions = new std::vector<Vector3>();
+				VerticesCount += Mesh->mNumVertices;
+			}
 
-				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
+			if (Mesh->HasFaces())
+			{
+				for (unsigned int i = 0; i < Mesh->mNumFaces; i++)
 				{
-					vertexPositions->emplace_back(Vector3(Mesh->mVertices[i].x, Mesh->mVertices[i].y, Mesh->mVertices[i].z));
+					aiFace& Face = Mesh->mFaces[i];
+					IndicesCount += Face.mNumIndices;
+				}
+			}
+
+		}
+
+		// Exand the vertices and indices containers
+		RawData->Vertices.resize(VerticesCount);
+		RawData->Indices.reserve(IndicesCount);
+		RawData->SectionInfos.reserve(SectionCount);
+
+		// Extract data from the mesh
+		for (unsigned int MeshIndex = 0; MeshIndex < Scene->mNumMeshes; MeshIndex++)
+		{
+			aiMesh* iMesh = Scene->mMeshes[MeshIndex];
+
+			size_t NumVertices = (size_t)iMesh->mNumVertices;
+			// Extract the Vertex positions
+			if (iMesh->HasPositions())
+			{
+				for (size_t i = 0; i < NumVertices; i++)
+				{
+					Vertices[VerticesOffset + i].Position = Vector3(iMesh->mVertices[i].x, iMesh->mVertices[i].y, iMesh->mVertices[i].z);
 				}
 			}
 
 			// Extract the Normals
-			std::vector<Vector3>* normals = nullptr;
-			if (Mesh->HasNormals())
+			if (iMesh->HasNormals())
 			{
-				normals = new std::vector<Vector3>();
-				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
+				for (size_t i = 0; i < NumVertices; i++)
 				{
-					normals->emplace_back(Vector3(Mesh->mNormals[i].x, Mesh->mNormals[i].y, Mesh->mNormals[i].z));
+					Vertices[VerticesOffset + i].Normal = Vector3(iMesh->mNormals[i].x, iMesh->mNormals[i].y, iMesh->mNormals[i].z);
 				}
 			}
 
 			// Extract the Texture coordinates
-			std::vector<Vector2>* texCoords = new std::vector<Vector2>();
-			if (Mesh->HasTextureCoords(0))
+			// TODO: Extract texture coordinates for other channels too
+			if (iMesh->HasTextureCoords(0))
 			{
-				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
+				for (size_t i = 0; i < NumVertices; i++)
 				{
-					texCoords->emplace_back(Vector2(Mesh->mTextureCoords[0][i].x, Mesh->mTextureCoords[0][i].y));
+					Vertices[VerticesOffset + i].TexCoord = Vector2(iMesh->mTextureCoords[0][i].x, iMesh->mTextureCoords[0][i].y);
 				}
 			}
 
 			// Extract indices
-			std::vector<unsigned int>* indices = nullptr;
-			if (Mesh->HasFaces())
+			if (iMesh->HasFaces())
 			{
-				indices = new std::vector<unsigned int>();
-				for (unsigned int i = 0; i < Mesh->mNumFaces; i++)
+				unsigned int NumFaces = iMesh->mNumFaces;
+				for (unsigned int i = 0; i < NumFaces; i++)
 				{
-					aiFace Face = Mesh->mFaces[i];
-					for (unsigned int j = 0; j < Face.mNumIndices; j++)
+					const aiFace& iFace = iMesh->mFaces[i];
+					for (unsigned int j = 0; j < iFace.mNumIndices; j++)
 					{
-						indices->emplace_back(Face.mIndices[j]);
+						Indices.emplace_back(iFace.mIndices[j]);
 					}
 				}
 			}
 
-			// TODO: Add for vertex colors
+			// TODO: Extract vertex colors
 
 			// Textures
-			std::vector<Ref<const Texture2D>>* textures = nullptr;
 			if (Scene->HasMaterials())
 			{
-				textures = new std::vector<Ref<const Texture2D>>();
-				aiMaterial* mat = Scene->mMaterials[Mesh->mMaterialIndex];
-				unsigned int TexCount = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE);
-				aiString* Path = new aiString();
-				std::string FileLocation = EngineUtil::ExtractFileLocation(FilePath);
-				for (unsigned int i = 0; i < TexCount; i++)
+				Ref<Material> NewMaterial = nullptr;
+				uint32_t MaterialIndex = -1;
+				auto itr = AssimpMaterialIndexMap.find(iMesh->mMaterialIndex);
+				if (itr != AssimpMaterialIndexMap.end())
 				{
-					mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, i, Path);
-					std::string FileName = EngineUtil::ExtractFileName(Path->C_Str());
-					textures->emplace_back(new Texture2D(FileLocation + '\\' + FileName));
+					MaterialIndex = itr->second;
+					NewMaterial = InMesh->GetMaterial(itr->second);
 				}
-			}
-
-			// Combine all the attributes into vertex array
-			std::vector<Vertex3D>* vertices = nullptr;
-			if (vertexPositions != nullptr && normals != nullptr)
-			{
-				vertices = new std::vector<Vertex3D>();
-				for (unsigned int i = 0; i < Mesh->mNumVertices; i++)
+				else
 				{
-					Vertex3D vertex;
-					vertex.Position = vertexPositions->at(i);
-					vertex.Normal = normals->at(i);
-					vertex.TexCoord = (texCoords->size() > i) ? texCoords->at(i) : Vector2::ZeroVector;
-					vertices->emplace_back(vertex);
+					NewMaterial = CreateRef<Material>(InMat.operator*());
+					aiMaterial* mat = Scene->mMaterials[iMesh->mMaterialIndex];
+					unsigned int TexCount = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE);
+					aiString* Path = new aiString();
+					std::string FileLocation = EngineUtil::ExtractFileLocation(FilePath);
+					for (unsigned int i = 0; i < TexCount; i++)
+					{
+						mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, i, Path);
+						std::string FileName = EngineUtil::ExtractFileName(Path->C_Str());
+						NewMaterial->AddTexture(CreateRef<Texture2D>(FileLocation + '\\' + FileName));
+					}
+
+					// If no texture is loaded with the model, load the provided materials textures
+					// TODO: In case the provided material doesn't have textures either, provide the default material
+					if (TexCount == 0)
+					{
+						NewMaterial->AddTexture(InMat->GetTextures());
+					}
+
+					MaterialIndex = InMesh->AddMaterial(NewMaterial);
 				}
+
+				RawMeshData::MeshSectionInfo Info;
+				Info.SectionStartIndex = VerticesOffset;
+				Info.MaterialIndex = MaterialIndex;
+				Infos.emplace_back(Info);
 			}
 
-			// Create the mesh
-			Ref<Mesh3D> mMesh = nullptr;
-			if (vertices != nullptr && textures != nullptr)
-			{
-				mMesh = CreateRef<Mesh3D>(Vector3::ZeroVector, Rotator::ZeroRotator, Vector3::UnitVector, *vertices, *indices);
-			}
-
-			if (mMesh == nullptr)
-			{
-				return false;
-			}
-
-			// Store the mesh and the textures
-			Meshes.emplace_back(mMesh);
-			Textures.emplace_back(std::vector<Ref<const Texture2D>>());
-			for (unsigned int index = 0; index < textures->size(); index++)
-			{
-				Textures[i].emplace_back(textures->at(index));
-			}
-
-			// Clean up the memory
-			delete vertexPositions;
-			delete normals;
-			delete texCoords;
-			delete indices;
-			delete vertices;
-			delete textures;
+			VerticesOffset += iMesh->mNumVertices;
 		}
+
+		// No Materials were loaded with the mesh, add the provided material (Special case)
+		if (Infos.size() == 0)
+		{ 
+			RawMeshData::MeshSectionInfo Info;
+			Info.SectionStartIndex = 0;
+			Info.MaterialIndex = InMesh->AddMaterial(InMat);
+			Infos.emplace_back(Info);
+		}
+
 		return true;
 	}
 

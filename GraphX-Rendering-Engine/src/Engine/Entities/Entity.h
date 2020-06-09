@@ -9,6 +9,8 @@ namespace GraphX
 			: m_Destroy(false)
 		{};
 
+		virtual ~Entity() = default;
+
 		/* Whether the entity is marked to be destroyed */
 		bool m_Destroy;
 
@@ -21,6 +23,12 @@ namespace GraphX
 
 		/* Disable the Entity after rendering */
 		virtual void Disable() const = 0;
+
+		/* Initialise the resources used by the entity */
+		virtual bool InitResources() { return true; }
+
+		/* Release the resources used by the entity */
+		virtual bool ReleaseResources() { return true; }
 
 		/* Returns whether the entity is marked to be destroyed */
 		inline bool IsToBeDestroyed() const { return m_Destroy; }

@@ -21,14 +21,16 @@ namespace GraphX
 		/* @Param Scale - Scale of the mesh in the x and z direction */
 		Terrain(int TilesX, int TilesZ, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
 
-		/** Entity Interface **/
-		void Update(float DeltaTime) override;
 
 		/* Prepares the terrain for rendering */
 		void Enable() const;
 
-		/* Unbinds the terrain after the rendering */
+		// Entity Interface ---------
+		void Update(float DeltaTime) override;
 		virtual void Disable() const override;
+		virtual bool InitResources() override;
+		virtual bool ReleaseResources() override;
+		// Entity Interface --------------- END
 
 		/* Returns the mesh of the terrain */
 		inline Ref<Mesh3D> GetMesh() const { return m_Mesh; }

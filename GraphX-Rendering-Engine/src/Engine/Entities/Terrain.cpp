@@ -198,6 +198,21 @@ namespace GraphX
 		}
 	}
 
+	bool Terrain::InitResources()
+	{
+		if (m_Mesh)
+			return m_Mesh->InitResources();
+		return false;
+	}
+
+	bool Terrain::ReleaseResources()
+	{
+		if (m_Mesh)
+			return m_Mesh->ReleaseResources();
+
+		return true;
+	}
+
 	Terrain::~Terrain()
 	{
 	}

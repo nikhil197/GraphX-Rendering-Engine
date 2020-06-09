@@ -159,45 +159,39 @@ namespace GraphX
 			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
 			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
 
-			std::vector<Ref<Mesh3D>> TreeModel;
-			Mesh3D::Load("res/Models/tree.obj", TreeMaterial, TreeModel);
-			Ref<Mesh3D> TreeMesh = TreeModel.at(0);
+			Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
 			TreeMesh->Scale = 2.5f * Vector3::UnitVector;
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
 				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				TreeMesh->Position = Position;
-				m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
+				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
 			}
 
 			// Load Low Poly Trees
 			Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
 			LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
 
-			std::vector<Ref<Mesh3D>> LowPolyTreeModel;
-			Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial, LowPolyTreeModel);
-			Ref<Mesh3D> LowPolyTreeMesh = LowPolyTreeModel.at(0);
+			Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
 			LowPolyTreeMesh->Scale = Vector3::UnitVector;
 			NumTree = 10;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
 				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				LowPolyTreeMesh->Position = Position;
-				m_Objects3D.emplace_back(new Mesh3D(*LowPolyTreeMesh));
+				m_Objects3D.emplace_back(CreateRef<Mesh3D>(LowPolyTreeMesh.operator*()));
 			}
 
 			// Load Stall
 			Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
 			StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
 
-			std::vector<Ref<Mesh3D>> StallModel;
-			Mesh3D::Load("res/Models/stall.obj", StallMaterial, StallModel);
-			StallModel.at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
-			m_Objects3D.emplace_back(StallModel.at(0));
+			Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
+			StallMesh->Position = Vector3(75.0f, 0.0f, -100.0f);
+			m_Objects3D.emplace_back(StallMesh);
 
 			m_Shader->UnBind();
-
 		}
 		
 		Ref<Texture2D> particleTex = CreateRef<Texture2D>("res/Textures/Particles/particleAtlas.png", false, 4);
@@ -230,6 +224,18 @@ namespace GraphX
 		config.ParticleProperties = particleProperties2;
 		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 0.0f, -70.0f));
 		ParticleManager::AddParticleSystem(particleSys2);
+
+		{
+			GX_PROFILE_SCOPE("Initialise Resources")
+
+			// Initialise the mesh resources
+			for (size_t i = 0; i < m_Objects3D.size(); i++)
+				m_Objects3D[i]->InitResources();
+
+			// Initialise the terrain resources
+			for (size_t i = 0; i < m_Terrain.size(); i++)
+				m_Terrain[i]->InitResources();
+		}
 
 		// For the purpose of fps count
 		int times = 0;
@@ -350,7 +356,7 @@ namespace GraphX
 		{
 			GX_PROFILE_SCOPE("Update::Lights")
 
-			for (unsigned int i = 0; i < m_Lights.size(); i++)
+			for (size_t i = 0; i < m_Lights.size(); i++)
 				m_Lights[i]->Update(DeltaTime);
 		}
 
@@ -358,21 +364,23 @@ namespace GraphX
 		{
 			GX_PROFILE_SCOPE("Update::2D Meshes")
 
-			for (unsigned int i = 0; i < m_Objects2D.size(); i++)
+			for (size_t i = 0; i < m_Objects2D.size(); i++)
 				m_Objects2D[i]->Update(DeltaTime);
 		}
 		
+		// Update lights
 		{
 			GX_PROFILE_SCOPE("Update::3D Meshes")
 
-			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+			for (size_t i = 0; i < m_Objects3D.size(); i++)
 				m_Objects3D[i]->Update(DeltaTime);
 		}
 
+		// Update Terrain
 		{
 			GX_PROFILE_SCOPE("Update::Terrain")
 
-			for (unsigned int i = 0; i < m_Terrain.size(); i++)
+			for (size_t i = 0; i < m_Terrain.size(); i++)
 				m_Terrain[i]->Update(DeltaTime);
 		}
 
@@ -824,7 +832,9 @@ namespace GraphX
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			Mesh3D::Load(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial, m_Objects3D);
+			Ref<Mesh3D> Mesh = Mesh3D::Load(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial);
+			Mesh->InitResources();
+			m_Objects3D.emplace_back(Mesh);
 		}
 		// Add more model types once added
 
@@ -869,6 +879,14 @@ namespace GraphX
 	Application::~Application()
 	{
 		GX_ENGINE_INFO("Application: Closing Application.");
+
+		// Release the mesh resources
+		for (size_t i = 0; i < m_Objects3D.size(); i++)
+			m_Objects3D[i]->ReleaseResources();
+
+		// Release the terrain resources
+		for (size_t i = 0; i < m_Terrain.size(); i++)
+			m_Terrain[i]->ReleaseResources();
 
 		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
 		// i.e. window destruction

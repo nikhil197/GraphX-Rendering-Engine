@@ -131,7 +131,7 @@ namespace GraphX
 		{
 			const Ref<Mesh3D>& Mesh = s_Data->RenderQueue.at(i);
 
-			Mesh->BindBuffers();
+			Mesh->Enable();
 
 			// Set the transformation matrix
 			const Matrix4& Model = Mesh->GetModelMatrix();
@@ -140,7 +140,7 @@ namespace GraphX
 			// Draw the object
 			glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-			Mesh->UnBindBuffers();
+			Mesh->Disable();
 		}
 	}
 
