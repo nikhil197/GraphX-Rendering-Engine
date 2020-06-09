@@ -22,7 +22,7 @@ namespace GM
 		BoxBounds(const Vector3& InOrigin, const Vector3& InExtents);
 
 		/**
-		* Creates and initializes a new instance from the given Box and Sphere.
+		* Creates and initializes a new instance from the given Box.
 		*
 		* @param Box The bounding box.
 		* @param Sphere The bounding sphere.
@@ -42,5 +42,8 @@ namespace GM
 
 		/* Extent of the bounding box */
 		Vector3 Extent;
+
+		/* Whether this actually stores any bounds or not */
+		bool Valid = false;
 	};
 }
