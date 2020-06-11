@@ -249,7 +249,9 @@ namespace GraphX
 
 	void GraphXGui::Models()
 	{
-		ImGui::Begin("Models", (bool*)true);
+		static bool ShowModelsWindow = true;
+
+		ImGui::Begin("Models", &ShowModelsWindow);
 		if(ImGui::Button("Cube"))
 		{
 			// Add Cube to the scene
