@@ -220,7 +220,7 @@ namespace GM
 
 	int32_t IntVector3::Magnitude() const
 	{
-		return Utility::Sqrt(MagnitudeSquare());
+		return (int32_t)Utility::Sqrt((float)MagnitudeSquare());
 	}
 
 	int32_t IntVector3::MagnitudeSquare() const
@@ -236,7 +236,7 @@ namespace GM
 	/* Static Member functions */
 	int32_t IntVector3::Distance(const IntVector3& V1, const IntVector3& V2)
 	{
-		return (int32_t)(Utility::Sqrt((float)IntVector3::DistanceSquared(V1, V2)));
+		return (int32_t)Utility::Sqrt((float)IntVector3::DistanceSquared(V1, V2));
 	}
 
 	int32_t IntVector3::DistanceSquared(const IntVector3& V1, const IntVector3& V2)

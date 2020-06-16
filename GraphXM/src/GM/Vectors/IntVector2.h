@@ -95,6 +95,9 @@ namespace GM
 		/* 2D Zero Vector constant(0, 0) */
 		static const IntVector2 ZeroVector;
 
+		/* 2D Unit Vector constant(1, 1) */
+		static const IntVector2 UnitVector;
+
 		/* Number of components in the vector */
 		static const int Components;
 	};

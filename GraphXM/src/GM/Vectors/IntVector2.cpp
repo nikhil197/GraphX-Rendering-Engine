@@ -8,6 +8,9 @@ namespace GM
 {
 	// Define the zero vector 
 	const IntVector2 IntVector2::ZeroVector(0, 0);
+	
+	// Define the unit vector 
+	const IntVector2 IntVector2::UnitVector(1, 1);
 
 	// Define the number of components
 	const int IntVector2::Components = 2;
@@ -196,7 +199,7 @@ namespace GM
 
 	int32_t IntVector2::Magnitude() const
 	{
-		return Utility::Sqrt(MagnitudeSquare());
+		return (int32_t)Utility::Sqrt((float)MagnitudeSquare());
 	}
 
 	int32_t IntVector2::MagnitudeSquare() const
@@ -212,7 +215,7 @@ namespace GM
 	/******** Static Methods *********/
 	int32_t IntVector2::Distance(const IntVector2& V1, const IntVector2& V2)
 	{
-		return Utility::Sqrt(IntVector2::DistanceSquared(V1, V2));
+		return (int32_t)Utility::Sqrt((float)IntVector2::DistanceSquared(V1, V2));
 	}
 
 	int32_t IntVector2::DistanceSquared(const IntVector2& V1, const IntVector2& V2)
