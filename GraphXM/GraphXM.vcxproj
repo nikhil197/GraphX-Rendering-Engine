@@ -96,6 +96,8 @@
     <ClInclude Include="src\GM\Misc\Rotator.h" />
     <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h" />
     <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h" />
+    <ClInclude Include="src\GM\Vectors\IntVector2.h" />
+    <ClInclude Include="src\GM\Vectors\IntVector3.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
     <ClInclude Include="src\GM\GraphX_Matrices.h" />
     <ClInclude Include="src\GM\GraphX_Transform.h" />
@@ -130,6 +132,8 @@
     <ClCompile Include="src\GM\Transformations\ScaleMatrix.cpp" />
     <ClCompile Include="src\GM\Transformations\TranslationMatrix.cpp" />
     <ClCompile Include="src\GM\Transformations\ViewMatrix.cpp" />
+    <ClCompile Include="src\GM\Vectors\IntVector2.cpp" />
+    <ClCompile Include="src\GM\Vectors\IntVector3.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector2.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector3.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector4.cpp" />
