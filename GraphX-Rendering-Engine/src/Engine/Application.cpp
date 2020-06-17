@@ -13,6 +13,7 @@
 #include "Engine/Core/Buffers/FrameBuffer.h"
 
 #include "Engine/Core/Textures/Texture2D.h"
+#include "Engine/Core/Textures/SpriteSheet.h"
 
 /* Renderer */
 #include "Engine/Core/Renderer/Renderer.h"
@@ -169,7 +170,7 @@ namespace GraphX
 				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
 			}
 
-			// Load Low Poly Trees
+			// Load Low poly Trees
 			Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
 			LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
 
@@ -194,9 +195,9 @@ namespace GraphX
 			m_Shader->UnBind();
 		}
 		
-		Ref<Texture2D> particleTex = CreateRef<Texture2D>("res/Textures/Particles/particleAtlas.png", false, 4);
+		Ref<SpriteSheet> particleSpriteSheet = CreateRef<SpriteSheet>("res/Textures/Particles/particleAtlas.png", 16, GM::Vector2(32.0f, 32.0f));
 		ParticleProps particleProperties;
-		particleProperties.Texture = particleTex;
+		particleProperties.Texture = particleSpriteSheet;
 		particleProperties.Velocity = GM::Vector3(2.0f);
 		particleProperties.GravityEffect = 0.5f;
 		particleProperties.LifeSpan = 2.0f;

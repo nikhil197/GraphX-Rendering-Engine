@@ -31,7 +31,7 @@ namespace GraphX
 		Ref<class SubTexture2D> GetSprite(const uint32_t InSpriteIndex) const;
 
 		// Overrides
-		virtual uint32_t GetRowsInTexAtlas() const override { return m_Rows; }
+		virtual uint32_t GetRowsInAtlas() const override { return m_Rows; }
 		virtual bool IsSpriteSheet() const override { return true; }
 
 	private:

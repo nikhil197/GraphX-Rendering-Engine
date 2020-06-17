@@ -137,7 +137,7 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Texture->GetID();
 		}
 
-		AddParticle_Internal(Position, Size, Rotation, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInTexAtlas(), textureIndex);
+		AddParticle_Internal(Position, Size, Rotation, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInAtlas(), textureIndex);
 	}
 
 	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const GM::Vector4& Color, const GM::Vector4& TexOffsets, float BlendFactor, float TexAtlasRows, float TextureIndex)

@@ -14,7 +14,7 @@ namespace GraphX
 		GM::Vector3 Velocity;
 		GM::Vector4 ColorBegin = GM::Vector4::UnitVector;
 		GM::Vector4 ColorEnd = GM::Vector4::UnitVector;
-		Ref<Texture2D> Texture = nullptr;
+		Ref<Texture2D> Texture = nullptr;	// Normal texture or a spritesheet
 		float Rotation = 0.0f;
 		float SizeBegin = 1.0f, SizeEnd = 1.0f;
 		float LifeSpan = 1.0f;
@@ -25,12 +25,12 @@ namespace GraphX
 		: public Entity
 	{
 	public:
-		/* Default Consturctor for the particle pool */
+		/* Default Constructor for the particle pool */
 		Particle();
 
 		Particle(const ParticleProps& props);
 
-		/* To Initialise the particles that are defualt constructed */
+		/* To Initialise the particles that are default constructed */
 		void Init(const ParticleProps& props);
 
 		/* Entity Interface */
@@ -57,9 +57,6 @@ namespace GraphX
 		
 		/* Updated the texture atlas offset for the particle based on the particle lifespan */
 		void UpdateTexOffset();
-
-		/* Calculates the offset for the given index */
-		void CalculateOffset(int index, float& xTexOffset, float& yOffset);
 
 	private:
 		/* Current Properties of the particle */

@@ -333,7 +333,7 @@ namespace GraphX
 					{
 						Texture->Bind();
 						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-						ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInTexAtlas());
+						ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInAtlas());
 					}
 					else
 					{

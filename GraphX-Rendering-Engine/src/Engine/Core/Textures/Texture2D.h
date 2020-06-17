@@ -51,7 +51,7 @@ namespace GraphX
 		inline bool IsTileTexture() const { return m_TileTexture; }
 
 		/* Returns the number of rows in the texture atlas */
-		virtual uint32_t GetRowsInTexAtlas() const { return 1; }
+		virtual uint32_t GetRowsInAtlas() const { return 1; }
 
 		/* Whether this is a texture atlas (or sprite sheet)*/
 		virtual bool IsSpriteSheet() const { return false; }

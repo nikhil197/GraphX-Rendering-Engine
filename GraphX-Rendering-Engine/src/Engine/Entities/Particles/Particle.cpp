@@ -5,6 +5,9 @@
 #include "Shaders/Shader.h"
 #include "Textures/Texture2D.h"
 
+#include "Core/Textures/SpriteSheet.h"
+#include "Core/Textures/SubTexture2D.h"
+
 namespace GraphX
 {
 	Particle::Particle()
@@ -21,15 +24,15 @@ namespace GraphX
 	void Particle::Init(const ParticleProps& props)
 	{
 		m_ElapsedTime = 0.0f;
-		m_Props.ColorBegin		= props.ColorBegin;
-		m_Props.ColorEnd		= props.ColorEnd;
-		m_Props.Position		= props.Position;
-		m_Props.Velocity		= props.Velocity;
-		m_Props.LifeSpan		= props.LifeSpan;
-		m_Props.Rotation		= props.Rotation;
-		m_Props.Texture			= props.Texture;
-		m_Props.SizeBegin		= props.SizeBegin;
-		m_Props.SizeEnd			= props.SizeEnd;
+		m_Props.ColorBegin = props.ColorBegin;
+		m_Props.ColorEnd = props.ColorEnd;
+		m_Props.Position = props.Position;
+		m_Props.Velocity = props.Velocity;
+		m_Props.LifeSpan = props.LifeSpan;
+		m_Props.Rotation = props.Rotation;
+		m_Props.Texture = props.Texture;
+		m_Props.SizeBegin = props.SizeBegin;
+		m_Props.SizeEnd = props.SizeEnd;
 		m_Props.GravityEffect = props.GravityEffect;
 		m_Active = true;
 	}
@@ -45,14 +48,14 @@ namespace GraphX
 		{
 			m_Active = false;
 		}
-		else if(m_Active)
+		else if (m_Active)
 		{
 			float scale = GM::Utility::Lerp(m_Props.SizeBegin, m_Props.SizeEnd, m_ElapsedTime / m_Props.LifeSpan);
 			m_Props.Velocity.y += EngineConstants::GravityValue * m_Props.GravityEffect * DeltaTime;
 
-			m_Props.Position += m_Props.Velocity;
-			
-			if (m_Props.Texture && m_Props.Texture->GetRowsInTexAtlas() > 1)
+			m_Props.Position += m_Props.Velocity * 0.1f;
+
+			if (m_Props.Texture && m_Props.Texture->IsSpriteSheet())
 				UpdateTexOffset();
 
 			// Change the model matrix only if batch rendering is not enabled
@@ -67,7 +70,7 @@ namespace GraphX
 				}
 				else
 				{
-					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Rotator::ZeroRotator, m_Props.Velocity * scale); 
+					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Rotator::ZeroRotator, m_Props.Velocity * scale);
 					/*GM::ScaleMatrix(scale)* GM::TranslationMatrix(m_Props.Velocity * scale);*/
 				}
 			}
@@ -77,10 +80,10 @@ namespace GraphX
 	void Particle::Enable(Shader& shader, const std::string& EntityNameInShader) const
 	{
 		shader.SetUniformMat4f("u_Model", m_Model);
-		
+
 		if (m_Props.Texture)
 		{
-			if (m_Props.Texture->GetRowsInTexAtlas() > 1)
+			if (m_Props.Texture->GetRowsInAtlas() > 1)
 			{
 				shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
 				shader.SetUniform4f("u_TexCoordOffsets", m_TexOffset);
@@ -99,24 +102,44 @@ namespace GraphX
 
 	void Particle::UpdateTexOffset()
 	{
-		// No Need to check active status and texture. Will only be called if both of those are true
+		// No Need to check active status and texture
+		// This method will be called only if the texture is a sprite sheet
+		SpriteSheet* spriteSheet = static_cast<SpriteSheet*>(m_Props.Texture.get());
 
 		float LifeSpanFactor = m_ElapsedTime / m_Props.LifeSpan;
-		int TotalStages = GM::Utility::Square(m_Props.Texture->GetRowsInTexAtlas());
+		uint32_t TotalStages = spriteSheet->GetNumSprites();
 		float LifeProgress = LifeSpanFactor * TotalStages;
-		int index1 = (int)LifeProgress;
-		int index2 = (index1 + 1 < TotalStages) ? index1 + 1 : index1;
+		uint32_t index1 = (uint32_t)LifeProgress;
+		uint32_t index2;
+
+		if (index1 < TotalStages - 1)
+			index2 = index1 + 1;
+		else
+			index2 = index1;
+
+		// Set the texture coordinate offsets
+		Ref<SubTexture2D> subtexture1 = spriteSheet->GetSprite(index1);
+		const GM::Vector2* TexCoords = subtexture1->GetTexCoords();
+
+		// Offset for 1st sprite
+		m_TexOffset.x = TexCoords[0].x;
+		m_TexOffset.y = TexCoords[0].y;
+
+		// offset for 2nd sprite
+		if (index1 == index2)
+		{
+			m_TexOffset.z = m_TexOffset.x;
+			m_TexOffset.w = m_TexOffset.y;
+		}
+		else
+		{
+			Ref<SubTexture2D> subtexture2 = spriteSheet->GetSprite(index2);
+			TexCoords = subtexture2->GetTexCoords();
+			m_TexOffset.z = TexCoords[0].x;
+			m_TexOffset.w = TexCoords[0].y;
+		}
+
+		// Factor by which to blend between the two sprites
 		m_BlendFactor = LifeProgress - index1;
-
-		CalculateOffset(index1, m_TexOffset.x, m_TexOffset.y);
-		CalculateOffset(index2, m_TexOffset.z, m_TexOffset.w);
-	}
-
-	void Particle::CalculateOffset(int index, float& xTexOffset, float& yTexOffset)
-	{
-		int column = index % m_Props.Texture->GetRowsInTexAtlas();
-		int row = index / m_Props.Texture->GetRowsInTexAtlas();
-		xTexOffset = (float) column / (float) m_Props.Texture->GetRowsInTexAtlas();
-		yTexOffset = (float) row / (float) m_Props.Texture->GetRowsInTexAtlas();
 	}
 }
