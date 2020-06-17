@@ -14,7 +14,7 @@ namespace GraphX
 		m_TexCoords[3].x = Min.x; m_TexCoords[3].y = Max.y;
 	}
 
-	Ref<SubTexture2D> SubTexture2D::Create(const Ref<Texture2D>& InTexture, const GM::Vector2& CellIndex, const GM::Vector2& CellSize, const GM::Vector2& CellSpan, bool FromBottomLeft)
+	Ref<SubTexture2D> SubTexture2D::Create(const Ref<Texture2D>& InTexture, const GM::IntVector2& CellIndex, const GM::Vector2& CellSize, const GM::IntVector2& CellSpan, bool FromBottomLeft)
 	{
 		GM::Vector2 Min, Max;
 		if (FromBottomLeft)

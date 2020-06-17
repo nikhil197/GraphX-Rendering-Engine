@@ -7,8 +7,8 @@
 
 namespace GraphX
 {
-	Texture2D::Texture2D(const std::string& filePath, bool TileTexture, unsigned int RowsInTexAtlas)
-		: RendererAsset(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(TileTexture), m_RowsInTexAtlas(RowsInTexAtlas)
+	Texture2D::Texture2D(const std::string& filePath, bool InTileTexture)
+		: RendererAsset(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(InTileTexture)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
@@ -16,12 +16,12 @@ namespace GraphX
 		// To flip the texture
 		stbi_set_flip_vertically_on_load(0);
 
-		int channels;
+		int width, height, channels;
 		stbi_uc* localBuffer = nullptr;
 		{
 			GX_PROFILE_SCOPE("Texture2D::LoadTexFile")
 
-			localBuffer = stbi_load(m_FilePath.c_str(), &m_Width, &m_Height, &channels, 0);	// No desired channels 
+			localBuffer = stbi_load(m_FilePath.c_str(), &width, &height, &channels, 0);	// No desired channels 
 			GX_ENGINE_ASSERT(localBuffer, "Failed to load texture data!");
 		}
 
@@ -35,6 +35,9 @@ namespace GraphX
 			m_InternalFormat = GL_RGB8;
 			m_DataFormat = GL_RGB;
 		}
+
+		m_Width = width;
+		m_Height = height;
 
 		GX_ENGINE_ASSERT(m_InternalFormat & m_DataFormat, " Texture Format not supported!");
 
@@ -50,15 +53,15 @@ namespace GraphX
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, localBuffer);
-		UnBind();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Free the local image data
 		if (localBuffer)
 			stbi_image_free(localBuffer);
 	}
 
-	Texture2D::Texture2D(int width, int height, FramebufferAttachmentType texType)
-		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false), m_RowsInTexAtlas(1)
+	Texture2D::Texture2D(uint32_t width, uint32_t height, FramebufferAttachmentType texType)
+		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -87,11 +90,11 @@ namespace GraphX
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
 
-		UnBind();
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	Texture2D::Texture2D(int width, int height)
-		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false), m_RowsInTexAtlas(1)
+	Texture2D::Texture2D(uint32_t width, uint32_t height)
+		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -107,6 +110,8 @@ namespace GraphX
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void Texture2D::Bind(unsigned int slot) const

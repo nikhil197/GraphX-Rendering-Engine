@@ -119,6 +119,7 @@
     <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Engine\Controllers\CameraController.cpp" />
     <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\SpriteSheet.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SubTexture2D.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="src\Engine\Core\RendererAsset.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
+    <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />
     <ClInclude Include="src\Engine\EngineConfig.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
