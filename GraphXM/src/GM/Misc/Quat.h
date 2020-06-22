@@ -57,6 +57,14 @@ namespace GM
        */
        Quat(float InPitch, float InYaw, float InRoll);
 
+
+       /**
+        * Constructor 
+        *
+        * @param Rotation Rotator about the std. axes
+        */
+       Quat(const struct Rotator& Rotation);
+
        /**
        * Creates and initializes a new quaternion from the a rotation around the given axis.
        *
@@ -198,8 +206,11 @@ namespace GM
          * @return vector after rotation by the inverse of this quaternion.
          */
         Vector3 UnrotateVector(Vector3 V) const;
+
+        /* Returns the matrix representing the same rotation transformation represented by this quaternion */
+        class Matrix4 ToMatrix() const;
     };
 
-    /* Premultiplies the vector with a quaterion */
+    /* Pre multiplies the vector with a quaternion */
     const Vector3 operator*(const Vector3& V, const Quat& Q);
 }

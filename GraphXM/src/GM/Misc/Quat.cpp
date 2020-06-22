@@ -3,6 +3,7 @@
 
 #include "MathUtility.h"
 #include "Matrices/Matrix4.h"
+#include "Rotator.h"
 
 namespace GM
 {
@@ -28,17 +29,22 @@ namespace GM
     Quat::Quat(float InPitch, float InYaw, float InRoll)
     {
         // cos and sin for roll, pitch and yaw respectively
-        float SR, SP, SY;
-        float CR, CP, CY;
+        float SP, SY, SR;
+        float CP, CY, CR;
 
-        Utility::SinAndCos(SR, CR, InRoll * 0.5f);
         Utility::SinAndCos(SP, CP, InPitch * 0.5f);
         Utility::SinAndCos(SY, CY, InYaw * 0.5f);
+        Utility::SinAndCos(SR, CR, InRoll * 0.5f);
 
-        X = CR * SP * CY - SR * CP * SY;
-        Y = CR * CP * SY + SR * CP * SY;
-        Z = CR * CP * SY + SR * SP * CY;
-        W = CR * CP * CY - SR * SP * SY;
+        X = SP * CY * CR - CP * SY * SR;
+        Y = CP * SY * CR + SP * CY * SR;
+        Z = CP * CY * SR - SP * SY * CR;
+        W = CP * CY * CR + SP * SY * SR;
+    }
+
+    Quat::Quat(const GM::Rotator& Rotation)
+        : Quat(Rotation.Pitch, Rotation.Yaw, Rotation.Roll)
+    {
     }
 
     Quat::Quat(const Vector3& Axis, float Angle)
@@ -221,6 +227,36 @@ namespace GM
         const Vector3 Axis(-X, -Y, -Z);     // Inverse
         const Vector3 Cross = 2 * Vector3::CrossProduct(Axis, V);
         const Vector3 Result = V + (W * Cross) + Vector3::CrossProduct(Axis, Cross);
+        return Result;
+    }
+
+    Matrix4 Quat::ToMatrix() const
+    {
+        Matrix4 Result;
+        const float xx2 = 2 * X * X;
+        const float yy2 = 2 * Y * Y;
+        const float zz2 = 2 * Z * Z;
+
+        Result(0, 0) = 1 - yy2 - zz2;
+        Result(0, 1) = 2 * (X * Y - W * Z);
+        Result(0, 2) = 2 * (X * Z + W * Y);
+        Result(0, 3) = 0.0f;
+
+        Result(1, 0) = 2 * (X * Y + W * Z);
+        Result(1, 1) = 1 - xx2 - zz2;
+        Result(1, 2) = 2 * (Y * Z - W * X);
+        Result(1, 3) = 0.0f;
+
+        Result(2, 0) = 2 * (X * Z - W * Y);
+        Result(2, 1) = 2 * (Y * Z + W * X);
+        Result(2, 2) = 1 - xx2 - yy2;
+        Result(2, 3) = 0.0f;
+ 
+        Result(3, 0) = 0.0f;
+        Result(3, 1) = 0.0f;
+        Result(3, 2) = 0.0f;
+        Result(3, 3) = 1.0f;
+
         return Result;
     }
 
