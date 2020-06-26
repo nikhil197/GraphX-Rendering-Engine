@@ -29,17 +29,17 @@ namespace GM
     Quat::Quat(float InPitch, float InYaw, float InRoll)
     {
         // cos and sin for roll, pitch and yaw respectively
-        float SP, SY, SR;
-        float CP, CY, CR;
+        float SR, SP, SY;
+        float CR, CP, CY;
 
         Utility::SinAndCos(SP, CP, InPitch * 0.5f);
         Utility::SinAndCos(SY, CY, InYaw * 0.5f);
         Utility::SinAndCos(SR, CR, InRoll * 0.5f);
 
-        X = SP * CY * CR - CP * SY * SR;
-        Y = CP * SY * CR + SP * CY * SR;
-        Z = CP * CY * SR - SP * SY * CR;
-        W = CP * CY * CR + SP * SY * SR;
+        X = SR * CP * CY - CR * SP * SY;
+        Y = CR * SP * CY + SR * CP * SY;
+        Z = CR * CP * SY - SR * SP * CY;
+        W = CR * CP * CY + SR * SP * SY;
     }
 
     Quat::Quat(const GM::Rotator& Rotation)
