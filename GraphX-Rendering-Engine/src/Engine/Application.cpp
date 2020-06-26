@@ -99,8 +99,8 @@ namespace GraphX
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(-3.0f, 0.0f, 0.0f), GM::Vector3::ZeroVector, EngineConstants::UpAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
+		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
 		
@@ -192,6 +192,7 @@ namespace GraphX
 
 			Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
 			StallMesh->Position = Vector3(100.0f, -75.0f, 0.0f);
+			StallMesh->Rotation.Roll = 90.0f;
 			m_Objects3D.emplace_back(StallMesh);
 
 			m_Shader->UnBind();

@@ -9,7 +9,7 @@ namespace GraphX
 	/* Camera Entity */
 	/**
 		Only Contains the data that represents a Camera in the world.
-		For a controlable camera, Use CameraController
+		For a controllable camera, Use CameraController
 	*/
 	class Camera
 		: public Entity
@@ -17,7 +17,7 @@ namespace GraphX
 		friend CameraController;
 	public:
 		/* Constructor */
-		Camera(const GM::Vector3& Position, const GM::Vector3& LookAtPoint, const GM::Vector3& UpAxis); // Matrices will be set by the CameraController
+		Camera(const GM::Vector3& Position, const GM::Vector3& LookAtPoint); // Matrices will be set by the CameraController
 
 		/* Update the camera */
 		virtual void Update(float DeltaTime) override;
@@ -33,6 +33,9 @@ namespace GraphX
 
 		/* Returns a view matrix for the camera */
 		inline const GM::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
+
+		/* Returns a rotation view matrix of the camera */
+		inline const GM::Matrix4& GetRotationViewMatrix() const { return m_RotationViewMatrix; }
 
 		/* Returns the product of projection and view matrix */
 		inline const GM::Matrix4& GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
@@ -58,14 +61,14 @@ namespace GraphX
 		/* Orientation of the camera */
 		GM::Rotator m_Rotation;
 
-		/* Up Axis for the whole world */
-		GM::Vector3 m_UpAxis;
-
-		/* Point on which the camera is focussed */
+		/* Point on which the camera is focused */
 		GM::Vector3 m_LookAtPoint;
 
 		/* The View matrix for the current camera orientation */
 		GM::Matrix4 m_ViewMatrix;
+
+		/* The View matrix containing only the camera rotation (to be used by sky boxes) */
+		GM::Matrix4 m_RotationViewMatrix;
 
 		/* Projection matrix for the current camera settings */
 		GM::Matrix4 m_ProjectionMatrix;

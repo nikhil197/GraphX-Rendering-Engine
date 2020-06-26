@@ -18,8 +18,8 @@
 
 namespace GraphX
 {
-	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Matrix4& ViewMat, const GM::Vector4& color, float factor, unsigned int slot, float Speed)
-		: m_VAO(CreateScope<VertexArray>()), m_VBO(nullptr), m_IBO(nullptr), m_CubeMap(new CubeMap(FilePath, FileNames)), m_BindingSlot(slot), m_Rotation(0.0f), m_View(ViewMat), m_BlendColor(color), RotationSpeed(Speed), BlendFactor(factor)
+	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Vector4& color, float factor, uint32_t slot, float Speed)
+		: RotationSpeed(Speed), BlendFactor(factor), m_VAO(CreateScope<VertexArray>()), m_VBO(nullptr), m_IBO(nullptr), m_CubeMap(new CubeMap(FilePath, FileNames)), m_BindingSlot(slot), m_Rotation(GM::Rotator(0.0f, -90.0f, 90.0f)), m_Model(GM::RotationTranslationMatrix(m_Rotation, GM::Vector3::ZeroVector)), m_Tint(color)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -56,17 +56,16 @@ namespace GraphX
 
 		m_VAO->AddVertexBuffer(*m_VBO, layout);
 		m_VAO->AddIndexBuffer(*m_IBO);
-
-		m_View(0, 3) = 0.0f;
-		m_View(1, 3) = 0.0f;
-		m_View(2, 3) = 0.0f;
 	}
 
 	void Skybox::Update(float DeltaTime)
 	{
-		m_Rotation += RotationSpeed * DeltaTime;
-		GM::Utility::ClampAngle(m_Rotation);
-		m_View = m_View * GM::RotationMatrix(RotationSpeed * DeltaTime, GM::Vector3::YAxis);
+		if (RotationSpeed != 0.0f)
+		{
+			m_Rotation.Yaw += RotationSpeed * DeltaTime;
+			GM::Utility::ClampAngle(m_Rotation.Yaw);
+			GM::RotationTranslationMatrix::Make(m_Model, m_Rotation, GM::Vector3::ZeroVector);
+		}
 	}
 
 	void Skybox::Enable(class Shader& shader, const std::string& Name) const

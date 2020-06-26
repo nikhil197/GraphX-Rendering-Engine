@@ -126,8 +126,9 @@ namespace GraphX
 		// Set the uniforms
 		const Ref<Shader>& shader = s_ShaderLibrary.GetShader("Skybox");
 		shader->Bind();
-		shader->SetUniformMat4f("u_View", skybox->GetView());
-		shader->SetUniform4f("u_BlendColor", skybox->GetBlendColor());
+		shader->SetUniformMat4f("u_View", s_SceneInfo->SceneCamera->GetRotationViewMatrix());
+		shader->SetUniformMat4f("u_Model", skybox->GetModel());
+		shader->SetUniform4f("u_BlendColor", skybox->GetTintColor());
 
 		const CameraController* CamControl = s_SceneInfo->SceneCamera->GetCameraController();
 

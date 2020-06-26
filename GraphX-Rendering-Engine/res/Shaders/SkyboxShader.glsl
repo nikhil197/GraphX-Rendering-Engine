@@ -3,6 +3,7 @@
 
 layout(location = 0) in vec3 vPosition;
 
+uniform mat4 u_Model = mat4(1.0f);
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
@@ -11,7 +12,7 @@ out vec3 v_TexCoord;
 void main()
 {
 	v_TexCoord = vPosition;
-	gl_Position = u_Projection * u_View * vec4(vPosition, 1.0);
+	gl_Position = u_Projection * u_View * u_Model * vec4(vPosition, 1.0);
 }
 
 #shader fragment
