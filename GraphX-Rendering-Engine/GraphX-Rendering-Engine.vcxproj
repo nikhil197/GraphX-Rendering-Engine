@@ -198,6 +198,7 @@
     <ClInclude Include="src\Engine\Core\Materials\Material.h" />
     <ClInclude Include="src\Engine\Core\RendererAsset.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\RendererResources.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />

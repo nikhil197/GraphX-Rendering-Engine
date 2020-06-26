@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Shaders/ShaderLibrary.h"
+#include "RendererResources.h"
 
 namespace GraphX
 {
@@ -51,7 +52,7 @@ namespace GraphX
 		/* Renders all the submitted meshes in the scene to the depth buffer */
 		static void RenderDepth(class Shader& DepthShader);
 
-		/* Directly renders (without queueing) the current bound vertex array having Count number of vertices
+		/* Directly renders (without queuing) the current bound vertex array having Count number of vertices
 		* NOTE: This is not for indexed rendering
 		*/
 		static void Render(unsigned int Count);
@@ -86,6 +87,9 @@ namespace GraphX
 
 		/* Info required for rendering current scene */
 		static SceneInfo* s_SceneInfo;
+		
+		/* Renderer data required for the skybox */
+		static SkyboxRenderData* s_SkyboxData;
 
 		/* A Simple renderer to directly render stuff (without queuing) */
 		static SimpleRenderer* s_Renderer;

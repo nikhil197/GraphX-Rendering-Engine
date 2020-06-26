@@ -2,7 +2,7 @@
 
 #include "Skybox.h"
 
-#include "Model/Cube.h"
+
 
 #include "Entities/Camera.h"
 #include "Engine/Controllers/CameraController.h"
@@ -18,48 +18,15 @@
 
 namespace GraphX
 {
-	Skybox::Skybox(const std::string& ShaderFilePath, const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Vector4& color, float factor, uint32_t slot, float Speed)
-		: RotationSpeed(Speed), BlendFactor(factor), m_VAO(CreateScope<VertexArray>()), m_VBO(nullptr), m_IBO(nullptr), m_CubeMap(new CubeMap(FilePath, FileNames)), m_BindingSlot(slot), m_Rotation(GM::Rotator(0.0f, -90.0f, 90.0f)), m_Model(GM::RotationTranslationMatrix(m_Rotation, GM::Vector3::ZeroVector)), m_Tint(color)
+	Skybox::Skybox(const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Vector4& color, float factor, float Speed)
+		: RotationSpeed(Speed), BlendFactor(factor), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Rotation(GM::Rotator(0.0f, -90.0f, 90.0f)), m_Model(GM::RotationTranslationMatrix(m_Rotation, GM::Vector3::ZeroVector)), m_Tint(color)
 	{
-		GX_PROFILE_FUNCTION()
-
-		std::vector<unsigned int> indices = Cube::GetIndices();
-		// Top face
-		indices[6]  = 7;
-		indices[7]  = 3;
-		indices[8]  = 6;
-		indices[9]  = 6;
-		indices[10] = 3;
-		indices[11] = 2;
-		// Bottom face
-		indices[18] = 0;
-		indices[19] = 4;
-		indices[20] = 1;
-		indices[21] = 1;
-		indices[22] = 4;
-		indices[23] = 5;
-
-		std::vector<GM::Vector3> vertices = Cube::GetVertexPositions();
-
-		m_VBO = CreateScope<VertexBuffer>(&vertices[0], vertices.size() * sizeof(GM::Vector3));
-		m_IBO = CreateRef<IndexBuffer>(&indices[0], indices.size());
-
-		ShaderLibrary& ShaderLib = Renderer::GetShaderLibrary();
-		if (ShaderLib.Exists("Skybox"))
-			m_Shader = ShaderLib.GetShader("Skybox");
-		else
-			m_Shader = ShaderLib.Load(ShaderFilePath, "Skybox");
-
-		VertexBufferLayout layout = {
-			{ BufferDataType::Float3 }
-		};
-
-		m_VAO->AddVertexBuffer(*m_VBO, layout);
-		m_VAO->AddIndexBuffer(*m_IBO);
 	}
 
 	void Skybox::Update(float DeltaTime)
 	{
+		GX_PROFILE_FUNCTION()
+
 		if (RotationSpeed != 0.0f)
 		{
 			m_Rotation.Yaw += RotationSpeed * DeltaTime;
@@ -76,17 +43,13 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_VAO->Bind();
-		
-		m_CubeMap->Bind(m_BindingSlot);
+		m_CubeMap->Bind(EngineConstants::SkyboxBindingSlot);
 	}
 
 	void Skybox::Disable() const
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_VAO->UnBind();
-		
 		m_CubeMap->UnBind();
 	}
 

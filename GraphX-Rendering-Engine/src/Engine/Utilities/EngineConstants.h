@@ -13,6 +13,9 @@ namespace GraphX
 		/* Near plane of the engine main camera */
 		const float NearPlane = 0.1f;
 
+		/* Slot used to bind the skybox for rendering */
+		const uint32_t SkyboxBindingSlot = 1;
+
 		/* Texture slot used for the shadow map */
 		const uint32_t ShadowMapTextureSlot = 5;
 
