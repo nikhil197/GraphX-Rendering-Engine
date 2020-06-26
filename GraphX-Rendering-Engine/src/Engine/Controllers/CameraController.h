@@ -26,7 +26,7 @@ namespace GraphX
 		/* Handles events */
 		void OnEvent(class Event& e);
 
-		/* Returns the controlled camer */
+		/* Returns the controlled camera */
 		inline Ref<Camera> GetCamera() { return m_Camera; }
 		
 		inline const Camera& GetCamera() const { return *m_Camera; }

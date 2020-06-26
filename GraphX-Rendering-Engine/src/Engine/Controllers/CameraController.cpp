@@ -200,7 +200,7 @@ namespace GraphX
 	{
 		m_ViewChanged = true;
 
-		m_Camera->m_Rotation.Pitch -= yOffset;
+		m_Camera->m_Rotation.Pitch += yOffset;
 		m_Camera->m_Rotation.Yaw -= xOffset;
 		
 		//TODO: Also change the roll

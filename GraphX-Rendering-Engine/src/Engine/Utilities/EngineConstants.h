@@ -18,21 +18,21 @@ namespace GraphX
 
 		/****** Six Directions ******/
 		/* Forward Axis for the engine */
-		const GM::Vector3 ForwardAxis(0.0f, 0.0f, -1.0f);
+		const GM::Vector3 ForwardAxis(1.0f, 0.0f, 0.0f);
 
 		/* Backward Axis for the engine */
-		const GM::Vector3 BackwardAxis(0.0f, 0.0f, 1.0f);
+		const GM::Vector3 BackwardAxis(-1.0f, 0.0f, 0.0f);
 
 		/* Right Axis for the engine */
-		const GM::Vector3 RightAxis(1.0f, 0.0f, 0.0f);
+		const GM::Vector3 RightAxis(0.0f, -1.0f, 0.0f);
 
 		/* Left Axis for the engine */
-		const GM::Vector3 LeftAxis(-1.0f, 0.0f, 0.0f);
+		const GM::Vector3 LeftAxis(0.0f, 1.0f, 0.0f);
 
 		/* Up Axis for the engine */
-		const GM::Vector3 UpAxis(0.0f, 1.0f, 0.0f);
+		const GM::Vector3 UpAxis(0.0f, 0.0f, 1.0f);
 
 		/* Down Axis for the engine */
-		const GM::Vector3 DownAxis(0.0f, -1.0f, 0.0f);
+		const GM::Vector3 DownAxis(0.0f, 0.0f, -1.0f);
 	};
 }
