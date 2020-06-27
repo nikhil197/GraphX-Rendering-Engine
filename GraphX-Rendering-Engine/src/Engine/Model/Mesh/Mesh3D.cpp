@@ -176,15 +176,18 @@ namespace GraphX
 			RawMeshData::MeshSectionInfo& SectionInfo = m_RawData->SectionInfos[SectionIndex];
 			m_MaterialMap.Add(SectionInfo.MaterialIndex, SectionIndex);
 
+
+			uint32_t NumIndices = 0;
+			if (SectionIndex < NumSections - 1)
+				NumIndices = m_RawData->SectionInfos[(size_t)SectionIndex + 1].FirstIndex - SectionInfo.FirstIndex;
+			else
+				NumIndices = (uint32_t)m_RawData->Indices.size() - SectionInfo.FirstVertexIndex;
+
 			MeshSection Section;
 			Section.MaterialIndex = SectionInfo.MaterialIndex;
-			Section.FirstIndex = SectionInfo.SectionStartIndex;
-
-			uint32_t NumVertices = 0;
-			if (SectionIndex < NumSections - 1)
-				NumVertices = m_RawData->SectionInfos[(size_t)SectionIndex + 1].SectionStartIndex - SectionInfo.SectionStartIndex;
-			else
-				NumVertices = (uint32_t)m_RawData->Vertices.size() - SectionInfo.SectionStartIndex;
+			Section.FirstVertexIndex = SectionInfo.FirstVertexIndex;
+			Section.FirstIndex = SectionInfo.FirstIndex;
+			Section.NumTriangles = NumIndices / 3;
 
 			m_RenderData->Sections.emplace_back(Section);
 		}
@@ -229,7 +232,7 @@ namespace GraphX
 
 		if (m_RenderData == nullptr)
 			return false;
-		// TODO: Initialise render data
+		
 		m_RenderData->VAO = CreateScope<VertexArray>();
 		m_RenderData->VBO = CreateRef<VertexBuffer>(&m_RawData->Vertices[0], m_RawData->Vertices.size() * sizeof(Vertex3D));
 		const VertexBufferLayout& layout = Vertex3D::VertexLayout();

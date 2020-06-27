@@ -55,6 +55,7 @@ namespace GraphX
 		std::unordered_map<unsigned int, uint32_t> AssimpMaterialIndexMap;
 
 		uint32_t VerticesOffset = 0;
+		uint32_t IndicesOffset = 0;
 
 		uint32_t VerticesCount = 0;
 		uint32_t IndicesCount = 0;
@@ -80,9 +81,9 @@ namespace GraphX
 
 		}
 
-		// Exand the vertices and indices containers
+		// Expand the vertices and indices containers
 		RawData->Vertices.resize(VerticesCount);
-		RawData->Indices.reserve(IndicesCount);
+		RawData->Indices.resize(IndicesCount);
 		RawData->SectionInfos.reserve(SectionCount);
 
 		// Extract data from the mesh
@@ -120,6 +121,7 @@ namespace GraphX
 			}
 
 			// Extract indices
+			uint32_t MeshIndicesCount = 0;
 			if (iMesh->HasFaces())
 			{
 				unsigned int NumFaces = iMesh->mNumFaces;
@@ -128,8 +130,10 @@ namespace GraphX
 					const aiFace& iFace = iMesh->mFaces[i];
 					for (unsigned int j = 0; j < iFace.mNumIndices; j++)
 					{
-						Indices.emplace_back(iFace.mIndices[j]);
+						Indices[IndicesOffset + MeshIndicesCount + j] = iFace.mIndices[j];
 					}
+
+					MeshIndicesCount += iFace.mNumIndices;
 				}
 			}
 
@@ -171,19 +175,21 @@ namespace GraphX
 				}
 
 				RawMeshData::MeshSectionInfo Info;
-				Info.SectionStartIndex = VerticesOffset;
+				Info.FirstVertexIndex = VerticesOffset;
+				Info.FirstIndex = IndicesOffset;
 				Info.MaterialIndex = MaterialIndex;
 				Infos.emplace_back(Info);
 			}
 
 			VerticesOffset += iMesh->mNumVertices;
+			IndicesOffset += MeshIndicesCount;
 		}
 
 		// No Materials were loaded with the mesh, add the provided material (Special case)
 		if (Infos.size() == 0)
 		{ 
 			RawMeshData::MeshSectionInfo Info;
-			Info.SectionStartIndex = 0;
+			Info.FirstVertexIndex = 0;
 			Info.MaterialIndex = InMesh->AddMaterial(InMat);
 			Infos.emplace_back(Info);
 		}

@@ -18,8 +18,11 @@ namespace GraphX
 
 		struct MeshSectionInfo
 		{
-			/* Index into the Vertices container at which a section starts */
-			uint32_t SectionStartIndex = 0;
+			/* Index into the Vertices container at which section's vertices starts */
+			uint32_t FirstVertexIndex = 0;
+
+			/* Index into the Indices container at which section's indices starts */
+			uint32_t FirstIndex = 0;
 
 			/* Index into the materials array of the mesh3d. Material used by the section */
 			uint32_t MaterialIndex = 0;
@@ -44,11 +47,15 @@ namespace GraphX
 		uint32_t MaterialIndex;
 
 		/** Range of vertices and indices used when rendering this section. */
+		uint32_t FirstVertexIndex;
 		uint32_t FirstIndex;
 		uint32_t NumTriangles;
 
+		/* Returns the number of indices for this section */
+		uint32_t GetNumIndices() const { return 3 * NumTriangles; }
+
 		MeshSection()
-			: MaterialIndex(0), FirstIndex(0), NumTriangles(0)
+			: MaterialIndex(0), FirstVertexIndex(0), FirstIndex(0), NumTriangles(0)
 		{}
 	};
 
@@ -71,7 +78,7 @@ namespace GraphX
 	private:
 		/* Map from material index to section indices */
 		/* Key - Material Index */
-		/* Value - All the sections using this mateiral */
+		/* Value - All the sections using this material */
 		std::unordered_map<uint32_t, std::vector<uint32_t>> m_Map;
 	};
 
