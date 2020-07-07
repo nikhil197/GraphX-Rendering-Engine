@@ -190,6 +190,7 @@ namespace GraphX
 		{ 
 			RawMeshData::MeshSectionInfo Info;
 			Info.FirstVertexIndex = 0;
+			Info.FirstIndex = 0;
 			Info.MaterialIndex = InMesh->AddMaterial(InMat);
 			Infos.emplace_back(Info);
 		}

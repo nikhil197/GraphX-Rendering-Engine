@@ -2,6 +2,7 @@
 
 namespace GraphX
 {
+	// Reference : Unreal Engine Source Code
 	/**
 	 * Interface for "runnable" objects.
 	 *
