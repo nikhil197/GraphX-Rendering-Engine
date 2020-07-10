@@ -58,6 +58,9 @@
 #include "Engine/Utilities/FileOpenDialog.h"
 #include "Engine/Utilities/MousePicker.h"
 
+#include "Subsystems/Multithreading/Async/AsyncTask.h"
+#include "Subsystems/Multithreading/Multithreading.h"
+
 namespace GraphX
 {
 	using namespace GM;
@@ -72,12 +75,17 @@ namespace GraphX
 		GX_ENGINE_ASSERT(!s_Instance, "An Instance is already running!");
 		s_Instance = this;
 
+		/* Initialize subsystems*/
+
+		// Initialize multi-threading
+		Multithreading::Init();
+
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
 		Clock::Init();
 		Mouse::Init();
 		Keyboard::Init();
-		
+
 		m_Window = new Window(WindowProps(m_Title, width, height));
 		
 		// Set the event callback with the window
@@ -160,8 +168,10 @@ namespace GraphX
 			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
 			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
 
-			Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
-			TreeMesh->Scale = 2.5f * Vector3::UnitVector;
+			std::future<Ref<Mesh3D>> ft = Async<Ref<Mesh3D>>(AsyncExecutionPolicy::ThreadPool, std::bind(&Mesh3D::Load, "res/Models/tree.obj", TreeMaterial));
+			Ref<Mesh3D> TreeMesh = ft.get();
+			//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
+			TreeMesh->Scale *= 2.5f;
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
@@ -908,5 +918,8 @@ namespace GraphX
 		GraphXGui::Cleanup();
 
 		delete m_Window;
+
+		/* Release resources of subsystems */
+		Multithreading::Shutdown();
 	}
 }

@@ -5,9 +5,12 @@
 
 #include "Subsystems/Multithreading/Runnable.h"
 #include "Subsystems/Multithreading/RunnableThread.h"
+#include "Subsystems/Multithreading/QueuedWork.h"
+#include "Subsystems/Multithreading/QueuedThreadPool.h"
 
 namespace GraphX
 {
+	// NOTE: Referenced from Unreal Engine Source Code
 	enum class AsyncExecutionPolicy
 	{
 		/* Execution on a separate thread */
@@ -42,7 +45,7 @@ namespace GraphX
 			: m_Function(std::move(InFunction)), m_Promise(std::move(InPromise)), m_Future(std::move(InFuture))
 		{}
 
-		// Runnable Interface
+		// IRunnable Interface
 		virtual uint32_t Run() override
 		{
 			SetPromiseValue(m_Promise, m_Function);
@@ -61,6 +64,7 @@ namespace GraphX
 			delete this;
 		}
 
+		// IRunnable Interface -------- END
 	private:
 		/* Function to be executed asynchronously */
 		std::function<Type()> m_Function;
@@ -70,6 +74,41 @@ namespace GraphX
 
 		/* Result of the executed function */
 		std::future<IThread*> m_Future;
+	};
+
+	/*
+	* Template for asynchronous functions that can be executed in a thread pool
+	*/
+	template<typename Type>
+	class AsyncQueuedTask
+		: public IQueuedWork
+	{
+	public:
+		AsyncQueuedTask(std::function<Type()>&& InFunction, std::promise<Type>&& InPromise)
+			: m_Function(std::move(InFunction)), m_Promise(std::move(InPromise))
+		{}
+
+	public:
+		// IQueuedTask Interface
+		virtual void DoAsyncWork() override
+		{
+			SetPromiseValue(m_Promise, m_Function);
+			delete this;
+		}
+
+		virtual void Abandon() override
+		{
+
+		}
+
+		// IQueuedTask Interface -------- END
+
+	private:
+		/* Function to be executed asynchronously */
+		std::function<Type()> m_Function;
+
+		/* Object which is responsible for setting the result */
+		std::promise<Type> m_Promise;
 	};
 
 	/**
@@ -90,7 +129,6 @@ namespace GraphX
 		{
 			case AsyncExecutionPolicy::Thread:
 				{
-					static 
 					std::promise<IThread*> TPromise;
 					AsyncRunnableTask<Result>* Runnable = new AsyncRunnableTask<Result>(std::move(InFunction), std::move(Promise), std::move(TPromise.get_future()));
 					IThread* Thread = IThread::Create(Runnable, "Async ");	// TODO: Add a Thread safe counter here for the created threads
@@ -102,6 +140,7 @@ namespace GraphX
 			case AsyncExecutionPolicy::ThreadPool:
 				{
 					//TODO
+					g_GlobalThreadPool->AddQueuedWork(new AsyncQueuedTask<Result>(std::move(InFunction), std::move(Promise)));
 				}
 				break;
 		}

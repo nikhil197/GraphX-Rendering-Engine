@@ -37,5 +37,13 @@ namespace GraphX
 
 		/* Down Axis for the engine */
 		const GM::Vector3 DownAxis(0.0f, 0.0f, -1.0f);
+
+		// Multi threading constants
+
+		/* Number of threads in the global thread pool */
+		const uint32_t GThreadPoolThreadCount = 4;
+
+		/* Wait time for a queued thread (in Milliseconds) */
+		const uint32_t QueuedThreadWaitTime = 10;
 	};
 }

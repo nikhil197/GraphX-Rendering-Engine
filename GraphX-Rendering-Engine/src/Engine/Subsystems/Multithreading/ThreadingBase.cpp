@@ -1,11 +1,18 @@
 #include "pch.h"
 #include <thread>
+#include <atomic>
 
 #include "Runnable.h"
 #include "RunnableThread.h"
+#include "QueuedThread.h"
+
 #include "ThreadManager.h"
 
+#include "Subsystems/Multithreading/QueuedThreadPool.h"
 #include "Subsystems/Multithreading/Async/AsyncTask.h"
+
+#include "Subsystems/Multithreading/QueuedWork.h"
+#include "Subsystems/Multithreading/Misc/QueuedThreadTrigger.h"
 
 namespace GraphX
 {
@@ -23,8 +30,8 @@ namespace GraphX
 
 	IThread* IThread::Create(IRunnable* InRunnable, const std::string& ThreadName)
 	{
-		// TODO: First check if multithread is supported
-		
+		// TODO: First check if multithreading is supported
+
 		IThread* Thread = new RunnableThread();
 
 		if (Thread->CreateInternal(InRunnable, ThreadName) == false)
@@ -114,7 +121,7 @@ namespace GraphX
 
 		if (m_Runnable->Init() == true)
 		{
-			// Rrun the task that needs to be done
+			// Run the task that needs to be done
 			ExitCode = m_Runnable->Run();
 			// Allow any allocated resources to be cleaned up
 			m_Runnable->Exit();
@@ -126,5 +133,80 @@ namespace GraphX
 		}
 
 		return ExitCode;
+	}
+
+	/***************** Queued Thread ********************/
+	bool QueuedThread::Create(QueuedThreadPool* InThreadPool)
+	{
+		static uint32_t PoolThreadIndex = 0;
+		static std::string PoolThreadFormat("Pool Thread %d");
+
+		std::string ThreadName;
+		std::snprintf(&ThreadName[0], PoolThreadFormat.length() + 2, PoolThreadFormat.c_str(), PoolThreadIndex);
+		PoolThreadIndex++;
+
+		m_OwnerPool = InThreadPool;
+		m_Trigger = new QueuedThreadTrigger;
+		m_Thread = IThread::Create(this, ThreadName);
+
+		return true;
+	}
+
+	uint32_t QueuedThread::Run()
+	{
+		while (!m_Exit.load(std::memory_order_relaxed))
+		{
+			// Wait for the next job
+			bool WaitForTask = true;
+			while (WaitForTask)
+			{
+				WaitForTask = !m_Trigger->Wait(EngineConstants::QueuedThreadWaitTime);
+			}
+
+			IQueuedWork* CurrentJob = m_QueuedWork;
+			m_QueuedWork = nullptr;
+
+			// DO the current job
+			while (CurrentJob)
+			{
+				// Do the job
+				CurrentJob->DoAsyncWork();
+
+				// Fetch the next job
+				CurrentJob = m_OwnerPool->GetNextJobOrReturnToPool(this);
+			}
+
+			// Set the trigger state to not signaled
+			m_Trigger->Reset();
+		}
+
+		return 0;
+	}
+
+	bool QueuedThread::KillThread()
+	{
+		bool ExitedOk = true;
+		m_Exit = true;
+
+		// Trigger the thread out of waiting state
+		m_Trigger->Signal();
+
+		// Wait for the thread to finish its job
+		m_Thread->WaitForCompletion();
+
+		delete m_Trigger;
+		delete m_Thread;
+
+		return ExitedOk;
+	}
+
+	void QueuedThread::DoWork(IQueuedWork* InQueuedWork)
+	{
+		GX_ENGINE_ASSERT(m_QueuedWork == nullptr, "Thread is already doing another job!!");
+
+		m_QueuedWork = InQueuedWork;
+
+		// Trigger the thread out of waiting state
+		m_Trigger->Signal();
 	}
 }

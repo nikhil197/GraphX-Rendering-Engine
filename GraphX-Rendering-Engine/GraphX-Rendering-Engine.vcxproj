@@ -152,6 +152,9 @@
     <ClCompile Include="src\Engine\Core\Textures\CubeMap.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\Texture2D.cpp" />
     <ClCompile Include="src\Engine\Profiler\Profiler.cpp" />
+    <ClCompile Include="src\Engine\Subsystems\Multithreading\Misc\QueuedThreadTrigger.cpp" />
+    <ClCompile Include="src\Engine\Subsystems\Multithreading\Multithreading.cpp" />
+    <ClCompile Include="src\Engine\Subsystems\Multithreading\QueuedThreadPool.cpp" />
     <ClCompile Include="src\Engine\Subsystems\MultiThreading\ThreadingBase.cpp" />
     <ClCompile Include="src\Engine\Subsystems\MultiThreading\ThreadManager.cpp" />
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
@@ -239,10 +242,15 @@
     <ClInclude Include="src\Engine\Core\Textures\Texture2D.h" />
     <ClInclude Include="src\Engine\Profiler\Profiler.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h" />
-    <ClInclude Include="src\Engine\Subsystems\MultiThreading\Runnable.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Misc\QueuedThreadTrigger.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Multithreading.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedThread.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedWork.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Runnable.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\RunnableThread.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\ThreadManager.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedThreadPool.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />
