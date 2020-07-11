@@ -58,7 +58,6 @@
 #include "Engine/Utilities/FileOpenDialog.h"
 #include "Engine/Utilities/MousePicker.h"
 
-#include "Subsystems/Multithreading/Async/AsyncTask.h"
 #include "Subsystems/Multithreading/Multithreading.h"
 
 namespace GraphX
@@ -177,7 +176,7 @@ namespace GraphX
 			{
 				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2, 0.0f);
 				TreeMesh->Position = Position;
-				TreeMesh->Rotation.Roll = 90.0f;
+				TreeMesh->Rotation.Roll = -90.0f;
 				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
 			}
 

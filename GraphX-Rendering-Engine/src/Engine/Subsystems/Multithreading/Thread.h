@@ -9,8 +9,6 @@ namespace GraphX
 	*/
 	class IThread
 	{
-		template<typename Type>
-		friend class AsyncRunnableTask;
 	public:
 		/**
 		 * Factory method to create a thread.
@@ -41,7 +39,7 @@ namespace GraphX
 		 */
 		virtual bool Kill(bool ShouldWait = true) = 0;
 
-		/** Halts the caller until this thread is has completed its work. */
+		/** Halts the caller until this thread is has completed its work. Must be called before deleting the thread */
 		virtual void WaitForCompletion() = 0;
 
 		/* Returns the name of the thread */
@@ -68,9 +66,5 @@ namespace GraphX
 
 		/** ID set during thread creation. */
 		std::thread::id m_ThreadID;
-
-		/* Whether to automatrically delete the thread after execution */
-		/* Note: If required, Should be set to true before Runnable::Exit() finishes execution */
-		bool m_AutoDelete = false;
 	};
 }

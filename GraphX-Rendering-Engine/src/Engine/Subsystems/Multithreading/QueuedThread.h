@@ -33,7 +33,7 @@ namespace GraphX
 		// IRunnable Interface ---------- END
 
 		/**
-		 * Tells the thread to exit.
+		 * Tells the thread to exit. Must be called before deleting the thread
 		 *
 		 * @return True if the thread exited graceful, false otherwise
 		 */
@@ -48,7 +48,7 @@ namespace GraphX
 		void DoWork(class IQueuedWork* InQueuedWork);
 
 		/* Destructor */
-		~QueuedThread() { KillThread(); }
+		~QueuedThread() = default;
 
 	private:
 		/* The work this thread is doing */

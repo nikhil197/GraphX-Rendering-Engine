@@ -46,23 +46,9 @@ namespace GraphX
 		{}
 
 		// IRunnable Interface
-		virtual uint32_t Run() override
-		{
-			SetPromiseValue(m_Promise, m_Function);
-			
-			return 0;
-		}
-
-		virtual void Exit() override
-		{
-			// Find a better way to do this
-			// 1st Alt -> (Delete this task and the thread executing this task on a separate thread)
-			IThread* Thread = m_Future.get();
-			Thread->m_AutoDelete = true;
-
-			// Auto Delete the task
-			delete this;
-		}
+		virtual uint32_t Run() override;
+		
+		virtual void Exit() override;
 
 		// IRunnable Interface -------- END
 	private:
@@ -146,5 +132,27 @@ namespace GraphX
 		}
 
 		return Future;
+	}
+
+	template<typename Result>
+	uint32_t AsyncRunnableTask<Result>::Run()
+	{
+		SetPromiseValue(m_Promise, m_Function);
+
+		return 0;
+	}
+
+	template<typename Result>
+	void AsyncRunnableTask<Result>::Exit()
+	{
+		// Queue the deletion of this task and the thread on global thread pool
+		IThread* Thread = m_Future.get();
+
+		Async<void>(AsyncExecutionPolicy::ThreadPool, [=]() {
+			Thread->WaitForCompletion();
+			delete Thread;
+			delete this;
+			}
+		);
 	}
 }

@@ -65,6 +65,8 @@ namespace GraphX
 	{
 		if (m_Thread)
 		{
+			//m_Thread->join();
+
 			delete m_Thread;
 			m_Thread = nullptr;
 		}
@@ -127,11 +129,6 @@ namespace GraphX
 			m_Runnable->Exit();
 		}
 
-		if (m_AutoDelete)
-		{
-			delete this;
-		}
-
 		return ExitCode;
 	}
 
@@ -185,6 +182,8 @@ namespace GraphX
 
 	bool QueuedThread::KillThread()
 	{
+		GX_ENGINE_ASSERT(m_Exit == false, "Thread Has already been deleted");
+
 		bool ExitedOk = true;
 		m_Exit = true;
 

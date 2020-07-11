@@ -440,7 +440,7 @@
     <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncQueueTask.h">
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncQueuedWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

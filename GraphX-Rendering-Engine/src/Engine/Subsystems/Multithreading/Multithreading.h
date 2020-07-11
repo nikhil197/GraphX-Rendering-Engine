@@ -2,9 +2,6 @@
 
 // Only Include file required for all multi-threading related tasks
 
-#include "Async/AsyncTask.h"
-#include "QueuedThreadPool.h"
-
 namespace GraphX
 {
 	/**
@@ -25,3 +22,8 @@ namespace GraphX
 
 	};
 }
+
+// Multithreading files
+#include "Async/AsyncTask.h"
+#include "Async/AsyncQueuedWork.h"
+#include "QueuedThreadPool.h"

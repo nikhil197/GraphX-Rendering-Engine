@@ -28,12 +28,12 @@ namespace GraphX
 	 * job.StartBackgroundTask(g_GlobalThreadPool);
 	 */
 	template<typename Task>
-	class AsyncQueueTask
+	class AsyncQueuedWork
 		: public IQueuedWork
 	{
 	public:
 		template<typename... Args>
-		AsyncQueueTask(Args&& ..args)
+		AsyncQueuedWork(Args&& ...args)
 			: m_WorkFinished(false), Task(std::forward<Args>(args)), m_ThreadPool(nullptr)
 		{}
 
