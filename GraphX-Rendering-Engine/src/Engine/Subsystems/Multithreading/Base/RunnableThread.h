@@ -1,9 +1,12 @@
 #pragma once
 
-#include "Thread.h"
+#include "Subsystems/Multithreading/Base/IThread.h"
 
 namespace GraphX
 {
+	/**
+	 * Implementation of the IThread interface.
+	 */
 	class RunnableThread
 		: public IThread
 	{

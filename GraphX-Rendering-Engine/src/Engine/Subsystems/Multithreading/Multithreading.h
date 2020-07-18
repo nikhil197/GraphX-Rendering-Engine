@@ -24,6 +24,6 @@ namespace GraphX
 }
 
 // Multithreading files
-#include "Async/AsyncTask.h"
-#include "Async/AsyncQueuedWork.h"
+#include "Subsystems/Multithreading/Async/AsyncTask.h"
+#include "Subsystems/Multithreading/Async/AsyncQueuedWork.h"
 #include "QueuedThreadPool.h"

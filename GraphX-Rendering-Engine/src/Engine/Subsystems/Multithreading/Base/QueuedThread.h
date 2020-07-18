@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Subsystems/Multithreading/Runnable.h"
+#include "Subsystems/Multithreading/Base/IRunnable.h"
 
 namespace GraphX
 {

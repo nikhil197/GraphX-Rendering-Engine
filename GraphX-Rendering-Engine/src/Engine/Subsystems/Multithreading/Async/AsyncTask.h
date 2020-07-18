@@ -3,9 +3,9 @@
 #include <future>
 #include <functional>
 
-#include "Subsystems/Multithreading/Runnable.h"
-#include "Subsystems/Multithreading/RunnableThread.h"
-#include "Subsystems/Multithreading/QueuedWork.h"
+#include "Subsystems/Multithreading/Base/IRunnable.h"
+#include "Subsystems/Multithreading/Base/RunnableThread.h"
+#include "Subsystems/Multithreading/Base/IQueuedWork.h"
 #include "Subsystems/Multithreading/QueuedThreadPool.h"
 
 namespace GraphX
@@ -20,12 +20,14 @@ namespace GraphX
 		ThreadPool
 	};
 
+	/* Sets the value of the promise returned by the Function */
 	template<typename Result>
 	inline void SetPromiseValue(std::promise<Result>& promise, const std::function<Result()>& Function)
 	{
 		promise.set_value(Function());
 	}
 
+	/* Template specialization of SetPromiseValue() for functions with void return type */
 	template<>
 	inline void SetPromiseValue(std::promise<void>& promise, const std::function<void()>& Function)
 	{

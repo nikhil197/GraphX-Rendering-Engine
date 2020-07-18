@@ -2,7 +2,7 @@
 
 #include <atomic>
 
-#include "Subsystems/Multithreading/QueuedWork.h"
+#include "Subsystems/Multithreading/Base/IQueuedWork.h"
 #include "Subsystems/Multithreading/QueuedThreadPool.h"
 
 namespace GraphX
@@ -130,6 +130,6 @@ namespace GraphX
 		Task m_Task;
 
 		/* Thread pool currently executing this job */
-		class QueuedThreadPool* m_ThreadPool;
+		QueuedThreadPool* m_ThreadPool;
 	};
 }

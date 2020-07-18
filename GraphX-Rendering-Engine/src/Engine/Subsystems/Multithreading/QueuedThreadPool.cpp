@@ -3,8 +3,8 @@
 
 #include <mutex>
 
-#include "Subsystems/Multithreading/QueuedWork.h"
-#include "Subsystems/Multithreading/QueuedThread.h"
+#include "Subsystems/Multithreading/Base/IQueuedWork.h"
+#include "Subsystems/Multithreading/Base/QueuedThread.h"
 
 namespace GraphX
 {

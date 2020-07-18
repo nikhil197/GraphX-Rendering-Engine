@@ -155,7 +155,7 @@
     <ClCompile Include="src\Engine\Subsystems\Multithreading\Misc\QueuedThreadTrigger.cpp" />
     <ClCompile Include="src\Engine\Subsystems\Multithreading\Multithreading.cpp" />
     <ClCompile Include="src\Engine\Subsystems\Multithreading\QueuedThreadPool.cpp" />
-    <ClCompile Include="src\Engine\Subsystems\MultiThreading\ThreadingBase.cpp" />
+    <ClCompile Include="src\Engine\Subsystems\Multithreading\Base\ThreadingBase.cpp" />
     <ClCompile Include="src\Engine\Subsystems\MultiThreading\ThreadManager.cpp" />
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
@@ -245,11 +245,11 @@
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Misc\QueuedThreadTrigger.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Multithreading.h" />
-    <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedThread.h" />
-    <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedWork.h" />
-    <ClInclude Include="src\Engine\Subsystems\Multithreading\Runnable.h" />
-    <ClInclude Include="src\Engine\Subsystems\MultiThreading\RunnableThread.h" />
-    <ClInclude Include="src\Engine\Subsystems\Multithreading\Thread.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Base\QueuedThread.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Base\IQueuedWork.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Base\IRunnable.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Base\RunnableThread.h" />
+    <ClInclude Include="src\Engine\Subsystems\Multithreading\Base\IThread.h" />
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\ThreadManager.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\QueuedThreadPool.h" />
     <ClInclude Include="src\Engine\Timer\Clock.h" />

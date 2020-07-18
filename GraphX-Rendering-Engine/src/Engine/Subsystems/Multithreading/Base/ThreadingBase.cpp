@@ -1,17 +1,18 @@
 #include "pch.h"
+
 #include <thread>
 #include <atomic>
 
-#include "Runnable.h"
-#include "RunnableThread.h"
-#include "QueuedThread.h"
+#include "Subsystems/Multithreading/Base/IRunnable.h"
+#include "Subsystems/Multithreading/Base/RunnableThread.h"
+#include "Subsystems/Multithreading/Base/QueuedThread.h"
 
-#include "ThreadManager.h"
+#include "Subsystems/Multithreading/ThreadManager.h"
 
 #include "Subsystems/Multithreading/QueuedThreadPool.h"
 #include "Subsystems/Multithreading/Async/AsyncTask.h"
 
-#include "Subsystems/Multithreading/QueuedWork.h"
+#include "Subsystems/Multithreading/Base/IQueuedWork.h"
 #include "Subsystems/Multithreading/Misc/QueuedThreadTrigger.h"
 
 namespace GraphX
