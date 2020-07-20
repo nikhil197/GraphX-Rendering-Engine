@@ -93,23 +93,23 @@ namespace GraphX
 			{
 				if (keyboard->GetKey(Keys::GX_W))
 				{
-					m_Camera->m_Position.y += CurrentCameraSpeed;
+					m_Camera->m_Position += CurrentCameraSpeed * EngineConstants::UpAxis;
 					m_ViewChanged = true;
 				}
 				else if (keyboard->GetKey(Keys::GX_S))
 				{
-					m_Camera->m_Position.y -= CurrentCameraSpeed;
+					m_Camera->m_Position -= CurrentCameraSpeed * EngineConstants::UpAxis;
 					m_ViewChanged = true;
 				}
 
 				if (keyboard->GetKey(Keys::GX_A))
 				{
-					m_Camera->m_Position.x -= CurrentCameraSpeed;
+					m_Camera->m_Position -= CurrentCameraSpeed * EngineConstants::RightAxis;
 					m_ViewChanged = true;
 				}
 				else if (keyboard->GetKey(Keys::GX_D))
 				{
-					m_Camera->m_Position.x += CurrentCameraSpeed;
+					m_Camera->m_Position += CurrentCameraSpeed * EngineConstants::RightAxis;
 					m_ViewChanged = true;
 				}
 			}
@@ -190,7 +190,7 @@ namespace GraphX
 
 			if (m_ViewChanged)
 			{
-				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(0.f, 0.f, -3.0f), GM::Vector3::YAxis);
+				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(3.f, 0.f, 0.0f), EngineConstants::UpAxis);
 				m_Camera->m_RotationViewMatrix = m_Camera->m_ViewMatrix;
 				m_Camera->m_RotationViewMatrix(0, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(1, 3) = 0.0f;

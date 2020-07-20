@@ -111,7 +111,7 @@ namespace GraphX
 
 		m_CurrentSkybox = m_NightSkybox;
 		
-		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(0.0f, 0.0f, -1.0f));
+		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-1.0f, 3.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
@@ -121,7 +121,7 @@ namespace GraphX
 
 		m_DefaultMaterial = CreateRef<Material>(m_Shader);
 
-		m_Light = CreateRef<PointLight>(Vector3(50.0f, 0.0f, 50.0f), Vector4(1, 1, 1, 1));
+		m_Light = CreateRef<PointLight>(Vector3(0.0f, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
 		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
@@ -696,7 +696,7 @@ namespace GraphX
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		GM::RotationMatrix rotation(angle, GM::Vector3::YAxis);
+		GM::RotationMatrix rotation(angle, EngineConstants::UpAxis);
 		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
