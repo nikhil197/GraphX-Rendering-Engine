@@ -273,6 +273,7 @@ namespace GraphX
 			{
 				const Ref<ParticleSystem>& System = pair.second;
 				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+				const GM::Matrix4& RotationViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetRotationViewMatrix();
 
 				if (Texture)
 				{
@@ -281,8 +282,9 @@ namespace GraphX
 						if (particle.IsActive())
 						{
 							const ParticleProps& props = particle.GetProps();
+							GM::Vector3 NewPos = RotationViewMatrix * props.Position;
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, props.Rotation, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
+							s_Data->ParticleBatch->AddParticle(NewPos + CamViewPos, { scale, scale }, props.Rotation, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
 						}
 					}
 				}
@@ -293,9 +295,10 @@ namespace GraphX
 						if (particle.IsActive())
 						{
 							const ParticleProps& props = particle.GetProps();
+							GM::Vector3 NewPos = RotationViewMatrix * props.Position;
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, props.Rotation, color);
+							s_Data->ParticleBatch->AddParticle(NewPos + CamViewPos, { scale, scale }, props.Rotation, color);
 						}
 					}
 				}
