@@ -50,7 +50,7 @@ namespace GraphX
 		props.SizeBegin = GenerateRandomValue(m_Config.ParticleProperties.SizeBegin, m_Config.SizeVariation);
 		props.GravityEffect = GenerateRandomValue(m_Config.ParticleProperties.GravityEffect, m_Config.GravityVariation);
 		props.Velocity.x = m_Config.ParticleProperties.Velocity.x * m_Config.VelocityVariation.x * (EngineUtil::Rand<float>() * 2.0f - 1.0f);
-		props.Velocity.y = m_Config.ParticleProperties.Velocity.y * m_Config.VelocityVariation.y;
+		props.Velocity.y = m_Config.ParticleProperties.Velocity.y * m_Config.VelocityVariation.y * (EngineUtil::Rand<float>() * 2.0f - 1.0f);
 		props.Velocity.z = m_Config.ParticleProperties.Velocity.z * m_Config.VelocityVariation.z * (EngineUtil::Rand<float>() * 2.0f - 1.0f);
 		
 		m_Particles[m_Index].Init(props);

@@ -215,10 +215,10 @@ namespace GraphX
 		m_Camera->m_Rotation.Pitch = GM::Utility::ClampAngle(m_Camera->m_Rotation.Pitch, -89.9f, 89.9f);
 		m_Camera->m_Rotation.Yaw = GM::Utility::ClampAngle(m_Camera->m_Rotation.Yaw, 0.0f, 359.999f);
 
-		GM::RotationMatrix RotationMat(m_Camera->m_Rotation);
-		m_RightAxis = RotationMat * EngineConstants::RightAxis;
-		m_ViewAxis = RotationMat * EngineConstants::ForwardAxis;
-		m_UpAxis = RotationMat * EngineConstants::UpAxis;
+		GM::Quat RotationQuat(m_Camera->m_Rotation);
+		m_RightAxis = RotationQuat * EngineConstants::RightAxis;
+		m_ViewAxis = RotationQuat * EngineConstants::ForwardAxis;
+		m_UpAxis = RotationQuat * EngineConstants::UpAxis;
 	}
 
 	void CameraController::OnEvent(Event& e)
@@ -255,9 +255,9 @@ namespace GraphX
 		}
 	}
 
-	const GM::Vector3& CameraController::GetCameraOrientation() const
+	const GM::Rotator& CameraController::GetCameraOrientation() const
 	{ 
-		//return m_Camera->m_EulerAngles;
+		return m_Camera->m_Rotation;
 	}
 
 	void CameraController::SetAspectRatio(float NewRatio)

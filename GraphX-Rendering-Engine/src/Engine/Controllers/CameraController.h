@@ -37,7 +37,7 @@ namespace GraphX
 		void SetCameraPosition(const GM::Vector3& NewPosition);
 
 		/* Returns the current orientation of the camera */
-		inline const GM::Vector3& GetCameraOrientation() const;
+		const GM::Rotator& GetCameraOrientation() const;
 
 		void SetCameraOrientation(const GM::Rotator& NewOrientation);
 

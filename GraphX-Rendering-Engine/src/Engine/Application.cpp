@@ -235,7 +235,7 @@ namespace GraphX
 		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
 		config.ParticleProperties = particleProperties2;
-		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 0.0f, -70.0f));
+		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 70.0f, 10.0f));
 		ParticleManager::AddParticleSystem(particleSys2);
 
 		{
