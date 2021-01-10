@@ -96,18 +96,20 @@ namespace GraphX
 		return ResultMesh;
 	}
 
-	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, const RawMeshData* RawData, const Ref<Material>& Mat)
+	Mesh3D::Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, RawMeshData* RawData, const Ref<Material>& Mat)
 		: Position(Pos), Rotation(Rotation), Scale(Scale), bShowDetails(0), m_Model(), m_MaterialMap(), m_UpdateModelMatrix(true)
 	{
 		GX_PROFILE_FUNCTION()
 
 		if (RawData != nullptr)
 		{
-			m_RawData = CreateScope<RawMeshData>(*RawData);
+			m_RawData = CreateRef<RawMeshData>(RawData);
 			BuildMesh();
 		}
 		else
-			m_RawData = CreateScope<RawMeshData>();
+		{
+			m_RawData = CreateRef<RawMeshData>();
+		}
 
 		if (Mat != nullptr)
 		{
@@ -120,7 +122,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_RawData = CreateScope<RawMeshData>(Vertices, Indices);
+		m_RawData = CreateRef<RawMeshData>(Vertices, Indices);
 
 		if (Mat != nullptr)
 		{
@@ -135,7 +137,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_RawData = CreateScope<RawMeshData>(*Mesh.GetRawData());
+		m_RawData = Mesh.m_RawData;
 
 		BuildMesh();
 	}

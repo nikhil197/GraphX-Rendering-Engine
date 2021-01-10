@@ -126,7 +126,7 @@ namespace GraphX
 		* @param RawData Raw data from which the mesh will be built
 		* @param Mat Material used to render the mesh
 		*/
-		Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, const RawMeshData* RawData = nullptr, const Ref<Material>& Mat = nullptr);
+		Mesh3D(const GM::Vector3& Pos, const GM::Rotator& Rotation, const GM::Vector3& Scale, RawMeshData* RawData = nullptr, const Ref<Material>& Mat = nullptr);
 
 		// Copy Constructor
 		Mesh3D(const Mesh3D& Mesh);
@@ -222,7 +222,7 @@ namespace GraphX
 
 	protected:
 		/* Raw Data of mesh */
-		Scope<RawMeshData> m_RawData;
+		Ref<RawMeshData> m_RawData;
 
 		/* Data required for rendering the mesh properly */
 		Scope<RenderDataMesh3D> m_RenderData;
