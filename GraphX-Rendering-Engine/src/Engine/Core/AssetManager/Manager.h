@@ -23,4 +23,10 @@ namespace GraphX
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+	template<typename T>
+	constexpr Ref<T> CreateRef(T* Pointer)
+	{
+		return std::shared_ptr<T>(Pointer);
+	}
 }

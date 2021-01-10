@@ -78,7 +78,6 @@ namespace GraphX
 					IndicesCount += Face.mNumIndices;
 				}
 			}
-
 		}
 
 		// Expand the vertices and indices containers
