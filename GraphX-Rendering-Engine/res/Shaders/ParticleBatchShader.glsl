@@ -3,15 +3,15 @@
 
 layout(location = 0) in vec3 vPosition;
 layout(location = 1) in vec4 vColor;
-layout(location = 2) in vec2 vTexCoords;
-layout(location = 3) in vec4 vTexOffsets;
+layout(location = 2) in vec2 vTexCoords1;
+layout(location = 3) in vec2 vTexCoords2;
 layout(location = 4) in float vTexAtlasRows;
 layout(location = 5) in float vBlendFactor;
 layout(location = 6) in float vTexIndex;
 
 out vec4 v_Color;
-out vec2 v_TexCoords;
-out vec4 v_TexOffsets;
+out vec2 v_TexCoords1;
+out vec2 v_TexCoords2;
 out float v_TexAtlasRows;
 out float v_BlendFactor;
 out float v_TexIndex;
@@ -22,8 +22,8 @@ uniform mat4 u_Projection;
 void main()
 {
 	v_Color = vColor;
-	v_TexCoords = vTexCoords;
-	v_TexOffsets = vTexOffsets;
+	v_TexCoords1 = vTexCoords1;
+	v_TexCoords2 = vTexCoords2;
 	v_TexAtlasRows = vTexAtlasRows;
 	v_BlendFactor = vBlendFactor;
 	v_TexIndex = vTexIndex;
@@ -34,8 +34,8 @@ void main()
 #version 330 core
 
 in vec4 v_Color;
-in vec2 v_TexCoords;
-in vec4 v_TexOffsets;
+in vec2 v_TexCoords1;
+in vec2 v_TexCoords2;
 in float v_TexAtlasRows;
 in float v_BlendFactor;
 in float v_TexIndex;
@@ -51,12 +51,10 @@ void main()
 	// Means texture atlas is not used
 	if (v_TexAtlasRows == 0 || v_TexAtlasRows == 1)
 	{
-		fColor = texture(u_Textures[index], v_TexCoords) * v_Color;
+		fColor = texture(u_Textures[index], v_TexCoords1) * v_Color;
 	}
 	else
 	{
-		vec2 TexCoords1 = (v_TexCoords / v_TexAtlasRows) + v_TexOffsets.xy;
-		vec2 TexCoords2 = (v_TexCoords / v_TexAtlasRows) + v_TexOffsets.zw;
-		fColor = mix(texture(u_Textures[index], TexCoords1), texture(u_Textures[index], TexCoords2), v_BlendFactor) * v_Color;
+		fColor = mix(texture(u_Textures[index], v_TexCoords1), texture(u_Textures[index], v_TexCoords2), v_BlendFactor) * v_Color;
 	}
 }

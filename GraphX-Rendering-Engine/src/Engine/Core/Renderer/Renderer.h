@@ -21,6 +21,7 @@ namespace GraphX
 	{
 		friend class Renderer2D;
 		friend class Renderer3D;
+		friend class ParticleBatch;
 	public:
 		/* Initializes the renderer */
 		static void Init();

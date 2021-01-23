@@ -264,17 +264,16 @@ namespace GraphX
 
 		if(GX_ENABLE_BATCH_RENDERING)
 		{
-			const GM::Matrix4& ViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
-			const GM::Vector3 CamViewPos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
-			
+			// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
+			const GM::Rotator& ViewRotationInverse = Renderer::s_SceneInfo->SceneCamera->GetRotation() + EngineConstants::AxisTransformRotationOffset;
+
 			s_Data->ParticleBatch->BeginBatch();
 
 			for (const auto& pair : ParticleSystems)
 			{
 				const Ref<ParticleSystem>& System = pair.second;
 				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
-				const GM::Matrix4& RotationViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetRotationViewMatrix();
-
+				
 				if (Texture)
 				{
 					for (const Particle& particle : System.operator*())
@@ -282,9 +281,9 @@ namespace GraphX
 						if (particle.IsActive())
 						{
 							const ParticleProps& props = particle.GetProps();
-							GM::Vector3 CameraSpacePos = RotationViewMatrix * props.Position;
+							GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(CameraSpacePos + CamViewPos, { scale, scale }, props.Rotation, Texture, GM::Vector4::UnitVector, particle.GetTexOffsets(), particle.GetBlendFactor());
+							s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
 						}
 					}
 				}
@@ -295,10 +294,10 @@ namespace GraphX
 						if (particle.IsActive())
 						{
 							const ParticleProps& props = particle.GetProps();
-							GM::Vector3 CameraSpacePos = RotationViewMatrix * props.Position;
+							GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
 							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(CameraSpacePos + CamViewPos, { scale, scale }, props.Rotation, color);
+							s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, color);
 						}
 					}
 				}

@@ -11,7 +11,7 @@
 namespace GraphX
 {
 	Particle::Particle()
-		: Entity(), m_TexOffset()
+		: Entity(), m_Index1(0), m_Index2(0)
 	{
 	}
 
@@ -24,6 +24,7 @@ namespace GraphX
 	void Particle::Init(const ParticleProps& props)
 	{
 		m_ElapsedTime = 0.0f;
+		m_Index1 = m_Index2 = 0;
 		m_Props.ColorBegin = props.ColorBegin;
 		m_Props.ColorEnd = props.ColorEnd;
 		m_Props.Position = props.Position;
@@ -86,7 +87,14 @@ namespace GraphX
 			if (m_Props.Texture->GetRowsInAtlas() > 1)
 			{
 				shader.SetUniform1f("u_BlendFactor", m_BlendFactor);
-				shader.SetUniform4f("u_TexCoordOffsets", m_TexOffset);
+
+				// Calculate the texture offsets
+				SpriteSheet* spriteSheet = static_cast<SpriteSheet*>(m_Props.Texture.get());
+				const GM::Vector2* TexCoords1 = spriteSheet->GetSprite(m_Index1)->GetTexCoords();
+				const GM::Vector2* TexCoords2 = spriteSheet->GetSprite(m_Index2)->GetTexCoords();
+
+				GM::Vector4 TexOffsets(TexCoords1[0].x, TexCoords1[0].y, TexCoords2[0].x, TexCoords2[0].y);
+				shader.SetUniform4f("u_TexCoordOffsets", TexOffsets);
 			}
 		}
 		else
@@ -109,37 +117,15 @@ namespace GraphX
 		float LifeSpanFactor = m_ElapsedTime / m_Props.LifeSpan;
 		uint32_t TotalStages = spriteSheet->GetNumSprites();
 		float LifeProgress = LifeSpanFactor * TotalStages;
-		uint32_t index1 = (uint32_t)LifeProgress;
-		uint32_t index2;
+		m_Index1 = (uint32_t)LifeProgress;
+		m_Index2;
 
-		if (index1 < TotalStages - 1)
-			index2 = index1 + 1;
+		if (m_Index1 < TotalStages - 1)
+			m_Index2 = m_Index1 + 1;
 		else
-			index2 = index1;
-
-		// Set the texture coordinate offsets
-		Ref<SubTexture2D> subtexture1 = spriteSheet->GetSprite(index1);
-		const GM::Vector2* TexCoords = subtexture1->GetTexCoords();
-
-		// Offset for 1st sprite
-		m_TexOffset.x = TexCoords[0].x;
-		m_TexOffset.y = TexCoords[0].y;
-
-		// offset for 2nd sprite
-		if (index1 == index2)
-		{
-			m_TexOffset.z = m_TexOffset.x;
-			m_TexOffset.w = m_TexOffset.y;
-		}
-		else
-		{
-			Ref<SubTexture2D> subtexture2 = spriteSheet->GetSprite(index2);
-			TexCoords = subtexture2->GetTexCoords();
-			m_TexOffset.z = TexCoords[0].x;
-			m_TexOffset.w = TexCoords[0].y;
-		}
+			m_Index2 = m_Index1;
 
 		// Factor by which to blend between the two sprites
-		m_BlendFactor = LifeProgress - index1;
+		m_BlendFactor = LifeProgress - m_Index1;
 	}
 }

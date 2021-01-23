@@ -13,8 +13,12 @@
 
 #include "Engine/Core/Shaders/Shader.h"
 #include "Engine/Core/Textures/Texture2D.h"
+#include "Engine/Core/Textures/SpriteSheet.h"
+#include "Engine/Core/Textures/SubTexture2D.h"
 
 #include "Engine/Core/Renderer/Renderer2D.h"
+
+#include "Engine/Entities/Camera.h"
 
 #include "Engine/Model/Quad.h"
 
@@ -91,7 +95,7 @@ namespace GraphX
 		m_TextureSlotIndex = 1;
 	}
 
-	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const GM::Vector4& Color)
+	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Rotator& Rotation, const GM::Vector4& Color)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -104,10 +108,10 @@ namespace GraphX
 
 		float textureIndex = 0.0f;		// White Texture Index
 
-		AddParticle_Internal(Position, Size, Rotation, Color, GM::Vector4::ZeroVector, 0.0f, 0, textureIndex);
+		AddParticle_Internal(Position, Size, Rotation, Color, nullptr, nullptr, 0.0f, 0, textureIndex);
 	}
 
-	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const Ref<Texture2D>& Texture, const GM::Vector4& TintColor, const GM::Vector4& TexOffsets, float BlendFactor)
+	void ParticleBatch::AddParticle(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Rotator& Rotation, const Ref<Texture2D>& Texture, const uint32_t SubTextureIndex1, const uint32_t SubTextureIndex2, const GM::Vector4& TintColor, float BlendFactor)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -137,19 +141,30 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Texture->GetID();
 		}
 
-		AddParticle_Internal(Position, Size, Rotation, TintColor, TexOffsets, BlendFactor, (float)Texture->GetRowsInAtlas(), textureIndex);
+		uint32_t RowsInAtlas = Texture->GetRowsInAtlas();
+		const GM::Vector2* TextureCoords1 = nullptr;
+		const GM::Vector2* TextureCoords2 = nullptr;
+
+		if (RowsInAtlas > 1)
+		{
+			SpriteSheet* spriteSheet = static_cast<SpriteSheet*>(Texture.get());
+			TextureCoords1 = spriteSheet->GetSprite(SubTextureIndex1)->GetTexCoords();
+			TextureCoords2 = spriteSheet->GetSprite(SubTextureIndex2)->GetTexCoords();
+		}
+
+		AddParticle_Internal(Position, Size, Rotation, TintColor, TextureCoords1, TextureCoords2, BlendFactor, (float)Texture->GetRowsInAtlas(), textureIndex);
 	}
 
-	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, float Rotation, const GM::Vector4& Color, const GM::Vector4& TexOffsets, float BlendFactor, float TexAtlasRows, float TextureIndex)
+	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Rotator& Rotation, const GM::Vector4& Color, const GM::Vector2* TextureCoords1, const GM::Vector2* TextureCoords2, float BlendFactor, float TexAtlasRows, float TextureIndex)
 	{
-		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, GM::Vector3::ZAxis, Position);
+		GM::Matrix4 transform = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix() * GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, Position);
 
 		for (int i = 0; i < 4; i++)
 		{
 			m_VertexDataPtr->Position = transform * Quad::s_QuadVertexPositions[i];
 			m_VertexDataPtr->Color = Color;
-			m_VertexDataPtr->TexCoords = Quad::s_QuadVertexTexCoords[i];
-			m_VertexDataPtr->TexOffsets = TexOffsets;
+			m_VertexDataPtr->TexCoords1 = (TextureCoords1 != nullptr) ? TextureCoords1[i] : Quad::s_QuadVertexTexCoords[i];
+			m_VertexDataPtr->TexCoords2 = (TextureCoords2 != nullptr) ? TextureCoords2[i] : Quad::s_QuadVertexTexCoords[i];
 			m_VertexDataPtr->TexAtlasRows = TexAtlasRows;
 			m_VertexDataPtr->BlendFactor = BlendFactor;
 			m_VertexDataPtr->TexIndex = TextureIndex;

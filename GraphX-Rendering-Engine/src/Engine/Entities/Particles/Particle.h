@@ -6,6 +6,7 @@
 namespace GraphX
 {
 	class Texture2D;
+	class SubTexture2D;
 	class Shader;
 
 	struct ParticleProps
@@ -43,7 +44,11 @@ namespace GraphX
 		/* Returns the current properties of the particle */
 		inline const ParticleProps& GetProps() const { return m_Props; }
 
-		inline const GM::Vector4& GetTexOffsets() const { return m_TexOffset; }
+		/* Returns the current index of the first sub texture from which the particle will sample (Only when Tex Atlas row > 1) */
+		inline uint32_t GetSubTextureIndex1() const { return m_Index1; }
+
+		/* Returns the current index of the second sub texture from which the particle will sample (Only when Tex Atlas row > 1) */
+		inline uint32_t GetSubTextureIndex2() const { return m_Index2; }
 
 		inline float GetBlendFactor() const { return m_BlendFactor; }
 
@@ -62,8 +67,8 @@ namespace GraphX
 		/* Current Properties of the particle */
 		ParticleProps m_Props;
 
-		/* Offsets of the current and next texture to be used in the atlas */
-		GM::Vector4 m_TexOffset;
+		/* Indices of the first and second subtexture in the atlas (or SpriteSheet) to sample from when rendering the particle */
+		uint32_t m_Index1, m_Index2;
 
 		/* Time elapsed since the creation of the particle */
 		float m_ElapsedTime = 0.0f;

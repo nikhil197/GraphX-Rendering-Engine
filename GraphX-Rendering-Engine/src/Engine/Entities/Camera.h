@@ -31,6 +31,9 @@ namespace GraphX
 		/* Returns the position of the camera */
 		inline const GM::Vector3& GetPosition() const { return m_Position; }
 
+		/* Returns the rotation of the camera */
+		inline const GM::Rotator& GetRotation() const { return m_Rotation; }
+
 		/* Returns a view matrix for the camera */
 		inline const GM::Matrix4& GetViewMatrix() const { return m_ViewMatrix; }
 
