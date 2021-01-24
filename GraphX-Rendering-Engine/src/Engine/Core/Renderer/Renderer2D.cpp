@@ -264,47 +264,7 @@ namespace GraphX
 
 		if(GX_ENABLE_BATCH_RENDERING)
 		{
-			// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
-			const GM::Rotator& ViewRotationInverse = Renderer::s_SceneInfo->SceneCamera->GetRotation() + EngineConstants::AxisTransformRotationOffset;
-
-			s_Data->ParticleBatch->BeginBatch();
-
-			for (const auto& pair : ParticleSystems)
-			{
-				const Ref<ParticleSystem>& System = pair.second;
-				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
-				
-				if (Texture)
-				{
-					for (const Particle& particle : System.operator*())
-					{
-						if (particle.IsActive())
-						{
-							const ParticleProps& props = particle.GetProps();
-							GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
-							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
-						}
-					}
-				}
-				else
-				{
-					for (const Particle& particle : System.operator*())
-					{
-						if (particle.IsActive())
-						{
-							const ParticleProps& props = particle.GetProps();
-							GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
-							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, color);
-						}
-					}
-				}
-			}
-
-			s_Data->ParticleBatch->EndBatch();
-			s_Data->ParticleBatch->Flush();
+			RenderParticlesBatched_Internal(ParticleSystems);
 		}
 		else
 		{
@@ -371,6 +331,51 @@ namespace GraphX
 				glDisable(GL_BLEND);
 			}
 		}
+	}
+
+	void Renderer2D::RenderParticlesBatched_Internal(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems)
+	{
+		// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
+		const GM::Rotator& ViewRotationInverse = Renderer::s_SceneInfo->SceneCamera->GetRotation() + EngineConstants::AxesTransformRotationOffsetParticles;
+
+		s_Data->ParticleBatch->BeginBatch();
+
+		for (const auto& pair : ParticleSystems)
+		{
+			const Ref<ParticleSystem>& System = pair.second;
+			const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+
+			if (Texture)
+			{
+				for (const Particle& particle : System.operator*())
+				{
+					if (particle.IsActive())
+					{
+						const ParticleProps& props = particle.GetProps();
+						GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
+						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+						s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
+					}
+				}
+			}
+			else
+			{
+				for (const Particle& particle : System.operator*())
+				{
+					if (particle.IsActive())
+					{
+						const ParticleProps& props = particle.GetProps();
+						GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
+						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+						GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
+						s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, color);
+					}
+				}
+			}
+		}
+
+		s_Data->ParticleBatch->EndBatch();
+		s_Data->ParticleBatch->Flush();
 	}
 
 	void Renderer2D::Submit(const Ref<Mesh2D>& mesh)

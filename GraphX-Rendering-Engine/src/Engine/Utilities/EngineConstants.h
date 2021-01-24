@@ -38,8 +38,11 @@ namespace GraphX
 		/* Down Axis for the engine */
 		const GM::Vector3 DownAxis{ 0.0f, 0.0f, -1.0f };
 
-		/* Offset To be added to the rotation in order to rotate the Co ordinate axes so that z - axis is Up and x - axis  is forward */
-		const GM::Rotator AxisTransformRotationOffset{ -90.0f, 0.0f, 0.0f };
+		/* Offset To be added to the rotation of particles in order to rotate the Co ordinate axes so that z - axis is Up and x - axis  is forward */
+		const GM::Rotator AxesTransformRotationOffsetParticles{ -90.0f, 0.0f, 0.0f };
+
+		/* Offset To be added to the rotation of skybox in order to rotate the Co ordinate axes so that z - axis is Up and x - axis  is forward */
+		const GM::Rotator AxesTransformRotationOffsetSkybox{ 0.0f, -90.0f, 90.0f };
 
 		// Multi threading constants
 

@@ -19,7 +19,7 @@
 namespace GraphX
 {
 	Skybox::Skybox(const std::string& FilePath, const std::vector<std::string>& FileNames, const GM::Vector4& color, float factor, float Speed)
-		: RotationSpeed(Speed), BlendFactor(factor), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Rotation(GM::Rotator(0.0f, -90.0f, 90.0f)), m_Model(GM::RotationTranslationMatrix(m_Rotation, GM::Vector3::ZeroVector)), m_Tint(color)
+		: RotationSpeed(Speed), BlendFactor(factor), m_CubeMap(new CubeMap(FilePath, FileNames)), m_Rotation(EngineConstants::AxesTransformRotationOffsetSkybox), m_Model(GM::RotationTranslationMatrix(m_Rotation, GM::Vector3::ZeroVector)), m_Tint(color)
 	{
 	}
 
@@ -54,7 +54,5 @@ namespace GraphX
 	}
 
 	Skybox::~Skybox()
-	{
-		
-	}
+	{ }
 }

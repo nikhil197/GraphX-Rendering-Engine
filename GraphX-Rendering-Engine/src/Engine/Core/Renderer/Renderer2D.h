@@ -62,10 +62,12 @@ namespace GraphX
 		static Renderer2D::Statistics GetStats();
 
 	private:
-		/* Internal method to draw quad - Reduce code repition */
+		/* Internal method to draw quad - Reduce code repetition */
 		static void DrawQuad_Internal(const GM::Matrix4& transform, const GM::Vector4& color);
 		static void DrawQuad_Internal(const Ref<Texture2D>& texture, const GM::Matrix4& transform, const GM::Vector4& color, float tiling, uint32_t textureSlot);
 
+		/* Internal method to render particles in batches */
+		static void RenderParticlesBatched_Internal(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems);
 	private:
 		struct Renderer2DData
 		{
