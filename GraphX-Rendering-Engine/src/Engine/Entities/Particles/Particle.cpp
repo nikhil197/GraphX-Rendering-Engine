@@ -42,7 +42,7 @@ namespace GraphX
 	{
 	}
 
-	void Particle::Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix)
+	void Particle::Update(float DeltaTime, const GM::Matrix4& ViewMatrix)
 	{
 		m_ElapsedTime += DeltaTime;
 		if (m_ElapsedTime >= m_Props.LifeSpan)
@@ -62,18 +62,9 @@ namespace GraphX
 			// Change the model matrix only if batch rendering is not enabled
 			if (!GX_ENABLE_BATCH_RENDERING)
 			{
-				// Change the model matrix based on ViewMatrix only if the view matrix is changed or if this is the first frame for the particle
-				if (UpdateMatrix || m_ElapsedTime == DeltaTime)
-				{
-					GM::ScaleRotationTranslationMatrix::Make(m_Model, GM::Vector3(scale), m_Props.Rotation, GM::Vector3::ZAxis, m_Props.Position + CameraViewSpacePos);
-					/*m_Model = GM::ScaleMatrix(scale) * GM::RotationMatrix(m_Props.Rotation, GM::Vector3::ZAxis)
-						* GM::TranslationMatrix(m_Props.Position + CameraViewSpacePos);*/
-				}
-				else
-				{
-					m_Model *= GM::ScaleRotationTranslationMatrix(GM::Vector3(scale), GM::Rotator::ZeroRotator, m_Props.Velocity * scale);
-					/*GM::ScaleMatrix(scale)* GM::TranslationMatrix(m_Props.Velocity * scale);*/
-				}
+				GM::Rotator ParticleRotation(0.0f, 0.0f, m_Props.Rotation);
+				GM::Vector3 Position = ViewMatrix * m_Props.Position;
+				GM::ScaleRotationTranslationMatrix::Make(m_Model, GM::Vector3(scale, scale, 1.0f), ParticleRotation, Position);
 			}
 		}
 	}

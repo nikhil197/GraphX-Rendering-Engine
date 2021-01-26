@@ -13,13 +13,13 @@ namespace GraphX
 		m_Particles.resize(m_Config.PoolCap);
 	}
 
-	void ParticleSystem::Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix)
+	void ParticleSystem::Update(float DeltaTime, const GM::Matrix4& ViewMatrix)
 	{
 		GX_PROFILE_FUNCTION()
 
 		for (auto& Particle : m_Particles)
 		{
-			Particle.Update(DeltaTime, CameraViewSpacePos, UpdateMatrix);
+			Particle.Update(DeltaTime, ViewMatrix);
 		}
 	}
 

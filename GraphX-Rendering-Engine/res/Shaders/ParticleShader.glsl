@@ -1,7 +1,8 @@
 #shader vertex
 #version 330 core
 
-layout(location = 0) in vec2 vPosition;
+layout(location = 0) in vec3 vPosition;
+layout(location = 1) in vec2 vTexCoords;
 
 out vec2 v_TexCoords;
 
@@ -11,8 +12,8 @@ uniform mat4 u_Projection;
 
 void main()
 {
-	v_TexCoords = vPosition + vec2(0.5f, 0.5f);
-	gl_Position = u_Projection * u_Model * vec4(vPosition, 0.0f, 1.0f);
+	gl_Position = u_Projection * u_Model * vec4(vPosition, 1.0f);
+	v_TexCoords = vTexCoords;
 }
 
 #shader fragment

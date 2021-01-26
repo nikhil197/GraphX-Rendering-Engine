@@ -24,7 +24,7 @@ namespace GraphX
 	public:
 		ParticleSystem(const std::string& name, const ParticleSystemConfig& props, const GM::Vector3& Pos);
 
-		void Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix);
+		void Update(float DeltaTime, const GM::Matrix4& ViewMatrix);
 
 		/* Spawn Particles at the specified location */
 		void SpawnParticles(float DeltaTime);

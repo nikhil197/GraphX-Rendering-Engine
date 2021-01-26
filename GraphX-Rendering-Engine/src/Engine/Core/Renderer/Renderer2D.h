@@ -92,7 +92,10 @@ namespace GraphX
 			// Batch object for batching particles together
 			Scope<class ParticleBatch> ParticleBatch;
 
-			// Shader to render the paticle batch
+			// Shader to render particles (without batch)
+			Ref<class Shader> ParticleShader;
+
+			// Shader to render the particle batch
 			Ref<class Shader> ParticleBatchShader;
 
 			/* Queue containing the objects to be rendered */

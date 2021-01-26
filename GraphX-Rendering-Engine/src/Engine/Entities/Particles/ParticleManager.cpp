@@ -20,7 +20,6 @@ namespace GraphX
 
 		s_Data = new ParticleManager::ParticleManagerData();
 		s_Data->Camera = Camera;
-		s_Data->ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 	}
 
 	void ParticleManager::Shutdown()
@@ -47,18 +46,11 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 		
 		GX_ENGINE_ASSERT(s_Data != nullptr, "Particle Manager is not Initialised");
-
-		if (!GX_ENABLE_BATCH_RENDERING && s_Data->Camera->IsRenderStateDirty())
-		{
-			s_Data->ParticleShader->Bind();
-			s_Data->ParticleShader->SetUniformMat4f("u_Projection", s_Data->Camera->GetProjectionMatrix());
-		}
 		
 		const GM::Matrix4& ViewMatrix = s_Data->Camera->GetViewMatrix();
-		const GM::Vector3 CameraViewSpacePos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
 		for (const auto& System : s_Data->ParticleSystems)
 		{
-			System.second->Update(DeltaTime, CameraViewSpacePos, s_Data->Camera->IsRenderStateDirty());
+			System.second->Update(DeltaTime, ViewMatrix);
 		}
 	}
 

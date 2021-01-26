@@ -157,7 +157,7 @@ namespace GraphX
 
 	void ParticleBatch::AddParticle_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Rotator& Rotation, const GM::Vector4& Color, const GM::Vector2* TextureCoords1, const GM::Vector2* TextureCoords2, float BlendFactor, float TexAtlasRows, float TextureIndex)
 	{
-		GM::Matrix4 transform = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix() * GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, Position);
+		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, Rotation, Position);
 
 		for (int i = 0; i < 4; i++)
 		{

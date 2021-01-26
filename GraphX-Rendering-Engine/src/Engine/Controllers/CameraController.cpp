@@ -21,9 +21,6 @@ namespace GraphX
 		m_RightAxis = GM::Vector3::CrossProduct(m_ViewAxis, m_UpAxis);
 		m_RightAxis.Normalize();
 
-		// Calculate the view and projection matrices (Default projection mode is perspective)
-		UpdateProjectionViewMatrix();
-
 		m_Camera->m_Controller = this;
 	}
 
@@ -164,7 +161,6 @@ namespace GraphX
 			if (m_ProjDataChanged)
 			{
 				GM::ProjectionMatrix::Perspective(m_Camera->m_ProjectionMatrix, m_FieldOfView * m_ZoomLevel, m_AspectRatio, m_NearClipPlane, m_FarClipPlane);
-				m_ProjDataChanged = false;
 			}
 
 			if (m_ViewChanged)
@@ -174,8 +170,6 @@ namespace GraphX
 				m_Camera->m_RotationViewMatrix(0, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(1, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(2, 3) = 0.0f;
-
-				m_ViewChanged = false;
 			}
 		}
 		else if (m_CurrentProjectionMode == ProjectionMode::Orthographic)
@@ -185,7 +179,6 @@ namespace GraphX
 				float HalfOrthoWidth = m_OrthoWidth * m_ZoomLevel / 2.0f;
 				float HalfOrthoHeight = m_OrthoHeight * m_ZoomLevel / 2.0f;
 				GM::ProjectionMatrix::Ortho(m_Camera->m_ProjectionMatrix, -HalfOrthoWidth, HalfOrthoWidth, -HalfOrthoHeight, HalfOrthoHeight, m_NearClipPlane, m_FarClipPlane);
-				m_ProjDataChanged = false;
 			}
 
 			if (m_ViewChanged)
@@ -195,13 +188,17 @@ namespace GraphX
 				m_Camera->m_RotationViewMatrix(0, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(1, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(2, 3) = 0.0f;
-
-				m_ViewChanged = false;
 			}
 		}
 
-		m_Camera->m_ProjectionViewMatrix = m_Camera->m_ProjectionMatrix * m_Camera->m_ViewMatrix;
-		m_Camera->m_RenderStateDirty = true;
+		// Change the Projection view matrix if any change has been made to the projection and view matrices
+		if (m_ProjDataChanged || m_ViewChanged)
+		{
+			m_Camera->m_ProjectionViewMatrix = m_Camera->m_ProjectionMatrix * m_Camera->m_ViewMatrix;
+			m_Camera->m_RenderStateDirty = true;
+			m_ProjDataChanged = false;
+			m_ViewChanged = false;
+		}
 	}
 
 	void CameraController::UpdateCameraOrientation(float xOffset, float yOffset)

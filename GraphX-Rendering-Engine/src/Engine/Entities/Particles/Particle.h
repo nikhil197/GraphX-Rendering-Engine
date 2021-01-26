@@ -35,7 +35,7 @@ namespace GraphX
 		void Init(const ParticleProps& props);
 
 		/* Entity Interface */
-		void Update(float DeltaTime, const GM::Vector3& CameraViewSpacePos, bool UpdateMatrix);
+		void Update(float DeltaTime, const GM::Matrix4& ViewMatrix);
 
 		virtual void Enable(Shader& shader, const std::string& EntityNameInShader = "") const override;
 		

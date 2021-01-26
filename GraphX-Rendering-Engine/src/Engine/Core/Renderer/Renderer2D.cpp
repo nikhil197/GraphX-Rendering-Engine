@@ -68,6 +68,7 @@ namespace GraphX
 		s_Data->ParticleBatch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
 
 		s_Data->BatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/BatchShader2D.glsl", "Batch2D");
+		s_Data->ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 		s_Data->ParticleBatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleBatchShader.glsl", "ParticleBatch");
 
 		// Setup texture slots in the shader
@@ -118,6 +119,11 @@ namespace GraphX
 
 				s_Data->ParticleBatchShader->Bind();
 				s_Data->ParticleBatchShader->SetUniformMat4f("u_Projection", Cam->GetProjectionMatrix());
+			}
+			else
+			{
+				s_Data->ParticleShader->Bind();
+				s_Data->ParticleShader->SetUniformMat4f("u_Projection", Cam->GetProjectionMatrix());
 			}
 		}
 	}
@@ -268,13 +274,11 @@ namespace GraphX
 		}
 		else
 		{
-			const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
-
 			{
 				// Pre Render Stuff
 				GX_PROFILE_SCOPE("Particles - PreRender")
 				
-				ParticleShader->Bind();
+				s_Data->ParticleShader->Bind();
 				s_Data->QuadVA->Bind();
 
 				glDepthMask(false);		// Don't render the particles to the depth buffer
@@ -294,22 +298,22 @@ namespace GraphX
 					if (Texture)
 					{
 						Texture->Bind();
-						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-						ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInAtlas());
+						s_Data->ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInAtlas());
 					}
 					else
 					{
 						// Bind the white texture in case the particle is using colors
 						s_Data->WhiteTexture->Bind();
-						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-						ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
+						s_Data->ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
 					}
+
+					s_Data->ParticleShader->SetUniform1i("u_ParticleTexture", 0);
 
 					for (const Particle& particle : System.operator*())
 					{
 						if (particle.IsActive())
 						{
-							particle.Enable(*ParticleShader);
+							particle.Enable(*(s_Data->ParticleShader));
 							glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 							
 							// Maintain stats
@@ -324,7 +328,7 @@ namespace GraphX
 				// Post Render Stuff
 				GX_PROFILE_SCOPE("Particles - PostRender")
 
-				ParticleShader->UnBind();
+				s_Data->ParticleShader->UnBind();
 				s_Data->QuadVA->UnBind();
 
 				glDepthMask(true);
@@ -336,8 +340,7 @@ namespace GraphX
 	void Renderer2D::RenderParticlesBatched_Internal(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems)
 	{
 		// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
-		const GM::Rotator& ViewRotationInverse = Renderer::s_SceneInfo->SceneCamera->GetRotation() + EngineConstants::AxesTransformRotationOffsetParticles;
-
+		const GM::Matrix4& RotationViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
 		s_Data->ParticleBatch->BeginBatch();
 
 		for (const auto& pair : ParticleSystems)
@@ -352,9 +355,10 @@ namespace GraphX
 					if (particle.IsActive())
 					{
 						const ParticleProps& props = particle.GetProps();
-						GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
+						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
+						GM::Vector3 ParticlePosition = RotationViewMatrix * props.Position;
 						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-						s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
+						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
 					}
 				}
 			}
@@ -365,10 +369,11 @@ namespace GraphX
 					if (particle.IsActive())
 					{
 						const ParticleProps& props = particle.GetProps();
-						GM::Rotator ParticleRotation(ViewRotationInverse.Pitch, ViewRotationInverse.Yaw, ViewRotationInverse.Roll + props.Rotation);
+						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
+						GM::Vector3 ParticlePosition = RotationViewMatrix * props.Position;
 						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 						GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-						s_Data->ParticleBatch->AddParticle(props.Position, { scale, scale }, ParticleRotation, color);
+						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, color);
 					}
 				}
 			}

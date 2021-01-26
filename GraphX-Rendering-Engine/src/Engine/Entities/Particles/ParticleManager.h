@@ -36,9 +36,6 @@ namespace GraphX
 	private:
 		struct ParticleManagerData
 		{
-			/* Shader used to renderer the particles in this particle system*/
-			Ref<Shader> ParticleShader;
-
 			/* All particle systems in the world */
 			std::unordered_map<std::string, Ref<ParticleSystem>> ParticleSystems;
 
