@@ -340,7 +340,7 @@ namespace GraphX
 	void Renderer2D::RenderParticlesBatched_Internal(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems)
 	{
 		// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
-		const GM::Matrix4& RotationViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
+		const GM::Matrix4& ViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
 		s_Data->ParticleBatch->BeginBatch();
 
 		for (const auto& pair : ParticleSystems)
@@ -356,7 +356,7 @@ namespace GraphX
 					{
 						const ParticleProps& props = particle.GetProps();
 						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
-						GM::Vector3 ParticlePosition = RotationViewMatrix * props.Position;
+						GM::Vector3 ParticlePosition = ViewMatrix * props.Position;
 						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
 					}
@@ -370,7 +370,7 @@ namespace GraphX
 					{
 						const ParticleProps& props = particle.GetProps();
 						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
-						GM::Vector3 ParticlePosition = RotationViewMatrix * props.Position;
+						GM::Vector3 ParticlePosition = ViewMatrix * props.Position;
 						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
 						GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
 						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, color);
