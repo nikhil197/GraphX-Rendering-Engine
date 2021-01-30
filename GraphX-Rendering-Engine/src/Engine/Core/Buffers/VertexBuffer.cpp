@@ -4,8 +4,8 @@
 
 namespace GraphX
 {
-	VertexBuffer::VertexBuffer(const void* data, unsigned int size)
-		: m_BufferSize(size)
+	VertexBuffer::VertexBuffer(const void* data, uint32_t size)
+		: RendererAsset(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -16,12 +16,12 @@ namespace GraphX
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	VertexBuffer::VertexBuffer(unsigned int size)
-		: m_BufferSize(size)
+	VertexBuffer::VertexBuffer(uint32_t size)
+		: RendererAsset(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
-			glGenBuffers(1, &m_RendererID);
+		glGenBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, m_BufferSize, nullptr, GL_DYNAMIC_DRAW);
 
@@ -29,7 +29,7 @@ namespace GraphX
 	}
 
 	VertexBuffer::VertexBuffer(const VertexBuffer& Other)
-		: m_BufferSize(Other.m_BufferSize)
+		: RendererAsset(), m_BufferSize(Other.m_BufferSize)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -63,7 +63,7 @@ namespace GraphX
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void VertexBuffer::SetData(const void* data, unsigned int size)
+	void VertexBuffer::SetData(const void* data, uint32_t size)
 	{
 		SetData(data, 0, size);
 	}

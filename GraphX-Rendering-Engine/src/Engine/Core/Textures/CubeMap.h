@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	class CubeMap
+		: public RendererAsset
 	{
 	public:
 		/*
@@ -27,9 +30,6 @@ namespace GraphX
 		~CubeMap();
 
 	private:
-		/* ID for the cubemap used by the renderer */
-		unsigned int m_RendererID;
-
 		/* Path to the cubemap texture */
 		std::string m_FilePath;
 

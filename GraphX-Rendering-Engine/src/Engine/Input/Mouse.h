@@ -47,7 +47,7 @@ namespace GraphX
 		inline const GM::Vector2& GetPosition() const { return m_Position; }
 
 		/* Returns the last frame mouse position */
-		inline const GM::Vector2& GetLastPosition() const { return m_LastPosition; }
+		inline const GM::Vector2& GetPositionDelta() const { return m_PositionDelta; }
 
 		/* Returns the current scroll offset */
 		inline const GM::Vector2& GetScrollOffset() const { return m_ScrollOffset; }
@@ -61,6 +61,9 @@ namespace GraphX
 		/* Returns if the middle mouse button is pressed */
 		inline bool IsMiddleButtonPressed() const { return m_MiddleButtonPressed; }
 
+		/* Returns if the mouse is being dragged (Any Button Pressed + Move) */
+		inline bool IsMouseDragged() const { return m_MouseDragged; }
+
 	private:
 		/* Whether the left mouse button is pressed or not */
 		bool m_LeftButtonPressed : 1;
@@ -71,11 +74,14 @@ namespace GraphX
 		/* Whether the middle mouse button is pressed or not */
 		bool m_MiddleButtonPressed : 1;
 
+		/* Whether the mouse is being dragged */
+		bool m_MouseDragged : 1;
+
 		/* Position of the mouse */
 		GM::Vector2 m_Position;
 
-		/* Position of the mouse in the last frame */
-		GM::Vector2 m_LastPosition;
+		/* Position delta of the mouse in current frame */
+		GM::Vector2 m_PositionDelta;
 
 		/* Current frame offset of the mouse scroll */
 		GM::Vector2 m_ScrollOffset;

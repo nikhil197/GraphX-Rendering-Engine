@@ -4,7 +4,6 @@ namespace GraphX
 {
 	class Shader;
 	class Mesh3D;
-	class Model3D;
 	class Terrain;
 
 	class Renderer3D
@@ -19,9 +18,6 @@ namespace GraphX
 		/* Submit the object to be rendered */
 		static void Submit(const Ref<Mesh3D>& mesh);
 
-		/* Submit the model to be rendered */
-		static void Submit(const Ref<Model3D>& model);
-
 		/* Submit the terrain for rendering */
 		static void Submit(const Ref<Terrain>& terrain);
 
@@ -33,10 +29,10 @@ namespace GraphX
 
 	private:
 		/* Renders the collision bounds for debugging */
-		static void RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model);
+		static void RenderDebugCollisions(const Ref<GM::BoundingBox>& Box);
 
 	private:
-		struct Renderer3DStorage
+		struct Renderer3DData
 		{
 			/* Queue containing the objects to be rendered */
 			std::deque<Ref<Mesh3D>> RenderQueue;
@@ -49,6 +45,6 @@ namespace GraphX
 
 		};
 
-		static Renderer3DStorage* s_Data;
+		static Renderer3DData* s_Data;
 	};
 }

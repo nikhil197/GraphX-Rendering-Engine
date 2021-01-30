@@ -22,12 +22,15 @@ namespace GraphX
 		void Flush() override;
 
 		void AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color);
-		void AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<class Texture2D>& Tex);
+		void AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<class Texture2D>& Tex, const GM::Vector4& TintColor, float tiling);
+
+		void AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const GM::Vector4& Color);
+		void AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const Ref<class Texture2D>& Tex, const GM::Vector4& TintColor, float tiling);
 
 		bool IsFull() const override;
 
 	private:
-		void AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, float textureIndex);
+		void AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const GM::Vector4& Color, float tiling, float textureIndex);
 
 	private:
 		// Buffer to store vertices

@@ -92,6 +92,21 @@ namespace GM
 		/* Moves the box's center to the Location */
 		void MoveTo(const Vector3& Location);
 
+		/* Transforms the bounding box using given transformation matrix */
+		void Transform(const class Matrix4& TransformationMat);
+
+		/**
+			Transforms the bounding box using the given bounds
+			
+			@param Bounds - Original Bounds to transform
+			@param TranformationMat - Matrix used to transform the box
+		*/
+		void Transform(const struct BoxBounds& Bounds, const class Matrix4& TransformationMat);
+
+	public:
+		/* Checks whether the Box intersects with the given ray (starting at Origin, heading in Direction) */
+		static bool RayIntersectionTest(const BoundingBox& Box, const Vector3& Origin, const Vector3& Direction);
+
 	public:
 		/* Stores the minimun extents of the bounding box */
 		Vector3 Min;
@@ -100,7 +115,7 @@ namespace GM
 		Vector3 Max;
 
 		/* Flag whether the box is valid or not */
-		bool IsValid;
+		bool IsValid = false;
 
 	};
 }

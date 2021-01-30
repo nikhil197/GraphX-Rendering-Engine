@@ -26,7 +26,7 @@ namespace GraphX
 		/* Handles events */
 		void OnEvent(class Event& e);
 
-		/* Returns the controlled camer */
+		/* Returns the controlled camera */
 		inline Ref<Camera> GetCamera() { return m_Camera; }
 		
 		inline const Camera& GetCamera() const { return *m_Camera; }
@@ -37,9 +37,9 @@ namespace GraphX
 		void SetCameraPosition(const GM::Vector3& NewPosition);
 
 		/* Returns the current orientation of the camera */
-		inline const GM::Vector3& GetCameraOrientation() const;
+		const GM::Rotator& GetCameraOrientation() const;
 
-		void SetCameraOrientation(const GM::Vector3& NewOrientation);
+		void SetCameraOrientation(const GM::Rotator& NewOrientation);
 
 		/* Returns the current aspect ratio of the camera */
 		inline float GetAspectRatio() const { return m_AspectRatio; }
@@ -83,6 +83,9 @@ namespace GraphX
 		/* Sets new height for the viewport */
 		void SetOrthoHeight(float NewHeight);
 
+		// Returns the forward (view) axis of the camera
+		const GM::Vector3& GetForwardAxis() const { return m_ViewAxis; }
+
 	private:
 		/* Process the input from the keyboard */
 		void ProcessKeyboardInput(float DeltaTime);
@@ -92,6 +95,9 @@ namespace GraphX
 
 		/* Updates the projection view matrix if the camera configuration changes */
 		void UpdateProjectionViewMatrix();
+
+		/* Rotates the camera by xOffset around Up-axis and yOffset around right-axis */
+		void UpdateCameraOrientation(float xOffset, float yOffset);
 
 		/*  Updates the camera on window / viewport resize */ 
 		bool OnViewPortResize(class WindowResizedEvent& e);

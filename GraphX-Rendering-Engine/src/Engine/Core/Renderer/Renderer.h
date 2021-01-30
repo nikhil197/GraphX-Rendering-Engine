@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Engine/Core/Shaders/ShaderLibrary.h"
+#include "RendererResources.h"
 
 namespace GraphX
 {
 	class Mesh2D;
 	class Mesh3D;
-	class Model3D;
 	class Shader;
 	class IndexBuffer;
 
@@ -21,6 +21,7 @@ namespace GraphX
 	{
 		friend class Renderer2D;
 		friend class Renderer3D;
+		friend class ParticleBatch;
 	public:
 		/* Initializes the renderer */
 		static void Init();
@@ -40,9 +41,6 @@ namespace GraphX
 		/* Submit a 3D mesh for rendering */
 		static void Submit(const Ref<Mesh3D>& mesh);
 
-		/* Submit a 3D model for rendering */
-		static void Submit(const Ref<Model3D>& model);
-
 		/* Submit a terrain for rendering */
 		static void Submit(const Ref<Terrain>& terrain);
 
@@ -55,7 +53,7 @@ namespace GraphX
 		/* Renders all the submitted meshes in the scene to the depth buffer */
 		static void RenderDepth(class Shader& DepthShader);
 
-		/* Directly renders (without queueing) the current bound vertex array having Count number of vertices
+		/* Directly renders (without queuing) the current bound vertex array having Count number of vertices
 		* NOTE: This is not for indexed rendering
 		*/
 		static void Render(unsigned int Count);
@@ -90,6 +88,9 @@ namespace GraphX
 
 		/* Info required for rendering current scene */
 		static SceneInfo* s_SceneInfo;
+		
+		/* Renderer data required for the skybox */
+		static SkyboxRenderData* s_SkyboxData;
 
 		/* A Simple renderer to directly render stuff (without queuing) */
 		static SimpleRenderer* s_Renderer;

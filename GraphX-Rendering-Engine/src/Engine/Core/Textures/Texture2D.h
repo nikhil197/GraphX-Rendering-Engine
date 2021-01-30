@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	/* Type of the texture used for the frame buffer */
@@ -11,6 +13,7 @@ namespace GraphX
 	};
 
 	class Texture2D
+		: public RendererAsset
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
@@ -18,13 +21,13 @@ namespace GraphX
 	public:
 		/* Constructor */
 		/* @Param TileTexture - Whether the texture will be used for tilling or not */
-		Texture2D(const std::string& filePath, bool TileTexture = false, unsigned int RowsInTexAtlas = 1);
+		Texture2D(const std::string& filePath, bool TileTexture = false);
 
 		/* Constructor for the framebuffer textures */
-		Texture2D(int width, int height, FramebufferAttachmentType texType);
+		Texture2D(uint32_t width, uint32_t height, FramebufferAttachmentType texType);
 
 		/* Constructor for creating texture by code (Data needs to be set manually) */
-		Texture2D(int width, int height);
+		Texture2D(uint32_t width, uint32_t height);
 
 		/* Bind the texture to the indicated slot */
 		void Bind(unsigned int slot = 0) const;
@@ -35,14 +38,11 @@ namespace GraphX
 		// Set Data of the texture
 		void SetData(void* data, uint32_t size);
 
-		// GPU Texture ID
-		inline uint32_t GetID() const { return m_RendererID; }
-
 		/* Returns the width of the texture */
-		inline int GetWidth() const { return m_Width; }
+		inline uint32_t GetWidth() const { return m_Width; }
 
 		/* Returns the height of the texture */
-		inline int GetHeight() const { return m_Height; }
+		inline uint32_t GetHeight() const { return m_Height; }
 
 		/* Returns the file path of the texture */
 		inline const std::string& GetFilePath() const { return m_FilePath; }
@@ -51,32 +51,29 @@ namespace GraphX
 		inline bool IsTileTexture() const { return m_TileTexture; }
 
 		/* Returns the number of rows in the texture atlas */
-		inline unsigned int GetRowsInTexAtlas() const { return m_RowsInTexAtlas; }
+		virtual uint32_t GetRowsInAtlas() const { return 1; }
+
+		/* Whether this is a texture atlas (or sprite sheet)*/
+		virtual bool IsSpriteSheet() const { return false; }
 
 		/* Equality Test for the texture */
 		bool operator==(const Texture2D& OtherTex) const;
 
 		/* Destroy the texture */
-		~Texture2D();
+		virtual ~Texture2D();
 
-	private:
-		/* ID For the texture */
-		uint32_t m_RendererID;
-
+	protected:
 		/* Path to the texture file */
 		std::string m_FilePath;
 
 		/* Width and height of the texture */
-		int m_Width, m_Height;
+		uint32_t m_Width, m_Height;
 
 		/* Format of the texture storage and the supplied data */
 		uint32_t m_InternalFormat, m_DataFormat;
 
 		/* Whether the texture will be used for tiling or not */
 		bool m_TileTexture;
-
-		/* Number of rows in texture atlas */
-		uint32_t m_RowsInTexAtlas;
 	};
 
 	/* Equality test for a Texture wrapped in reference_wrapper */

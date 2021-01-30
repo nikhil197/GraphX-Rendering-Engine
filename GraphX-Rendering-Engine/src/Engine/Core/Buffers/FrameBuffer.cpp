@@ -7,7 +7,7 @@
 namespace GraphX
 {
 	FrameBuffer::FrameBuffer(int width, int height, FramebufferType Type)
-		: m_RendererID(0), m_Width(width), m_Height(height)
+		: RendererAsset(), m_Width(width), m_Height(height)
 	{
 		GX_PROFILE_FUNCTION()
 

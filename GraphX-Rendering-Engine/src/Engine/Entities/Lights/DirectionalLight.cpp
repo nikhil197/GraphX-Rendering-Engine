@@ -7,14 +7,14 @@
 namespace GraphX
 {
 	DirectionalLight::DirectionalLight(const GM::Vector4& Color, const GM::Vector3& LightDir, float Intensity)
-		: Light(Color, GM::Projection::Ortho(-100.0f, 100.0f, -50.0f, 50.0f, -200.0f, 200.0f), Intensity), Direction(LightDir)
+		: Light(Color, GM::ProjectionMatrix::Ortho(-100.0f, 100.0f, -50.0f, 50.0f, -200.0f, 200.0f), Intensity), Direction(LightDir)
 	{
 	}
 
 	void DirectionalLight::Update(float DeltaTime)
 	{
 		Light::Update(DeltaTime);
-		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GM::View::LookAt(GM::Vector3(0.0f), Direction, GM::Vector3::YAxis);
+		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GM::ViewMatrix::LookAt(GM::Vector3(0.0f), Direction, GM::Vector3::YAxis);
 	}
 
 	void DirectionalLight::Enable(Shader& shader, const std::string& LightName) const

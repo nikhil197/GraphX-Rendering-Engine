@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
 	/* What frame buffer will be used for */
@@ -9,6 +11,7 @@ namespace GraphX
 	};
 
 	class FrameBuffer
+		: public RendererAsset
 	{
 	public:
 		/* Constructor */
@@ -41,9 +44,6 @@ namespace GraphX
 		~FrameBuffer();
 
 	private:
-		/* ID used by the renderer for this buffer */
-		unsigned int m_RendererID;
-
 		/* Width and height of the framebuffer (equal to the screen size) */
 		int m_Width, m_Height;
 

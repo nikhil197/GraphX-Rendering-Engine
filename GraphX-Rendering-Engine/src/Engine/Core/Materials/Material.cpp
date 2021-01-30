@@ -31,11 +31,15 @@ namespace GraphX
 
 		// Bind the textures
 		int NumTex = m_Textures.size();
+
+		// TODO: Also handle the case of more than 9 texture units i.e. 2-digit texture number
+		static std::string TexName("u_Texture ");
 		for (int i = 0; i < NumTex; i++)
 		{
 			const Ref<const Texture2D>& texture = m_Textures[i];
 			texture->Bind(i);
-			m_Shader->SetUniform1i((std::string("u_Texture") + std::to_string(i)).c_str(), i);
+			TexName[TexName.length() - 1] = '0' + i;
+			m_Shader->SetUniform1i(TexName.c_str(), i);
 		}
 	}
 

@@ -13,6 +13,10 @@
 #include "Engine/Core/Shaders/Shader.h"
 #include "Engine/Core/Textures/Texture2D.h"
 
+#include "Engine/Core/Renderer/Renderer2D.h"
+
+#include "Engine/Model/Quad.h"
+
 namespace GraphX
 {
 	Batch2D::Batch2D(uint32_t QuadCount)
@@ -61,12 +65,25 @@ namespace GraphX
 
 		glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr);
 
+		// Maintain stats
+		Renderer2D::s_Data->Stats.DrawCalls++;
+
 		m_Offset = 0;
 		m_IndexCount = 0;
 		m_TextureSlotIndex = 1;
 	}
 
 	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color)
+	{
+		AddQuad(Position, Size, GM::Vector3::ZeroVector, Color);
+	}
+
+	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Tex, const GM::Vector4& TintColor, float tiling)
+	{
+		AddQuad(Position, Size, GM::Vector3::ZeroVector, Tex, TintColor, tiling);
+	}
+
+	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const GM::Vector4& Color)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -79,10 +96,10 @@ namespace GraphX
 
 		float textureIndex = 0.0f;		// White Texture Index
 
-		AddQuad_Internal(Position, Size, Color, textureIndex);
+		AddQuad_Internal(Position, Size, Rotation, Color, 1.0f, textureIndex);
 	}
 
-	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const Ref<Texture2D>& Tex)
+	void Batch2D::AddQuad(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const Ref<class Texture2D>& Tex, const GM::Vector4& TintColor, float tiling)
 	{
 		GX_ENGINE_ASSERT(m_VertexDataPtr != nullptr && m_IndicesDataPtr != nullptr, "Batch::Begin() not called before submitting primities");
 
@@ -112,43 +129,33 @@ namespace GraphX
 			m_TextureIDs[m_TextureSlotIndex++] = Tex->GetID();
 		}
 
-		AddQuad_Internal(Position, Size, GM::Vector4::UnitVector, textureIndex);
+		AddQuad_Internal(Position, Size, Rotation, TintColor, tiling, textureIndex);
 	}
 
-	void Batch2D::AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector4& Color, float textureIndex)
+	void Batch2D::AddQuad_Internal(const GM::Vector3& Position, const GM::Vector2& Size, const GM::Vector3& Rotation, const GM::Vector4& Color, float tiling, float textureIndex)
 	{
-		m_VertexDataPtr->Position = { Position.x, Position.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 0.0f, 0.0f };
-		m_VertexDataPtr->TexIndex = textureIndex;
-		m_VertexDataPtr++;
+		GM::Matrix4 transform = GM::ScaleRotationTranslationMatrix({ Size, 1.0f }, GM::Rotator::MakeFromEuler(Rotation), Position);
 
-		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 1.0f, 0.0f };
-		m_VertexDataPtr->TexIndex = textureIndex;
-		m_VertexDataPtr++;
+		for (int i = 0; i < 4; i++)
+		{
+			m_VertexDataPtr->Position = transform * Quad::s_QuadVertexPositions[i];
+			m_VertexDataPtr->Color = Color;
+			m_VertexDataPtr->TexCoords = Quad::s_QuadVertexTexCoords[i] * tiling;
+			m_VertexDataPtr->TexIndex = textureIndex;
+			m_VertexDataPtr++;
+		}
 
-		m_VertexDataPtr->Position = { Position.x + Size.x, Position.y + Size.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 1.0f, 1.0f };
-		m_VertexDataPtr->TexIndex = textureIndex;
-		m_VertexDataPtr++;
+		for (int i = 0; i < 6; i++)
+		{
+			*m_IndicesDataPtr = m_Offset + Quad::s_QuadIndices[i];
+			m_IndicesDataPtr++;
+		}
 
-		m_VertexDataPtr->Position = { Position.x, Position.y + Size.y, Position.z };
-		m_VertexDataPtr->Color = Color;
-		m_VertexDataPtr->TexCoords = { 0.0f, 1.0f };
-		m_VertexDataPtr->TexIndex = textureIndex;
-		m_VertexDataPtr++;
-
-		*m_IndicesDataPtr = 0 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 1 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 2 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 2 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 3 + m_Offset; m_IndicesDataPtr++;
-		*m_IndicesDataPtr = 0 + m_Offset; m_IndicesDataPtr++;
 		m_Offset += 4;
 		m_IndexCount += 6;
+
+		// Maintain stats
+		Renderer2D::s_Data->Stats.QuadCount++;
 	}
 
 

@@ -28,16 +28,19 @@ namespace GraphX
 	};
 
 	// Not a scoped enum because it doesn't represent any actual thing in the event, unlike event type
-	enum EventCategory
+	namespace EventCategory
 	{
-		NONE = 0,
-		GX_EVENT_CATEGORY_INPUT			= BIT(0),
-		GX_EVENT_CATEGORY_MOUSE			= BIT(1),
-		GX_EVENT_CATEGORY_MOUSE_BUTTON  = BIT(2),
-		GX_EVENT_CATEGORY_KEYBOARD		= BIT(3),
-		GX_EVENT_CATEGORY_WINDOW		= BIT(4),
-		GX_EVENT_CATEGORY_GUI			= BIT(5),
-		GX_EVENT_CATEGORY_ENTITY_CHANGE	= BIT(6)
+		enum Type
+		{
+			NONE = 0,
+			GX_EVENT_CATEGORY_INPUT			= BIT(0),
+			GX_EVENT_CATEGORY_MOUSE			= BIT(1),
+			GX_EVENT_CATEGORY_MOUSE_BUTTON  = BIT(2),
+			GX_EVENT_CATEGORY_KEYBOARD		= BIT(3),
+			GX_EVENT_CATEGORY_WINDOW		= BIT(4),
+			GX_EVENT_CATEGORY_GUI			= BIT(5),
+			GX_EVENT_CATEGORY_ENTITY_CHANGE	= BIT(6)
+		};
 	};
 
 	// Macros to override the base event class methods
@@ -69,7 +72,7 @@ namespace GraphX
 		virtual std::string ToString() const { return GetName(); }
 
 		/* Returns if the event belongs to the specified category */
-		inline bool IsInCategory(EventCategory category)
+		inline bool IsInCategory(EventCategory::Type category)
 		{
 			return GetCategoryFlags() & category;
 		}

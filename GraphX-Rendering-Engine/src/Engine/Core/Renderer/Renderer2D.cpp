@@ -29,14 +29,14 @@ namespace GraphX
 	// Max Particles in a batch
 	static const uint32_t MaxParticlesCount = 5000;
 
-	Renderer2D::Renderer2DStorage* Renderer2D::s_Data = nullptr;
+	Renderer2D::Renderer2DData* Renderer2D::s_Data = nullptr;
 
 	void Renderer2D::Init()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer2D already Initialised");
-		s_Data = new Renderer2D::Renderer2DStorage();
+		s_Data = new Renderer2D::Renderer2DData();
 
 		s_Data->TextureShader = Renderer::GetShaderLibrary().Load("res/Shaders/TextureShader2D.glsl", "Texture2D");
 		s_Data->ShadowDebugShader = Renderer::GetShaderLibrary().Load("res/Shaders/ShadowDebugShader.glsl", "ShadowDebug");
@@ -68,6 +68,7 @@ namespace GraphX
 		s_Data->ParticleBatch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
 
 		s_Data->BatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/BatchShader2D.glsl", "Batch2D");
+		s_Data->ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 		s_Data->ParticleBatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleBatchShader.glsl", "ParticleBatch");
 
 		// Setup texture slots in the shader
@@ -119,6 +120,11 @@ namespace GraphX
 				s_Data->ParticleBatchShader->Bind();
 				s_Data->ParticleBatchShader->SetUniformMat4f("u_Projection", Cam->GetProjectionMatrix());
 			}
+			else
+			{
+				s_Data->ParticleShader->Bind();
+				s_Data->ParticleShader->SetUniformMat4f("u_Projection", Cam->GetProjectionMatrix());
+			}
 		}
 	}
 	
@@ -140,64 +146,120 @@ namespace GraphX
 		}
 		else
 		{
-			s_Data->WhiteTexture->Bind();
-
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", color);
-			s_Data->TextureShader->SetUniform1i("u_Texture", 0);
-
-			GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			s_Data->WhiteTexture->UnBind();
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
+			DrawQuad_Internal(model, color);
 		}
 	}
 		 
-	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawQuad(const GM::Vector2& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
 	{
-		DrawQuad({ position, 0.0f }, size, texture, slot);
+		DrawQuad({ position, 0.0f }, size, texture, tintColor, tiling, textureSlot);
 	}
 
-	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
 	{
 		if (GX_ENABLE_BATCH_RENDERING)
 		{
-			s_Data->Batch->AddQuad(position, size, texture);
+			s_Data->Batch->AddQuad(position, size, texture, tintColor, tiling);
 		}
 		else
 		{
-
-			s_Data->TextureShader->Bind();
-			s_Data->TextureShader->SetUniform4f("u_Tint", GM::Vector4::UnitVector);
-
-			texture->Bind(slot);
-			s_Data->TextureShader->SetUniform1i("u_Texture", slot);
-
-			GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
-			s_Data->TextureShader->SetUniformMat4f("u_Model", model);
-
-			s_Data->QuadVA->Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-			texture->UnBind();
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
+			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
 		}
 	}
 
-	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, unsigned int slot)
+	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color)
+	{
+		DrawRotatedQuad({ position, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const GM::Vector4& color)
+	{
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, rotation, color);
+		}
+		else
+		{
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::MakeFromEuler(rotation), position);
+			DrawQuad_Internal(model, color);
+		}
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector2& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& TintColor, float tiling, uint32_t textureSlot)
+	{
+		DrawRotatedQuad({ position, 0.0f }, size, rotation, texture, TintColor, tiling, textureSlot);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const GM::Vector3& position, const GM::Vector2& size, const GM::Vector3& rotation, const Ref<Texture2D>& texture, const GM::Vector4& tintColor, float tiling, uint32_t textureSlot)
+	{
+		if (GX_ENABLE_BATCH_RENDERING)
+		{
+			s_Data->Batch->AddQuad(position, size, rotation, texture, tintColor, tiling);
+		}
+		else
+		{
+			GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::MakeFromEuler(rotation), position);
+			DrawQuad_Internal(texture, model, tintColor, tiling, textureSlot);
+		}
+	}
+
+	void Renderer2D::DrawQuad_Internal(const GM::Matrix4& transform, const GM::Vector4& color)
+	{
+		s_Data->WhiteTexture->Bind();
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", color);
+		s_Data->TextureShader->SetUniform1i("u_Texture", 0);
+		s_Data->TextureShader->SetUniformMat4f("u_Model", transform);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
+
+		s_Data->WhiteTexture->UnBind();
+	}
+
+	void Renderer2D::DrawQuad_Internal(const Ref<Texture2D>& texture, const GM::Matrix4& transform, const GM::Vector4& color, float tiling, uint32_t textureSlot)
+	{
+		texture->Bind(textureSlot);
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetUniform4f("u_Tint", color);
+		s_Data->TextureShader->SetUniform1f("u_Tiling", tiling);
+		s_Data->TextureShader->SetUniform1i("u_Texture", textureSlot);
+		s_Data->TextureShader->SetUniformMat4f("u_Model", transform);
+
+		s_Data->QuadVA->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
+
+		texture->UnBind();
+	}
+
+	void Renderer2D::DrawDebugQuad(const GM::Vector3& position, const GM::Vector2& size, const Ref<Texture2D>& texture, uint32_t textureSlot)
 	{
 		s_Data->ShadowDebugShader->Bind();
 		
-		texture->Bind(slot);
-		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", slot);
+		texture->Bind(textureSlot);
+		s_Data->ShadowDebugShader->SetUniform1i("u_Texture", textureSlot);
 
-		GM::Matrix4 model = GM::Translation(position) * GM::Scaling({ size, 1.0f });
+		GM::Matrix4 model = GM::ScaleRotationTranslationMatrix(GM::Vector3(size, 1.0f), GM::Rotator::ZeroRotator, position);
 		s_Data->ShadowDebugShader->SetUniformMat4f("u_Model", model);
 
 		s_Data->QuadVA->Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		// Maintain stats
+		s_Data->Stats.QuadCount++;
+		s_Data->Stats.DrawCalls++;
 
 		texture->UnBind();
 	}
@@ -208,55 +270,15 @@ namespace GraphX
 
 		if(GX_ENABLE_BATCH_RENDERING)
 		{
-			const GM::Matrix4& ViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
-			const GM::Vector3 CamViewPos(ViewMatrix(0, 3), ViewMatrix(1, 3), ViewMatrix(2, 3));
-			
-			s_Data->ParticleBatch->BeginBatch();
-
-			for (const auto& pair : ParticleSystems)
-			{
-				const Ref<ParticleSystem>& System = pair.second;
-				const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
-
-				if (Texture)
-				{
-					for (const Particle& particle : System.operator*())
-					{
-						if (particle.IsActive())
-						{
-							const ParticleProps& props = particle.GetProps();
-							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, Texture, particle.GetTexOffsets(), particle.GetBlendFactor());
-						}
-					}
-				}
-				else
-				{
-					for (const Particle& particle : System.operator*())
-					{
-						if (particle.IsActive())
-						{
-							const ParticleProps& props = particle.GetProps();
-							float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
-							GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
-							s_Data->ParticleBatch->AddParticle(props.Position + CamViewPos, { scale, scale }, color);
-						}
-					}
-				}
-			}
-
-			s_Data->ParticleBatch->EndBatch();
-			s_Data->ParticleBatch->Flush();
+			RenderParticlesBatched_Internal(ParticleSystems);
 		}
 		else
 		{
-			const Ref<Shader>& ParticleShader = Renderer::GetShaderLibrary().GetShader("Particle");
-
 			{
 				// Pre Render Stuff
 				GX_PROFILE_SCOPE("Particles - PreRender")
 				
-				ParticleShader->Bind();
+				s_Data->ParticleShader->Bind();
 				s_Data->QuadVA->Bind();
 
 				glDepthMask(false);		// Don't render the particles to the depth buffer
@@ -276,23 +298,27 @@ namespace GraphX
 					if (Texture)
 					{
 						Texture->Bind();
-						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-						ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInTexAtlas());
+						s_Data->ParticleShader->SetUniform1i("u_TexAtlasRows", (int)Texture->GetRowsInAtlas());
 					}
 					else
 					{
 						// Bind the white texture in case the particle is using colors
 						s_Data->WhiteTexture->Bind();
-						ParticleShader->SetUniform1i("u_ParticleTexture", 0);
-						ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
+						s_Data->ParticleShader->SetUniform1i("u_TexAtlasRows", 0);
 					}
+
+					s_Data->ParticleShader->SetUniform1i("u_ParticleTexture", 0);
 
 					for (const Particle& particle : System.operator*())
 					{
 						if (particle.IsActive())
 						{
-							particle.Enable(*ParticleShader);
+							particle.Enable(*(s_Data->ParticleShader));
 							glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+							
+							// Maintain stats
+							s_Data->Stats.QuadCount++;
+							s_Data->Stats.DrawCalls++;
 						}
 					}
 				}
@@ -302,13 +328,59 @@ namespace GraphX
 				// Post Render Stuff
 				GX_PROFILE_SCOPE("Particles - PostRender")
 
-				ParticleShader->UnBind();
+				s_Data->ParticleShader->UnBind();
 				s_Data->QuadVA->UnBind();
 
 				glDepthMask(true);
 				glDisable(GL_BLEND);
 			}
 		}
+	}
+
+	void Renderer2D::RenderParticlesBatched_Internal(const std::unordered_map<std::string, Ref<ParticleSystem>>& ParticleSystems)
+	{
+		// Current Camera rotation plus the Rotation offset used for transforming coordinate axes
+		const GM::Matrix4& ViewMatrix = Renderer::s_SceneInfo->SceneCamera->GetViewMatrix();
+		s_Data->ParticleBatch->BeginBatch();
+
+		for (const auto& pair : ParticleSystems)
+		{
+			const Ref<ParticleSystem>& System = pair.second;
+			const Ref<Texture2D>& Texture = System->GetConfig().ParticleProperties.Texture;
+
+			if (Texture)
+			{
+				for (const Particle& particle : System.operator*())
+				{
+					if (particle.IsActive())
+					{
+						const ParticleProps& props = particle.GetProps();
+						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
+						GM::Vector3 ParticlePosition = ViewMatrix * props.Position;
+						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, Texture, particle.GetSubTextureIndex1(), particle.GetSubTextureIndex2(), GM::Vector4::UnitVector, particle.GetBlendFactor());
+					}
+				}
+			}
+			else
+			{
+				for (const Particle& particle : System.operator*())
+				{
+					if (particle.IsActive())
+					{
+						const ParticleProps& props = particle.GetProps();
+						GM::Rotator ParticleRotation(0.0f, 0.0f, props.Rotation);
+						GM::Vector3 ParticlePosition = ViewMatrix * props.Position;
+						float scale = GM::Utility::Lerp(props.SizeBegin, props.SizeEnd, particle.GetLifeProgress());
+						GM::Vector4 color = GM::Utility::Lerp(props.ColorBegin, props.ColorEnd, particle.GetLifeProgress());
+						s_Data->ParticleBatch->AddParticle(ParticlePosition, { scale, scale }, ParticleRotation, color);
+					}
+				}
+			}
+		}
+
+		s_Data->ParticleBatch->EndBatch();
+		s_Data->ParticleBatch->Flush();
 	}
 
 	void Renderer2D::Submit(const Ref<Mesh2D>& mesh)
@@ -349,6 +421,10 @@ namespace GraphX
 
 			// Draw the object
 			glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			
+			// Maintain Stats
+			s_Data->Stats.QuadCount++;
+			s_Data->Stats.DrawCalls++;
 
 			// Disable the mesh after drawing
 			mesh->Disable();
@@ -372,5 +448,15 @@ namespace GraphX
 
 			Mesh->UnBindBuffers();
 		}
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_Data->Stats, 0, sizeof(Renderer2D::Statistics));
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return s_Data->Stats;
 	}
 }

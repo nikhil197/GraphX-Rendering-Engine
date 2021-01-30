@@ -31,6 +31,7 @@ namespace GraphX
 	}
 
 	VertexArray::VertexArray()
+		: RendererAsset()
 	{
 		GX_PROFILE_FUNCTION()
 

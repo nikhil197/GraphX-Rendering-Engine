@@ -8,7 +8,13 @@
 namespace GM
 {
 	// Define the value of PI (static to make it private to this translation unit i.e. the translation unit in which this header file will be included)
-	static const double PI = 3.14159265;
+	static constexpr float PI = 3.14159265f;
+
+	// Multiplier used to convert angles from degree to radians
+	static constexpr float DEG_TO_RADS = PI / 180;
+
+	// Multiplier used to convert angles from degree to radians
+	static constexpr float RADS_TO_DEG = 1 / DEG_TO_RADS;
 
 	struct Utility
 	{
@@ -20,11 +26,10 @@ namespace GM
 		}
 
 		/* Returns the sqrt of the value */
-		template<typename T>
-		static float Sqrt(const T Value)
+		static float Sqrt(const float Value)
 		{
 			if (Value > 0)
-				return std::sqrt(Value);
+				return std::sqrtf(Value);
 			else
 				return 0;
 		}
@@ -39,13 +44,78 @@ namespace GM
 				Val = Max;
 		}
 
-		template<typename T>
-		static void ClampAngle(T& Val)
+		/* Returns floating point remainder of X / Y */
+		static float Mod(float X, float Y)
 		{
-			if (Val > 360)
-				Val = Val - 360;
-			else if (Val < 0)
-				Val = Val + 360;
+			float Quotient = X / Y;
+			float Div = (float)((int)Quotient) * Y;
+
+			// Rounding and imprecision could cause Div to exceed X and cause the result to be outside the expected range.
+			if (fabsf(Div) > fabsf(X))
+				Div = X;
+
+			return X - Div;
+		}
+
+		/* Clamps an angle to the range [0, 360) */
+		static float ClampAngle(float Angle)
+		{
+			Angle = Mod(Angle, 360.0f);
+			if (Angle < 0.0f)
+			{
+				// shift to [0,360) range
+				Angle += 360.0f;
+			}
+
+			return Angle;
+		}
+
+		/**
+		* Clamps an arbitrary angle to be between the given angles.  Will clamp to nearest boundary.
+		*
+		* @param MinAngleDegrees	"from" angle that defines the beginning of the range of valid angles (sweeping clockwise)
+		* @param MaxAngleDegrees	"to" angle that defines the end of the range of valid angles
+		* @return Returns clamped angle in the range -180..180.
+		*/
+		static float ClampAngle(float Angle, const float Min, const float Max)
+		{
+			// Extent of the range
+			const float Extent = ClampAngle(Max - Min) * 0.5f;
+
+			// Center of the range [Min, Max]
+			const float RangeCenter = ClampAngle(Min + Extent);
+
+			// Offset of 'Angle' from the RangeCenter
+			const float CenterOffset = NormalizeAngle(Angle - RangeCenter);
+
+			// Greater than Max
+			if (CenterOffset > Extent)
+			{
+				return NormalizeAngle(RangeCenter + Extent);
+			}
+			// Less than Min
+			else if(CenterOffset < -Extent)
+			{
+				return NormalizeAngle(RangeCenter - Extent);
+			}
+			
+			// In Range
+			return NormalizeAngle(Angle);
+		}
+
+		/* Clamps an angle to the range [-180, 180) */
+		static float NormalizeAngle(float Angle)
+		{
+			// returns Angle in the range [0,360)
+			Angle = ClampAngle(Angle);
+
+			if (Angle > 180.f)
+			{
+				// shift to (-180,180]
+				Angle -= 360.f;
+			}
+
+			return Angle;
 		}
 
 		/* Returns min of the two values */
@@ -70,60 +140,59 @@ namespace GM
 		}
 
 		/************ Trignometric functions  **************/
+		static void SinAndCos(float& OutSin, float& OutCos, float AngleInDegrees)
+		{
+			OutSin = Sin(AngleInDegrees);
+			OutCos = Cos(AngleInDegrees);
+		}
 
 		// Cosine Function
-		template <typename T>
-		static double Cos(T angleInDegrees)
+		static float Cos(float angleInDegrees)
 		{
-			return cos(angleInDegrees * PI / 180);
+			return cosf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Secant Function
-		template <typename T>
-		static double Sec(T angleInDegrees)
+		static float Sec(float angleInDegrees)
 		{
-			double val = Cos(angleInDegrees);
+			float val = Cos(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
 
 		// Sine Function
-		template <typename T>
-		static double Sin(T angleInDegrees)
+		static float Sin(float angleInDegrees)
 		{
-			return sin(angleInDegrees * PI / 180);
+			return sinf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Cosecant Function
-		template <typename T>
-		static double Csc(T angleInDegrees)
+		static float Csc(float angleInDegrees)
 		{
-			double val = Sin(angleInDegrees);
+			float val = Sin(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
 
 		// Tangent Function
-		template <typename T>
-		static double Tan(T angleInDegrees)
+		static float Tan(float angleInDegrees)
 		{
-			return tan(angleInDegrees * PI / 180);
+			return tanf(angleInDegrees * DEG_TO_RADS);
 		}
 
 		// Cotangent Function
-		template <typename T>
-		static double Cot(T angleInDegrees)
+		static float Cot(float angleInDegrees)
 		{
-			double val = Tan(angleInDegrees);
+			float val = Tan(angleInDegrees);
 
 			if (val == 0)
-				return std::numeric_limits<double>::max();
+				return std::numeric_limits<float>::max();
 			else
 				return 1 / val;
 		}
@@ -131,28 +200,25 @@ namespace GM
 		/************ Inverse Trignometric functions  **************/
 
 		// Inverse Cosine Function
-		template <typename T>
-		static double ACos(T Val)
+		static float ACos(float Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
-			return acos(Val) * 180 / PI;
+			return acosf(Val) * RADS_TO_DEG;
 		}
 
 		// Inverse Sine Function
-		template <typename T>
-		static double ASin(T Val)
+		static float ASin(float Val)
 		{
 			// Make sure that the Val lies within the valid Domain for the inverse operation
 			Clamp(Val, -1.0f, 1.0f);
-			return asin(Val) * 180 / PI;
+			return asinf(Val) * RADS_TO_DEG;
 		}
 
 		// Inverse Tangent Function
-		template <typename T>
-		static double ATan(T Val)
+		static float ATan(float Val)
 		{
-			return atan(Val) * 180 / PI;
+			return atanf(Val) * RADS_TO_DEG;
 		}
 
 		// Linear Interpolation between A and B based on BlendFactor(B/W 0 and 1)

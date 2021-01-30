@@ -4,7 +4,6 @@
 
 #include "Renderer.h"
 #include "Model/Mesh/Mesh3D.h"
-#include "Model/Model3D.h"
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
 
@@ -20,14 +19,14 @@ namespace GraphX
 {
 	using namespace GM;
 
-	Renderer3D::Renderer3DStorage* Renderer3D::s_Data = nullptr;
+	Renderer3D::Renderer3DData* Renderer3D::s_Data = nullptr;
 
 	void Renderer3D::Init()
 	{
 		GX_PROFILE_FUNCTION()
 
 		GX_ENGINE_ASSERT(s_Data == nullptr, "Renderer3D already Initialised");
-		s_Data = new Renderer3D::Renderer3DStorage();
+		s_Data = new Renderer3D::Renderer3DData();
 
 		s_Data->DebugData.VAO = CreateScope<VertexArray>();
 		s_Data->DebugData.VBO = CreateScope<VertexBuffer>(8 * sizeof(Vector3));
@@ -82,17 +81,6 @@ namespace GraphX
 		s_Data->RenderQueue.emplace_back(mesh);
 	}
 
-	void Renderer3D::Submit(const Ref<Model3D>& model)
-	{
-		const Ref<std::vector<Ref<Mesh3D>>>& meshes = model->GetMeshes();
-		
-		for (unsigned int i = 0; i < meshes->size(); i++)
-		{
-			const Ref<Mesh3D>& mesh = meshes->at(i);
-			s_Data->RenderQueue.emplace_back(mesh);
-		}
-	}
-
 	void Renderer3D::Submit(const Ref<Terrain>& terrain)
 	{
 		s_Data->RenderQueue.emplace_back(terrain->GetMesh());
@@ -130,7 +118,7 @@ namespace GraphX
 			// Draw debug collision box
 			if (GX_ENABLE_DEBUG_COLLISIONS_RENDERING)
 			{
-				RenderDebugCollisions(mesh->GetBoundingBox(), Model);
+				RenderDebugCollisions(mesh->GetBoundingBox());
 			}
 		}
 	}
@@ -143,7 +131,7 @@ namespace GraphX
 		{
 			const Ref<Mesh3D>& Mesh = s_Data->RenderQueue.at(i);
 
-			Mesh->BindBuffers();
+			Mesh->Enable();
 
 			// Set the transformation matrix
 			const Matrix4& Model = Mesh->GetModelMatrix();
@@ -152,11 +140,11 @@ namespace GraphX
 			// Draw the object
 			glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-			Mesh->UnBindBuffers();
+			Mesh->Disable();
 		}
 	}
 
-	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box, const GM::Matrix4& Model)
+	void Renderer3D::RenderDebugCollisions(const Ref<GM::BoundingBox>& Box)
 	{
 		GX_PROFILE_FUNCTION()
 		// Todo: Figure out a better structure for debug drawing
@@ -180,7 +168,6 @@ namespace GraphX
 
 			s_Data->DebugData.VAO->Bind();
 			Renderer::s_DebugShader->Bind();
-			Renderer::s_DebugShader->SetUniformMat4f("u_Model", Model);
 			glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, nullptr);
 		}
 	}

@@ -12,7 +12,7 @@ namespace GraphX
 		AddTextureEvent() {}
 
 		EVENT_CLASS_TYPE(GX_ADD_TEXTURE)
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_GUI)
 	};
 
 	class AddModelEvent
@@ -31,7 +31,7 @@ namespace GraphX
 		inline ModelType GetModelType() const { return m_ModelType; }
 
 		EVENT_CLASS_TYPE(GX_LOAD_MODEL)
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_GUI)
 	};
 
 	class CreateTerrainEvent
@@ -49,7 +49,7 @@ namespace GraphX
 		inline const Ref<Terrain>& GetTerrain() const { return m_Terrain; }
 
 		EVENT_CLASS_TYPE(GX_CREATE_TERRAIN)
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_GUI)
 	};
 
 	/* Entity changed events */
@@ -67,7 +67,7 @@ namespace GraphX
 		/* Returns the entity */
 		virtual class Entity& GetEntity() const = 0;
 
-		EVENT_CLASS_CATEGORY(GX_EVENT_CATEGORY_GUI | GX_EVENT_CATEGORY_ENTITY_CHANGE)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_GUI | EventCategory::GX_EVENT_CATEGORY_ENTITY_CHANGE)
 	};
 
 	/* Camera Events */

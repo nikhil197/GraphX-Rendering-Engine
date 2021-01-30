@@ -21,6 +21,14 @@ namespace GraphX
 		{}
 	};
 
+	/* Different cursor input modes for the window */
+	enum class CursorInputMode : int
+	{
+		CURSOR_NORMAL = 0,
+		CURSOR_HIDDEN,
+		CURSOR_DISABLED
+	};
+
 	class Window
 	{
 	public:
@@ -50,6 +58,12 @@ namespace GraphX
 
 		/* Resize the window */
 		void OnResize();
+
+		/* Set a new input mode for the cursor */
+		void SetCursorInputMode(CursorInputMode InputMode);
+
+		/* Returns the underlying native window */
+		inline void* GetNativeWindow() const { return m_Window; }
 
 		/* Returns the width of the window */
 		inline int GetWidth() const { return m_Data.Width; }

@@ -24,31 +24,20 @@ namespace GraphX
 		s_RandNumGenerator.seed(s_RandNumGenerator.default_seed);
 	}
 
-	double EngineUtil::GetRandomValue()
-	{
-		return std::generate_canonical<double, 10>(s_RandNumGenerator);
-	}
-
-	double EngineUtil::GetRandomValue(unsigned int x, unsigned int y, unsigned long long SeedValue)
-	{
-		s_RandNumGenerator.seed(x * 65655 + y * 43434 + SeedValue);
-		return std::generate_canonical<double, 10>(s_RandNumGenerator);
-	}
-
 	std::string EngineUtil::ExtractFileName(const std::string& AbsoluteFilePath)
 	{
-		int LastSlash = AbsoluteFilePath.find_last_of("/\\");
+		size_t LastSlash = AbsoluteFilePath.find_last_of("/\\");
 		LastSlash = LastSlash == std::string::npos ? 0 : LastSlash + 1;
 
-		int LastDot = AbsoluteFilePath.rfind(".");
-		int count = LastDot == std::string::npos ? AbsoluteFilePath.size() - LastSlash : LastDot - LastSlash;
+		size_t LastDot = AbsoluteFilePath.rfind(".");
+		size_t count = LastDot == std::string::npos ? AbsoluteFilePath.size() - LastSlash : LastDot - LastSlash;
 
 		return AbsoluteFilePath.substr(LastSlash, count);
 	}
 
 	std::string EngineUtil::ExtractFileLocation(const std::string& AbsoluteFilePath)
 	{
-		int LastSlash = AbsoluteFilePath.find_last_of("/\\");
+		size_t LastSlash = AbsoluteFilePath.find_last_of("/\\");
 		if (LastSlash == std::string::npos)
 		{
 			return std::string();

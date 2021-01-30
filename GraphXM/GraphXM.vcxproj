@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -22,23 +14,10 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1BE73EEC-C60F-422E-B797-2BED8D339AB9}</ProjectGuid>
     <RootNamespace>GraphXM</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>GraphXM</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -57,12 +36,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -70,16 +43,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(ProjectName)-$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\$(ProjectName)-$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)src\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(ProjectName)-$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\$(ProjectName)-$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)src\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)bin\$(ProjectName)-$(Platform)\$(Configuration)\</OutDir>
@@ -90,19 +53,6 @@
     <OutDir>$(SolutionDir)bin\$(ProjectName)-$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(ProjectName)-$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\GM\</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>GMPch.h</PrecompiledHeaderFile>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -115,25 +65,6 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GMPch.h</PrecompiledHeaderFile>
     </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\GM\</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>GMPch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -155,11 +86,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GM\Geometry\BoxBounds.h" />
     <ClInclude Include="src\GM\GraphX_Geometry.h" />
     <ClInclude Include="src\GM\GMPch.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox2D.h" />
     <ClInclude Include="src\GM\Geometry\Plane.h" />
+    <ClInclude Include="src\GM\Misc\Quat.h" />
+    <ClInclude Include="src\GM\Misc\Rotator.h" />
+    <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\ScaleRotationTranslationMatrix.h" />
+    <ClInclude Include="src\GM\Vectors\IntVector2.h" />
+    <ClInclude Include="src\GM\Vectors\IntVector3.h" />
     <ClInclude Include="src\GraphX_Maths.h" />
     <ClInclude Include="src\GM\GraphX_Matrices.h" />
     <ClInclude Include="src\GM\GraphX_Transform.h" />
@@ -167,19 +105,18 @@
     <ClInclude Include="src\GM\MathUtility.h" />
     <ClInclude Include="src\GM\Matrices\Matrix3.h" />
     <ClInclude Include="src\GM\Matrices\Matrix4.h" />
-    <ClInclude Include="src\GM\Transformations\Projection.h" />
-    <ClInclude Include="src\GM\Transformations\Rotation.h" />
-    <ClInclude Include="src\GM\Transformations\Scaling.h" />
-    <ClInclude Include="src\GM\Transformations\Translation.h" />
-    <ClInclude Include="src\GM\Transformations\View.h" />
+    <ClInclude Include="src\GM\Transformations\ProjectionMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\RotationMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\ScaleMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\TranslationMatrix.h" />
+    <ClInclude Include="src\GM\Transformations\ViewMatrix.h" />
     <ClInclude Include="src\GM\Vectors\Vector2.h" />
     <ClInclude Include="src\GM\Vectors\Vector3.h" />
     <ClInclude Include="src\GM\Vectors\Vector4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GM\Geometry\BoxBounds.cpp" />
     <ClCompile Include="src\GM\GMPch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -188,11 +125,15 @@
     <ClCompile Include="src\GM\Geometry\Plane.cpp" />
     <ClCompile Include="src\GM\Matrices\Matrix3.cpp" />
     <ClCompile Include="src\GM\Matrices\Matrix4.cpp" />
-    <ClCompile Include="src\GM\Transformations\Projection.cpp" />
-    <ClCompile Include="src\GM\Transformations\Rotation.cpp" />
-    <ClCompile Include="src\GM\Transformations\Scaling.cpp" />
-    <ClCompile Include="src\GM\Transformations\Translation.cpp" />
-    <ClCompile Include="src\GM\Transformations\View.cpp" />
+    <ClCompile Include="src\GM\Misc\Quat.cpp" />
+    <ClCompile Include="src\GM\Misc\Rotator.cpp" />
+    <ClCompile Include="src\GM\Transformations\ProjectionMatrix.cpp" />
+    <ClCompile Include="src\GM\Transformations\RotationMatrix.cpp" />
+    <ClCompile Include="src\GM\Transformations\ScaleMatrix.cpp" />
+    <ClCompile Include="src\GM\Transformations\TranslationMatrix.cpp" />
+    <ClCompile Include="src\GM\Transformations\ViewMatrix.cpp" />
+    <ClCompile Include="src\GM\Vectors\IntVector2.cpp" />
+    <ClCompile Include="src\GM\Vectors\IntVector3.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector2.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector3.cpp" />
     <ClCompile Include="src\GM\Vectors\Vector4.cpp" />

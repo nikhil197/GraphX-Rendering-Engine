@@ -1,12 +1,16 @@
 #pragma once
 
+#include "Engine/Core/RendererAsset.h"
+
 namespace GraphX
 {
+	// NOTE: GraphX only support 32-bit index buffers
 	class IndexBuffer
+		: public RendererAsset
 	{
 	public:
 		/* data is the collection of indices and size is the size of collection in bytes */
-		IndexBuffer(const unsigned int* data, unsigned int count);
+		IndexBuffer(const uint32_t* data, uint32_t count);
 
 		/* Creates an empty index buffer (data to be specified using SetData() )*/
 		IndexBuffer(const uint32_t count);
@@ -32,13 +36,10 @@ namespace GraphX
 		~IndexBuffer();
 
 		/* Returns the count */
-		unsigned int GetCount() const { return m_Count; }
+		uint32_t GetCount() const { return m_Count; }
 
 	private:
-		/* ID of the index buffer */
-		unsigned int m_RendererID;
-
 		/* # of primitives to be drawn */
-		unsigned int m_Count;
+		uint32_t m_Count;
 	};
 }

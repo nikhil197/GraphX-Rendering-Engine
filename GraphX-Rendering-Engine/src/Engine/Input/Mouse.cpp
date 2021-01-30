@@ -3,12 +3,15 @@
 #include "Mouse.h"
 #include "Events/MouseEvent.h"
 
+#include "Application.h"
+#include "Window.h"
+
 namespace GraphX
 {
 	std::shared_ptr<Mouse> Mouse::s_Mouse = nullptr;
 
 	Mouse::Mouse()
-		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), Sensitivity(0.1f), ScrollSenstivity(0.1f), m_Position(0), m_LastPosition(0), m_ScrollOffset(0)
+		: m_LeftButtonPressed(0), m_RightButtonPressed(0), m_MiddleButtonPressed(0), m_MouseDragged(0), Sensitivity(1.0f), ScrollSenstivity(0.1f), m_Position(0), m_PositionDelta(0), m_ScrollOffset(0)
 	{}
 
 	void Mouse::Init()
@@ -24,6 +27,14 @@ namespace GraphX
 			m_RightButtonPressed = 1;
 		else if (e.GetButton() == MouseButton::GX_MOUSE_MIDDLE)
 			m_MiddleButtonPressed = 1;
+
+		// If left or right mouse button is pressed, then the mouse is being dragged
+		if (!m_MouseDragged && (m_LeftButtonPressed || m_RightButtonPressed))
+		{
+			// Disable the cursor for unlimited mouse movement
+			m_MouseDragged = 1;
+			Application::Get().GetWindow()->SetCursorInputMode(CursorInputMode::CURSOR_DISABLED);
+		}
 	}
 
 	void Mouse::OnEvent(MouseButtonReleasedEvent& e)
@@ -34,17 +45,22 @@ namespace GraphX
 			m_RightButtonPressed = 0;
 		else if (e.GetButton() == MouseButton::GX_MOUSE_MIDDLE)
 			m_MiddleButtonPressed = 0;
+
+		// Set the cursor back to normal if the mouse was being dragged
+		if (m_MouseDragged && !m_LeftButtonPressed && !m_RightButtonPressed)
+		{
+			m_MouseDragged = 0;
+			Application::Get().GetWindow()->SetCursorInputMode(CursorInputMode::CURSOR_NORMAL);
+		}
 	}
 
 	void Mouse::OnEvent(MouseMovedEvent& e)
 	{
-		m_LastPosition = m_Position;
-
-		float xOffset = e.GetX() - m_Position.x;
-		float yOffset = e.GetY() - m_Position.y;
-
-		m_Position.x += xOffset * Sensitivity;
-		m_Position.y += yOffset * Sensitivity;
+		m_PositionDelta.x = (e.GetX() - m_Position.x) * Sensitivity;
+		m_PositionDelta.y = (e.GetY() - m_Position.y) * Sensitivity;
+		
+		m_Position.x = e.GetX();
+		m_Position.y = e.GetY();
 	}
 
 	void Mouse::OnEvent(MouseScrolledEvent& e)
@@ -55,10 +71,8 @@ namespace GraphX
 
 	void Mouse::Update()
 	{
-		// Update the last mouse position to the current at the end of every frame
-		m_LastPosition = m_Position;
-		
-		// Set the scroll offset back to zero, the event must be handled by the application before updating the mouse
+		// Set the position delta and scroll offset back to zero, the event must be handled by the application before updating the mouse
+		m_PositionDelta = GM::Vector2::ZeroVector;
 		m_ScrollOffset = GM::Vector2::ZeroVector;
 	}
 }

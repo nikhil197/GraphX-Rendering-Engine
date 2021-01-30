@@ -13,6 +13,7 @@
 #include "Engine/Core/Buffers/FrameBuffer.h"
 
 #include "Engine/Core/Textures/Texture2D.h"
+#include "Engine/Core/Textures/SpriteSheet.h"
 
 /* Renderer */
 #include "Engine/Core/Renderer/Renderer.h"
@@ -48,7 +49,6 @@
 
 /* Model */
 #include "Engine/Model/ModelTypes.h"
-#include "Engine/Model/Model3D.h"
 #include "Engine/Model/Mesh/Mesh2D.h"
 #include "Engine/Model/Mesh/Mesh3D.h"
 #include "Engine/model/Cube.h"
@@ -56,26 +56,42 @@
 /* Utils */
 #include "Engine/Utilities/EngineUtil.h"
 #include "Engine/Utilities/FileOpenDialog.h"
+#include "Engine/Utilities/MousePicker.h"
+
+#include "Subsystems/Multithreading/Multithreading.h"
 
 namespace GraphX
 {
 	using namespace GM;
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application(const char* title, int width, int height)
-		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_ParticlesManager(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
+		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
 		GX_PROFILE_FUNCTION()
+
+		GX_ENGINE_ASSERT(!s_Instance, "An Instance is already running!");
+		s_Instance = this;
+
+		/* Initialize subsystems*/
+
+		// Initialize multi-threading
+		Multithreading::Init();
 
 		// Initialise the clock and the logging, and the input devices
 		Log::Init();
 		Clock::Init();
 		Mouse::Init();
 		Keyboard::Init();
-		
+
 		m_Window = new Window(WindowProps(m_Title, width, height));
 		
 		// Set the event callback with the window
 		m_Window->SetEventCallback(BIND_EVENT_FUNC(Application::OnEvent));
+
+		// Intialise the ImGui
+		GraphXGui::Init(BIND_EVENT_FUNC(Application::OnEvent));
 
 		// Initialise the renderer
 		Renderer::Init();
@@ -87,15 +103,15 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), GX_ENGINE_NEAR_PLANE, GX_ENGINE_FAR_PLANE);
+		m_CameraController = CreateRef<CameraController>(GM::Vector3(-3.0f, 0.0f, 0.0f), GM::Vector3::ZeroVector, EngineConstants::UpAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
-		m_DaySkybox  = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Day/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-		m_NightSkybox = CreateRef<Skybox>("res/Shaders/SkyboxShader.glsl", "res/Textures/Skybox/Night/", SkyboxNames, m_CameraController->GetCamera()->GetViewMatrix(), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0, 0.f);
+		m_DaySkybox  = CreateRef<Skybox>("res/Textures/Skybox/Day/", SkyboxNames, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_NightSkybox = CreateRef<Skybox>("res/Textures/Skybox/Night/", SkyboxNames, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.f);
 
 		m_CurrentSkybox = m_NightSkybox;
-
-		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-3.0f, -1.0f, 1.0f));
+		
+		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-1.0f, 3.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
@@ -105,16 +121,18 @@ namespace GraphX
 
 		m_DefaultMaterial = CreateRef<Material>(m_Shader);
 
-		m_Light = CreateRef<PointLight>(Vector3(0, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
+		m_Light = CreateRef<PointLight>(Vector3(0.0f, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
 		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
 		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
-		m_ParticlesManager = CreateRef<ParticleManager>();
-		m_ParticlesManager->Initialize(m_CameraController->GetCamera());	// TODO: Move to a suitable location
+		ParticleManager::Init(m_CameraController->GetCamera());
 
 		m_DefaultTexture  = CreateRef<Texture2D>("res/Textures/stone.jpg");
+
+		// Initialise the mouse picker
+		MousePicker::Init(m_CameraController->GetCamera(), m_Window->GetWidth(), m_Window->GetHeight());
 	}
 
 	void Application::Run()
@@ -138,58 +156,60 @@ namespace GraphX
 			Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
 			CubeMaterial->AddTexture(m_DefaultTexture);
 
-			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, -5.0f), GM::Vector3::ZeroVector, GM::Vector3::UnitVector, CubeMaterial);
+			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(5.0f, -10.0f, 10.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
 			m_Objects3D.emplace_back(cube);
 			cube->bShowDetails = true;
 
-			Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f,	 249.0f), Vector2(1.0f, 1.0f));
+			Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(249.0f, -249.0f, 10.0f), Vector2(1.0f, 1.0f));
 			m_Terrain.emplace_back(ter);
 
 			// Load Trees
 			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
 			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
 
-			Model3D TreeModel("res/Models/tree.obj", TreeMaterial);
-			Ref<Mesh3D> TreeMesh = TreeModel.GetMeshes()->at(0);
-			TreeMesh->Scale = 2.5f * Vector3::UnitVector;
+			std::future<Ref<Mesh3D>> ft = Async<Ref<Mesh3D>>(AsyncExecutionPolicy::ThreadPool, std::bind(&Mesh3D::Load, "res/Models/tree.obj", TreeMaterial));
+			Ref<Mesh3D> TreeMesh = ft.get();
+			//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
+			TreeMesh->Scale *= 2.5f;
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
+				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2, 0.0f);
 				TreeMesh->Position = Position;
-				m_Objects3D.emplace_back(new Mesh3D(*TreeMesh));
+				TreeMesh->Rotation.Roll = -90.0f;
+				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
 			}
 
-			// Load Low Poly Trees
+			// Load Low poly Trees
 			Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
 			LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
 
-			Model3D LowPolyTreeModel("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
-			Ref<Mesh3D> LowPolyTreeMesh = LowPolyTreeModel.GetMeshes()->at(0);
+			Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
 			LowPolyTreeMesh->Scale = Vector3::UnitVector;
 			NumTree = 10;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetWidth() / 2, 0.0f, (2 * (float)EngineUtil::GetRandomValue() - 1) * ter->GetDepth() / 2);
+				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2, 0.0f);
 				LowPolyTreeMesh->Position = Position;
-				m_Objects3D.emplace_back(new Mesh3D(*LowPolyTreeMesh));
+				LowPolyTreeMesh->Rotation.Roll = 90.0f;
+				m_Objects3D.emplace_back(CreateRef<Mesh3D>(LowPolyTreeMesh.operator*()));
 			}
 
 			// Load Stall
 			Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
 			StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
 
-			Model3D StallModel("res/Models/stall.obj", StallMaterial);
-			StallModel.GetMeshes()->at(0)->Position = Vector3(75.0f, 0.0f, -100.0f);
-			m_Objects3D.emplace_back(StallModel.GetMeshes()->at(0));
+			Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
+			StallMesh->Position = Vector3(100.0f, -75.0f, 0.0f);
+			StallMesh->Rotation.Roll = 90.0f;
+			m_Objects3D.emplace_back(StallMesh);
 
 			m_Shader->UnBind();
-
 		}
 		
-		Ref<Texture2D> particleTex = CreateRef<Texture2D>("res/Textures/Particles/particleAtlas.png", false, 4);
+		Ref<SpriteSheet> particleSpriteSheet = CreateRef<SpriteSheet>("res/Textures/Particles/particleAtlas.png", 16, GM::Vector2(32.0f, 32.0f));
 		ParticleProps particleProperties;
-		particleProperties.Texture = particleTex;
+		particleProperties.Texture = particleSpriteSheet;
 		particleProperties.Velocity = GM::Vector3(2.0f);
 		particleProperties.GravityEffect = 0.5f;
 		particleProperties.LifeSpan = 2.0f;
@@ -203,8 +223,8 @@ namespace GraphX
 		config.SizeVariation = 0.5f;
 		config.GravityVariation = 1.0f;
 		
-		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3::ZeroVector);
-		m_ParticlesManager->AddParticleSystem(particleSys);
+		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", config, GM::Vector3::ZeroVector);
+		ParticleManager::AddParticleSystem(particleSys);
 		
 		ParticleProps particleProperties2;
 		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -215,8 +235,20 @@ namespace GraphX
 		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
 
 		config.ParticleProperties = particleProperties2;
-		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", m_ParticlesManager.operator->(), config, GM::Vector3(50.0f, 0.0f, -70.0f));
-		m_ParticlesManager->AddParticleSystem(particleSys2);
+		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 70.0f, 10.0f));
+		ParticleManager::AddParticleSystem(particleSys2);
+
+		{
+			GX_PROFILE_SCOPE("Initialise Resources")
+
+			// Initialise the mesh resources
+			for (size_t i = 0; i < m_Objects3D.size(); i++)
+				m_Objects3D[i]->InitResources();
+
+			// Initialise the terrain resources
+			for (size_t i = 0; i < m_Terrain.size(); i++)
+				m_Terrain[i]->InitResources();
+		}
 
 		// For the purpose of fps count
 		int times = 0;
@@ -225,6 +257,7 @@ namespace GraphX
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
+			GX_PROFILER_NEW_FRAME()
 			GX_PROFILE_SCOPE("Application::Frame")
 
 			// Frame Time in seconds
@@ -241,17 +274,23 @@ namespace GraphX
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
+
+				Renderer2D::Statistics Stats = Renderer2D::GetStats();
+				GX_ENGINE_INFO("Renderer2D Stats: {0} Draw Calls, {1} Quad Count", Stats.DrawCalls, Stats.QuadCount);
 			}
 
 			// No need to update or render stuff if the application (window) is minimised
 			if (!m_IsMinimised)
 			{
+				// Reset Stats at the beginning of the frame 
+				Renderer2D::ResetStats();
+
 				{
 					GX_PROFILE_SCOPE("Frame-Update")
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						m_ParticlesManager->SpawnParticles(DeltaTime);
+						ParticleManager::SpawnParticles(DeltaTime);
 					}
 					
 					// Update all the elements of the scene
@@ -289,7 +328,7 @@ namespace GraphX
 					
 					// Bind the shader and draw the objects
 					m_Shader->Bind();
-					m_ShadowBuffer->BindDepthMap(GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+					m_ShadowBuffer->BindDepthMap(EngineConstants::ShadowMapTextureSlot);
 					ConfigureShaderForRendering(*m_Shader);
 
 					Render2DScene();
@@ -297,9 +336,8 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						m_ParticlesManager->RenderParticles();
+						ParticleManager::RenderParticles();
 					}
-
 
 					Renderer2D::EndScene();
 					Renderer3D::EndScene();
@@ -331,7 +369,7 @@ namespace GraphX
 		{
 			GX_PROFILE_SCOPE("Update::Lights")
 
-			for (unsigned int i = 0; i < m_Lights.size(); i++)
+			for (size_t i = 0; i < m_Lights.size(); i++)
 				m_Lights[i]->Update(DeltaTime);
 		}
 
@@ -339,25 +377,27 @@ namespace GraphX
 		{
 			GX_PROFILE_SCOPE("Update::2D Meshes")
 
-			for (unsigned int i = 0; i < m_Objects2D.size(); i++)
+			for (size_t i = 0; i < m_Objects2D.size(); i++)
 				m_Objects2D[i]->Update(DeltaTime);
 		}
 		
+		// Update lights
 		{
 			GX_PROFILE_SCOPE("Update::3D Meshes")
 
-			for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+			for (size_t i = 0; i < m_Objects3D.size(); i++)
 				m_Objects3D[i]->Update(DeltaTime);
 		}
 
+		// Update Terrain
 		{
 			GX_PROFILE_SCOPE("Update::Terrain")
 
-			for (unsigned int i = 0; i < m_Terrain.size(); i++)
+			for (size_t i = 0; i < m_Terrain.size(); i++)
 				m_Terrain[i]->Update(DeltaTime);
 		}
 
-		m_ParticlesManager->Update(DeltaTime);
+		ParticleManager::Update(DeltaTime);
 
 		DayNightCycleCalculations(DeltaTime);
 
@@ -428,12 +468,13 @@ namespace GraphX
 	void Application::Render2DScene()
 	{
 		Renderer2D::DrawQuad({ -4.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		Renderer2D::DrawRotatedQuad({ -10.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, {0.0f, 0.0f, 45.0f}, GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 		Renderer2D::DrawQuad({ 4.0f, 5.0f, -10.f }, { 5.0f, 5.0f }, m_DefaultTexture);
 
 		if (GX_ENABLE_SHADOWS)
 		{
 			// Draw the debug quad to show the depth map
-			Renderer2D::DrawDebugQuad({-10.0f, 10.0f, 0.0f}, 5 * GM::Vector2::UnitVector, m_ShadowBuffer->GetDepthMap(), GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+			Renderer2D::DrawDebugQuad({-10.0f, 10.0f, 0.0f}, 5 * GM::Vector2::UnitVector, m_ShadowBuffer->GetDepthMap(), EngineConstants::ShadowMapTextureSlot);
 		}
 	}
 
@@ -492,7 +533,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		shader.SetUniform1i("u_ShadowMap", GX_ENGINE_SHADOW_MAP_TEXTURE_SLOT);
+		shader.SetUniform1i("u_ShadowMap", EngineConstants::ShadowMapTextureSlot);
 		shader.SetUniform3f("u_LightPos", m_Light->Position);
 		shader.SetUniform4f("u_LightColor", m_Light->Color);
 
@@ -506,13 +547,13 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		// Send the event to all the layers (once the layer system is in place)
+		// TODO: Send the event to all the layers (once the layer system is in place)
 		m_CameraController->OnEvent(e);
 
 		bool handled = false;
 		EventDispatcher dispatcher(e);
 
-		if (e.IsInCategory(GX_EVENT_CATEGORY_WINDOW))
+		if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_WINDOW))
 		{
 			// handle the window events
 			if (!handled)
@@ -536,7 +577,7 @@ namespace GraphX
 				handled = dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_KEYBOARD))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_KEYBOARD))
 		{
 			if (!handled)
 			{
@@ -547,8 +588,11 @@ namespace GraphX
 				handled = dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FUNC(Application::OnKeyReleased));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_MOUSE))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_MOUSE))
 		{
+			// TODO: Find a better way to do this
+			if (GraphXGui::WantsMouseInput())
+				return;
 			if (!handled)
 			{
 				handled = dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(Application::OnMouseButtonPressed));
@@ -566,7 +610,7 @@ namespace GraphX
 				handled = dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(Application::OnMouseScrolled));
 			}
 		}
-		else if (e.IsInCategory(GX_EVENT_CATEGORY_GUI))
+		else if (e.IsInCategory(EventCategory::GX_EVENT_CATEGORY_GUI))
 		{
 			if (!handled)
 			{
@@ -652,8 +696,31 @@ namespace GraphX
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		GM::Rotation rotation(angle, GM::Vector3::YAxis);
+		GM::RotationMatrix rotation(angle, EngineConstants::UpAxis);
 		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
+	}
+
+	void Application::PickObject()
+	{
+		const GM::Vector3& ForwardAxis = m_CameraController->GetForwardAxis();
+		const GM::Vector3& CameraPos = m_CameraController->GetCamera()->GetPosition();
+		const GM::Vector3& PickerRay = MousePicker::Get()->GetPickerRay();
+		m_SelectedObject3D = nullptr;
+		for (size_t i = 0; i < m_Objects3D.size(); i++)
+		{
+			const Ref<Mesh3D>& Mesh = m_Objects3D[i];
+			// Ignore if the object is behind the camera
+			if (GM::Vector3::DotProduct(Mesh->Position - CameraPos, PickerRay) <= 0)
+				continue;
+
+			// Check for the Picker Ray and Bounding box intersection
+			if (BoundingBox::RayIntersectionTest(*(Mesh->GetBoundingBox()), CameraPos, PickerRay))
+			{
+				Mesh->bShowDetails = true;
+				m_SelectedObject3D = Mesh;
+				break;
+			}
+		}
 	}
 
 #pragma region eventHandlers
@@ -702,6 +769,15 @@ namespace GraphX
 	bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
 		Mouse::GetMouse()->OnEvent(e);
+
+		// DO MOUSE PICKING HERE
+		if (e.GetButton() == MouseButton::GX_MOUSE_LEFT && !Mouse::GetMouse()->IsRightButtonPressed())
+		{
+			PickObject();
+
+			// TODO: Terrain and skybox picking logic
+		}
+
 		return true;
 	}
 
@@ -761,7 +837,7 @@ namespace GraphX
 	{
 		if (e.GetModelType() == ModelType::CUBE)
 		{
-			m_Objects3D.emplace_back(new Cube(GM::Vector3::ZeroVector, GM::Vector3::ZeroVector, GM::Vector3::UnitVector, m_DefaultMaterial));
+			m_Objects3D.emplace_back(new Cube(GM::Vector3::ZeroVector, GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, m_DefaultMaterial));
 			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
 		}
 		else if (e.GetModelType() == ModelType::CUSTOM)
@@ -769,13 +845,9 @@ namespace GraphX
 			FileOpenDialog dialog(ResourceType::MODELS);
 			dialog.Show();
 			
-			Ref<Model3D> model = CreateRef<Model3D>(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial);
-			const Ref<std::vector<Ref<Mesh3D>>>& meshes = model->GetMeshes();
-			
-			for(unsigned int i = 0; i < meshes->size(); i++)
-				m_Objects3D.emplace_back(meshes->at(i));
-
-			m_SelectedObject3D = m_Objects3D[m_Objects3D.size() - 1];
+			Ref<Mesh3D> Mesh = Mesh3D::Load(EngineUtil::ToByteString(dialog.GetAbsolutePath()), m_DefaultMaterial);
+			Mesh->InitResources();
+			m_Objects3D.emplace_back(Mesh);
 		}
 		// Add more model types once added
 
@@ -815,16 +887,38 @@ namespace GraphX
 		return true;
 	}
 
+	bool Application::Exit()
+	{
+		m_IsRunning = false;
+		return true;
+	}
+
 #pragma endregion
 
 	Application::~Application()
 	{
 		GX_ENGINE_INFO("Application: Closing Application.");
 
+		// Release the mesh resources
+		for (size_t i = 0; i < m_Objects3D.size(); i++)
+			m_Objects3D[i]->ReleaseResources();
+
+		// Release the terrain resources
+		for (size_t i = 0; i < m_Terrain.size(); i++)
+			m_Terrain[i]->ReleaseResources();
+
 		// TODO: Cleanup all the renderer assets (vao, vbo, ibo, shader, material, textures, etc.) before losing the opengl contex
 		// i.e. window destruction
+		ParticleManager::Shutdown();
+		
 		Renderer::Shutdown();
 
+		/* Cleanup the ImGui */
+		GraphXGui::Cleanup();
+
 		delete m_Window;
+
+		/* Release resources of subsystems */
+		Multithreading::Shutdown();
 	}
 }

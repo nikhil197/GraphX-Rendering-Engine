@@ -5,7 +5,6 @@ namespace GraphX
 	class Window;
 	class Mesh2D;
 	class Mesh3D;
-	class Model3D;
 	class Material;
 	class Shader;
 	class Texture2D;
@@ -27,6 +26,12 @@ namespace GraphX
 
 		/* Application main method */
 		void Run();
+
+		/* Returns the window of the engine */
+		Window* GetWindow() const { return m_Window; }
+
+		/* Returns the current application instance */
+		static Application& Get() { return *s_Instance; }
 
 		~Application();
 
@@ -72,6 +77,11 @@ namespace GraphX
 
 		bool OnCreateTerrain(class CreateTerrainEvent& e);
 
+		/* Other Events */
+
+		// Exits out of the game loop (or closes the engine)
+		bool Exit();
+
 #pragma endregion
 
 		/* Initializes all the components of the application */
@@ -101,7 +111,13 @@ namespace GraphX
 		/* All the calculations related to the day night cycle */
 		void DayNightCycleCalculations(float DeltaTime);
 
+		/* Mouse pick logic*/
+		void PickObject();
+
 	private:
+		/* Current instance of the application using the engine */
+		static Application* s_Instance;
+
 		/* Application window */
 		Window* m_Window;
 
@@ -159,9 +175,6 @@ namespace GraphX
 		/* Current active skybox */
 		Ref<Skybox> m_CurrentSkybox;
 
-		/* To handle all the particles generated */
-		Ref<ParticleManager> m_ParticlesManager;
-
 		Ref<Shader> m_Shader;
 
 		/* Default Material used by objects */
@@ -171,4 +184,7 @@ namespace GraphX
 
 		Ref<Texture2D> m_DefaultTexture;
 	};
+
+	// To be defined in GraphX CLIENTS
+	Application* CreateApplication();
 }

@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Shader::Shader(const std::string& filePath, const std::string& name)
-		:m_Name(name), m_RendererID(0)
+		: RendererAsset(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -26,7 +26,7 @@ namespace GraphX
 	}
 
 	Shader::Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc)
-		: m_Name(name), m_RendererID(0)
+		: RendererAsset(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -114,12 +114,12 @@ namespace GraphX
 
 	void Shader::SetUniformMat3f(const char* Name, const GM::Matrix3& Mat)
 	{
-		glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
+		glUniformMatrix3fv(GetLocation(Name), 1, GL_TRUE, &Mat(0, 0));
 	}
 
 	void Shader::SetUniformMat4f(const char* Name, const GM::Matrix4& Mat)
 	{
-		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat[0][0]);
+		glUniformMatrix4fv(GetLocation(Name), 1, GL_TRUE, &Mat(0, 0));
 	}
 
 	int Shader::GetLocation(const char* Name)

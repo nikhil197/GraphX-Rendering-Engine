@@ -5,16 +5,57 @@
 #include <ostream>
 
 #include "Engine/Log.h"
+#include "Engine/EngineConfig.h"
 #include "Engine/Utilities/EngineUtil.h"
 
 namespace GraphX
 {
-	struct ProfilerResult
+	#if GX_PROFILING 
+		#if GX_PROFILE_MEMORY
+			#define START_MEMORY_COUNTERS_DECL \
+					uint32_t m_StartMemAllocated;\
+					uint32_t m_StartMemFreed;
+
+			#define INIT_MEM_COUNTERS() \
+				{\
+					const MemoryCounters& counters = ::GraphX::MemoryProfiler::Get().MemCounters;\
+					m_StartMemAllocated = counters.MemoryAllocated;\
+					m_StartMemFreed = counters.MemoryFreed;\
+				}
+
+			#define CALCULATE_MEM_COUNTERS() \
+				{\
+					const MemoryCounters& counters = ::GraphX::MemoryProfiler::Get().MemCounters;\
+					uint32_t MemAllocated = counters.MemoryAllocated - m_StartMemAllocated;\
+					uint32_t MemFreed = counters.MemoryFreed - m_StartMemFreed;\
+					MemoryProfiler::Get().WriteProfile({ m_Name, MemAllocated, MemFreed, startTime + duration });\
+				}
+		#else
+			#define START_MEMORY_COUNTERS_DECL
+			#define INIT_MEM_COUNTERS()
+			#define CALCULATE_MEM_COUNTERS()
+		#endif
+	#else
+		#define START_MEMORY_COUNTERS_DECL
+		#define INIT_MEM_COUNTERS()
+		#define CALCULATE_MEM_COUNTERS()
+	#endif
+
+	struct RunTimeProfilerResult
 	{
-		std::string Name;
+		const char* Name;
 
 		long long StartTime;
 		long long Duration;
+	};
+
+	struct MemoryProfilerResut
+	{
+		const char* Name;
+
+		uint32_t MemAllocated;
+		uint32_t MemFreed;
+		long long Time;
 	};
 
 	struct ProfilerSession
@@ -22,114 +63,102 @@ namespace GraphX
 		const char* Name;
 	};
 
-	class Profiler
+	struct MemoryCounters
+	{
+		uint32_t MemoryAllocated = 0;
+		uint32_t MemoryFreed = 0;
+	};
+
+	class RunTimeProfiler
 	{
 	private:
 		ProfilerSession* m_CurrentSession;
 		std::ofstream m_ProfilerStream;
 
+		/* For preventing string allocations while writing profiles */
+		static const char s_ProfileFormat[];
+		static std::vector<char> s_ProfileString;
+		static uint32_t s_FormatStringLen;
+
 	public:
-		Profiler()
+		RunTimeProfiler()
 			: m_CurrentSession(nullptr)
 		{ }
 
-		void BeginSession(const char* name, const std::string& filePath = "Profiler-Results.json")
+		void BeginSession(const char* name, const std::string& filePath = "Profiler-Results.json");
+
+		void WriteProfile(const RunTimeProfilerResult&& Result);
+
+		void EndSession(); 
+
+		static RunTimeProfiler& Get()
 		{
-			if (m_CurrentSession)
-			{
-				if (Log::GetEngineLogger())
-				{
-					GX_ENGINE_ERROR("CpuProfiler::BeginSession({0}) while '{1}' is already open", name, m_CurrentSession->Name);
-				}
-
-				EndSession_Internal();
-			}
-			else
-			{
-				m_ProfilerStream.open(filePath);
-
-				if (m_ProfilerStream.is_open())
-				{
-					m_CurrentSession = new ProfilerSession({name});
-					WriteHeader();
-				}
-				else
-				{
-					if (Log::GetEngineLogger())
-					{
-						GX_ENGINE_ERROR("Profiler could not open the {0} file.", filePath);
-					}
-				}
-			}
-		}
-
-		void WriteProfile(const ProfilerResult& Result)
-		{
-			std::stringstream profile;
-
-			profile << ",{\"cat\" : \"Scope\", ";
-			profile << "\"dur\" : " << Result.Duration << ',';
-			profile << "\"name\" : \"" << Result.Name << "\", ";
-			profile << "\"ph\" : \"X\", ";
-			profile << "\"pid\" : \"0\", ";
-			profile << "\"tid\" : \"0\", ";
-			profile << "\"ts\" : " << Result.StartTime;
-			profile << "}";
-
-			if (m_CurrentSession)
-			{
-				m_ProfilerStream << profile.str();
-				m_ProfilerStream.flush();
-			}
-		}
-
-		void EndSession()
-		{
-			EndSession_Internal();
-		}
-
-		static Profiler& Get()
-		{
-			static Profiler s_Profiler;
+			static RunTimeProfiler s_Profiler;
 			return s_Profiler;
 		}
 
 	private:
-		void WriteHeader()
-		{
-			m_ProfilerStream << "{ \" otherData\" : { \" version\" : \" GraphX Engine v1.0 \"}, \"traceEvents\" : [{}";
-			m_ProfilerStream.flush();
-		}
+		void WriteHeader();
 
-		void WriteFooter()
-		{
-			m_ProfilerStream << "]}";
-			m_ProfilerStream.flush();
-		}
+		void WriteFooter();
 
-		void EndSession_Internal()
-		{
-			if (m_CurrentSession)
-			{
-				WriteFooter();
-				m_ProfilerStream.close();
-				delete m_CurrentSession;
-				m_CurrentSession = nullptr;
-			}
-		}
+		void EndSession_Internal();
 	};
 
-	class ProfilerTimer
+	class MemoryProfiler
+	{
+	private:
+		ProfilerSession* m_CurrentSession;
+		std::ofstream m_ProfilerStream;
+
+		/* For preventing string allocations for profiling use */
+		static const char s_ProfileFormat[];
+		static std::vector<char> s_ProfileString;
+		static uint32_t s_FormatStringLen;
+
+	public:
+		MemoryCounters MemCounters;
+
+	public:
+		MemoryProfiler()
+			: m_CurrentSession(nullptr)
+		{ }
+
+		void BeginSession(const char* name, const std::string& filePath = "Profiler-Results.json");
+		
+		void WriteProfile(MemoryProfilerResut&& Result);
+
+		void EndSession();
+
+		/* NOTE: DO NOT USE THIS METHOD. ONLY FOR INTERNAL USE */
+		void ResetMemCounters();
+
+		static MemoryProfiler& Get()
+		{
+			static MemoryProfiler s_Profiler;
+			return s_Profiler;
+		}
+
+	private:
+		void WriteHeader();
+
+		void WriteFooter();
+
+		void EndSession_Internal();
+	};
+
+	class ProfilerInstrument
 	{
 		using HighResDuration = std::chrono::duration<long long int, std::micro>;
 	public:
-		ProfilerTimer(const char* name)
+		ProfilerInstrument(const char* name)
 			: m_Name(name), m_Stopped(false)
 		{
 			m_StartTimePoint = std::chrono::high_resolution_clock::now();
+			INIT_MEM_COUNTERS()
 		}
 
-		~ProfilerTimer()
+		~ProfilerInstrument()
 		{
 			if (!m_Stopped)
 				Stop();
@@ -141,26 +170,45 @@ namespace GraphX
 			long long startTime = std::chrono::time_point_cast<HighResDuration>(m_StartTimePoint).time_since_epoch().count();
 			long long duration = std::chrono::time_point_cast<HighResDuration>(endPoint).time_since_epoch().count() - startTime;
 
-			Profiler::Get().WriteProfile({ m_Name, startTime, duration });
+			RunTimeProfiler::Get().WriteProfile({ m_Name, startTime, duration });
 
 			m_Stopped = true;
+
+			CALCULATE_MEM_COUNTERS()
 		}
 
 	private:
 		const char* m_Name;
 		std::chrono::high_resolution_clock::time_point m_StartTimePoint;
 		bool m_Stopped;
+		
+		START_MEMORY_COUNTERS_DECL
 	};
 }
 
+
 #if GX_PROFILING
-	#define GX_PROFILER_BEGIN_SESSION(name, filePath)	::GraphX::Profiler::Get().BeginSession(name, filePath);
-	#define GX_PROFILER_END_SESISON()					::GraphX::Profiler::Get().EndSession();
-	#define GX_PROFILE_SCOPE(name)						::GraphX::ProfilerTimer timer##__LINE__(name);
+	#if GX_PROFILE_MEMORY
+		#define GX_PROFILER_BEGIN_SESSION(name, filePath)\
+			::GraphX::RunTimeProfiler::Get().BeginSession(name, filePath);\
+			::GraphX::MemoryProfiler::Get().BeginSession(name, filePath);
+		
+		#define GX_PROFILER_END_SESISON()\
+			::GraphX::RunTimeProfiler::Get().EndSession();\
+			::GraphX::MemoryProfiler::Get().EndSession();
+
+		#define GX_PROFILER_NEW_FRAME()						::GraphX::MemoryProfiler::Get().ResetMemCounters();
+	#else
+		#define GX_PROFILER_BEGIN_SESSION(name, filePath)	::GraphX::RunTimeProfiler::Get().BeginSession(name, filePath);
+		#define GX_PROFILER_END_SESISON()					::GraphX::RunTimeProfiler::Get().EndSession();
+		#define GX_PROFILER_NEW_FRAME()
+	#endif
+	#define GX_PROFILE_SCOPE(name)						::GraphX::ProfilerInstrument instrument##__LINE__(name);
 	#define GX_PROFILE_FUNCTION()						GX_PROFILE_SCOPE(__FUNCSIG__)
 #else
 	#define GX_PROFILER_BEGIN_SESSION(name, filePath)	
-	#define GX_PROFILER_END_SESISON()					
+	#define GX_PROFILER_END_SESISON()
+	#define GX_PROFILER_NEW_FRAME()
 	#define GX_PROFILE_SCOPE(name)
 	#define GX_PROFILE_FUNCTION() 
 #endif

@@ -6,13 +6,10 @@ namespace GraphX
 
 	class Clock
 	{
-		/* To use as a constructor argument to make it private */
-		struct ConstructorHelper {};
+	private:
+		Clock();
 
 	public:
-		/* Constructor cannot be invoked since the ConstructorHelper is a private type, clock is supposed to be static class */
-		Clock(ConstructorHelper&& ch);
-
 		/* Returns the static instance of the clock */
 		inline static std::shared_ptr<Clock>& GetClock() { return s_Clock; }
 

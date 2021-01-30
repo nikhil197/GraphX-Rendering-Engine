@@ -18,27 +18,27 @@ namespace GraphX
 {
 	using namespace GM;
 
-	double SmoothNoise(int x, int z)
+	double SmoothNoise(int x, int y)
 	{
 		static unsigned long long seed = 7436767332u;
-		double corners = EngineUtil::GetRandomValue(x - 1, z - 1, seed) + EngineUtil::GetRandomValue(x + 1, z - 1, seed)
-			+ EngineUtil::GetRandomValue(x - 1, z + 1, seed) + EngineUtil::GetRandomValue(x + 1, z + 1, seed) / 16.0;
+		double corners = EngineUtil::Rand(x - 1, y - 1, seed) + EngineUtil::Rand(x + 1, y - 1, seed)
+			+ EngineUtil::Rand(x - 1, y + 1, seed) + EngineUtil::Rand(x + 1, y + 1, seed) / 16.0;
 
-		double sides = EngineUtil::GetRandomValue(x - 1, z, seed) + EngineUtil::GetRandomValue(x + 1, z, seed)
-			+ EngineUtil::GetRandomValue(x, z + 1, seed) + EngineUtil::GetRandomValue(x, z - 1, seed) / 8.0;
+		double sides = EngineUtil::Rand(x - 1, y, seed) + EngineUtil::Rand(x + 1, y, seed)
+			+ EngineUtil::Rand(x, y + 1, seed) + EngineUtil::Rand(x, y - 1, seed) / 8.0;
 
-		double center = EngineUtil::GetRandomValue(x, z, seed) / 4.0;
+		double center = EngineUtil::Rand(x, y, seed) / 4.0;
 		return corners + sides + center;
 	}
 
-	double InterpolatedNoise(double x, double z)
+	double InterpolatedNoise(double x, double y)
 	{
 		GX_PROFILE_FUNCTION()
 
 		int intX = (int)x;
-		int intZ = (int)z;
+		int intZ = (int)y;
 		double fracX = x - intX;
-		double fracZ = z - intZ;
+		double fracZ = y - intZ;
 
 		double v1 = SmoothNoise(intX, intZ);
 		double v2 = SmoothNoise(intX + 1, intZ);
@@ -55,15 +55,15 @@ namespace GraphX
 
 	double Terrain::s_Amplitude = 5.0;
 
-	Terrain::Terrain(int Width, int Depth, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
-		: m_Mesh(nullptr), m_Material(nullptr), m_Width(Width), m_Depth(Depth), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
+	Terrain::Terrain(int TilesX, int TilesY, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const Vector3& Position, const Vector2& Scale)
+		: m_Mesh(nullptr), m_Material(nullptr), m_TilesX(TilesX), m_TilesY(TilesY), m_TileSize(TileSize), m_Vertices(nullptr), m_Indices(nullptr)
 	{
 		GX_PROFILE_FUNCTION()
 
 		BuildTerrain();
 		Ref<Shader> shader = CreateRef<Shader>("res/Shaders/TerrainShader.glsl");
 		shader->Bind();
-		shader->SetUniform2i("u_TerrainDimensions", m_Width, m_Depth);
+		shader->SetUniform2i("u_TerrainDimensions", m_TilesX, m_TilesY);
 		shader->SetUniform1f("u_AmbientStrength", 0.01f);
 
 		m_Material = CreateRef<Material>(shader);
@@ -83,7 +83,7 @@ namespace GraphX
 		
 		if (m_Vertices && m_Indices)
 		{
-			m_Mesh = CreateRef<Mesh3D>(Position, Vector3::ZeroVector, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
+			m_Mesh = CreateRef<Mesh3D>(Position, Rotator::ZeroRotator, Vector3(Scale.x, 1.0f, Scale.y), *m_Vertices, *m_Indices, m_Material);
 			
 			delete m_Vertices;
 			delete m_Indices;
@@ -103,37 +103,37 @@ namespace GraphX
 		m_Vertices = new std::vector<Vertex3D>();
 		m_Indices = new std::vector<unsigned int>();
 		Vertex3D vertex;
-		for (int z = 0; z < m_Depth; z++)
+		for (int x_New = 0; x_New < m_TilesX; x_New++)
 		{
-			for (int x = 0; x < m_Width; x++)
+			for (int y_New = 0; y_New < m_TilesY; y_New++)
 			{
 				// Calculate the vertices of the terrain
-				//double yCoord = GetYCoords(x, z);
-				vertex.Position = Vector3(x * m_TileSize, /*(float)yCoord*/-10.0f, -z * m_TileSize);
-				vertex.TexCoord = Vector2((float)x, (float)z);
+				//double zCoord = GetZCoords(x, z);
+				vertex.Position = Vector3(-x_New * m_TileSize, y_New * m_TileSize, /*(float)yCoord*/-10.0f);
+				vertex.TexCoord = Vector2((float)y_New, (float)x_New);
 				m_Vertices->emplace_back(vertex);
 
 				// Calculate the indices for the vertices of the terrain
-				if (x != m_Width - 1 && z != m_Depth - 1)
+				if (y_New != m_TilesX - 1 && x_New != m_TilesY - 1)
 				{
 					// Lower triangle
-					m_Indices->push_back(z * m_Width + x);
-					m_Indices->push_back(z * m_Width + x + 1);
-					m_Indices->push_back(((z + 1) * m_Width) + x + 1);
+					m_Indices->push_back(x_New * m_TilesX + y_New);
+					m_Indices->push_back(x_New * m_TilesX + y_New + 1);
+					m_Indices->push_back(((x_New + 1) * m_TilesX) + y_New + 1);
 
 					// Upper triangle
-					m_Indices->push_back(((z + 1) * m_Width) + x + 1);
-					m_Indices->push_back(((z + 1) * m_Width) + x);
-					m_Indices->push_back(z * m_Width + x);
+					m_Indices->push_back(((x_New + 1) * m_TilesX) + y_New + 1);
+					m_Indices->push_back(((x_New + 1) * m_TilesX) + y_New);
+					m_Indices->push_back(x_New * m_TilesX + y_New);
 				}
 			}
 		}
 
-		for (int z = 0; z < m_Depth; z++)
+		for (int x = 0; x < m_TilesX; x++)
 		{
-			for (int x = 0; x < m_Width; x++)
+			for (int y = 0; y < m_TilesY; y++)
 			{
-				CalculateNormal(x, z);
+				CalculateNormal(x, y);
 			}
 		}
 
@@ -142,23 +142,23 @@ namespace GraphX
 	}
 	
 
-	double Terrain::GetYCoords(int x, int z)
+	double Terrain::GetZCoords(int x, int y)
 	{
-		double total = InterpolatedNoise(x / 8.0 , z / 8.0 ) * s_Amplitude;
-		total += InterpolatedNoise(x / 4.0 , z / 4.0 ) * s_Amplitude / 3.0 ;
-		total += InterpolatedNoise(x / 2.0 , z / 2.0 ) * s_Amplitude / 9.0 ;
+		double total = InterpolatedNoise(x / 8.0 , y / 8.0 ) * s_Amplitude;
+		total += InterpolatedNoise(x / 4.0 , y / 4.0 ) * s_Amplitude / 3.0 ;
+		total += InterpolatedNoise(x / 2.0 , y / 2.0 ) * s_Amplitude / 9.0 ;
 		return total;
 	}
 
-	void Terrain::CalculateNormal(int x, int z)
+	void Terrain::CalculateNormal(int x, int y)
 	{
 		GX_PROFILE_FUNCTION()
 
-		float heightL = m_Vertices->at(Utility::Max((x - 1) + z * m_Width, 0)).Position.y;
-		float heightR = m_Vertices->at(Utility::Min((x + 1) + z * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		float heightD = m_Vertices->at(Utility::Max(x + (z - 1) * m_Width, 0)).Position.y;
-		float heightU = m_Vertices->at(Utility::Min(x + (z + 1) * m_Width, (int)m_Vertices->size() - 1)).Position.y;
-		m_Vertices->at(x + z * m_Width).Normal = Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
+		float heightL = m_Vertices->at(Utility::Max((x - 1) + y * m_TilesX, 0)).Position.y;
+		float heightR = m_Vertices->at(Utility::Min((x + 1) + y * m_TilesX, (int)m_Vertices->size() - 1)).Position.y;
+		float heightD = m_Vertices->at(Utility::Max(x + (y - 1) * m_TilesX, 0)).Position.y;
+		float heightU = m_Vertices->at(Utility::Min(x + (y + 1) * m_TilesX, (int)m_Vertices->size() - 1)).Position.y;
+		m_Vertices->at(x + y * m_TilesX).Normal = Vector3(heightL - heightR, 2.0, heightD - heightU).Normal();
 	}
 	
 	void Terrain::Update(float DeltaTime)
@@ -196,6 +196,21 @@ namespace GraphX
 		{
 			m_Mesh->Disable();
 		}
+	}
+
+	bool Terrain::InitResources()
+	{
+		if (m_Mesh)
+			return m_Mesh->InitResources();
+		return false;
+	}
+
+	bool Terrain::ReleaseResources()
+	{
+		if (m_Mesh)
+			return m_Mesh->ReleaseResources();
+
+		return true;
 	}
 
 	Terrain::~Terrain()

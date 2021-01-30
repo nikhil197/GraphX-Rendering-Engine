@@ -7,6 +7,11 @@
 
 #include "Model\Mesh\Mesh2D.h"
 #include "Model\Mesh\Mesh3D.h"
+#include "Model/Cube.h"
+
+#include "Core/Buffers/VertexBuffer.h"
+#include "Core/Buffers/IndexBuffer.h"
+#include "Core/VertexArray.h"
 
 #include "Shaders\Shader.h"
 
@@ -20,7 +25,7 @@
 namespace GraphX
 {
 #define CheckRenderer() {																		\
-		if(!s_Renderer || !s_SceneInfo)										\
+		if(!s_Renderer || !s_SceneInfo)															\
 		{																						\
 			GX_ENGINE_ASSERT(false, "Renderer Not Initialised before initialising a scene");	\
 		}																						\
@@ -31,6 +36,7 @@ namespace GraphX
 	ShaderLibrary Renderer::s_ShaderLibrary;
 
 	Renderer::SceneInfo* Renderer::s_SceneInfo = nullptr;
+	SkyboxRenderData* Renderer::s_SkyboxData = nullptr;
 	Ref<Shader> Renderer::s_DebugShader = nullptr;
 
 	void Renderer::Init()
@@ -43,6 +49,39 @@ namespace GraphX
 		Renderer3D::Init();
 
 		s_SceneInfo = new Renderer::SceneInfo();
+
+		// Setup the skybox render data
+		s_SkyboxData = new SkyboxRenderData();
+		s_SkyboxData->VAO = CreateScope<VertexArray>();
+		
+		std::vector<uint32_t> indices = Cube::GetIndices();
+		// Top face
+		indices[6] = 7;
+		indices[7] = 3;
+		indices[8] = 6;
+		indices[9] = 6;
+		indices[10] = 3;
+		indices[11] = 2;
+		// Bottom face
+		indices[18] = 0;
+		indices[19] = 4;
+		indices[20] = 1;
+		indices[21] = 1;
+		indices[22] = 4;
+		indices[23] = 5;
+
+		std::vector<GM::Vector3> vertices = Cube::GetVertexPositions();
+		s_SkyboxData->VBO = CreateScope<VertexBuffer>(&vertices[0], vertices.size() * sizeof(GM::Vector3));
+		s_SkyboxData->IBO = CreateRef<IndexBuffer>(&indices[0], indices.size());
+
+		s_SkyboxData->SkyboxShader = s_ShaderLibrary.Load("res/Shaders/SkyboxShader.glsl", "Skybox");
+
+		VertexBufferLayout layout = {
+			{ BufferDataType::Float3 }
+		};
+
+		s_SkyboxData->VAO->AddVertexBuffer(s_SkyboxData->VBO.operator*(), layout);
+		s_SkyboxData->VAO->AddIndexBuffer(s_SkyboxData->IBO.operator*());
 
 		// TODO: Bind this to the GX_ENABLE_DEBUG_COLLISIONS_RENDERING
 		s_DebugShader = s_ShaderLibrary.Load("res/Shaders/DebugCollisionsShader.glsl", "Debug");
@@ -71,6 +110,13 @@ namespace GraphX
 			delete s_SceneInfo;
 			s_SceneInfo = nullptr;
 		}
+
+		if (s_SkyboxData)
+		{
+			delete s_SkyboxData;
+			s_SkyboxData = nullptr;
+		}
+
 		if (s_DebugShader)
 		{
 			s_DebugShader.reset();
@@ -108,11 +154,6 @@ namespace GraphX
 		Renderer3D::Submit(Mesh);
 	}
 
-	void Renderer::Submit(const Ref<Model3D>& Model)
-	{
-		Renderer3D::Submit(Model);
-	}
-
 	void Renderer::Submit(const Ref<Terrain>& Terr)
 	{
 		Renderer3D::Submit(Terr);
@@ -122,6 +163,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
+		s_SkyboxData->VAO->Bind();
 		skybox->Enable();
 
 		// TODO: Think about doing it using render commands
@@ -129,20 +171,19 @@ namespace GraphX
 		glDisable(GL_CULL_FACE);
 
 		// Set the uniforms
-		const Ref<Shader>& shader = s_ShaderLibrary.GetShader("Skybox");
-		shader->Bind();
-		shader->SetUniformMat4f("u_View", skybox->GetView());
-		shader->SetUniform4f("u_BlendColor", skybox->GetBlendColor());
+		s_SkyboxData->SkyboxShader->Bind();
+		s_SkyboxData->SkyboxShader->SetUniformMat4f("u_View", s_SceneInfo->SceneCamera->GetRotationViewMatrix());
+		s_SkyboxData->SkyboxShader->SetUniformMat4f("u_Model", skybox->GetModel());
+		s_SkyboxData->SkyboxShader->SetUniform4f("u_BlendColor", skybox->GetTintColor());
 
 		const CameraController* CamControl = s_SceneInfo->SceneCamera->GetCameraController();
-
 		if (CamControl->GetProjectionMode() == ProjectionMode::Perspective)
-			shader->SetUniformMat4f("u_Projection", s_SceneInfo->SceneCamera->GetProjectionMatrix());
+			s_SkyboxData->SkyboxShader->SetUniformMat4f("u_Projection", s_SceneInfo->SceneCamera->GetProjectionMatrix());
 
-		shader->SetUniform1i("u_Skybox", skybox->GetBindingSlot());
-		shader->SetUniform1f("u_BlendFactor", skybox->BlendFactor);
+		s_SkyboxData->SkyboxShader->SetUniform1i("u_Skybox", EngineConstants::SkyboxBindingSlot);
+		s_SkyboxData->SkyboxShader->SetUniform1f("u_BlendFactor", skybox->BlendFactor);
 
-		RenderIndexed(*skybox->GetIBO());
+		RenderIndexed(s_SkyboxData->IBO.operator*());
 
 		skybox->Disable();
 

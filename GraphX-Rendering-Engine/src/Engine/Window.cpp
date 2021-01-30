@@ -25,9 +25,6 @@ namespace GraphX
 
 		Init(props);
 		
-		// Intialise the ImGui
-		GraphXGui::Init(m_Window, BIND_EVENT_FUNC(Window::OnEvent));
-		
 		GX_ENGINE_INFO("Window: Successfully Created window");
 	}
 
@@ -233,7 +230,7 @@ namespace GraphX
 
 	void Window::OnUpdate()
 	{
-		::GraphX::ProfilerTimer timer(__FUNCSIG__);
+		GX_PROFILE_FUNCTION()
 
 		/* Swap the front and back buffers */
 		glfwSwapBuffers(m_Window);
@@ -249,6 +246,11 @@ namespace GraphX
 		glViewport(0, 0, m_Data.Width, m_Data.Height);
 	}
 
+	void Window::SetCursorInputMode(CursorInputMode InputMode)
+	{
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL + (int)InputMode);
+	}
+
 	Window::~Window()
 	{
 		GX_ENGINE_INFO("Window: Destroying window");
@@ -256,9 +258,6 @@ namespace GraphX
 
 		/* Destroy the Graphics Context */
 		delete m_Context;
-
-		/* Cleanup the ImGui */
-		GraphXGui::Cleanup();
 
 		/* Destroy the window */
 		glfwDestroyWindow(m_Window);

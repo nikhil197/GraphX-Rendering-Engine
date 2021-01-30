@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vectors/Vector3.h"
+
 namespace GM
 {
 	// Forward Declaration
@@ -81,6 +83,9 @@ namespace GM
 		/* Returns the vector obtained after multipying a vec4 with this matrix */
 		const Vector4 operator*(const Vector4& Vec) const;
 
+		/* Returns the vector obtained after multiplying a vec3 with this matrx */
+		const Vector3 operator*(const Vector3& Vec) const;
+
 		/* Returns the elements */
 		const float& operator()(int row, int column) const { return M[row][column]; }
 		float& operator()(int row, int column) { return M[row][column]; }
@@ -105,6 +110,13 @@ namespace GM
 
 		/* Returns an inverse matrix of this matrix */
 		virtual Matrix4 Inverse() const;
+
+	public:
+		/* Extracts the translation vector from the transform matrix */
+		static Vector3 ExtractTranslation(const Matrix4& Mat);
+
+		/* Extracts the scale vector from the transform matrix */
+		static Vector3 ExtractScale(const Matrix4& Mat);
 
 	private:
 		/* Initialise the matrix with Value */

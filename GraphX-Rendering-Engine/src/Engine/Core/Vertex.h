@@ -110,7 +110,7 @@ namespace GraphX
 		GM::Vector2 TexCoords;
 		
 		// Texture slot used for this vertex
-		float TexIndex;
+		float TexIndex = 0.0f;
 
 		static const VertexBufferLayout& VertexLayout()
 		{
@@ -135,27 +135,27 @@ namespace GraphX
 		GM::Vector4 Color;
 
 		// Texture coordinates of the vertex
-		GM::Vector2 TexCoords;
+		GM::Vector2 TexCoords1;
 
 		// Texture offsets for the particle(In case the particle uses a texture atlas)
-		GM::Vector4 TexOffsets;
+		GM::Vector2 TexCoords2;
 
 		// No. of rows in the texture atlas
-		float TexAtlasRows;
+		float TexAtlasRows = 1.0f;
 
 		// Blend factor for blending b/w two stages of the atlas
-		float BlendFactor;
+		float BlendFactor = 0.0f;
 
 		// Texture slot used for this vertex
-		float TexIndex;
+		float TexIndex = 0.0f;
 
 		static const VertexBufferLayout& VertexLayout()
 		{
 			static VertexBufferLayout Layout = {
 				{ BufferDataType::Float3 },	// For Position
 				{ BufferDataType::Float4 },	// For Color
-				{ BufferDataType::Float2 },	// For TexCoords
-				{ BufferDataType::Float4 },	// For TexOffsets 
+				{ BufferDataType::Float2 },	// For TexCoords1
+				{ BufferDataType::Float2 },	// For TexCoords2 
 				{ BufferDataType::Float },	// For TexAtlasRows 
 				{ BufferDataType::Float },	// For BlendFactor 
 				{ BufferDataType::Float },	// For TexIndex

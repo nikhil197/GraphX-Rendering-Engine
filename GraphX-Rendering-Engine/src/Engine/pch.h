@@ -6,6 +6,7 @@
 #include <memory>
 #include <random>
 #include <limits>
+#include <cmath>
 
 /* STL */
 #include <array>
@@ -16,6 +17,9 @@
 #include <sstream>
 #include <fstream>
 #include <functional>
+
+/* Maths Library */
+#include "GraphX_Maths.h"
 
 /********************* Engine Files **************************/
 #include "Engine/EngineConfig.h"
@@ -32,6 +36,3 @@
 #include "Engine/Timer/Timer.h"
 #include "Engine/Utilities/EngineConstants.h"
 #include "Engine/Utilities/EngineProperties.h"
-
-/* Maths Library */
-#include "GraphX_Maths.h"
