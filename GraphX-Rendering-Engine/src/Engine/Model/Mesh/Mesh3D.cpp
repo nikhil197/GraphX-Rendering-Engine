@@ -73,7 +73,7 @@ namespace GraphX
 		GX_ENGINE_INFO("Loading Model {0}", FilePath);
 		GX_PROFILE_FUNCTION()
 
-			GX_ENGINE_ASSERT(InMat != nullptr, "Material cannot be nullptr");
+		GX_ENGINE_ASSERT(InMat != nullptr, "Material cannot be nullptr");
 
 		Ref<Mesh3D> ResultMesh = CreateRef<Mesh3D>(Vector3::ZeroVector, Rotator::ZeroRotator, Vector3::UnitVector);
 

@@ -4,6 +4,8 @@
 #include "Shaders/Shader.h"
 #include "Textures/Texture2D.h"
 
+#include "Engine/Utilities/AssetLoader/AssetLoader.h"
+
 namespace GraphX
 {
 	Material::Material(const Shader& shader)
@@ -45,14 +47,21 @@ namespace GraphX
 
 	void Material::AddTexture(const Ref<const Texture2D>& Tex)
 	{
+		std::lock_guard<std::mutex> lock(m_TextureMutex);
 		m_Textures.emplace_back(Tex);
 	}
 
 	void Material::AddTexture(const std::vector<Ref<const Texture2D>>& Textures)
 	{
+		std::lock_guard<std::mutex> lock(m_TextureMutex);
 		for (const Ref<const Texture2D>& Tex : Textures)
 		{
 			m_Textures.emplace_back(Tex);
 		}
+	}
+
+	void Material::LoadTexture(const std::string& FilePath)
+	{
+		AssetLoader::LoadTexture2D(FilePath, std::bind(static_cast<void(Material::*)(const Ref<const Texture2D>&)>(&Material::AddTexture), this, std::placeholders::_1));
 	}
 }

@@ -14,7 +14,7 @@ namespace GraphX
 	void DirectionalLight::Update(float DeltaTime)
 	{
 		Light::Update(DeltaTime);
-		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GM::ViewMatrix::LookAt(GM::Vector3(0.0f), Direction, GM::Vector3::YAxis);
+		m_LightShadowInfo->LightViewProjMat = m_LightShadowInfo->LightProjMat * GM::ViewMatrix::LookAt(GM::Vector3(0.0f), Direction, EngineConstants::UpAxis);
 	}
 
 	void DirectionalLight::Enable(Shader& shader, const std::string& LightName) const

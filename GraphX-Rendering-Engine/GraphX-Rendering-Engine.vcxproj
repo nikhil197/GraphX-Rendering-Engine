@@ -160,6 +160,7 @@
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
     <ClCompile Include="src\Engine\Gui\GraphXGui.cpp" />
+    <ClCompile Include="src\Engine\Utilities\AssetLoader\AssetLoader.cpp" />
     <ClCompile Include="src\Engine\Utilities\EngineUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp" />
     <ClCompile Include="src\Engine\Utilities\Importer.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />
+    <ClInclude Include="src\Engine\Utilities\AssetLoader\AssetLoader.h" />
     <ClInclude Include="src\Engine\Utilities\EngineConstants.h" />
     <ClInclude Include="src\Engine\Utilities\EngineProperties.h" />
     <ClInclude Include="src\Engine\Utilities\EngineUtil.h" />

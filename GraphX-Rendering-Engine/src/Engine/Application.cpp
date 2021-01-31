@@ -60,6 +60,8 @@
 
 #include "Subsystems/Multithreading/Multithreading.h"
 
+#include "Engine/Utilities/AssetLoader/AssetLoader.h"
+
 namespace GraphX
 {
 	using namespace GM;
@@ -111,7 +113,7 @@ namespace GraphX
 
 		m_CurrentSkybox = m_NightSkybox;
 		
-		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-1.0f, 3.0f, 1.0f));
+		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-1.0f, -3.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
@@ -166,7 +168,7 @@ namespace GraphX
 			// Load Trees
 			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
 			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
-
+			
 			std::future<Ref<Mesh3D>> ft = Async<Ref<Mesh3D>>(AsyncExecutionPolicy::ThreadPool, std::bind(&Mesh3D::Load, "res/Models/tree.obj", TreeMaterial));
 			Ref<Mesh3D> TreeMesh = ft.get();
 			//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
@@ -293,6 +295,9 @@ namespace GraphX
 						ParticleManager::SpawnParticles(DeltaTime);
 					}
 					
+					// Load New Resources Before Updating anything
+					LoadNewResources();
+
 					// Update all the elements of the scene
 					Update(DeltaTime);
 
@@ -355,6 +360,24 @@ namespace GraphX
 
 			//Poll events and swap buffers
 			m_Window->OnUpdate();
+		}
+	}
+
+	void Application::LoadNewResources()
+	{
+		// Load new 3D Meshes
+		{
+			// Lock the queue so that no other thread can access it
+			std::lock_guard<std::mutex> lock(m_Mesh3DMutex);
+			while (!m_Loaded3DMeshes.empty())
+			{
+				Ref<Mesh3D> LoadedMesh3D = m_Loaded3DMeshes.front();
+				m_Loaded3DMeshes.pop_front();
+
+				// Initialise resources and add into the list of meshes
+				LoadedMesh3D->InitResources();
+				m_Objects3D.emplace_back(LoadedMesh3D);
+			}
 		}
 	}
 
@@ -638,6 +661,16 @@ namespace GraphX
 		if (!handled)
 		{
 			GX_ENGINE_ERROR("Unhandled Event: \"{0}\" ", e);
+		}
+	}
+
+	void Application::OnMesh3DLoad(const Ref<Mesh3D>& Mesh)
+	{
+		if (Mesh != nullptr)
+		{
+			std::lock_guard<std::mutex> lock(m_Mesh3DMutex);
+			m_Loaded3DMeshes.emplace_back(Mesh);
+			GX_ENGINE_TRACE("Mesh Loaded on thread {0}", std::this_thread::get_id());
 		}
 	}
 
