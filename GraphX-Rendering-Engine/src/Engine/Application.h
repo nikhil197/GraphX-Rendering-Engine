@@ -90,6 +90,8 @@ namespace GraphX
 		/* Updates the scene */
 		void Update(float DeltaTime);
 
+		void UpdateCameraUniforms();
+
 		/* Configure the shader for rendering by setting the proper uniforms */
 		void ConfigureShaderForRendering(class Shader& shader);
 

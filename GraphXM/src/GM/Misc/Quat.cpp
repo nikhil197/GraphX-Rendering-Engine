@@ -36,10 +36,10 @@ namespace GM
         Utility::SinAndCos(SY, CY, InYaw * 0.5f);
         Utility::SinAndCos(SR, CR, InRoll * 0.5f);
 
-        X = SR * CP * CY - CR * SP * SY;
-        Y = CR * SP * CY + SR * CP * SY;
-        Z = CR * CP * SY - SR * SP * CY;
-        W = CR * CP * CY + SR * SP * SY;
+        X = SP * CY * CR - CP * SY * SR;
+        Y = CP * SY * CR + SP * CY * SR;
+        Z = CP * CY * SR - SP * SY * CR;
+        W = CP * CY * CR + SP * SY * SR;
     }
 
     Quat::Quat(const GM::Rotator& Rotation)

@@ -105,15 +105,15 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		m_CameraController = CreateRef<CameraController>(GM::Vector3(-3.0f, 0.0f, 0.0f), GM::Vector3::ZeroVector, EngineConstants::UpAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
+		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
 		std::vector<std::string> SkyboxNames = { "right.png", "left.png" , "top.png" , "bottom.png" , "front.png" , "back.png" };
 		m_DaySkybox  = CreateRef<Skybox>("res/Textures/Skybox/Day/", SkyboxNames, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 		m_NightSkybox = CreateRef<Skybox>("res/Textures/Skybox/Night/", SkyboxNames, Vector4(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.f);
 
-		m_CurrentSkybox = m_NightSkybox;
+		m_CurrentSkybox = m_DaySkybox;
 		
-		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-1.0f, -3.0f, 1.0f));
+		m_SunLight = CreateRef<DirectionalLight>(GM::Vector4::UnitVector, GM::Vector3(-3.0f, -1.0f, 1.0f));
 		m_Lights.emplace_back(m_SunLight);
 
 		// Basic Lighting Shader 
@@ -158,11 +158,11 @@ namespace GraphX
 			Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
 			CubeMaterial->AddTexture(m_DefaultTexture);
 
-			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(5.0f, -10.0f, 10.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
+			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, 5.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
 			m_Objects3D.emplace_back(cube);
 			cube->bShowDetails = true;
 
-			Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(249.0f, -249.0f, 10.0f), Vector2(1.0f, 1.0f));
+			Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
 			m_Terrain.emplace_back(ter);
 
 			// Load Trees
@@ -176,9 +176,7 @@ namespace GraphX
 			unsigned int NumTree = 100;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2, 0.0f);
-				TreeMesh->Position = Position;
-				TreeMesh->Rotation.Roll = -90.0f;
+				TreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
 			}
 
@@ -191,9 +189,7 @@ namespace GraphX
 			NumTree = 10;
 			for (unsigned int i = 0; i < NumTree; i++)
 			{
-				Vector3 Position((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2, 0.0f);
-				LowPolyTreeMesh->Position = Position;
-				LowPolyTreeMesh->Rotation.Roll = 90.0f;
+				LowPolyTreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
 				m_Objects3D.emplace_back(CreateRef<Mesh3D>(LowPolyTreeMesh.operator*()));
 			}
 
@@ -202,8 +198,7 @@ namespace GraphX
 			StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
 
 			Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
-			StallMesh->Position = Vector3(100.0f, -75.0f, 0.0f);
-			StallMesh->Rotation.Roll = 90.0f;
+			StallMesh->Position = Vector3(75.0f, 0.0f, -100.0f);
 			m_Objects3D.emplace_back(StallMesh);
 
 			m_Shader->UnBind();
@@ -428,7 +423,13 @@ namespace GraphX
 
 		if (m_CameraController->GetCamera()->IsRenderStateDirty())
 		{
-			GX_PROFILE_SCOPE("Update Camera Uniforms")
+			UpdateCameraUniforms();
+		}
+	}
+
+	void Application::UpdateCameraUniforms()
+	{
+		GX_PROFILE_SCOPE("Update Camera Uniforms")
 
 			for (unsigned int i = 0; i < m_Shaders.size(); i++)
 			{
@@ -445,14 +446,13 @@ namespace GraphX
 				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
 			}
 
-			// Update the terrain Material shader (TODO: Find a better way)
-			for (unsigned int i = 0; i < m_Terrain.size(); i++)
-			{
-				const Ref<Shader>& shader = m_Terrain[i]->GetMaterial()->GetShader();
-				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
-				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
-			}
+		// Update the terrain Material shader (TODO: Find a better way)
+		for (unsigned int i = 0; i < m_Terrain.size(); i++)
+		{
+			const Ref<Shader>& shader = m_Terrain[i]->GetMaterial()->GetShader();
+			shader->Bind();
+			shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+			shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
 		}
 	}
 
@@ -729,7 +729,7 @@ namespace GraphX
 		}
 
 		float angle = DeltaTime * 25.0f / (m_EngineDayTime * 10.0f);
-		GM::RotationMatrix rotation(angle, EngineConstants::UpAxis);
+		GM::RotationMatrix rotation(angle, GM::Vector3::YAxis);
 		m_SunLight->Direction = GM::Vector3(rotation * GM::Vector4(m_SunLight->Direction, 1.0f));
 	}
 
@@ -907,6 +907,7 @@ namespace GraphX
 		if (Controller != nullptr)
 		{
 			Controller->SetProjectionMode(e.GetNewProjectionMode());
+			UpdateCameraUniforms();
 			return true;
 		}
 

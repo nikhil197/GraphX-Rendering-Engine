@@ -52,7 +52,7 @@ namespace GraphX
 		else if (m_Active)
 		{
 			float scale = GM::Utility::Lerp(m_Props.SizeBegin, m_Props.SizeEnd, m_ElapsedTime / m_Props.LifeSpan);
-			m_Props.Velocity.z += EngineConstants::GravityValue * m_Props.GravityEffect * DeltaTime;
+			m_Props.Velocity.y += EngineConstants::GravityValue * m_Props.GravityEffect * DeltaTime;
 
 			m_Props.Position += m_Props.Velocity * 0.1f;
 

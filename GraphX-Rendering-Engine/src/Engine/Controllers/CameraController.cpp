@@ -183,7 +183,7 @@ namespace GraphX
 
 			if (m_ViewChanged)
 			{
-				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(3.f, 0.f, 0.0f), EngineConstants::UpAxis);
+				GM::ViewMatrix::LookAt(m_Camera->m_ViewMatrix, m_Camera->m_Position, m_Camera->m_Position + GM::Vector3(0.f, 0.f, -3.0f), GM::Vector3::YAxis);
 				m_Camera->m_RotationViewMatrix = m_Camera->m_ViewMatrix;
 				m_Camera->m_RotationViewMatrix(0, 3) = 0.0f;
 				m_Camera->m_RotationViewMatrix(1, 3) = 0.0f;
@@ -205,7 +205,7 @@ namespace GraphX
 	{
 		m_ViewChanged = true;
 
-		m_Camera->m_Rotation.Pitch += yOffset;
+		m_Camera->m_Rotation.Pitch -= yOffset;
 		m_Camera->m_Rotation.Yaw -= xOffset;
 		
 		//TODO: Also change the roll
