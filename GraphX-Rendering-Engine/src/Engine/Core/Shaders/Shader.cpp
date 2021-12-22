@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Shader::Shader(const std::string& filePath, const std::string& name)
-		: RendererAsset(), m_Name(name)
+		: RendererResource(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -26,7 +26,7 @@ namespace GraphX
 	}
 
 	Shader::Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc)
-		: RendererAsset(), m_Name(name)
+		: RendererResource(), m_Name(name)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -38,6 +38,16 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		glDeleteProgram(m_RendererID);
+	}
+
+	void Shader::InitRHI()
+	{
+
+	}
+
+	void Shader::ReleaseRHI()
+	{
+
 	}
 
 	void Shader::Bind() const

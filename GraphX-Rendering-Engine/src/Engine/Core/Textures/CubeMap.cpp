@@ -7,7 +7,7 @@
 namespace GraphX
 {
 	CubeMap::CubeMap(const std::string& FilePath, const std::vector<std::string>& FileNames)
-		: RendererAsset(), m_FilePath(FilePath), m_FileNames(FileNames)
+		: RendererResource(), m_FilePath(FilePath), m_FileNames(FileNames)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading CubeMap: {0}", FilePath);
@@ -60,6 +60,16 @@ namespace GraphX
 		}
 
 		UnBind();
+	}
+
+	void CubeMap::InitRHI()
+	{
+
+	}
+
+	void CubeMap::ReleaseRHI()
+	{
+
 	}
 
 	void CubeMap::Bind(unsigned int slot) const

@@ -3,6 +3,8 @@
 #include "Engine/Core/Shaders/ShaderLibrary.h"
 #include "RendererResources.h"
 
+#include "Subsystems/Multithreading/Base/RunnableThread.h"
+
 namespace GraphX
 {
 	class Mesh2D;
@@ -16,6 +18,9 @@ namespace GraphX
 	class SimpleRenderer;
 	class Renderer2D;
 	class Renderer3D;
+
+	/* Returns if the current thread is the rendering thread */
+	extern bool IsInRenderingThread(); // To be defined in the Thread Manager
 
 	class Renderer
 	{
@@ -44,6 +49,8 @@ namespace GraphX
 		/* Submit a terrain for rendering */
 		static void Submit(const Ref<Terrain>& terrain);
 
+		static void SubmitRenderCommand(class RenderCommandBase* Cmd);
+
 		/* Render the skybox */
 		static void RenderSkybox(const Ref<class Skybox>& skybox);
 
@@ -66,6 +73,9 @@ namespace GraphX
 
 		/* Returns the shader library */
 		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }
+
+		/* Returns the thread Id for the render thread */
+		static std::thread::id GetRenderThreadID() { return s_RenderThread->GetID(); }
 
 	public:
 		// Maximum number of texture slots available for the renderer 
@@ -94,5 +104,10 @@ namespace GraphX
 
 		/* A Simple renderer to directly render stuff (without queuing) */
 		static SimpleRenderer* s_Renderer;
+
+		/* Render thread */
+		static RunnableThread* s_RenderThread;
+
+		static class RenderThread* s_RenderThreadRunnable;
 	};
 }

@@ -8,7 +8,7 @@
 namespace GraphX
 {
 	Texture2D::Texture2D(const std::string& filePath, bool InTileTexture)
-		: RendererAsset(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(InTileTexture)
+		: RendererResource(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(InTileTexture)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
@@ -61,7 +61,7 @@ namespace GraphX
 	}
 
 	Texture2D::Texture2D(uint32_t width, uint32_t height, FramebufferAttachmentType texType)
-		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false)
+		: RendererResource(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -94,7 +94,7 @@ namespace GraphX
 	}
 
 	Texture2D::Texture2D(uint32_t width, uint32_t height)
-		: RendererAsset(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false)
+		: RendererResource(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -112,6 +112,16 @@ namespace GraphX
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture2D::InitRHI()
+	{
+
+	}
+
+	void Texture2D::ReleaseRHI()
+	{
+
 	}
 
 	void Texture2D::Bind(unsigned int slot) const

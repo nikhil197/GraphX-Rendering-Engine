@@ -150,6 +150,7 @@ namespace GraphX
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 		
 		{
+			Timer timer("Load Scene");
 			GX_PROFILE_SCOPE("Load Scene")
 			
 			std::vector<Ref<const Texture2D>> textures(0);

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
 	/* Class to represent the buffers */
 	class VertexBuffer
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		/*data is the collection of the vertices and size is the size of the collection in bytes */
@@ -17,6 +17,13 @@ namespace GraphX
 
 		/* Copy construct another buffer */
 		VertexBuffer(const VertexBuffer& Other);
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		/* Bind the buffer to the target */
 		void Bind() const;

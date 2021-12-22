@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
@@ -13,7 +13,7 @@ namespace GraphX
 	};
 
 	class Texture2D
-		: public RendererAsset
+		: public RendererResource
 	{
 		/* Required to access the rendererID for the texture to bind to the framebuffer */
 		friend class FrameBuffer;
@@ -34,6 +34,13 @@ namespace GraphX
 
 		/* Unbind the currently bound texture */
 		void UnBind() const;
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		// Set Data of the texture
 		void SetData(void* data, uint32_t size);

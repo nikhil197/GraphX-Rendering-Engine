@@ -7,7 +7,7 @@
 namespace GraphX
 {
 	FrameBuffer::FrameBuffer(int width, int height, FramebufferType Type)
-		: RendererAsset(), m_Width(width), m_Height(height)
+		: RendererResource(), m_Width(width), m_Height(height)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -26,6 +26,16 @@ namespace GraphX
 
 		GX_ENGINE_ASSERT(m_DepthMap != nullptr && glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Unable to Create Framebuffer");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void FrameBuffer::InitRHI()
+	{
+
+	}
+
+	void FrameBuffer::ReleaseRHI()
+	{
+
 	}
 
 	void FrameBuffer::Bind() const

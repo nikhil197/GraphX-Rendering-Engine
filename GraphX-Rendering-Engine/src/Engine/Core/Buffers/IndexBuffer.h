@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
 	// NOTE: GraphX only support 32-bit index buffers
 	class IndexBuffer
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		/* data is the collection of indices and size is the size of collection in bytes */
@@ -17,6 +17,13 @@ namespace GraphX
 
 		/* Copy Construct an index buffer */
 		IndexBuffer(const IndexBuffer& Other);
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		/* Bind the index buffer */
 		void Bind() const;

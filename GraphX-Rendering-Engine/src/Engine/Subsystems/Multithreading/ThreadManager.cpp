@@ -3,6 +3,8 @@
 
 #include "Subsystems/Multithreading/Base/RunnableThread.h"
 
+#include "Renderer/Renderer.h"
+
 namespace GraphX
 {
 	ThreadManager& ThreadManager::Get()
@@ -28,5 +30,11 @@ namespace GraphX
 		{
 			m_Threads.erase(itr);
 		}
+	}
+
+	// Some definitions
+	bool IsInRenderingThread()
+	{
+		return std::this_thread::get_id() == Renderer::GetRenderThreadID();
 	}
 }

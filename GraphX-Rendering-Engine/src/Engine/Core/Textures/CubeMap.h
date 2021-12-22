@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
 	class CubeMap
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		/*
@@ -14,6 +14,13 @@ namespace GraphX
 		* @param FileNames names of the files to be used as textures for the six faces of the cubemap. Order of the names should be right, left, top, bottom, front, back faces
 		*/
 		CubeMap(const std::string& FilePath, const std::vector<std::string>& FileNames);
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		/* Bind the cubemap to specified slot */
 		void Bind(unsigned int slot = 0) const;

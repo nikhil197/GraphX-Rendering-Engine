@@ -6,3 +6,5 @@
 #define BIND_EVENT_FUNC(x) std::bind(&x, this, std::placeholders::_1)
 
 #define BIT(x) (1 << x)
+
+#define PREPROCESSORJOIN(x, y) x##y
