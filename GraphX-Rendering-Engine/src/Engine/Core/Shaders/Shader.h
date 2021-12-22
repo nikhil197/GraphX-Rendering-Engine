@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
@@ -12,7 +12,7 @@ namespace GraphX
 	};
 
 	class Shader
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		/* filePath is the path to the source file */
@@ -21,6 +21,13 @@ namespace GraphX
 		Shader(const std::string& name, const std::string& vertexShaderSrc, const std::string& fragShaderSrc);
 
 		~Shader();
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		/* Bind the shader */
 		void Bind() const;

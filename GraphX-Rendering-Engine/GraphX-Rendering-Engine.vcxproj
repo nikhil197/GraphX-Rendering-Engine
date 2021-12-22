@@ -118,6 +118,7 @@
     <ClCompile Include="src\Engine\Core\Materials\Material.cpp" />
     <ClCompile Include="src\Engine\Core\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Engine\Controllers\CameraController.cpp" />
+    <ClCompile Include="src\Engine\Core\Renderer\RendererCommandList.cpp" />
     <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SpriteSheet.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SubTexture2D.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Engine\Timer\Clock.cpp" />
     <ClCompile Include="src\Engine\Timer\Timer.cpp" />
     <ClCompile Include="src\Engine\Gui\GraphXGui.cpp" />
+    <ClCompile Include="src\Engine\Utilities\AssetLoader\AssetLoader.cpp" />
     <ClCompile Include="src\Engine\Utilities\EngineUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp" />
     <ClCompile Include="src\Engine\Utilities\Importer.cpp" />
@@ -199,8 +201,9 @@
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Engine\Core\GraphicsContext.h" />
     <ClInclude Include="src\Engine\Core\Materials\Material.h" />
-    <ClInclude Include="src\Engine\Core\RendererAsset.h" />
+    <ClInclude Include="src\Engine\Core\RendererResource.h" />
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\RendererCommandList.h" />
     <ClInclude Include="src\Engine\Core\Renderer\RendererResources.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
@@ -255,6 +258,7 @@
     <ClInclude Include="src\Engine\Timer\Clock.h" />
     <ClInclude Include="src\Engine\Timer\Timer.h" />
     <ClInclude Include="src\Engine\Gui\GraphXGui.h" />
+    <ClInclude Include="src\Engine\Utilities\AssetLoader\AssetLoader.h" />
     <ClInclude Include="src\Engine\Utilities\EngineConstants.h" />
     <ClInclude Include="src\Engine\Utilities\EngineProperties.h" />
     <ClInclude Include="src\Engine\Utilities\EngineUtil.h" />

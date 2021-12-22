@@ -5,7 +5,7 @@
 namespace GraphX
 {
 	IndexBuffer::IndexBuffer(const uint32_t* data, uint32_t count)
-		: RendererAsset(), m_Count(count)
+		: RendererResource(), m_Count(count)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -17,7 +17,7 @@ namespace GraphX
 	}
 
 	IndexBuffer::IndexBuffer(const uint32_t count)
-		: RendererAsset(), m_Count(count)
+		: RendererResource(), m_Count(count)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -28,7 +28,7 @@ namespace GraphX
 	}
 
 	IndexBuffer::IndexBuffer(const IndexBuffer& Other)
-		: RendererAsset(), m_Count(Other.m_Count)
+		: RendererResource(), m_Count(Other.m_Count)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -46,6 +46,16 @@ namespace GraphX
 		// Unbind
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);
+	}
+
+	void IndexBuffer::InitRHI()
+	{
+
+	}
+
+	void IndexBuffer::ReleaseRHI()
+	{
+
 	}
 
 	void IndexBuffer::Bind() const

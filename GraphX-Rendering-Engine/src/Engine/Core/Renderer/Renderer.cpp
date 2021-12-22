@@ -4,6 +4,7 @@
 #include "Renderer3D.h"
 #include "Renderer2D.h"
 #include "SimpleRenderer.h"
+#include "RendererCommandList.h"
 
 #include "Model\Mesh\Mesh2D.h"
 #include "Model\Mesh\Mesh3D.h"
@@ -20,6 +21,8 @@
 
 #include "Engine/Controllers/CameraController.h"
 
+#include "Subsystems/Multithreading/Base/IRunnable.h"
+
 #include "GL/glew.h"
 
 namespace GraphX
@@ -31,6 +34,63 @@ namespace GraphX
 		}																						\
 	}
 
+	class RenderThread
+		: public IRunnable
+	{
+		friend class Renderer;
+	private:
+		RendererCommandList* m_CommandList;
+
+		// Whether it's time for the thread to exit
+		bool m_Exit;
+
+	public:
+		RenderThread()
+			: m_CommandList(nullptr), m_Exit(false)
+		{}
+
+		void ShutdownRendering()
+		{
+			m_Exit = true;
+		}
+
+		virtual bool Init() override
+		{
+			// TODO: Set the render context from here
+
+			m_CommandList = new RendererCommandList();
+			return true;
+		}
+
+		virtual uint32_t Run() override
+		{
+			while (!m_Exit)
+			{
+				// keep executing the render commands here
+				m_CommandList->SwapCommandBuffers();
+
+				while (!m_CommandList->m_CommandsForCurrentPass.empty())
+				{
+					RenderCommandBase* command = m_CommandList->m_CommandsForCurrentPass.front();
+					command->ExecuteAndDestruct();
+					m_CommandList->m_CommandsForCurrentPass.pop_front();
+				}
+			}
+
+			return 0;
+		}
+
+		virtual void Stop() override
+		{
+
+		}
+
+		virtual void Exit() override
+		{
+			// Shutdown the stuff here
+		}
+	};
+
 	SimpleRenderer* Renderer::s_Renderer = nullptr;
 
 	ShaderLibrary Renderer::s_ShaderLibrary;
@@ -38,12 +98,18 @@ namespace GraphX
 	Renderer::SceneInfo* Renderer::s_SceneInfo = nullptr;
 	SkyboxRenderData* Renderer::s_SkyboxData = nullptr;
 	Ref<Shader> Renderer::s_DebugShader = nullptr;
+	RunnableThread* Renderer::s_RenderThread = nullptr;
+	RenderThread* Renderer::s_RenderThreadRunnable = new RenderThread();
 
 	void Renderer::Init()
 	{
 		GX_PROFILE_FUNCTION()
 
-		s_Renderer   = new SimpleRenderer();
+		s_RenderThread = (RunnableThread*)IThread::Create(s_RenderThreadRunnable, EngineConstants::RenderThreadName);
+
+		GX_ENGINE_ASSERT(s_RenderThread != nullptr, "Failed to create the Render Thread")
+
+		s_Renderer = new SimpleRenderer();
 
 		Renderer2D::Init();
 		Renderer3D::Init();
@@ -157,6 +223,11 @@ namespace GraphX
 	void Renderer::Submit(const Ref<Terrain>& Terr)
 	{
 		Renderer3D::Submit(Terr);
+	}
+
+	void Renderer::SubmitRenderCommand(RenderCommandBase* Cmd)
+	{
+		s_RenderThreadRunnable->m_CommandList->Push(Cmd);
 	}
 
 	void Renderer::RenderSkybox(const Ref<class Skybox>& skybox)

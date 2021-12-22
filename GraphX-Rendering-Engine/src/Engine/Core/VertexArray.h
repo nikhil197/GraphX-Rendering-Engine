@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
@@ -9,7 +9,7 @@ namespace GraphX
 	class IndexBuffer;
 
 	class VertexArray
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		VertexArray();
@@ -20,6 +20,13 @@ namespace GraphX
 		void AddVertexBuffer(const VertexBuffer& vbo, const VertexBufferLayout& layout);
 
 		void AddIndexBuffer(const IndexBuffer& ibo);
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 		/* Bind the vao */
 		void Bind() const;

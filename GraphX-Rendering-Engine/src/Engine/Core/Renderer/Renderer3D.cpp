@@ -105,8 +105,9 @@ namespace GraphX
 			const Matrix4& Model = mesh->GetModelMatrix();
 			shader->SetUniformMat4f("u_Model", Model);
 
+			// TODO: Improve this. There must be a better way to do this
 			// Normal Transform Matrix (Could be done in the vertex shader, but more efficient here since vertex shader runs for each vertex)
-			Matrix3 Normal = Matrix3(Model);
+			Matrix3 Normal = Matrix3(Model).Inverse().Transpose();
 			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object

@@ -14,12 +14,12 @@ namespace GraphX
 	public:
 		/* Constructs a new terrain */
 		/* @Param TilesX  - # of tiles in the x - direction */
-		/* @Param TilesY - # of tiles in the negative y - direction */
+		/* @Param TilesZ - # of tiles in the negative Z - direction */
 		/* @Param TexNames - Names of the textures to be used for the terrain */
 		/* @Param BlendMap - Name of the blend map used to sample the textures specified in TexNames */
 		/* @Param Pos - Position of the terrain in the world */
 		/* @Param Scale - Scale of the mesh in the x and z direction */
-		Terrain(int TilesX, int TilesY, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
+		Terrain(int TilesX, int TilesZ, float TileSize, const std::vector<std::string>& TexNames, const std::string& BlendMap, const GM::Vector3& Pos, const GM::Vector2& Scale);
 
 		/* Prepares the terrain for rendering */
 		void Enable() const;
@@ -40,8 +40,8 @@ namespace GraphX
 		/* Returns the Width of the terrain (x - direction) */
 		inline float GetWidth() const { return m_TileSize * m_TilesX; }
 
-		/* Returns the depth of the terrain (y - direction) */
-		inline float GetDepth() const { return m_TileSize * m_TilesY; }
+		/* Returns the depth of the terrain (z - direction) */
+		inline float GetDepth() const { return m_TileSize * m_TilesZ; }
 
 		virtual ~Terrain();
 
@@ -52,7 +52,7 @@ namespace GraphX
 		virtual void Enable(class Shader& shader, const std::string& Name = "") const override;
 
 		/* Calculates the y - Coordinate for the vertices of the terrain mesh */
-		double GetZCoords(int x, int y);
+		double GetYCoords(int x, int y);
 
 		/* Calculates normals for the created mesh of the terrain */
 		void CalculateNormal(int x, int y);
@@ -65,7 +65,7 @@ namespace GraphX
 		Ref<Material> m_Material;
 
 		/* # tiles in X and Z direction respectively */
-		const int m_TilesX, m_TilesY;
+		const int m_TilesZ, m_TilesX;
 
 		/* Tile size for the terrain */
 		float m_TileSize;

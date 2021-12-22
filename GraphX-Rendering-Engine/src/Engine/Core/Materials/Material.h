@@ -14,7 +14,7 @@ namespace GraphX
 
 		Material(const Ref<Shader>& shader);
 
-		/* Copy Constructor (For now, This doesn't copy the textues, For that Use Material Instance once created) */
+		/* Copy Constructor (For now, This doesn't copy the textures, For that Use Material Instance once created) */
 		Material(const Material& Other);
 
 		void Bind();
@@ -23,13 +23,16 @@ namespace GraphX
 		void AddTexture(const Ref<const Texture2D>& Tex);
 		void AddTexture(const std::vector<Ref<const Texture2D>>& Textures);
 
+		/* Load the texture directly from the file */
+		void LoadTexture(const std::string& FilePath);
+
 		/* Sets a new value for Base Color */
 		inline void SetBaseColor(const Vector4& NewColor)
 		{
 			m_BaseColor = NewColor;
 		}
 
-		/* Sets a new value for Specular Strengt (Reflectivity) */
+		/* Sets a new value for Specular Strength (Reflectivity) */
 		inline void SetSpecularStrength(const float NewStrength)
 		{
 			m_Specular = NewStrength;
@@ -73,5 +76,8 @@ namespace GraphX
 
 		/* Textures for the material */
 		std::vector<Ref<const Texture2D>> m_Textures;
+
+		/* Mutex used when accessing textures */
+		std::mutex m_TextureMutex;
 	};
 }

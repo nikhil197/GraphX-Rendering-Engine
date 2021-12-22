@@ -186,6 +186,12 @@
     <ClCompile Include="src\Engine\Subsystems\Multithreading\Base\ThreadingBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Utilities\AssetLoader\AssetLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Renderer\RendererCommandList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imgui.h">
@@ -401,7 +407,7 @@
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Core\RendererAsset.h">
+    <ClInclude Include="src\Engine\Core\RendererResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Subsystems\MultiThreading\ThreadManager.h">
@@ -441,6 +447,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utilities\AssetLoader\AssetLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Renderer\RendererCommandList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

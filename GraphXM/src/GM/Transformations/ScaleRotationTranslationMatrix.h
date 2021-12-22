@@ -45,19 +45,19 @@ namespace GM
 			float SY = Utility::Sin(Rot.Yaw);
 			float SR = Utility::Sin(Rot.Roll);
 
-			Mat(0, 0) = (CP * CY) * Scale.x;
-			Mat(0, 1) = (SR * SP * CY - CR * SY) * Scale.y;
-			Mat(0, 2) = (CR * SP * CY + SR * SY) * Scale.z;
+			Mat(0, 0) = (CY * CR) * Scale.x;
+			Mat(0, 1) = (SP * SY * CR - CP * SR) * Scale.y;
+			Mat(0, 2) = (CP * SY * CR + SP * SR) * Scale.z;
 			Mat(0, 3) = Origin.x;
 
-			Mat(1, 0) = (CP * SY) * Scale.x;
-			Mat(1, 1) = (SR * SP * SY + CR * CY) * Scale.y;
-			Mat(1, 2) = (CR * SP * SY - SR * CY) * Scale.z;
+			Mat(1, 0) = (CY * SR) * Scale.x;
+			Mat(1, 1) = (SP * SY * SR + CP * CR) * Scale.y;
+			Mat(1, 2) = (CP * SY * SR - SP * CR) * Scale.z;
 			Mat(1, 3) = Origin.y;
 
-			Mat(2, 0) = (-SP) * Scale.x;
-			Mat(2, 1) = (SR * CP) * Scale.y;
-			Mat(2, 2) = (CR * CP) * Scale.z;
+			Mat(2, 0) = (-SY) * Scale.x;
+			Mat(2, 1) = (SP * CY) * Scale.y;
+			Mat(2, 2) = (CP * CY) * Scale.z;
 			Mat(2, 3) = Origin.z;
 
 			Mat(3, 0) = 0.0f;

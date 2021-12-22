@@ -175,7 +175,7 @@ namespace GM
 
 	Vector3& Vector3::operator*=(float Value)
 	{
-		*this = *this - Value;
+		*this = *this * Value;
 
 		return *this;
 	}

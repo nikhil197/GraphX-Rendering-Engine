@@ -31,7 +31,7 @@ namespace GraphX
 	}
 
 	VertexArray::VertexArray()
-		: RendererAsset()
+		: RendererResource()
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -83,6 +83,16 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		glBindVertexArray(0);
+	}
+
+	void VertexArray::InitRHI()
+	{
+
+	}
+
+	void VertexArray::ReleaseRHI()
+	{
+
 	}
 
 	VertexArray::~VertexArray()

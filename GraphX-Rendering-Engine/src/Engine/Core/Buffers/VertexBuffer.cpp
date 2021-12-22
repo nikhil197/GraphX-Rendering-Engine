@@ -5,7 +5,7 @@
 namespace GraphX
 {
 	VertexBuffer::VertexBuffer(const void* data, uint32_t size)
-		: RendererAsset(), m_BufferSize(size)
+		: RendererResource(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -17,7 +17,7 @@ namespace GraphX
 	}
 
 	VertexBuffer::VertexBuffer(uint32_t size)
-		: RendererAsset(), m_BufferSize(size)
+		: RendererResource(), m_BufferSize(size)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -29,7 +29,7 @@ namespace GraphX
 	}
 
 	VertexBuffer::VertexBuffer(const VertexBuffer& Other)
-		: RendererAsset(), m_BufferSize(Other.m_BufferSize)
+		: RendererResource(), m_BufferSize(Other.m_BufferSize)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -47,6 +47,16 @@ namespace GraphX
 		// Unbind
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);
+	}
+
+	void VertexBuffer::InitRHI()
+	{
+
+	}
+
+	void VertexBuffer::ReleaseRHI()
+	{
+
 	}
 
 	void VertexBuffer::Bind() const

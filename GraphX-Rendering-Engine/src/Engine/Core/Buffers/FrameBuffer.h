@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Core/RendererAsset.h"
+#include "Engine/Core/RendererResource.h"
 
 namespace GraphX
 {
@@ -11,7 +11,7 @@ namespace GraphX
 	};
 
 	class FrameBuffer
-		: public RendererAsset
+		: public RendererResource
 	{
 	public:
 		/* Constructor */
@@ -42,6 +42,13 @@ namespace GraphX
 		inline Ref<class Texture2D> GetDepthMap() const { return m_DepthMap; }
 
 		~FrameBuffer();
+
+		/* Renderer Resource Interface */
+		virtual void InitRHI() override;
+
+		virtual void ReleaseRHI() override;
+
+		/** ~ Renderer Resource interface */
 
 	private:
 		/* Width and height of the framebuffer (equal to the screen size) */

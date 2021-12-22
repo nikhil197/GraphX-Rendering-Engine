@@ -90,6 +90,8 @@ namespace GraphX
 		/* Updates the scene */
 		void Update(float DeltaTime);
 
+		void UpdateCameraUniforms();
+
 		/* Configure the shader for rendering by setting the proper uniforms */
 		void ConfigureShaderForRendering(class Shader& shader);
 
@@ -113,6 +115,12 @@ namespace GraphX
 
 		/* Mouse pick logic*/
 		void PickObject();
+
+		/* Loads any new resources (loaded in b/w frames) in the pool. [This will called from the main thread only] */
+		void LoadNewResources();
+
+		/* Callback fn for when a Mesh3D is loaded */
+		void OnMesh3DLoad(const Ref<Mesh3D>& LoadedMesh);
 
 	private:
 		/* Current instance of the application using the engine */
@@ -183,6 +191,12 @@ namespace GraphX
 		Ref<PointLight> m_Light;
 
 		Ref<Texture2D> m_DefaultTexture;
+
+		/* 3D Meshes loaded b/w the frames */
+		std::deque<Ref<Mesh3D>> m_Loaded3DMeshes;
+
+		/* Mutex used for dealing with asynchronous loading and other stuff for the Mesh3D */
+		std::mutex m_Mesh3DMutex;
 	};
 
 	// To be defined in GraphX CLIENTS
