@@ -59,7 +59,7 @@ namespace GraphX
 		static void ResetStats();
 
 		/* Returns the renderer stats */
-		static Renderer2D::Statistics GetStats();
+		static const Renderer2D::Statistics& GetStats() { return s_Data->Stats; }
 
 	private:
 		/* Internal method to draw quad - Reduce code repetition */

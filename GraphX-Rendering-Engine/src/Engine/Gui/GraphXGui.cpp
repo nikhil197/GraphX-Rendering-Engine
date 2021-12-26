@@ -7,6 +7,9 @@
 #include "Application.h"
 #include "Window.h"
 
+#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer3D.h"
+
 #include "Model/Mesh/Mesh2D.h"
 #include "Model/Mesh/Mesh3D.h"
 
@@ -51,6 +54,46 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		ImGui_ImplGlfwGL3_NewFrame();
+	}
+
+	void GraphXGui::RendererStats()
+	{
+		static bool showRendererStats = true;
+		if (showRendererStats)
+		{
+			ImGui::Begin("RendererStats", &showRendererStats);
+
+			const Renderer2D::Statistics& Renderer2DStats = Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Draw Calls : %i", Renderer2DStats.DrawCalls);
+			ImGui::Text("Renderer2D Quad Count : %i", Renderer2DStats.QuadCount);
+			
+			const Renderer3D::Statistics& Renderer3DStats = Renderer3D::GetStats();
+			ImGui::Text("Renderer3D Draw Calls : %i", Renderer3DStats.DrawCalls);
+			ImGui::Text("Renderer3D Geometry Count : %i", Renderer3DStats.GeometryCount);
+			ImGui::Text("Renderer3D Collision Boxes Count : %i", Renderer3DStats.CollisionBoxes);
+			ImGui::Text("Renderer3D Indices Count : %i", Renderer3DStats.IndexCount);
+
+			ImGui::End();
+		}
+	}
+
+	void GraphXGui::RenderEngineRunTimeStats()
+	{
+		static bool showEngineRunTimeStats = true;
+		if (showEngineRunTimeStats)
+		{
+			ImGui::Begin("Engine Run Time Stats", &showEngineRunTimeStats);
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Engine Startup Time : %f ms", gRunTimeStats.EngineStartupTime);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scene Load Time : %f ms", gRunTimeStats.SceneLoadTime);
+
+			for (std::pair<std::string, float> customStat : gRunTimeStats.CustomStats)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s Time : %f ms", customStat.first.c_str(), customStat.second);
+			}
+
+			ImGui::End();
+		}
 	}
 
 	void GraphXGui::GlobalSettings(const Ref<Skybox>& skybox, float& daytime, float& SunLightIntensity, bool& EnableParticles)

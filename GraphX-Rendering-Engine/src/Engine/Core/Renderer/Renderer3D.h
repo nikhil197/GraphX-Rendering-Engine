@@ -9,6 +9,14 @@ namespace GraphX
 	class Renderer3D
 	{
 	public:
+		struct Statistics
+		{
+			uint32_t DrawCalls = 0;
+			uint32_t GeometryCount = 0;
+			uint32_t IndexCount = 0;
+			uint32_t CollisionBoxes = 0;
+		};
+	public:
 		static void Init();
 		static void Shutdown();
 
@@ -27,9 +35,16 @@ namespace GraphX
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
 		static void Render(Shader& DepthShader);
 
+		static const Renderer3D::Statistics& GetStats() { return s_Data->Stats; }
+
+		static void ResetStats();
+
 	private:
 		/* Renders the collision bounds for debugging */
 		static void RenderDebugCollisions(const Ref<GM::BoundingBox>& Box);
+
+		/* The actual Draw call for the GPU to render geometry */
+		static void DrawCall(uint32_t RenderMode, uint32_t Count, uint32_t Type, const void* indices = nullptr);
 
 	private:
 		struct Renderer3DData
@@ -43,6 +58,7 @@ namespace GraphX
 				Scope<class VertexBuffer> VBO;
 			} DebugData;
 
+			Statistics Stats;
 		};
 
 		static Renderer3DData* s_Data;

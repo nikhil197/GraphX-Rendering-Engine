@@ -68,6 +68,9 @@ namespace GraphX
 
 	Application* Application::s_Instance = nullptr;
 
+	/* Global object to store the run time stats */
+	EngineRunTimeStats gRunTimeStats;
+
 	Application::Application(const char* title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
@@ -104,6 +107,8 @@ namespace GraphX
 	void Application::InitializeApplication()
 	{
 		GX_PROFILE_FUNCTION()
+
+		Timer timer("EngineInit");
 
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
@@ -149,93 +154,8 @@ namespace GraphX
 		m_Shader->SetUniform3f("u_LightPos", m_Light->Position);
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 		
-		{
-			Timer timer("Load Scene");
-			GX_PROFILE_SCOPE("Load Scene")
-			
-			std::vector<Ref<const Texture2D>> textures(0);
-			textures.push_back(m_DefaultTexture);
-
-			Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
-			CubeMaterial->AddTexture(m_DefaultTexture);
-
-			Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, 5.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
-			m_Objects3D.emplace_back(cube);
-			cube->bShowDetails = true;
-
-			Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
-			m_Terrain.emplace_back(ter);
-
-			// Load Trees
-			Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
-			TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
-			
-			std::future<Ref<Mesh3D>> ft = Async<Ref<Mesh3D>>(AsyncExecutionPolicy::ThreadPool, std::bind(&Mesh3D::Load, "res/Models/tree.obj", TreeMaterial));
-			Ref<Mesh3D> TreeMesh = ft.get();
-			//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
-			TreeMesh->Scale *= 2.5f;
-			unsigned int NumTree = 100;
-			for (unsigned int i = 0; i < NumTree; i++)
-			{
-				TreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
-				m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
-			}
-
-			// Load Low poly Trees
-			Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
-			LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
-
-			Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
-			LowPolyTreeMesh->Scale = Vector3::UnitVector;
-			NumTree = 10;
-			for (unsigned int i = 0; i < NumTree; i++)
-			{
-				LowPolyTreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
-				m_Objects3D.emplace_back(CreateRef<Mesh3D>(LowPolyTreeMesh.operator*()));
-			}
-
-			// Load Stall
-			Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
-			StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
-
-			Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
-			StallMesh->Position = Vector3(75.0f, 0.0f, -100.0f);
-			m_Objects3D.emplace_back(StallMesh);
-
-			m_Shader->UnBind();
-		}
+		LoadScene();
 		
-		Ref<SpriteSheet> particleSpriteSheet = CreateRef<SpriteSheet>("res/Textures/Particles/particleAtlas.png", 16, GM::Vector2(32.0f, 32.0f));
-		ParticleProps particleProperties;
-		particleProperties.Texture = particleSpriteSheet;
-		particleProperties.Velocity = GM::Vector3(2.0f);
-		particleProperties.GravityEffect = 0.5f;
-		particleProperties.LifeSpan = 2.0f;
-		particleProperties.SizeBegin = particleProperties.SizeEnd = 1.0f;
-
-		ParticleSystemConfig config;
-		config.ParticleProperties = particleProperties;
-		config.ParticlesPerSec = 50;
-		config.VelocityVariation = GM::Vector3(0.5f);
-		config.LifeSpanVariation = 0.4f;
-		config.SizeVariation = 0.5f;
-		config.GravityVariation = 1.0f;
-		
-		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", config, GM::Vector3::ZeroVector);
-		ParticleManager::AddParticleSystem(particleSys);
-		
-		ParticleProps particleProperties2;
-		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-		particleProperties2.ColorEnd = GM::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-		particleProperties2.Velocity = GM::Vector3(2.0f);
-		particleProperties2.GravityEffect = 0.5f;
-		particleProperties2.LifeSpan = 2.0f;
-		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
-
-		config.ParticleProperties = particleProperties2;
-		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 70.0f, 10.0f));
-		ParticleManager::AddParticleSystem(particleSys2);
-
 		{
 			GX_PROFILE_SCOPE("Initialise Resources")
 
@@ -272,9 +192,6 @@ namespace GraphX
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
-
-				Renderer2D::Statistics Stats = Renderer2D::GetStats();
-				GX_ENGINE_INFO("Renderer2D Stats: {0} Draw Calls, {1} Quad Count", Stats.DrawCalls, Stats.QuadCount);
 			}
 
 			// No need to update or render stuff if the application (window) is minimised
@@ -282,13 +199,18 @@ namespace GraphX
 			{
 				// Reset Stats at the beginning of the frame 
 				Renderer2D::ResetStats();
+				Renderer3D::ResetStats();
 
 				{
 					GX_PROFILE_SCOPE("Frame-Update")
 
+					Timer timer("Update");
+
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
+						Timer particlesTime("SpawnParticlesTime");
 						ParticleManager::SpawnParticles(DeltaTime);
+						gRunTimeStats.CustomStats[particlesTime.GetName()] = particlesTime.GetTime() * 1000;
 					}
 					
 					// Load New Resources Before Updating anything
@@ -306,6 +228,8 @@ namespace GraphX
 
 				{
 					GX_PROFILE_SCOPE("Frame-Render")
+
+					Timer renderTimer("Render");
 
 					// Start a scene
 					Renderer::BeginScene(m_CameraController->GetCamera());
@@ -337,7 +261,9 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
+						Timer particlesRenderTime("ParticlesRenderTime");
 						ParticleManager::RenderParticles();
+						gRunTimeStats.CustomStats[particlesRenderTime.GetName()] = particlesRenderTime.GetTime() * 1000;
 					}
 
 					Renderer2D::EndScene();
@@ -359,8 +285,98 @@ namespace GraphX
 		}
 	}
 
+	void Application::LoadScene()
+	{
+		Timer timer("Load Scene");
+		GX_PROFILE_SCOPE("Load Scene")
+
+			std::vector<Ref<const Texture2D>> textures(0);
+		textures.push_back(m_DefaultTexture);
+
+		Ref<Material> CubeMaterial = CreateRef<Material>(m_Shader);
+		CubeMaterial->AddTexture(m_DefaultTexture);
+
+		Ref<Cube> cube = CreateRef<Cube>(GM::Vector3(-10.0f, 10.0f, 5.0f), GM::Rotator::ZeroRotator, GM::Vector3::UnitVector, CubeMaterial);
+		m_Objects3D.emplace_back(cube);
+		cube->bShowDetails = true;
+
+		Ref<Terrain> ter = CreateRef<Terrain>(250, 250, 2.0f, std::vector<std::string>({ "res/Textures/Terrain/Grass.png", "res/Textures/Terrain/GrassFlowers.png", "res/Textures/Terrain/Mud.png", "res/Textures/Terrain/Path.png" }), "res/Textures/Terrain/BlendMap.png", Vector3(-249.0f, 10.0f, 249.0f), Vector2(1.0f, 1.0f));
+		m_Terrain.emplace_back(ter);
+
+		// Load Trees
+		Ref<Material> TreeMaterial = CreateRef<Material>(m_Shader);
+		TreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/tree.png"));
+
+		std::future<Ref<Mesh3D>> ft = Async<Ref<Mesh3D>>(AsyncExecutionPolicy::ThreadPool, std::bind(&Mesh3D::Load, "res/Models/tree.obj", TreeMaterial));
+		Ref<Mesh3D> TreeMesh = ft.get();
+		//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
+		TreeMesh->Scale *= 2.5f;
+		unsigned int NumTree = 100;
+		for (unsigned int i = 0; i < NumTree; i++)
+		{
+			TreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
+			m_Objects3D.emplace_back(CreateRef<Mesh3D>(TreeMesh.operator*()));
+		}
+
+		// Load Low poly Trees
+		Ref<Material> LowPolyTreeMaterial = CreateRef<Material>(m_Shader);
+		LowPolyTreeMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/lowPolyTree.png"));
+
+		Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
+		LowPolyTreeMesh->Scale = Vector3::UnitVector;
+		NumTree = 10;
+		for (unsigned int i = 0; i < NumTree; i++)
+		{
+			LowPolyTreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
+			m_Objects3D.emplace_back(CreateRef<Mesh3D>(LowPolyTreeMesh.operator*()));
+		}
+
+		// Load Stall
+		Ref<Material> StallMaterial = CreateRef<Material>(m_Shader);
+		StallMaterial->AddTexture(CreateRef<const Texture2D>("res/Textures/stallTexture.png"));
+
+		Ref<Mesh3D> StallMesh = Mesh3D::Load("res/Models/stall.obj", StallMaterial);
+		StallMesh->Position = Vector3(75.0f, 0.0f, -100.0f);
+		m_Objects3D.emplace_back(StallMesh);
+
+		m_Shader->UnBind();
+
+		Ref<SpriteSheet> particleSpriteSheet = CreateRef<SpriteSheet>("res/Textures/Particles/particleAtlas.png", 16, GM::Vector2(32.0f, 32.0f));
+		ParticleProps particleProperties;
+		particleProperties.Texture = particleSpriteSheet;
+		particleProperties.Velocity = GM::Vector3(2.0f);
+		particleProperties.GravityEffect = 0.5f;
+		particleProperties.LifeSpan = 2.0f;
+		particleProperties.SizeBegin = particleProperties.SizeEnd = 1.0f;
+
+		ParticleSystemConfig config;
+		config.ParticleProperties = particleProperties;
+		config.ParticlesPerSec = 50;
+		config.VelocityVariation = GM::Vector3(0.5f);
+		config.LifeSpanVariation = 0.4f;
+		config.SizeVariation = 0.5f;
+		config.GravityVariation = 1.0f;
+
+		Ref<ParticleSystem> particleSys = CreateRef<ParticleSystem>("Fire Texture ParticleSystem", config, GM::Vector3::ZeroVector);
+		ParticleManager::AddParticleSystem(particleSys);
+
+		ParticleProps particleProperties2;
+		particleProperties2.ColorBegin = GM::Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+		particleProperties2.ColorEnd = GM::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		particleProperties2.Velocity = GM::Vector3(2.0f);
+		particleProperties2.GravityEffect = 0.5f;
+		particleProperties2.LifeSpan = 2.0f;
+		particleProperties2.SizeBegin = particleProperties.SizeEnd = 1.0f;
+
+		config.ParticleProperties = particleProperties2;
+		Ref<ParticleSystem> particleSys2 = CreateRef<ParticleSystem>("Color ParticleSystem", config, GM::Vector3(50.0f, 70.0f, 10.0f));
+		ParticleManager::AddParticleSystem(particleSys2);
+	}
+
 	void Application::LoadNewResources()
 	{
+		Timer timer("LoadNewResources");
+
 		// Load new 3D Meshes
 		{
 			// Lock the queue so that no other thread can access it
@@ -538,6 +554,10 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
+		Timer timer("RenderGui");
+
+		GraphXGui::RendererStats();
+
 		GraphXGui::DetailsWindow(m_Objects3D[0]);
 		if (m_SelectedObject3D != nullptr)
 			GraphXGui::DetailsWindow(m_SelectedObject3D, "Selected Object");
@@ -550,7 +570,9 @@ namespace GraphX
 			GraphXGui::TerrainDetails(m_Terrain[0]);
 		}
 		GraphXGui::GlobalSettings(m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity, GX_ENABLE_PARTICLE_EFFECTS);
-		GraphXGui::Render();
+
+		GraphXGui::RenderEngineRunTimeStats();
+		GraphXGui::Render();		
 	}
 
 	void Application::ConfigureShaderForRendering(Shader& shader)

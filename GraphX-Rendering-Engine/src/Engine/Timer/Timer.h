@@ -2,6 +2,16 @@
 
 namespace GraphX
 {
+	/* Different run time stats for the engine (All the stats are in milliseconds) */
+	struct EngineRunTimeStats
+	{
+		float EngineStartupTime;
+		float SceneLoadTime;
+		std::unordered_map<std::string, float> CustomStats;
+	};
+
+	extern EngineRunTimeStats gRunTimeStats;
+
 	class Timer
 	{
 	public:
@@ -19,6 +29,9 @@ namespace GraphX
 
 		/* Destructor for the timer */
 		~Timer();
+
+		/* Returns the name of the timer */
+		const char* GetName() const { return m_Name; }
 
 	private:
 		/* Name of the timer */

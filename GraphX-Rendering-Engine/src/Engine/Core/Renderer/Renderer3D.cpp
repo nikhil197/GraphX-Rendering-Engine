@@ -88,6 +88,8 @@ namespace GraphX
 
 	void Renderer3D::Render()
 	{
+		s_Data->Stats.GeometryCount += s_Data->RenderQueue.size();
+
 		while (!s_Data->RenderQueue.empty())
 		{
 			const Ref<Mesh3D>& mesh = s_Data->RenderQueue.front();
@@ -111,7 +113,8 @@ namespace GraphX
 			shader->SetUniformMat3f("u_Normal", Normal);
 
 			// Draw the object
-			glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			DrawCall(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT);
+			//glDrawElements(GL_TRIANGLES, mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			// Disable the mesh after drawing
 			mesh->Disable();
@@ -128,6 +131,8 @@ namespace GraphX
 	{
 		DepthShader.Bind();
 
+		s_Data->Stats.GeometryCount += s_Data->RenderQueue.size();
+
 		for (unsigned int i = 0; i < s_Data->RenderQueue.size(); i++)
 		{
 			const Ref<Mesh3D>& Mesh = s_Data->RenderQueue.at(i);
@@ -139,7 +144,8 @@ namespace GraphX
 			DepthShader.SetUniformMat4f("u_Model", Model);
 
 			// Draw the object
-			glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			DrawCall(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT);
+			//glDrawElements(GL_TRIANGLES, Mesh->GetIBO()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			Mesh->Disable();
 		}
@@ -169,7 +175,21 @@ namespace GraphX
 
 			s_Data->DebugData.VAO->Bind();
 			Renderer::s_DebugShader->Bind();
-			glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, nullptr);
+			s_Data->Stats.CollisionBoxes++;
+			DrawCall(GL_LINES, 24, GL_UNSIGNED_INT);
 		}
+	}
+
+	void Renderer3D::ResetStats()
+	{
+		// Using memset to reset the stats.. It is faster than setting each value manually since in a struct / class all variables will be continuous in memory
+		memset(&s_Data->Stats.DrawCalls, 0, sizeof(Renderer3D::Statistics));
+	}
+
+	void Renderer3D::DrawCall(uint32_t RenderMode, uint32_t Count, uint32_t Type, const void* indices)
+	{
+		glDrawElements(RenderMode, Count, Type, indices);
+		s_Data->Stats.DrawCalls++;
+		s_Data->Stats.IndexCount += Count;
 	}
 }

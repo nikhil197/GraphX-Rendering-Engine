@@ -27,6 +27,8 @@ namespace GraphX
 		/* Application main method */
 		void Run();
 
+		void LoadScene();
+
 		/* Returns the window of the engine */
 		Window* GetWindow() const { return m_Window; }
 

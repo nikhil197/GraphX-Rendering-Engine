@@ -20,6 +20,12 @@ namespace GraphX
 		/* Update the UI frame */
 		static void Update();
 
+		/* Render Renderer Stats */
+		static void RendererStats();
+
+		/* Renders the Engine Run Time stats to the GUI panel */
+		static void RenderEngineRunTimeStats();
+
 		/* Create a window showing Global Settings like Day Time and Skybox */
 		static void GlobalSettings(const Ref<class Skybox>& skybox, float& daytime, float& SunlightIntensity, bool& EnableParticles);
 
