@@ -172,6 +172,10 @@ namespace GraphX
 		int times = 0;
 		float then = Clock::GetClock()->GetEngineTime();
 
+		// Get total allocated memory
+		uint64_t mem = VertexBuffer::TotalAllocatedMemory();
+		mem += IndexBuffer::TotalAllocatedMemory();
+
 		// Draw while the window doesn't close
 		while (m_IsRunning)
 		{
@@ -192,6 +196,7 @@ namespace GraphX
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
+				gRunTimeStats.CustomStats.clear();
 			}
 
 			// No need to update or render stuff if the application (window) is minimised
