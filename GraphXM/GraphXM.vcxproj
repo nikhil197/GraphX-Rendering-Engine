@@ -92,6 +92,7 @@
     <ClInclude Include="src\GM\Geometry\BoundingBox.h" />
     <ClInclude Include="src\GM\Geometry\BoundingBox2D.h" />
     <ClInclude Include="src\GM\Geometry\Plane.h" />
+    <ClInclude Include="src\GM\Misc\Hash.h" />
     <ClInclude Include="src\GM\Misc\Quat.h" />
     <ClInclude Include="src\GM\Misc\Rotator.h" />
     <ClInclude Include="src\GM\Transformations\RotationTranslationMatrix.h" />

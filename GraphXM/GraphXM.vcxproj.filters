@@ -155,5 +155,8 @@
     <ClInclude Include="src\GM\Vectors\IntVector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GM\Misc\Hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
