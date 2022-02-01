@@ -7,11 +7,17 @@
 
 namespace GraphX
 {
-	Texture2D::Texture2D(const std::string& filePath, bool InTileTexture)
-		: RendererResource(), m_FilePath(filePath), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(InTileTexture)
+	Texture2D::Texture2D(const std::string& filePath, bool InTileTexture, const std::string& name)
+		: RendererResource(), m_Name(name), m_Width(0), m_Height(0), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(InTileTexture)
 	{
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
+
+		// Use the FileName as the texture name
+		if (name.length() == 0)
+		{
+			m_Name = EngineUtil::ExtractFileName(m_Name);
+		}
 
 		// To flip the texture
 		stbi_set_flip_vertically_on_load(0);
@@ -21,7 +27,7 @@ namespace GraphX
 		{
 			GX_PROFILE_SCOPE("Texture2D::LoadTexFile")
 
-			localBuffer = stbi_load(m_FilePath.c_str(), &width, &height, &channels, 0);	// No desired channels 
+			localBuffer = stbi_load(m_Name.c_str(), &width, &height, &channels, 0);	// No desired channels 
 			GX_ENGINE_ASSERT(localBuffer, "Failed to load texture data!");
 		}
 
@@ -60,8 +66,8 @@ namespace GraphX
 			stbi_image_free(localBuffer);
 	}
 
-	Texture2D::Texture2D(uint32_t width, uint32_t height, FramebufferAttachmentType texType)
-		: RendererResource(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false)
+	Texture2D::Texture2D(const std::string& name, uint32_t width, uint32_t height, FramebufferAttachmentType texType)
+		: RendererResource(), m_Name(name), m_Width(width), m_Height(height), m_InternalFormat(0), m_DataFormat(0), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -93,8 +99,8 @@ namespace GraphX
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	Texture2D::Texture2D(uint32_t width, uint32_t height)
-		: RendererResource(), m_FilePath(std::string()), m_Width(width), m_Height(height), m_TileTexture(false)
+	Texture2D::Texture2D(const std::string& name, uint32_t width, uint32_t height)
+		: RendererResource(), m_Name(name), m_Width(width), m_Height(height), m_TileTexture(false)
 	{
 		GX_PROFILE_FUNCTION()
 
@@ -152,7 +158,7 @@ namespace GraphX
 
 	bool Texture2D::operator==(const Texture2D& OtherTex) const
 	{
-		return EngineUtil::ExtractFileName(OtherTex.GetFilePath()) == EngineUtil::ExtractFileName(m_FilePath) && OtherTex.m_Width == m_Width && OtherTex.m_Height == m_Height;
+		return OtherTex.GetName() == m_Name && OtherTex.m_Width == m_Width && OtherTex.m_Height == m_Height;
 	}
 
 	Texture2D::~Texture2D()

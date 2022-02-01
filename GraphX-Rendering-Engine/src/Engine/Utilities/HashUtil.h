@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Textures/Texture2D.h"
 #include "Vertex.h"
 
 namespace GraphX

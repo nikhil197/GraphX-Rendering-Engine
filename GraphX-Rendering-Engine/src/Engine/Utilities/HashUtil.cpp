@@ -1,15 +1,38 @@
 #include "pch.h"
 #include "HashUtil.h"
 
+#include "Textures/Texture2D.h"
+#include "Materials/Material.h"
+
 template<>
-struct std::hash<std::reference_wrapper<GraphX::Texture2D>>
+struct std::hash<GraphX::Texture2D>
 {
-	std::size_t operator()(reference_wrapper<GraphX::Texture2D> const& Tex) const noexcept
+	std::size_t operator()(GraphX::Texture2D const& Tex) const noexcept
 	{
 		std::size_t seed = 0;
-		GM::Hash_Combine(seed, Tex.get().GetFilePath());
-		GM::Hash_Combine(seed, Tex.get().GetWidth());
-		GM::Hash_Combine(seed, Tex.get().GetHeight());
+		GM::Hash_Combine(seed, Tex.GetName());
+		GM::Hash_Combine(seed, Tex.GetWidth());
+		GM::Hash_Combine(seed, Tex.GetHeight());
+
+		return seed;
+	}
+};
+
+template<>
+struct std::hash<GraphX::Material>
+{
+	std::size_t operator()(GraphX::Material const& Mat) const noexcept
+	{
+		std::size_t seed = 0;
+		
+		// Hash the Base Color
+		GM::Hash_Combine(seed, Mat.GetBaseColor());
+
+		// Hash the textures
+		for (const auto& tex : Mat.GetTextures())
+		{
+			GM::Hash_Combine(seed, tex);
+		}
 
 		return seed;
 	}

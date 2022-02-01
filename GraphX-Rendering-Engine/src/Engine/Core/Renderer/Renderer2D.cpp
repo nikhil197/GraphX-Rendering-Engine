@@ -41,7 +41,7 @@ namespace GraphX
 		s_Data->TextureShader = Renderer::GetShaderLibrary().Load("res/Shaders/TextureShader2D.glsl", "Texture2D");
 		s_Data->ShadowDebugShader = Renderer::GetShaderLibrary().Load("res/Shaders/ShadowDebugShader.glsl", "ShadowDebug");
 
-		s_Data->WhiteTexture = CreateScope<Texture2D>(1, 1);
+		s_Data->WhiteTexture = CreateScope<Texture2D>("WhiteTexture", 1, 1);
 		uint32_t data = 0xffffffff;
 		s_Data->WhiteTexture->SetData(&data, sizeof(data));
 

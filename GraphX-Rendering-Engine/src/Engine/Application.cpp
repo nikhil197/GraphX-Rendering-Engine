@@ -131,7 +131,7 @@ namespace GraphX
 		m_Light = CreateRef<PointLight>(Vector3(0.0f, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
-		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
+		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH, "ShadowBuffer");
 		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
 		ParticleManager::Init(m_CameraController->GetCamera());
