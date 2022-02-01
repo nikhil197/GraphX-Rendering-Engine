@@ -13,10 +13,10 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 		GX_ENGINE_INFO("Loading Texture2D: {0}", filePath);
 
-		// Use the FileName as the texture name
 		if (name.length() == 0)
 		{
-			m_Name = EngineUtil::ExtractFileName(m_Name);
+			// Use the FilePath as the texture name
+			m_Name = filePath;
 		}
 
 		// To flip the texture

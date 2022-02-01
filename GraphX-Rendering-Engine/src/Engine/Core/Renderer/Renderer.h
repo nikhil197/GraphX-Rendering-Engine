@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Shaders/ShaderLibrary.h"
+#include "Engine/Core/Textures/TextureLibrary.h"
 #include "RendererResources.h"
 
 #include "Subsystems/Multithreading/Base/RunnableThread.h"
@@ -74,6 +75,9 @@ namespace GraphX
 		/* Returns the shader library */
 		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }
 
+		/* Returns the texture library */
+		static TextureLibrary& GetTextureLibrary() { return s_TextureLibrary; }
+
 		/* Returns the thread Id for the render thread */
 		static std::thread::id GetRenderThreadID() { return s_RenderThread->GetID(); }
 
@@ -93,6 +97,9 @@ namespace GraphX
 
 		/* Shaders library to store all the shaders */
 		static ShaderLibrary s_ShaderLibrary;
+
+		/* Textures library to store all the textures */
+		static TextureLibrary s_TextureLibrary;
 
 		static Ref<Shader> s_DebugShader;
 
