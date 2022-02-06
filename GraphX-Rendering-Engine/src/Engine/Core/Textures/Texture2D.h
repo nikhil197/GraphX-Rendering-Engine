@@ -86,3 +86,17 @@ namespace GraphX
 	/* Equality test for a Texture wrapped in reference_wrapper */
 	bool operator==(const std::reference_wrapper<Texture2D>& Ref1, const std::reference_wrapper<Texture2D>& Ref2);
 }
+
+template<>
+struct std::hash<GraphX::Texture2D>
+{
+	std::size_t operator()(GraphX::Texture2D const& Tex) const noexcept
+	{
+		std::size_t seed = 0;
+		GM::Hash_Combine(seed, Tex.GetName());
+		GM::Hash_Combine(seed, Tex.GetWidth());
+		GM::Hash_Combine(seed, Tex.GetHeight());
+
+		return seed;
+	}
+};

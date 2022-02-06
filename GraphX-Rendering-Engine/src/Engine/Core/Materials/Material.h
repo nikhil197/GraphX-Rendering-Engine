@@ -88,3 +88,23 @@ namespace GraphX
 		std::size_t m_Hash;
 	};
 }
+
+template<>
+struct std::hash<GraphX::Material>
+{
+	std::size_t operator()(GraphX::Material const& Mat) const noexcept
+	{
+		std::size_t seed = 0;
+
+		// Hash the Base Color
+		GM::Hash_Combine(seed, Mat.GetBaseColor());
+
+		// Hash the textures
+		for (const auto& tex : Mat.GetTextures())
+		{
+			GM::Hash_Combine(seed, tex);
+		}
+
+		return seed;
+	}
+};

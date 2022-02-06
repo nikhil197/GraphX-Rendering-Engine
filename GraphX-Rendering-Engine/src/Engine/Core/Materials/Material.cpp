@@ -4,6 +4,8 @@
 #include "Shaders/Shader.h"
 #include "Textures/Texture2D.h"
 
+#include "Utilities/HashUtil.h"
+
 #include "Engine/Utilities/AssetLoader/AssetLoader.h"
 
 namespace GraphX
@@ -49,7 +51,6 @@ namespace GraphX
 	{
 		std::lock_guard<std::mutex> lock(m_TextureMutex);
 		m_Textures.emplace_back(Tex);
-
 		GM::Hash_Combine(m_Hash, *Tex);
 	}
 

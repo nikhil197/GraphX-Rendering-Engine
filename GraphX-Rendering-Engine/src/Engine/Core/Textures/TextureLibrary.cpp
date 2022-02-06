@@ -12,7 +12,6 @@ namespace GraphX
 
 	void TextureLibrary::Add(const std::string& name, const Ref<Texture2D>& texture)
 	{
-		const std::string& name = texture->GetName();
 		GX_ENGINE_ASSERT(!Exists(name), "Texture {0} already exists", name);
 		m_TextureMap[name] = texture;
 	}
