@@ -81,7 +81,7 @@ namespace GraphX
 			Ref<Shader> ShadowDebugShader;
 
 			// White texture for rendering colored 2D stuff
-			Scope<Texture2D> WhiteTexture;
+			Ref<Texture2D> WhiteTexture;
 
 			// Batch object for batching quads / meshes together
 			Scope<class Batch2D> Batch;

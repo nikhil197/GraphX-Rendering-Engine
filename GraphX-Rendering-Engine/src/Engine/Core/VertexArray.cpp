@@ -30,6 +30,24 @@ namespace GraphX
 		return 0;
 	}
 
+	static int GlVertexAttribPointerSetup(uint32_t attribIndex, uint32_t componentCount, GLenum type, bool normalised, uint32_t stride, const void* offset, int instancedAdvanceRate)
+	{
+		//Enable the current vertex attribute array
+		glEnableVertexAttribArray(attribIndex);
+
+		// Specify the layout
+		glVertexAttribPointer(attribIndex, componentCount, type, normalised, stride, offset);
+
+		// Check if instanced rendering, set the divisor accordingly
+		if (instancedAdvanceRate > 0)
+		{
+			glVertexAttribDivisor(attribIndex, instancedAdvanceRate);
+		}
+
+		// Advance and return the pointer for next attribute
+		return ++attribIndex;
+	}
+
 	VertexArray::VertexArray()
 		: RendererResource()
 	{
@@ -50,14 +68,22 @@ namespace GraphX
 
 		for (unsigned int i = 0; i < elements.size(); i++)
 		{
-			//Enable the current vertex attribute array
-			glEnableVertexAttribArray(i);
-
 			//specify the layout
 			const auto& element = elements[i];
-			glVertexAttribPointer(i, element.GetComponentCount(), BufferDataTypeToOpenGLType(element.Type), element.Normalised, layout.GetStride(), (const void*)element.Offset);
+			if (element.Type == BufferDataType::Mat3 || element.Type == BufferDataType::Mat4)
+			{
+				int columns = element.Type == BufferDataType::Mat3 ? 3 : 4;
+				for (int i = 0; i < columns; i++)
+				{
+					m_ActiveVertexAttribs = GlVertexAttribPointerSetup(m_ActiveVertexAttribs, element.GetComponentCount(), BufferDataTypeToOpenGLType(element.Type), element.Normalised, layout.GetStride(), (const void*)(element.Offset + (i * GetBufferDataMatColumnSize(element.Type))), element.InstancedAdvanceRate);
+				}
+			}
+			else
+			{
+				m_ActiveVertexAttribs = GlVertexAttribPointerSetup(m_ActiveVertexAttribs, element.GetComponentCount(), BufferDataTypeToOpenGLType(element.Type), element.Normalised, layout.GetStride(), (const void*)element.Offset, element.InstancedAdvanceRate);
+			}
 		}
-
+		
 		// Unbind the vertex array
 		glBindVertexArray(0);
 	}

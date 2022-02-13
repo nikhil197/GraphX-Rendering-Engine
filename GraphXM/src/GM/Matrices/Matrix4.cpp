@@ -27,6 +27,11 @@ namespace GM
 		Init(OtherMat.M);
 	}
 
+	Matrix4::Matrix4(Matrix4&& OtherMat)
+	{
+		Init(OtherMat.M);
+	}
+
 	void Matrix4::Init(float Value)
 	{
 		for (int i = 0; i < 4; i++)
@@ -62,6 +67,12 @@ namespace GM
 	Matrix4& Matrix4::operator=(const Matrix4& OtherMat)
 	{
 		Init(OtherMat.M);
+		return *this;
+	}
+
+	Matrix4& Matrix4::operator=(Matrix4&& OtherMat)
+	{
+		std::memcpy(&M, &OtherMat.M, sizeof(M));
 		return *this;
 	}
 

@@ -25,9 +25,15 @@ namespace GM
 		/* Copy Contructor */
 		Matrix4(const Matrix4& OtherMat);
 
+		/* Move Constructor */
+		Matrix4(Matrix4&& OtherMat);
+
 	public:
 		/* Assignment operator */
 		Matrix4& operator=(const Matrix4& OtherMat);
+
+		/* Move Assignment operator */
+		Matrix4& operator=(Matrix4&& OtherMat);
 
 		/* Returns whether the matrix is equal to this one */
 		bool operator==(const Matrix4& OtherMat) const;

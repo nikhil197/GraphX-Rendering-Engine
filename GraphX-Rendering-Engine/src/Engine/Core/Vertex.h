@@ -164,4 +164,36 @@ namespace GraphX
 			return Layout;
 		}
 	};
+
+	/* Data that varies for each Instance */
+	struct PerInstanceData
+	{
+		// Model Matrix
+		GM::Matrix4 ModelMatrix;
+
+		// Normal Matrix;
+		GM::Matrix3 NormalMatrix;
+
+		// The tint color for the instance
+		GM::Vector4 TintColor;
+
+		// The reflectivity of the instance
+		float Reflectivity;
+
+		// The Shininess of the instance surface
+		float Shininess;
+
+		static const VertexBufferLayout& VertexLayout()
+		{
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Mat4, false, 1 },		// For Model Matrix
+				{ BufferDataType::Mat3, false, 1 },		// For Normal Matrix
+				{ BufferDataType::Float4, false, 1 },	// For Tint Color
+				{ BufferDataType::Float, false, 1 },	// For Reflectivity 
+				{ BufferDataType::Float, false, 1 },	// For Shininess
+			};
+
+			return Layout;
+		}
+	};
 }

@@ -21,13 +21,20 @@ namespace GM
 
 		/* Create the Matrix3 from the upper 3x3 matrix from the given matrix4 */
 		explicit Matrix3(const class Matrix4& OtherMat);
+		explicit Matrix3(class Matrix4&& OtherMat);
 
 		/* Copy constructor */
 		Matrix3(const Matrix3& OtherMat);
 
+		/* Move Constructor */
+		Matrix3(Matrix3&& OtherMat);
+
 	public:
 		/* Assignment Operator */
 		Matrix3& operator=(const Matrix3& OtherMat);
+
+		/* Move Assignment operator */
+		Matrix3& operator=(Matrix3&& OtherMat);
 
 		/* Returns whether the matrix is equal to this one */
 		bool operator==(const Matrix3& OtherMat) const;

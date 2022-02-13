@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\Boost;$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -86,7 +86,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)vendor\Boost;$(ProjectDir)src\;$(ProjectDir)src\Engine\Core\;$(SolutionDir)GraphXM\src\;$(SolutionDir)GraphXM\src\GM\;$(ProjectDir)src\Engine\;$(ProjectDir)vendor\;$(ProjectDir)vendor\spdlog\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\Assimp\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -111,7 +111,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Application.cpp" />
+    <ClCompile Include="src\Engine\Core\AssetManager\BufferAllocator.cpp" />
+    <ClCompile Include="src\Engine\Core\AssetManager\GObject.cpp" />
     <ClCompile Include="src\Engine\Core\Batches\Batch2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Batches\InstanceBatch.cpp" />
     <ClCompile Include="src\Engine\Core\Batches\ParticleBatch.cpp" />
     <ClCompile Include="src\Engine\Core\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Engine\Core\GraphicsContext.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SpriteSheet.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SubTexture2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\TextureLibrary.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp" />
@@ -164,6 +168,7 @@
     <ClCompile Include="src\Engine\Utilities\AssetLoader\AssetLoader.cpp" />
     <ClCompile Include="src\Engine\Utilities\EngineUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp" />
+    <ClCompile Include="src\Engine\Utilities\HashUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\Importer.cpp" />
     <ClCompile Include="src\Engine\Utilities\MousePicker.cpp" />
     <ClCompile Include="src\Engine\Core\VertexArray.cpp" />
@@ -193,9 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Application.h" />
+    <ClInclude Include="src\Engine\Core\AssetManager\BufferAllocator.h" />
+    <ClInclude Include="src\Engine\Core\AssetManager\GObject.h" />
     <ClInclude Include="src\Engine\Core\AssetManager\Manager.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch2D.h" />
+    <ClInclude Include="src\Engine\Core\Batches\InstanceBatch.h" />
     <ClInclude Include="src\Engine\Core\Batches\ParticleBatch.h" />
     <ClInclude Include="src\Engine\Core\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
@@ -208,6 +216,7 @@
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />
+    <ClInclude Include="src\Engine\Core\Textures\TextureLibrary.h" />
     <ClInclude Include="src\Engine\EngineConfig.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />

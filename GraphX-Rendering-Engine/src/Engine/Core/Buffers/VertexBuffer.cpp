@@ -4,6 +4,8 @@
 
 namespace GraphX
 {
+	uint64_t VertexBuffer::s_TotalAllocatedMemory;
+
 	VertexBuffer::VertexBuffer(const void* data, uint32_t size)
 		: RendererResource(), m_BufferSize(size)
 	{
@@ -12,6 +14,8 @@ namespace GraphX
 		glGenBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, m_BufferSize, data, GL_STATIC_DRAW);
+
+		s_TotalAllocatedMemory += m_BufferSize;
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -40,6 +44,8 @@ namespace GraphX
 		glGenBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, m_BufferSize, nullptr, GL_STATIC_DRAW);
+
+		s_TotalAllocatedMemory += m_BufferSize;
 
 		// Copy data from the source buffer
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ARRAY_BUFFER, 0, 0, m_BufferSize);
