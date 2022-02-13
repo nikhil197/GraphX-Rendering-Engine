@@ -277,6 +277,14 @@ namespace GraphX
 		Renderer2D::Render();
 	}
 
+	void Renderer::RenderInstanced()
+	{
+		Renderer3D::RenderInstanced();
+
+		// Renderer2D is not instanced for now
+		//Render
+	}
+
 	void Renderer::RenderDepth(Shader& DepthShader)
 	{
 		Renderer3D::Render(DepthShader);

@@ -27,6 +27,9 @@ namespace GraphX
 
 		// END Batch interface
 
+		// TODO: Need to account for the increasing instances
+		//void Resize(uint32_t newSize);
+
 		/* Returns the Batch Hash */
 		inline std::size_t GetBatchHash() const { return m_BatchHash; }
 

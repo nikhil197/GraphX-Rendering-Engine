@@ -140,6 +140,9 @@ namespace GraphX
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
 
+		/* Returns the vbo for the object */
+		inline Ref<VertexBuffer> GetVBO() const { return m_RenderData->VBO; }
+
 		/* Returns the ibo for the object */
 		inline Ref<const IndexBuffer> GetIBO() const { return m_RenderData->IBO; }
 

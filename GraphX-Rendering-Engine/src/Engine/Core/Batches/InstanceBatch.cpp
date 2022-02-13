@@ -40,8 +40,13 @@ namespace GraphX
 
 	void InstanceBatch::EndBatch()
 	{
+		if (m_InstanceDataPtr == m_InstanceData || m_InstanceDataPtr == nullptr)
+			return;
+
 		std::size_t bufferSize = m_CurrentInstanceCount * sizeof(PerInstanceData);
 		m_VBO->SetData(m_InstanceData, 0, bufferSize);
+
+		m_VAO->AddVertexBuffer(*m_VBO, PerInstanceData::VertexLayout());
 
 		m_InstanceDataPtr = nullptr;
 	}
@@ -50,7 +55,7 @@ namespace GraphX
 	{
 		// Render everything
 		// No need to do any thing in case there is no data
-		if (m_InstanceDataPtr == m_InstanceData)
+		if (m_InstanceDataPtr == m_InstanceData || m_InstanceDataPtr == nullptr)
 			return;
 
 		Ref<Shader> shader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");

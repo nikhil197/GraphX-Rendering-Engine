@@ -17,23 +17,30 @@ namespace GM
     template<typename T>
     std::size_t Hash_Combine(std::size_t& seed, const T& v)
     {
-        const uint64_t m = (uint64_t(0xc6a4a793) << 32) + 0x5bd1e995;
-        const int r = 47;
-
         std::size_t hV = Hash<T>(v);
-        hV *= m;
-        hV ^= hV >> r;
-        hV *= m;
-
-        seed ^= hV;
-        seed *= m;
-
-        // Completely arbitrary number, to prevent 0's
-        // from hashing to 0.
-        seed += 0xe6546b64;
-
-        return seed;
+		return Hash_Combine(seed, hV);
     }
+
+	template<>
+	std::size_t Hash_Combine<std::size_t>(std::size_t& seed, const std::size_t& value)
+	{
+		const uint64_t m = (uint64_t(0xc6a4a793) << 32) + 0x5bd1e995;
+		const int r = 47;
+
+		std::size_t hV = value;
+		hV *= m;
+		hV ^= hV >> r;
+		hV *= m;
+
+		seed ^= hV;
+		seed *= m;
+
+		// Completely arbitrary number, to prevent 0's
+		// from hashing to 0.
+		seed += 0xe6546b64;
+
+		return seed;
+	}
 }
 
 // std::hash specializations for vectors

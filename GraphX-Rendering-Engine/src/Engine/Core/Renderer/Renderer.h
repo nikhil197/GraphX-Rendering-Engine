@@ -58,6 +58,9 @@ namespace GraphX
 		/* Renders all the submitted meshes in the scene */
 		static void Render();
 
+		/* Renders all the submitted meshes in the scene using instanced rendering */
+		static void RenderInstanced();
+
 		/* Renders all the submitted meshes in the scene to the depth buffer */
 		static void RenderDepth(class Shader& DepthShader);
 

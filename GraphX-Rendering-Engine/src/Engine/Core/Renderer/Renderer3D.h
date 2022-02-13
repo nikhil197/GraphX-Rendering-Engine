@@ -32,6 +32,9 @@ namespace GraphX
 		/* Renders the objects submitted to the rendered*/
 		static void Render();
 
+		/* Renders the submitted objects using instanced rendering */
+		static void RenderInstanced();
+
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
 		static void Render(Shader& DepthShader);
 
@@ -62,5 +65,7 @@ namespace GraphX
 		};
 
 		static Renderer3DData* s_Data;
+
+		static std::unordered_map<std::size_t, Ref<class InstanceBatch>> s_InstanceBatches;
 	};
 }
