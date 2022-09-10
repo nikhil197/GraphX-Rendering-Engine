@@ -74,8 +74,8 @@ namespace GraphX
 				case BufferDataType::Int4:		return 4;
 				case BufferDataType::UInt:		return 1;
 				case BufferDataType::Bool:		return 1;
-				case BufferDataType::Mat3:		return 3 * 3;
-				case BufferDataType::Mat4:		return 4 * 4;
+				case BufferDataType::Mat3:		return 3;
+				case BufferDataType::Mat4:		return 4;
 			}
 
 			GX_ENGINE_ASSERT(false, "Unknown Buffer Data Type");
@@ -97,6 +97,34 @@ namespace GraphX
 		VertexBufferLayout(const std::initializer_list<BufferLayoutElement>& Elements)
 			: m_Elements(Elements), m_Stride(0)
 		{
+			CalculateStrideAndOffset();
+		}
+
+		void PushBack(const BufferLayoutElement& newElement)
+		{
+			m_Elements.push_back(newElement);
+
+			m_Stride = 0;
+
+			// Calculate the stride an offset again
+			CalculateStrideAndOffset();
+		}
+
+		void PushBack(const VertexBufferLayout& layout)
+		{
+			PushBack(layout.GetElements());
+		}
+
+		void PushBack(const std::vector<BufferLayoutElement>& newElements)
+		{
+			for (const auto& e : newElements)
+			{
+				m_Elements.push_back(e);
+			}
+
+			m_Stride = 0;
+
+			// Calculate the stride an offset again
 			CalculateStrideAndOffset();
 		}
 

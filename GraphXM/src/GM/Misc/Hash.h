@@ -1,3 +1,4 @@
+#pragma once
 
 namespace GM
 {
@@ -22,7 +23,7 @@ namespace GM
     }
 
 	template<>
-	std::size_t Hash_Combine<std::size_t>(std::size_t& seed, const std::size_t& value)
+	inline std::size_t Hash_Combine<std::size_t>(std::size_t& seed, const std::size_t& value)
 	{
 		const uint64_t m = (uint64_t(0xc6a4a793) << 32) + 0x5bd1e995;
 		const int r = 47;

@@ -154,6 +154,14 @@ namespace GraphX
 		m_Shader->SetUniform3f("u_LightPos", m_Light->Position);
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 		
+		// TOOD: Find a better way to do this
+		Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		InstancedBatchShader->Bind();
+		InstancedBatchShader->SetUniform1f("u_AmbientStrength", 0.1f);
+
+		InstancedBatchShader->SetUniform3f("u_LightPos", m_Light->Position);
+		InstancedBatchShader->SetUniform4f("u_LightColor", m_Light->Color);
+
 		LoadScene();
 		
 		{
@@ -260,6 +268,11 @@ namespace GraphX
 					m_Shader->Bind();
 					m_ShadowBuffer->BindDepthMap(EngineConstants::ShadowMapTextureSlot);
 					ConfigureShaderForRendering(*m_Shader);
+
+					Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+					InstancedBatchShader->Bind();
+					ConfigureShaderForRendering(*InstancedBatchShader);
+					m_Shader->Bind();
 
 					Render2DScene();
 					RenderScene();
@@ -453,20 +466,26 @@ namespace GraphX
 	{
 		GX_PROFILE_SCOPE("Update Camera Uniforms")
 
-			for (unsigned int i = 0; i < m_Shaders.size(); i++)
+		for (unsigned int i = 0; i < m_Shaders.size(); i++)
+		{
+			const Ref<Shader>& shader = m_Shaders.at(i);
+			if (!shader)
 			{
-				const Ref<Shader>& shader = m_Shaders.at(i);
-				if (!shader)
-				{
-					m_Shaders.erase(m_Shaders.begin() + i);		// TODO : Fix Memory leak
-					continue;
-				}
-				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
-
-				//TODO: Uniforms need to be set in the renderer
-				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
+				m_Shaders.erase(m_Shaders.begin() + i);		// TODO : Fix Memory leak
+				continue;
 			}
+			shader->Bind();
+			shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+
+			//TODO: Uniforms need to be set in the renderer
+			shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
+		}
+
+		Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		InstancedBatchShader->Bind();
+		//TODO: Uniforms need to be set in the renderer
+		InstancedBatchShader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+		InstancedBatchShader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
 
 		// Update the terrain Material shader (TODO: Find a better way)
 		for (unsigned int i = 0; i < m_Terrain.size(); i++)

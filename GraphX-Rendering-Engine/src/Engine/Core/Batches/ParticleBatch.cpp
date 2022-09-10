@@ -36,9 +36,6 @@ namespace GraphX
 		m_VAO->AddIndexBuffer(*m_IBO);
 
 		m_VertexData = new VertexParticleBatch[m_MaxVerticesCount];
-
-		// 0 Texture slot is reserved for the white texture
-		m_TextureIDs[0] = Renderer::GetTextureLibrary().GetTexture2D("White")->GetID();
 	}
 
 	ParticleBatch::~ParticleBatch()

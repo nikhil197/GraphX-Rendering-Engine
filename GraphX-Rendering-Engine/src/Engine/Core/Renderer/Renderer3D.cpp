@@ -59,6 +59,16 @@ namespace GraphX
 
 		s_Data->DebugData.VAO->AddVertexBuffer(*(s_Data->DebugData.VBO), layout);
 		s_Data->DebugData.VAO->AddIndexBuffer(ibo);
+
+		int samplers[32]{};
+		for (int i = 0; i < 32; i++)
+		{
+			samplers[i] = i;
+		}
+
+		Ref<Shader> instanceBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		instanceBatchShader->Bind();
+		instanceBatchShader->SetUniform1iv("u_Textures", 32, samplers);
 	}
 
 	void Renderer3D::Shutdown()
@@ -135,10 +145,11 @@ namespace GraphX
 
 	void Renderer3D::RenderInstanced()
 	{
+		// TODO: Needs to render debug collisions
 		uint32_t queueSize = s_Data->RenderQueue.size();
 
 		// Begin each instance batch;
-		for (auto itr : s_InstanceBatches)
+		for (auto& itr : s_InstanceBatches)
 		{
 			itr.second->BeginBatch();
 		}
@@ -163,14 +174,13 @@ namespace GraphX
 
 				batch->BeginBatch();
 				batch->AddMesh(mesh);
-				batch->EndBatch();
-
+				
 				s_InstanceBatches[hash] = batch;
 			}
 		}
 
 		// End and flush each instance batch;
-		for (auto itr : s_InstanceBatches)
+		for (auto& itr : s_InstanceBatches)
 		{
 			itr.second->EndBatch();
 			itr.second->Flush();

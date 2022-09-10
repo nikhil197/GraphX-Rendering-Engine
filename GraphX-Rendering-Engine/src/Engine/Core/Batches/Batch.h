@@ -2,6 +2,8 @@
 
 #include "Engine/Core/Renderer/Renderer.h"
 
+#include "Textures/Texture2D.h"
+
 namespace GraphX
 {
 	class Batch
@@ -17,6 +19,9 @@ namespace GraphX
 
 			// TODO: Replace 32, get the actual count from the GPU
 			memset(m_TextureIDs.data(), 0, m_TextureIDs.size() * sizeof(uint32_t));
+
+			// 0 Texture slot is reserved for the white texture
+			m_TextureIDs[0] = Renderer::GetTextureLibrary().GetTexture2D("White")->GetID();
 		}
 
 	public:

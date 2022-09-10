@@ -12,7 +12,7 @@ namespace GraphX
 		: public Batch
 	{
 	public:
-		InstanceBatch(std::size_t BatchHash, uint32_t InstanceCount, const Ref<VertexBuffer>& vData, const struct VertexBufferLayout& bufferLayout, const Ref<IndexBuffer>& iData);
+		InstanceBatch(std::size_t BatchHash, uint32_t InstanceCount, const Ref<VertexBuffer>& vData, const struct VertexBufferLayout& bufferLayout, const Ref<const IndexBuffer>& iData);
 
 		void AddMesh(const Ref<Mesh3D>& Mesh);
 
@@ -34,7 +34,7 @@ namespace GraphX
 		inline std::size_t GetBatchHash() const { return m_BatchHash; }
 
 	private:
-		void AddMesh_Internal(const Ref<Mesh3D>& Mesh);
+		void AddMesh_Internal(const Ref<Mesh3D>& Mesh, const std::vector<float>& texIds);
 
 	protected:
 		Ref<VertexBuffer> m_VertexData;

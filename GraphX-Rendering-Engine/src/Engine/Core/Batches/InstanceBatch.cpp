@@ -20,15 +20,19 @@
 
 namespace GraphX
 {
-	InstanceBatch::InstanceBatch(std::size_t BatchHash, uint32_t InstanceCount, const Ref<VertexBuffer>& vData, const VertexBufferLayout& bufferLayout, const Ref<IndexBuffer>& iData)
-		: Batch(InstanceCount, true), m_BatchHash(BatchHash)
+	InstanceBatch::InstanceBatch(std::size_t BatchHash, uint32_t InstanceCount, const Ref<VertexBuffer>& vData, const VertexBufferLayout& bufferLayout, const Ref<const IndexBuffer>& iData)
+		: Batch(InstanceCount, true), m_BatchHash(BatchHash), m_CurrentInstanceCount(0)
 	{
 		m_VAO = CreateScope<VertexArray>();
 
 		/* Create the empty buffer */
 		m_VBO = CreateScope<VertexBuffer>(InstanceCount * sizeof(PerInstanceData));
+
 		m_VAO->AddVertexBuffer(*vData, bufferLayout);
+		m_VAO->AddVertexBuffer(*m_VBO, PerInstanceData::VertexLayout());
 		m_VAO->AddIndexBuffer(*iData);	// Bind the index buffer, no need to store it
+
+		m_IndexCount = iData->GetCount();
 
 		m_InstanceData = new PerInstanceData[InstanceCount];
 	}
@@ -36,17 +40,16 @@ namespace GraphX
 	void InstanceBatch::BeginBatch()
 	{
 		m_InstanceDataPtr = m_InstanceData;
+		m_CurrentInstanceCount = 0;
 	}
 
 	void InstanceBatch::EndBatch()
 	{
-		if (m_InstanceDataPtr == m_InstanceData || m_InstanceDataPtr == nullptr)
+		if (m_InstanceDataPtr == nullptr)
 			return;
 
 		std::size_t bufferSize = m_CurrentInstanceCount * sizeof(PerInstanceData);
 		m_VBO->SetData(m_InstanceData, 0, bufferSize);
-
-		m_VAO->AddVertexBuffer(*m_VBO, PerInstanceData::VertexLayout());
 
 		m_InstanceDataPtr = nullptr;
 	}
@@ -55,7 +58,7 @@ namespace GraphX
 	{
 		// Render everything
 		// No need to do any thing in case there is no data
-		if (m_InstanceDataPtr == m_InstanceData || m_InstanceDataPtr == nullptr)
+		if (m_InstanceDataPtr == m_InstanceData || m_CurrentInstanceCount == 0)
 			return;
 
 		Ref<Shader> shader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
@@ -88,15 +91,17 @@ namespace GraphX
 			BeginBatch();
 		}
 
+		std::vector<float> texIds(textures.size(), 0.0f);
+
 		for (int i = 0; i < textures.size(); i++)
 		{
-			uint32_t TexID = textures[i]->GetID();
+			uint32_t TextureId = textures[i]->GetID();
 			float textureIndex = 0.0f;
-			for (uint32_t i = 1; i < m_TextureSlotIndex; i++)
+			for (uint32_t textureSlot = 1; textureSlot < m_TextureSlotIndex; textureSlot++)
 			{
-				if (TexID == m_TextureIDs[i])
+				if (TextureId == m_TextureIDs[textureSlot])
 				{
-					textureIndex = (float)i;
+					textureIndex = (float)textureSlot;
 					break;
 				}
 			}
@@ -105,14 +110,20 @@ namespace GraphX
 			if (textureIndex == 0.0f)
 			{
 				textureIndex = (float)m_TextureSlotIndex;
-				m_TextureIDs[m_TextureSlotIndex++] = TexID;
+				m_TextureIDs[m_TextureSlotIndex++] = TextureId;
 			}
+
+			texIds[i] = textureIndex;
 		}
 
-		AddMesh_Internal(mesh);
+		AddMesh_Internal(mesh, texIds);
 	}
 
-	void InstanceBatch::AddMesh_Internal(const Ref<Mesh3D>& mesh)
+	// Need to check how to properly fill the data into the buffer
+	// The instance data needs to be properly added with the per vertex data
+	// Right now, the per vertex and per instance data are added separately using different strides 
+	// which is causing the issues when data is read in the shader
+	void InstanceBatch::AddMesh_Internal(const Ref<Mesh3D>& mesh, const std::vector<float>& texIds)
 	{
 		// Add Data into the mesh
 		Ref<Material> mat = mesh->GetMaterial();
@@ -127,6 +138,9 @@ namespace GraphX
 		m_InstanceDataPtr->TintColor = mat->GetBaseColor();
 		m_InstanceDataPtr->Reflectivity = mat->GetSpecularStrength();
 		m_InstanceDataPtr->Shininess = mat->GetShininess();
+
+		// For now only using one texture for each material, Material system needs a redesign
+		m_InstanceDataPtr->TexIndex = texIds[0];
 
 		m_InstanceDataPtr++;
 		m_CurrentInstanceCount++;

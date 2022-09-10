@@ -142,6 +142,9 @@ namespace GraphX
 
 		s_SkyboxData->SkyboxShader = s_ShaderLibrary.Load("res/Shaders/SkyboxShader.glsl", "Skybox");
 
+		s_ShaderLibrary.Load("res/Shaders/InstancedBatchShader.glsl", "InstancedBatch");
+
+
 		VertexBufferLayout layout = {
 			{ BufferDataType::Float3 }
 		};
@@ -280,6 +283,8 @@ namespace GraphX
 	void Renderer::RenderInstanced()
 	{
 		Renderer3D::RenderInstanced();
+
+		Renderer2D::Render();
 
 		// Renderer2D is not instanced for now
 		//Render

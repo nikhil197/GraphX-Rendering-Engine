@@ -67,7 +67,7 @@ namespace GraphX
 		s_Data->WhiteTexture = Renderer::GetTextureLibrary().GetTexture2D("White");
 
 		// Setup texture slots in the shader
-		int samplers[32];
+		int samplers[32]{};
 		for (int i = 0; i < 32; i++)
 		{
 			samplers[i] = i;

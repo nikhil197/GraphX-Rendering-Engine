@@ -115,7 +115,7 @@ namespace GM
 		Matrix4 AdjointTranspose() const;
 
 		/* Returns an inverse matrix of this matrix */
-		virtual Matrix4 Inverse() const;
+		Matrix4 Inverse() const;
 
 	public:
 		/* Extracts the translation vector from the transform matrix */
