@@ -45,7 +45,13 @@ namespace GraphX
 		/* Returns the count */
 		uint32_t GetCount() const { return m_Count; }
 
+		/* Returns the total memory Allocated to the Vertex Buffers */
+		static inline uint64_t TotalAllocatedMemory() { return s_TotalAllocatedMemory; }
+
 	private:
+		/* Total memory allocated to the vertex buffers in the engine */
+		static uint64_t s_TotalAllocatedMemory;
+		
 		/* # of primitives to be drawn */
 		uint32_t m_Count;
 	};

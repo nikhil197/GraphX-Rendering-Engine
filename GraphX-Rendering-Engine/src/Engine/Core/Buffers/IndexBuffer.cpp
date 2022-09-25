@@ -4,6 +4,8 @@
 
 namespace GraphX
 {
+	uint64_t IndexBuffer::s_TotalAllocatedMemory;
+
 	IndexBuffer::IndexBuffer(const uint32_t* data, uint32_t count)
 		: RendererResource(), m_Count(count)
 	{
@@ -12,6 +14,8 @@ namespace GraphX
 		glGenBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count * sizeof(uint32_t), data, GL_STATIC_DRAW);
+
+		s_TotalAllocatedMemory += m_Count * sizeof(uint32_t);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
@@ -42,6 +46,8 @@ namespace GraphX
 
 		// Copy data from the source buffer
 		glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ELEMENT_ARRAY_BUFFER, 0, 0, m_Count * sizeof(unsigned int));
+
+		s_TotalAllocatedMemory += m_Count * sizeof(uint32_t);
 
 		// Unbind
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

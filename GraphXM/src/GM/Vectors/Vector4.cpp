@@ -282,4 +282,3 @@ namespace GM
 		return result;
 	}
 }
-

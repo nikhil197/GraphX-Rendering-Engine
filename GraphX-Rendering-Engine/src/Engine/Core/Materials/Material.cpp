@@ -4,21 +4,23 @@
 #include "Shaders/Shader.h"
 #include "Textures/Texture2D.h"
 
+#include "Utilities/HashUtil.h"
+
 #include "Engine/Utilities/AssetLoader/AssetLoader.h"
 
 namespace GraphX
 {
 	Material::Material(const Shader& shader)
-		: m_BaseColor(Vector4()), m_Shader(CreateRef<Shader>(shader))
+		: m_BaseColor(Vector4()), m_Shader(CreateRef<Shader>(shader)), m_Hash(GM::Hash(Vector4()))
 	{
 	}
 
 	Material::Material(const Ref<Shader>& shader)
-		: m_BaseColor(Vector4()), m_Shader(shader)
+		: m_BaseColor(Vector4()), m_Shader(shader), m_Hash(GM::Hash(Vector4()))
 	{}
 
 	Material::Material(const Material& Other)
-		: m_BaseColor(Other.m_BaseColor), m_Specular(Other.m_Specular), m_Shininess(Other.m_Shininess), m_Shader(Other.m_Shader)
+		: m_BaseColor(Other.m_BaseColor), m_Specular(Other.m_Specular), m_Shininess(Other.m_Shininess), m_Shader(Other.m_Shader), m_Hash(GM::Hash(Vector4()))
 	{
 	}
 
@@ -49,6 +51,7 @@ namespace GraphX
 	{
 		std::lock_guard<std::mutex> lock(m_TextureMutex);
 		m_Textures.emplace_back(Tex);
+		GM::Hash_Combine(m_Hash, *Tex);
 	}
 
 	void Material::AddTexture(const std::vector<Ref<const Texture2D>>& Textures)
@@ -57,6 +60,7 @@ namespace GraphX
 		for (const Ref<const Texture2D>& Tex : Textures)
 		{
 			m_Textures.emplace_back(Tex);
+			GM::Hash_Combine(m_Hash, *Tex);
 		}
 	}
 

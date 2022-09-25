@@ -13,4 +13,7 @@ namespace GraphX
 
 	// Whether to enable batch rendering or not
 	static bool GX_ENABLE_BATCH_RENDERING = true;
+
+	// Whether or not to use instanced rendering or not
+	static bool GX_ENABLE_INSTANCED_RENDERING = true;
 }

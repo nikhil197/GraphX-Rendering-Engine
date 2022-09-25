@@ -140,6 +140,9 @@ namespace GraphX
 		/* Unbinds all the buffers for the object */
 		virtual void Disable() const;
 
+		/* Returns the vbo for the object */
+		inline Ref<VertexBuffer> GetVBO() const { return m_RenderData->VBO; }
+
 		/* Returns the ibo for the object */
 		inline Ref<const IndexBuffer> GetIBO() const { return m_RenderData->IBO; }
 
@@ -188,6 +191,9 @@ namespace GraphX
 
 		/* Returns whether the mesh resources have been initialised */
 		inline bool IsInitialised() const { return m_Initialised; }
+
+		/* Returns the Mesh Instance Hash */
+		inline std::size_t GetInstanceHash() const { return m_InstanceHash; }
 
 		virtual ~Mesh3D();
 
@@ -250,5 +256,15 @@ namespace GraphX
 
 		/* Whether the mesh resources has been intialised */
 		bool m_Initialised = false;
+
+		/* Instanced hash for the Instanced rendering */
+		std::size_t m_InstanceHash;
+
+	private:
+		/* Mutex to add new buffers in a thread safe way */
+		static std::mutex s_BuffersMutex;
+
+		/* Map to store the Vertex and index buffers of the meshes to be re-used */
+		static std::unordered_map<std::size_t, std::pair<Ref<VertexBuffer>, Ref<IndexBuffer>>> s_Buffers;
 	};
 }

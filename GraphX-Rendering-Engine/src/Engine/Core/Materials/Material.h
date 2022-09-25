@@ -59,6 +59,9 @@ namespace GraphX
 		/* Returns textures used in the material */
 		inline const std::vector<Ref<const Texture2D>>& GetTextures() const { return m_Textures; }
 
+		/* Returns the current hash of the material */
+		inline std::size_t GetHash() const { return m_Hash; }
+
 		~Material() {};
 
 	protected:
@@ -79,5 +82,29 @@ namespace GraphX
 
 		/* Mutex used when accessing textures */
 		std::mutex m_TextureMutex;
+
+		// TODO: Decide if this should be stored or not
+		/* Hash value for the material */
+		std::size_t m_Hash;
 	};
 }
+
+template<>
+struct std::hash<GraphX::Material>
+{
+	std::size_t operator()(GraphX::Material const& Mat) const noexcept
+	{
+		std::size_t seed = 0;
+
+		// Hash the Base Color
+		GM::Hash_Combine(seed, Mat.GetBaseColor());
+
+		// Hash the textures
+		for (const auto& tex : Mat.GetTextures())
+		{
+			GM::Hash_Combine(seed, tex);
+		}
+
+		return seed;
+	}
+};

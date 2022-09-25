@@ -33,5 +33,8 @@ namespace GraphX
 
 		/* UnBind the vao */
 		void UnBind() const;
+
+	private:
+		uint32_t m_ActiveVertexAttribs = 0;
 	};
 }

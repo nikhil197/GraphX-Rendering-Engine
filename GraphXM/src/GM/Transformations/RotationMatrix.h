@@ -31,7 +31,7 @@ namespace GM
 		const RotationMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Member functions */
-		Matrix4 Inverse() const override;
+		Matrix4 Inverse() const;
 
 		/* Returns the angles */
 		inline const Rotator& GetRotation() const { return m_Rotation; }

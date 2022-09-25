@@ -6,7 +6,7 @@
 
 namespace GraphX
 {
-	FrameBuffer::FrameBuffer(int width, int height, FramebufferType Type)
+	FrameBuffer::FrameBuffer(int width, int height, FramebufferType Type, const std::string& name)
 		: RendererResource(), m_Width(width), m_Height(height)
 	{
 		GX_PROFILE_FUNCTION()
@@ -15,7 +15,7 @@ namespace GraphX
 		if (Type == FramebufferType::GX_FRAME_DEPTH)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-			m_DepthMap = CreateRef<Texture2D>(m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
+			m_DepthMap = CreateRef<Texture2D>(name, m_Width, m_Height, FramebufferAttachmentType::GX_TEX_DEPTH);
 			m_DepthMap->Bind();
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMap->m_RendererID, 0);
 			glDrawBuffer(GL_NONE);

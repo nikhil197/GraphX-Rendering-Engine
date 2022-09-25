@@ -41,10 +41,6 @@ namespace GraphX
 		s_Data->TextureShader = Renderer::GetShaderLibrary().Load("res/Shaders/TextureShader2D.glsl", "Texture2D");
 		s_Data->ShadowDebugShader = Renderer::GetShaderLibrary().Load("res/Shaders/ShadowDebugShader.glsl", "ShadowDebug");
 
-		s_Data->WhiteTexture = CreateScope<Texture2D>(1, 1);
-		uint32_t data = 0xffffffff;
-		s_Data->WhiteTexture->SetData(&data, sizeof(data));
-
 		std::vector<Vertex2D> quadVertices = {
 			{ GM::Vector3(-0.5f, -0.5f, 0.0f), GM::Vector2(0.0f, 0.0f) },
 			{ GM::Vector3( 0.5f, -0.5f, 0.0f), GM::Vector2(1.0f, 0.0f) },
@@ -62,17 +58,16 @@ namespace GraphX
 		s_Data->QuadVA->AddIndexBuffer(ibo);
 
 		s_Data->Batch = CreateScope<Batch2D>(MaxQuadCount);
-		s_Data->Batch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
-		
 		s_Data->ParticleBatch = CreateScope<ParticleBatch>(MaxParticlesCount);
-		s_Data->ParticleBatch->m_TextureIDs[0] = s_Data->WhiteTexture->GetID();
-
+		
 		s_Data->BatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/BatchShader2D.glsl", "Batch2D");
 		s_Data->ParticleShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleShader.glsl", "Particle");
 		s_Data->ParticleBatchShader = Renderer::GetShaderLibrary().Load("res/Shaders/ParticleBatchShader.glsl", "ParticleBatch");
 
+		s_Data->WhiteTexture = Renderer::GetTextureLibrary().GetTexture2D("White");
+
 		// Setup texture slots in the shader
-		int samplers[32];
+		int samplers[32]{};
 		for (int i = 0; i < 32; i++)
 		{
 			samplers[i] = i;

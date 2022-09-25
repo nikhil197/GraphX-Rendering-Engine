@@ -17,8 +17,9 @@ namespace GraphX
 		/* Constructor */
 		/* @param width - width of the framebuffer */
 		/* @param height - height of the framebuffer */
-		/* @param IsScreenSize - whether the framebuffer size is equal to that of the screen (main window) */
-		FrameBuffer(int width, int height, FramebufferType Type);
+		/* @param Type - Type of the Framebuffer */
+		/* @param name - Name of the buffer */
+		FrameBuffer(int width, int height, FramebufferType Type, const std::string& name);
 
 		/* Binds the frame buffer */
 		void Bind() const;

@@ -7,7 +7,7 @@ namespace GraphX
 	{
 		std::lock_guard<std::mutex> guard(m_CommandListMutex);
 
-		m_CommandsForCurrentPass = m_CommandsForNextPass;
+		m_CommandsForCurrentPass = std::move(m_CommandsForNextPass);
 		m_CommandsForNextPass = std::deque<RenderCommandBase*>();
 	}
 

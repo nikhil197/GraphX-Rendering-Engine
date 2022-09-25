@@ -131,7 +131,7 @@ namespace GraphX
 		m_Light = CreateRef<PointLight>(Vector3(0.0f, 50.0f, 50.0f), Vector4(1, 1, 1, 1));
 		m_Lights.emplace_back(m_Light);
 
-		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH);
+		m_ShadowBuffer = CreateRef<FrameBuffer>(m_Window->GetWidth(), m_Window->GetHeight(), FramebufferType::GX_FRAME_DEPTH, "ShadowBuffer");
 		m_DepthShader = CreateRef<Shader>("res/Shaders/DepthShader.glsl");
 
 		ParticleManager::Init(m_CameraController->GetCamera());
@@ -154,6 +154,14 @@ namespace GraphX
 		m_Shader->SetUniform3f("u_LightPos", m_Light->Position);
 		m_Shader->SetUniform4f("u_LightColor", m_Light->Color);
 		
+		// TOOD: Find a better way to do this
+		Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		InstancedBatchShader->Bind();
+		InstancedBatchShader->SetUniform1f("u_AmbientStrength", 0.1f);
+
+		InstancedBatchShader->SetUniform3f("u_LightPos", m_Light->Position);
+		InstancedBatchShader->SetUniform4f("u_LightColor", m_Light->Color);
+
 		LoadScene();
 		
 		{
@@ -171,6 +179,10 @@ namespace GraphX
 		// For the purpose of fps count
 		int times = 0;
 		float then = Clock::GetClock()->GetEngineTime();
+
+		// Get total allocated memory
+		uint64_t mem = VertexBuffer::TotalAllocatedMemory();
+		mem += IndexBuffer::TotalAllocatedMemory();
 
 		// Draw while the window doesn't close
 		while (m_IsRunning)
@@ -192,6 +204,7 @@ namespace GraphX
 				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
 				then = now;
 				times = 0;
+				gRunTimeStats.CustomStats.clear();
 			}
 
 			// No need to update or render stuff if the application (window) is minimised
@@ -255,6 +268,11 @@ namespace GraphX
 					m_Shader->Bind();
 					m_ShadowBuffer->BindDepthMap(EngineConstants::ShadowMapTextureSlot);
 					ConfigureShaderForRendering(*m_Shader);
+
+					Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+					InstancedBatchShader->Bind();
+					ConfigureShaderForRendering(*InstancedBatchShader);
+					m_Shader->Bind();
 
 					Render2DScene();
 					RenderScene();
@@ -448,20 +466,26 @@ namespace GraphX
 	{
 		GX_PROFILE_SCOPE("Update Camera Uniforms")
 
-			for (unsigned int i = 0; i < m_Shaders.size(); i++)
+		for (unsigned int i = 0; i < m_Shaders.size(); i++)
+		{
+			const Ref<Shader>& shader = m_Shaders.at(i);
+			if (!shader)
 			{
-				const Ref<Shader>& shader = m_Shaders.at(i);
-				if (!shader)
-				{
-					m_Shaders.erase(m_Shaders.begin() + i);		// TODO : Fix Memory leak
-					continue;
-				}
-				shader->Bind();
-				shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
-
-				//TODO: Uniforms need to be set in the renderer
-				shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
+				m_Shaders.erase(m_Shaders.begin() + i);		// TODO : Fix Memory leak
+				continue;
 			}
+			shader->Bind();
+			shader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+
+			//TODO: Uniforms need to be set in the renderer
+			shader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
+		}
+
+		Ref<Shader> InstancedBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		InstancedBatchShader->Bind();
+		//TODO: Uniforms need to be set in the renderer
+		InstancedBatchShader->SetUniform3f("u_CameraPos", m_CameraController->GetCameraPosition());
+		InstancedBatchShader->SetUniformMat4f("u_ProjectionView", m_CameraController->GetCamera()->GetProjectionViewMatrix());
 
 		// Update the terrain Material shader (TODO: Find a better way)
 		for (unsigned int i = 0; i < m_Terrain.size(); i++)

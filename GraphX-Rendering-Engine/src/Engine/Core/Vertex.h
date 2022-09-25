@@ -55,7 +55,7 @@ namespace GraphX
 
 		// The normal vector of the vertex
 		GM::Vector3 Normal;
-		
+
 		// The color for the vertex
 		GM::Vector4 Color;
 
@@ -105,10 +105,10 @@ namespace GraphX
 
 		// Color of the vertex
 		GM::Vector4 Color;
-		
+
 		// Texture coordinates of the vertex
 		GM::Vector2 TexCoords;
-		
+
 		// Texture slot used for this vertex
 		float TexIndex = 0.0f;
 
@@ -159,6 +159,43 @@ namespace GraphX
 				{ BufferDataType::Float },	// For TexAtlasRows 
 				{ BufferDataType::Float },	// For BlendFactor 
 				{ BufferDataType::Float },	// For TexIndex
+			};
+
+			return Layout;
+		}
+	};
+
+	/* Data that varies for each Instance */
+	struct PerInstanceData
+	{
+		// Model Matrix
+		GM::Matrix4 ModelMatrix;
+
+		// Normal Matrix;
+		GM::Matrix3 NormalMatrix;
+
+		// The tint color for the instance
+		GM::Vector4 TintColor;
+
+		// The reflectivity of the instance
+		float Reflectivity;
+
+		// The Shininess of the instance surface
+		float Shininess;
+
+		// Texture index for the Instance
+		float TexIndex = 0.0f;
+
+		static const VertexBufferLayout& VertexLayout()
+		{
+			static VertexBufferLayout Layout = {
+				{ BufferDataType::Mat4, false, 1 },		// For Model Matrix
+				{ BufferDataType::Mat3, false, 1 },		// For Normal Matrix
+				{ BufferDataType::Float4, false, 1 },	// For Tint Color
+				//{ BufferDataType::Float3, false, 1 },	// For Reflectivity, Shininess and TexIndex
+				{ BufferDataType::Float, false, 1 },	// For Reflectivity 
+				{ BufferDataType::Float, false, 1 },	// For Shininess
+				{ BufferDataType::Float, false, 1 },	// For TexIndex
 			};
 
 			return Layout;

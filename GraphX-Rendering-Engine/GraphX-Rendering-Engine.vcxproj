@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -111,7 +111,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Application.cpp" />
+    <ClCompile Include="src\Engine\Core\AssetManager\BufferAllocator.cpp" />
+    <ClCompile Include="src\Engine\Core\AssetManager\GObject.cpp" />
     <ClCompile Include="src\Engine\Core\Batches\Batch2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Batches\InstanceBatch.cpp" />
     <ClCompile Include="src\Engine\Core\Batches\ParticleBatch.cpp" />
     <ClCompile Include="src\Engine\Core\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Engine\Core\GraphicsContext.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="src\Engine\Core\Shaders\ShaderLibrary.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SpriteSheet.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\SubTexture2D.cpp" />
+    <ClCompile Include="src\Engine\Core\Textures\TextureLibrary.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Lights\PointLight.cpp" />
     <ClCompile Include="src\Engine\Entities\Particles\Particle.cpp" />
@@ -164,6 +168,7 @@
     <ClCompile Include="src\Engine\Utilities\AssetLoader\AssetLoader.cpp" />
     <ClCompile Include="src\Engine\Utilities\EngineUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\FileOpenDialog.cpp" />
+    <ClCompile Include="src\Engine\Utilities\HashUtil.cpp" />
     <ClCompile Include="src\Engine\Utilities\Importer.cpp" />
     <ClCompile Include="src\Engine\Utilities\MousePicker.cpp" />
     <ClCompile Include="src\Engine\Core\VertexArray.cpp" />
@@ -193,9 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Application.h" />
+    <ClInclude Include="src\Engine\Core\AssetManager\BufferAllocator.h" />
+    <ClInclude Include="src\Engine\Core\AssetManager\GObject.h" />
     <ClInclude Include="src\Engine\Core\AssetManager\Manager.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch.h" />
     <ClInclude Include="src\Engine\Core\Batches\Batch2D.h" />
+    <ClInclude Include="src\Engine\Core\Batches\InstanceBatch.h" />
     <ClInclude Include="src\Engine\Core\Batches\ParticleBatch.h" />
     <ClInclude Include="src\Engine\Core\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Engine\Core\Buffers\VertexBufferLayout.h" />
@@ -208,6 +216,7 @@
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />
+    <ClInclude Include="src\Engine\Core\Textures\TextureLibrary.h" />
     <ClInclude Include="src\Engine\EngineConfig.h" />
     <ClInclude Include="src\Engine\EngineMacros.h" />
     <ClInclude Include="src\Engine\Entities\Camera.h" />

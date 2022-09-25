@@ -7,7 +7,6 @@ namespace GraphX
 	class Batch2D
 		: public Batch
 	{
-		friend class Renderer2D;
 	public:
 		/**
 		* Batch2D

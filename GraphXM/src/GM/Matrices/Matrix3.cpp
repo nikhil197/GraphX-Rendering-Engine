@@ -32,9 +32,25 @@ namespace GM
 		}
 	}
 
+	Matrix3::Matrix3(Matrix4&& OtherMat)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				M[i][j] = OtherMat(i, j);
+			}
+		}
+	}
+
 	Matrix3::Matrix3(const Matrix3& OtherMat)
 	{
-		Init(OtherMat.M);
+		std::memcpy(&M, &OtherMat.M, sizeof(M));
+	}
+
+	Matrix3::Matrix3(Matrix3&& OtherMat)
+	{
+		std::memcpy(&M, &OtherMat.M, sizeof(M));
 	}
 
 	void Matrix3::Init(float Value)
@@ -69,8 +85,14 @@ namespace GM
 	#pragma region Operators
 	Matrix3& Matrix3::operator=(const Matrix3& OtherMat)
 	{
-		Init(OtherMat.M);
+		std::memcpy(&M, &OtherMat.M, sizeof(M));
+		return *this;
+	}
 
+	/* Move Assignment operator */
+	Matrix3& Matrix3::operator=(Matrix3&& OtherMat)
+	{
+		std::memcpy(&M, &OtherMat.M, sizeof(M));
 		return *this;
 	}
 

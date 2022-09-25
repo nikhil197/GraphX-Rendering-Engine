@@ -174,7 +174,7 @@ namespace GraphX
 			size_t size = Textures.size();
 			for (size_t n = 0; n < size; n++)
 			{
-				ImGui::Text("%s", Textures.at(n)->GetFilePath().c_str());
+				ImGui::Text("%s", Textures.at(n)->GetName().c_str());
 			}
 			if (ImGui::Button("Add New Texture"))
 			{

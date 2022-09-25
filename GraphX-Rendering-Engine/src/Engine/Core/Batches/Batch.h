@@ -2,22 +2,29 @@
 
 #include "Engine/Core/Renderer/Renderer.h"
 
+#include "Textures/Texture2D.h"
+
 namespace GraphX
 {
 	class Batch
 	{
-	public:
-		Batch(uint32_t PrimCount)
+	protected:
+		Batch(uint32_t PrimCount, bool instanceBatch = false)
 			: m_PrimitivesCount(PrimCount), m_MaxVerticesCount(4 * m_PrimitivesCount), m_MaxIndicesCount(6 * m_PrimitivesCount)
 		{
-			m_IndicesData = new uint32_t[m_MaxIndicesCount];
+			if (!instanceBatch)
+			{
+				m_IndicesData = new uint32_t[m_MaxIndicesCount];
+			}
 
 			// TODO: Replace 32, get the actual count from the GPU
-			for (int i = 0; i < Renderer::MaxTextureImageUnits; i++)
-			{
-				m_TextureIDs[i] = 0;
-			}
+			memset(m_TextureIDs.data(), 0, m_TextureIDs.size() * sizeof(uint32_t));
+
+			// 0 Texture slot is reserved for the white texture
+			m_TextureIDs[0] = Renderer::GetTextureLibrary().GetTexture2D("White")->GetID();
 		}
+
+	public:
 
 		virtual ~Batch()
 		{

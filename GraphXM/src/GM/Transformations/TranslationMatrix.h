@@ -6,7 +6,7 @@
 namespace GM
 {
 	class TranslationMatrix
-		:public Matrix4
+		: public Matrix4
 	{
 	private:
 		/* Vector to store the values by which the matrix translates w.r.t. each axis */
@@ -23,7 +23,7 @@ namespace GM
 		const TranslationMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Returns the inverse of the translation matrix */
-		Matrix4 Inverse() const override;
+		Matrix4 Inverse() const;
 
 		/* Returns the translation vector of the matrix */
 		inline const Vector3& GetTranslationVector() const { return m_TranslationVector; }

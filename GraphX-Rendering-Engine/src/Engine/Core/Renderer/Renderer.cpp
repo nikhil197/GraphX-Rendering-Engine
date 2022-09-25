@@ -16,6 +16,8 @@
 
 #include "Shaders\Shader.h"
 
+#include "Textures/Texture2D.h"
+
 #include "Entities/Camera.h"
 #include "Entities/Skybox.h"
 
@@ -94,6 +96,7 @@ namespace GraphX
 	SimpleRenderer* Renderer::s_Renderer = nullptr;
 
 	ShaderLibrary Renderer::s_ShaderLibrary;
+	TextureLibrary Renderer::s_TextureLibrary;
 
 	Renderer::SceneInfo* Renderer::s_SceneInfo = nullptr;
 	SkyboxRenderData* Renderer::s_SkyboxData = nullptr;
@@ -110,9 +113,6 @@ namespace GraphX
 		GX_ENGINE_ASSERT(s_RenderThread != nullptr, "Failed to create the Render Thread")
 
 		s_Renderer = new SimpleRenderer();
-
-		Renderer2D::Init();
-		Renderer3D::Init();
 
 		s_SceneInfo = new Renderer::SceneInfo();
 
@@ -142,6 +142,9 @@ namespace GraphX
 
 		s_SkyboxData->SkyboxShader = s_ShaderLibrary.Load("res/Shaders/SkyboxShader.glsl", "Skybox");
 
+		s_ShaderLibrary.Load("res/Shaders/InstancedBatchShader.glsl", "InstancedBatch");
+
+
 		VertexBufferLayout layout = {
 			{ BufferDataType::Float3 }
 		};
@@ -151,6 +154,15 @@ namespace GraphX
 
 		// TODO: Bind this to the GX_ENABLE_DEBUG_COLLISIONS_RENDERING
 		s_DebugShader = s_ShaderLibrary.Load("res/Shaders/DebugCollisionsShader.glsl", "Debug");
+		
+		// Create the white texture and add it to the texture library (MAY BE CONSIDER DOING IT IN THE CONSTRUCTOR)
+		auto WhiteTexture = CreateRef<Texture2D>("White", 1, 1);
+		uint32_t data = 0xffffffff;
+		WhiteTexture->SetData(&data, sizeof(data));
+		s_TextureLibrary.Add(WhiteTexture->GetName(), WhiteTexture);
+
+		Renderer2D::Init();
+		Renderer3D::Init();
 	}
 
 	void Renderer::Shutdown()
@@ -266,6 +278,16 @@ namespace GraphX
 	{
 		Renderer3D::Render();
 		Renderer2D::Render();
+	}
+
+	void Renderer::RenderInstanced()
+	{
+		Renderer3D::RenderInstanced();
+
+		Renderer2D::Render();
+
+		// Renderer2D is not instanced for now
+		//Render
 	}
 
 	void Renderer::RenderDepth(Shader& DepthShader)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Shaders/ShaderLibrary.h"
+#include "Engine/Core/Textures/TextureLibrary.h"
 #include "RendererResources.h"
 
 #include "Subsystems/Multithreading/Base/RunnableThread.h"
@@ -57,6 +58,9 @@ namespace GraphX
 		/* Renders all the submitted meshes in the scene */
 		static void Render();
 
+		/* Renders all the submitted meshes in the scene using instanced rendering */
+		static void RenderInstanced();
+
 		/* Renders all the submitted meshes in the scene to the depth buffer */
 		static void RenderDepth(class Shader& DepthShader);
 
@@ -73,6 +77,9 @@ namespace GraphX
 
 		/* Returns the shader library */
 		static ShaderLibrary& GetShaderLibrary() { return s_ShaderLibrary; }
+
+		/* Returns the texture library */
+		static TextureLibrary& GetTextureLibrary() { return s_TextureLibrary; }
 
 		/* Returns the thread Id for the render thread */
 		static std::thread::id GetRenderThreadID() { return s_RenderThread->GetID(); }
@@ -93,6 +100,9 @@ namespace GraphX
 
 		/* Shaders library to store all the shaders */
 		static ShaderLibrary s_ShaderLibrary;
+
+		/* Textures library to store all the textures */
+		static TextureLibrary s_TextureLibrary;
 
 		static Ref<Shader> s_DebugShader;
 

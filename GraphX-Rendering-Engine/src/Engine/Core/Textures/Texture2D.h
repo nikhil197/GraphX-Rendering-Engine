@@ -21,13 +21,13 @@ namespace GraphX
 	public:
 		/* Constructor */
 		/* @Param TileTexture - Whether the texture will be used for tilling or not */
-		Texture2D(const std::string& filePath, bool TileTexture = false);
+		Texture2D(const std::string& filePath, bool TileTexture = false, const std::string& Name = "");
 
 		/* Constructor for the framebuffer textures */
-		Texture2D(uint32_t width, uint32_t height, FramebufferAttachmentType texType);
+		Texture2D(const std::string& name, uint32_t width, uint32_t height, FramebufferAttachmentType texType);
 
 		/* Constructor for creating texture by code (Data needs to be set manually) */
-		Texture2D(uint32_t width, uint32_t height);
+		Texture2D(const std::string& name, uint32_t width, uint32_t height);
 
 		/* Bind the texture to the indicated slot */
 		void Bind(unsigned int slot = 0) const;
@@ -51,8 +51,8 @@ namespace GraphX
 		/* Returns the height of the texture */
 		inline uint32_t GetHeight() const { return m_Height; }
 
-		/* Returns the file path of the texture */
-		inline const std::string& GetFilePath() const { return m_FilePath; }
+		/* Returns the name of the texture */
+		inline const std::string& GetName() const { return m_Name; }
 
 		/* Returns whether the texture will be used for tiling */
 		inline bool IsTileTexture() const { return m_TileTexture; }
@@ -71,7 +71,7 @@ namespace GraphX
 
 	protected:
 		/* Path to the texture file */
-		std::string m_FilePath;
+		std::string m_Name;
 
 		/* Width and height of the texture */
 		uint32_t m_Width, m_Height;
@@ -86,3 +86,17 @@ namespace GraphX
 	/* Equality test for a Texture wrapped in reference_wrapper */
 	bool operator==(const std::reference_wrapper<Texture2D>& Ref1, const std::reference_wrapper<Texture2D>& Ref2);
 }
+
+template<>
+struct std::hash<GraphX::Texture2D>
+{
+	std::size_t operator()(GraphX::Texture2D const& Tex) const noexcept
+	{
+		std::size_t seed = 0;
+		GM::Hash_Combine(seed, Tex.GetName());
+		GM::Hash_Combine(seed, Tex.GetWidth());
+		GM::Hash_Combine(seed, Tex.GetHeight());
+
+		return seed;
+	}
+};

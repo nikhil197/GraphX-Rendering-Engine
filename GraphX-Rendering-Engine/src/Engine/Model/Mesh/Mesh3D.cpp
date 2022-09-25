@@ -10,6 +10,9 @@
 #include "Materials/Material.h"
 
 #include "Utilities/Importer.h"
+#include "Utilities/HashUtil.h"
+
+#include "AssetManager/BufferAllocator.h"
 
 namespace GraphX
 {
@@ -68,6 +71,10 @@ namespace GraphX
 	// Mesh 3D
 	///////////////////////////////////
 
+	std::mutex Mesh3D::s_BuffersMutex;
+
+	std::unordered_map<std::size_t, std::pair<Ref<VertexBuffer>, Ref<IndexBuffer>>> Mesh3D::s_Buffers;
+
 	Ref<Mesh3D> Mesh3D::Load(const std::string& FilePath, const Ref<Material>& InMat)
 	{
 		GX_ENGINE_INFO("Loading Model {0}", FilePath);
@@ -86,6 +93,7 @@ namespace GraphX
 
 		if (Loaded)
 		{
+			ResultMesh->m_InstanceHash = GetVerticesHash<Vertex3D>(ResultMesh->m_RawData->Vertices, ResultMesh->m_RawData->Indices);
 			ResultMesh->BuildMesh();
 		}
 		else
@@ -104,6 +112,7 @@ namespace GraphX
 		if (RawData != nullptr)
 		{
 			m_RawData = CreateRef<RawMeshData>(RawData);
+			m_InstanceHash = GetVerticesHash<Vertex3D>(m_RawData->Vertices, m_RawData->Indices);
 			BuildMesh();
 		}
 		else
@@ -123,6 +132,7 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		m_RawData = CreateRef<RawMeshData>(Vertices, Indices);
+		m_InstanceHash = GetVerticesHash<Vertex3D>(m_RawData->Vertices, m_RawData->Indices);
 
 		if (Mat != nullptr)
 		{
@@ -138,6 +148,7 @@ namespace GraphX
 		GX_PROFILE_FUNCTION()
 
 		m_RawData = Mesh.m_RawData;
+		m_InstanceHash = Mesh.m_InstanceHash;
 
 		BuildMesh();
 	}
@@ -171,7 +182,7 @@ namespace GraphX
 	{
 		// Create Render Data
 		m_RenderData = CreateScope<RenderDataMesh3D>();
-		
+
 		uint32_t NumSections = (uint32_t)m_RawData->SectionInfos.size();
 		for (uint32_t SectionIndex = 0; SectionIndex < NumSections; SectionIndex++)
 		{
@@ -236,11 +247,30 @@ namespace GraphX
 			return false;
 		
 		m_RenderData->VAO = CreateScope<VertexArray>();
-		m_RenderData->VBO = CreateRef<VertexBuffer>(&m_RawData->Vertices[0], m_RawData->Vertices.size() * sizeof(Vertex3D));
+
+		auto itr = s_Buffers.find(m_InstanceHash);
+		if (itr != s_Buffers.end())
+		{
+			// Use the existing buffers
+			m_RenderData->VBO = itr->second.first;
+			m_RenderData->IBO = itr->second.second;
+		}
+		else
+		{
+			// Create new buffers
+			m_RenderData->VBO = BufferAllocator::AllocateVertexBuffer(m_RawData->Vertices);// CreateRef<VertexBuffer>(&m_RawData->Vertices[0], m_RawData->Vertices.size() * sizeof(Vertex3D));
+			m_RenderData->IBO = BufferAllocator::AllocateIndexBuffer(m_RawData->Indices);// CreateRef<IndexBuffer>(&m_RawData->Indices[0], m_RawData->Indices.size());
+
+			// Add the new buffers to the cache
+			{
+				std::lock_guard<std::mutex> lock(s_BuffersMutex);
+				s_Buffers[m_InstanceHash] = std::make_pair(m_RenderData->VBO, m_RenderData->IBO);
+			}
+		}
+
+		// Add the buffers to the Vertex Array
 		const VertexBufferLayout& layout = Vertex3D::VertexLayout();
 		m_RenderData->VAO->AddVertexBuffer(m_RenderData->VBO.operator*(), layout);
-
-		m_RenderData->IBO = CreateRef<IndexBuffer>(&m_RawData->Indices[0], m_RawData->Indices.size());
 		m_RenderData->VAO->AddIndexBuffer(m_RenderData->IBO.operator*());
 
 		m_Initialised = true;

@@ -11,6 +11,8 @@ namespace GraphX
 {
 	std::vector<std::future<void>> AssetLoader::s_Futures;
 
+	std::unordered_map<std::string, Mesh3D*> AssetLoader::s_LoadedModels;
+
 	Ref<Mesh3D> AssetLoader::LoadMesh3D(const std::string& FilePath, const Ref<Material>& Mat)
 	{
 		return Mesh3D::Load(FilePath, Mat);

@@ -7,6 +7,10 @@
 #include "Shaders/Shader.h"
 #include "Materials/Material.h"
 
+#include "Batches/InstanceBatch.h"
+
+#include "Utilities/HashUtil.h"
+
 #include "VertexArray.h"
 #include "Buffers/IndexBuffer.h"
 #include "Buffers/VertexBuffer.h"
@@ -20,6 +24,8 @@ namespace GraphX
 	using namespace GM;
 
 	Renderer3D::Renderer3DData* Renderer3D::s_Data = nullptr;
+
+	std::unordered_map<std::size_t, Ref<InstanceBatch>> Renderer3D::s_InstanceBatches;
 
 	void Renderer3D::Init()
 	{
@@ -53,6 +59,16 @@ namespace GraphX
 
 		s_Data->DebugData.VAO->AddVertexBuffer(*(s_Data->DebugData.VBO), layout);
 		s_Data->DebugData.VAO->AddIndexBuffer(ibo);
+
+		int samplers[32]{};
+		for (int i = 0; i < 32; i++)
+		{
+			samplers[i] = i;
+		}
+
+		Ref<Shader> instanceBatchShader = Renderer::GetShaderLibrary().GetShader("InstancedBatch");
+		instanceBatchShader->Bind();
+		instanceBatchShader->SetUniform1iv("u_Textures", 32, samplers);
 	}
 
 	void Renderer3D::Shutdown()
@@ -124,6 +140,50 @@ namespace GraphX
 			{
 				RenderDebugCollisions(mesh->GetBoundingBox());
 			}
+		}
+	}
+
+	void Renderer3D::RenderInstanced()
+	{
+		// TODO: Needs to render debug collisions
+		uint32_t queueSize = s_Data->RenderQueue.size();
+
+		// Begin each instance batch;
+		for (auto& itr : s_InstanceBatches)
+		{
+			itr.second->BeginBatch();
+		}
+
+		while (!s_Data->RenderQueue.empty())
+		{
+			const Ref<Mesh3D>& mesh = s_Data->RenderQueue.front();
+			s_Data->RenderQueue.pop_front();
+
+			// TODO: This is only accounting for the first material only
+			std::size_t hash = mesh->GetMaterial()->GetHash(); 
+			GM::Hash_Combine(hash, mesh->GetInstanceHash());
+
+			auto itr = s_InstanceBatches.find(hash);
+			if (itr != s_InstanceBatches.end())
+			{
+				itr->second->AddMesh(mesh);
+			}
+			else
+			{
+				Ref<InstanceBatch> batch = CreateRef<InstanceBatch>(hash, queueSize, mesh->GetVBO(), Vertex3D::VertexLayout(), mesh->GetIBO());
+
+				batch->BeginBatch();
+				batch->AddMesh(mesh);
+				
+				s_InstanceBatches[hash] = batch;
+			}
+		}
+
+		// End and flush each instance batch;
+		for (auto& itr : s_InstanceBatches)
+		{
+			itr.second->EndBatch();
+			itr.second->Flush();
 		}
 	}
 

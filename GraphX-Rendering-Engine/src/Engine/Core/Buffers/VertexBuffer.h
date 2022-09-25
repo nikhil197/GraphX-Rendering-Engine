@@ -42,7 +42,13 @@ namespace GraphX
 
 		~VertexBuffer();
 
+		/* Returns the total memory Allocated to the Vertex Buffers */
+		static inline uint64_t TotalAllocatedMemory() { return s_TotalAllocatedMemory; }
+
 	private:
+		/* Total memory allocated to the vertex buffers in the engine */
+		static uint64_t s_TotalAllocatedMemory;
+
 		/* Total Size (in bytes) of the data stored in the buffer */
 		uint32_t m_BufferSize;
 	};

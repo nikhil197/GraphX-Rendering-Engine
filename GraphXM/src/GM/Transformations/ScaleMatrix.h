@@ -24,7 +24,7 @@ namespace GM
 		const ScaleMatrix& operator=(const Matrix4& OtherMat);
 
 		/* Inverse of the scale matrix */
-		Matrix4 Inverse() const override;
+		Matrix4 Inverse() const;
 
 		/* Returns the scale for the matrix */
 		inline const Vector3& GetScaleVector() const { return m_ScaleVector; }

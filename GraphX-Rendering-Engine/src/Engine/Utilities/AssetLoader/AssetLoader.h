@@ -26,5 +26,8 @@ namespace GraphX
 
 		// vector to store the future objects returned by the async method
 		static std::vector<std::future<void>> s_Futures;
+
+		/* A map to store the loaded models */
+		static std::unordered_map<std::string, class Mesh3D*> s_LoadedModels;
 	};
 }
