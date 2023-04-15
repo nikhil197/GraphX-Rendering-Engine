@@ -84,12 +84,12 @@ namespace GraphX
 		{
 			ImGui::Begin("Engine Run Time Stats", &showEngineRunTimeStats);
 
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Engine Startup Time : %f ms", gRunTimeStats.EngineStartupTime);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scene Load Time : %f ms", gRunTimeStats.SceneLoadTime);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Engine Startup Time : %f ms", gRunTimeStats.GetEngineStartupTime());
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scene Load Time : %f ms", gRunTimeStats.GetPrevSceneLoadTime());
 
-			for (std::pair<std::string, float> customStat : gRunTimeStats.CustomStats)
+			for (const std::pair<std::string, std::pair<float, int>>& customStat : gRunTimeStats.GetCustomStats())
 			{
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s Time : %f ms", customStat.first.c_str(), customStat.second);
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s Time : %f ms", customStat.first.c_str(), (customStat.second.first / customStat.second.second));
 			}
 
 			ImGui::End();

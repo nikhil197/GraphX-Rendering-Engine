@@ -2,21 +2,15 @@
 
 namespace GraphX
 {
-	/* Different run time stats for the engine (All the stats are in milliseconds) */
-	struct EngineRunTimeStats
-	{
-		float EngineStartupTime;
-		float SceneLoadTime;
-		std::unordered_map<std::string, float> CustomStats;
-	};
-
-	extern EngineRunTimeStats gRunTimeStats;
-
 	class Timer
 	{
 	public:
 		/* Constructor */
 		explicit Timer(const char* name, bool accumulate = false);
+
+		Timer(const char* name, const std::function<void(float)>& callback);
+
+		Timer(const char* name, std::function<void(float)>&& callback);
 
 		/* Update the timer */
 		void Update();
@@ -39,6 +33,8 @@ namespace GraphX
 
 		/* Whether to accumulate the time values or not */
 		bool m_Accumulate;
+
+		std::function<void(float)> m_Callback;
 
 		/* To store the time point of the last update */
 		std::chrono::time_point<std::chrono::steady_clock> m_LastUpdateTimePoint;
