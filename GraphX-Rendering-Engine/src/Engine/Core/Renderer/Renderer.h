@@ -82,6 +82,9 @@ namespace GraphX
 		/* Returns the thread Id for the render thread */
 		static std::thread::id GetRenderThreadID() { return s_RenderThread->GetID(); }
 
+		/* Returns the current set render mode */
+		static RenderMode GetCurrentRenderMode() { return s_Config.Mode; }
+
 		/* Change the rendering mode */
 		static void ChangeRenderMode(RenderMode newMode);
 

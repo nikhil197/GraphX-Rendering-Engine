@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "Window.h"
 
+#include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Renderer3D.h"
 
@@ -86,6 +87,8 @@ namespace GraphX
 
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Engine Startup Time : %f ms", gRunTimeStats.GetEngineStartupTime());
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Scene Load Time : %f ms", gRunTimeStats.GetPrevSceneLoadTime());
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "FPS: %i", gRunTimeStats.GetFPS());
 
 			for (const std::pair<std::string, std::pair<float, int>>& customStat : gRunTimeStats.GetCustomStats())
 			{
@@ -320,6 +323,7 @@ namespace GraphX
 					s_GuiEventCallback(e);
 				}
 			}
+
 			if (ImGui::Button("Add Model"))
 			{
 				// Load a new, custom Model from the file system
@@ -393,6 +397,48 @@ namespace GraphX
 
 			ImGui::EndPopup();
 		}
+	}
+
+	void GraphXGui::RendererOptions()
+	{
+		static bool ShowRendererOptions = true;
+		static int SelectedModeIdx = Renderer::GetCurrentRenderMode();
+		static const char* Modes[] = {
+			"Normal",		// RenderMode::Normal
+			"Batched",		// RenderMode::Batched
+			"Instanced",	// RenderMode::Instanced
+			"Hybrid",		// RenderMode::Hybrid
+		};
+
+		ImGui::Begin("RendererOptions", &ShowRendererOptions);
+		if (ImGui::ListBox("RenderMode", &SelectedModeIdx, Modes, 4))
+		{
+			if (s_GuiEventCallback)
+			{
+				RenderMode newMode;
+				if (SelectedModeIdx == 0)
+				{
+					newMode = RenderMode::Normal;
+				}
+				else if (SelectedModeIdx == 1)
+				{
+					newMode = RenderMode::Batched;
+				}
+				else if (SelectedModeIdx == 2)
+				{
+					newMode = RenderMode::Instanced;
+				}
+				else 
+				{
+					newMode = RenderMode::Hybrid;
+				}
+
+				RenderModeChangedEvent e(newMode);
+				s_GuiEventCallback(e);
+			}
+		}
+
+		ImGui::End();
 	}
 
 	void GraphXGui::Render()

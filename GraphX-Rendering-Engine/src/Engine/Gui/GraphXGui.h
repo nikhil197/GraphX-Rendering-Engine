@@ -50,6 +50,9 @@ namespace GraphX
 		/* Create a window showing Add Terrain Button */
 		static void AddTerrain();
 
+		/* Create a window showing options for the renderer */
+		static void RendererOptions();
+
 		/* Render the UI */
 		static void Render();
 

@@ -325,7 +325,7 @@ namespace GraphX
 
 		Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
 		LowPolyTreeMesh->Scale = Vector3::UnitVector;
-		NumTree = 10;
+		NumTree = 100;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
 			LowPolyTreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
@@ -583,6 +583,9 @@ namespace GraphX
 		GraphXGui::GlobalSettings(m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity, GX_ENABLE_PARTICLE_EFFECTS);
 
 		GraphXGui::RenderEngineRunTimeStats();
+
+		GraphXGui::RendererOptions();
+
 		GraphXGui::Render();		
 	}
 
@@ -689,6 +692,10 @@ namespace GraphX
 			{
 				handled = dispatcher.Dispatch<CameraProjectionModeChange>(BIND_EVENT_FUNC(Application::OnCameraProjectionModeChanged));
 			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<RenderModeChangedEvent>(BIND_EVENT_FUNC(Application::OnRenderModeChange));
+			}
 		}
 		
 		// Raise an error if the event is not handled
@@ -790,7 +797,7 @@ namespace GraphX
 		}
 	}
 
-#pragma region eventHandlers
+#pragma region Event Handlers
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
 	{
@@ -952,6 +959,15 @@ namespace GraphX
 	bool Application::OnCreateTerrain(CreateTerrainEvent& e)
 	{
 		m_Terrain.push_back(e.GetTerrain());
+		return true;
+	}
+
+	bool Application::OnRenderModeChange(RenderModeChangedEvent& e)
+	{
+		Renderer::ChangeRenderMode(e.GetNewRenderMode());
+
+		gRunTimeStats.ResetCustomStats();
+
 		return true;
 	}
 

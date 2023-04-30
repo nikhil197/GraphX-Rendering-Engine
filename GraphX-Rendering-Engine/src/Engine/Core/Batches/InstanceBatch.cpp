@@ -145,4 +145,9 @@ namespace GraphX
 		m_InstanceDataPtr++;
 		m_CurrentInstanceCount++;
 	}
+
+	bool InstanceBatch::IsFull() const
+	{
+		return m_CurrentInstanceCount >= m_PrimitivesCount;
+	}
 }

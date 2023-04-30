@@ -23,7 +23,7 @@ namespace GraphX
 
 		virtual void Flush() override;
 
-		virtual bool IsFull() const override { return false; }
+		virtual bool IsFull() const override;
 
 		// END Batch interface
 

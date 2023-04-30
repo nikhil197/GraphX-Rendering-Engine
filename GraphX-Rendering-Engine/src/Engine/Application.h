@@ -79,6 +79,8 @@ namespace GraphX
 
 		bool OnCreateTerrain(class CreateTerrainEvent& e);
 
+		bool OnRenderModeChange(class RenderModeChangedEvent& e);
+
 		/* Other Events */
 
 		// Exits out of the game loop (or closes the engine)

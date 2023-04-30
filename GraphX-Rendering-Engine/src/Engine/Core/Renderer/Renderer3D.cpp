@@ -122,6 +122,7 @@ namespace GraphX
 		else if (mode == RenderMode::Hybrid)
 		{
 			// TODO
+			GX_ENGINE_ASSERT(false, "Hybrid Mode Not Support Yet", mode);
 		}
 		else
 		{
@@ -288,5 +289,8 @@ namespace GraphX
 	void Renderer3D::OnRenderModeChange(RenderMode newMode)
 	{
 		//TODO
+
+		// Flush render queue
+
 	}
 }
