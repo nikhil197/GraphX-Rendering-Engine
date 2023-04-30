@@ -3,6 +3,7 @@
 #include "Engine/Core/Shaders/ShaderLibrary.h"
 #include "Engine/Core/Textures/TextureLibrary.h"
 #include "RendererResources.h"
+#include "RendererTypes.h"
 
 #include "Subsystems/Multithreading/Base/RunnableThread.h"
 
@@ -58,9 +59,6 @@ namespace GraphX
 		/* Renders all the submitted meshes in the scene */
 		static void Render();
 
-		/* Renders all the submitted meshes in the scene using instanced rendering */
-		static void RenderInstanced();
-
 		/* Renders all the submitted meshes in the scene to the depth buffer */
 		static void RenderDepth(class Shader& DepthShader);
 
@@ -83,6 +81,12 @@ namespace GraphX
 
 		/* Returns the thread Id for the render thread */
 		static std::thread::id GetRenderThreadID() { return s_RenderThread->GetID(); }
+
+		/* Returns the current set render mode */
+		static RenderMode GetCurrentRenderMode() { return s_Config.Mode; }
+
+		/* Change the rendering mode */
+		static void ChangeRenderMode(RenderMode newMode);
 
 	public:
 		// Maximum number of texture slots available for the renderer 
@@ -119,5 +123,13 @@ namespace GraphX
 		static RunnableThread* s_RenderThread;
 
 		static class RenderThread* s_RenderThreadRunnable;
+
+		struct RendererConfig
+		{
+			/* Mode to use for rendering. Default is Normal */
+			RenderMode Mode;
+		};
+
+		static RendererConfig s_Config;
 	};
 }

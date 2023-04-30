@@ -68,9 +68,6 @@ namespace GraphX
 
 	Application* Application::s_Instance = nullptr;
 
-	/* Global object to store the run time stats */
-	EngineRunTimeStats gRunTimeStats;
-
 	Application::Application(const char* title, int width, int height)
 		: m_Window(nullptr), m_Title(title), m_IsRunning(true), m_EngineDayTime(0.1f), m_SelectedObject2D(nullptr), m_SelectedObject3D(nullptr), m_SunLight(nullptr), m_ShadowBuffer(nullptr), m_DepthShader(nullptr), m_CameraController(nullptr), m_DaySkybox(nullptr), m_NightSkybox(nullptr), m_CurrentSkybox(nullptr), m_Shader(nullptr), m_DefaultMaterial(nullptr), m_Light(nullptr), m_DefaultTexture(nullptr)
 	{
@@ -100,6 +97,7 @@ namespace GraphX
 
 		// Initialise the renderer
 		Renderer::Init();
+		Renderer::ChangeRenderMode(RenderMode::Instanced);
 
 		InitializeApplication();
 	}
@@ -108,7 +106,7 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
-		Timer timer("EngineInit");
+		GX_ENGINE_RUN_TIME_STAT_STARTUP("EngineLoad");
 
 		m_CameraController = CreateRef<CameraController>(GM::Vector3(0.0f, 0.0f, 3.0f), GM::Vector3::ZeroVector, GM::Vector3::YAxis, (float)m_Window->GetWidth() / (float)m_Window->GetHeight(), EngineConstants::NearPlane, EngineConstants::FarPlane);
 
@@ -176,10 +174,6 @@ namespace GraphX
 				m_Terrain[i]->InitResources();
 		}
 
-		// For the purpose of fps count
-		int times = 0;
-		float then = Clock::GetClock()->GetEngineTime();
-
 		// Get total allocated memory
 		uint64_t mem = VertexBuffer::TotalAllocatedMemory();
 		mem += IndexBuffer::TotalAllocatedMemory();
@@ -191,22 +185,12 @@ namespace GraphX
 			GX_PROFILE_SCOPE("Application::Frame")
 
 			// Frame Time in seconds
-			float DeltaTime = Clock::GetClock()->GetDeltaTime();
-			
+			float deltaTime = Clock::GetClock()->GetDeltaTime();
+			gRunTimeStats.NewFrame(deltaTime);
+
 			// Tick the clock every frame to get the delta time
 			Clock::GetClock()->Tick();
-
-			// Calculate the fps
-			times++;
-			float now = Clock::GetClock()->GetEngineTime();
-			if ((now - then) > 1.0f)
-			{
-				GX_ENGINE_INFO("Frame Rate: {0} FPS", times);
-				then = now;
-				times = 0;
-				gRunTimeStats.CustomStats.clear();
-			}
-
+			
 			// No need to update or render stuff if the application (window) is minimised
 			if (!m_IsMinimised)
 			{
@@ -217,20 +201,18 @@ namespace GraphX
 				{
 					GX_PROFILE_SCOPE("Frame-Update")
 
-					Timer timer("Update");
+					GX_ENGINE_RUN_TIME_STAT_AVG("Update")
 
-					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						Timer particlesTime("SpawnParticlesTime");
-						ParticleManager::SpawnParticles(DeltaTime);
-						gRunTimeStats.CustomStats[particlesTime.GetName()] = particlesTime.GetTime() * 1000;
+						GX_ENGINE_RUN_TIME_STAT_AVG("SpawnParticlesTime")
+						ParticleManager::SpawnParticles(deltaTime);
 					}
 					
 					// Load New Resources Before Updating anything
 					LoadNewResources();
 
 					// Update all the elements of the scene
-					Update(DeltaTime);
+					Update(deltaTime);
 
 					// Update the Gui
 					GraphXGui::Update();
@@ -242,7 +224,7 @@ namespace GraphX
 				{
 					GX_PROFILE_SCOPE("Frame-Render")
 
-					Timer renderTimer("Render");
+					GX_ENGINE_RUN_TIME_STAT_AVG("Render");
 
 					// Start a scene
 					Renderer::BeginScene(m_CameraController->GetCamera());
@@ -251,7 +233,9 @@ namespace GraphX
 					Renderer3D::BeginScene();
 
 					for (unsigned int i = 0; i < m_Objects3D.size(); i++)
+					{
 						Renderer::Submit(m_Objects3D[i]);
+					}
 
 					// Calculate the shadow maps
 					if (GX_ENABLE_SHADOWS)
@@ -279,9 +263,8 @@ namespace GraphX
 
 					if (GX_ENABLE_PARTICLE_EFFECTS)
 					{
-						Timer particlesRenderTime("ParticlesRenderTime");
+						GX_ENGINE_RUN_TIME_STAT_AVG("ParticlesRenderTime");
 						ParticleManager::RenderParticles();
-						gRunTimeStats.CustomStats[particlesRenderTime.GetName()] = particlesRenderTime.GetTime() * 1000;
 					}
 
 					Renderer2D::EndScene();
@@ -329,7 +312,7 @@ namespace GraphX
 		Ref<Mesh3D> TreeMesh = ft.get();
 		//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
 		TreeMesh->Scale *= 2.5f;
-		unsigned int NumTree = 100;
+		unsigned int NumTree = 1000;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
 			TreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
@@ -342,7 +325,7 @@ namespace GraphX
 
 		Ref<Mesh3D> LowPolyTreeMesh = Mesh3D::Load("res/Models/lowPolyTree.obj", LowPolyTreeMaterial);
 		LowPolyTreeMesh->Scale = Vector3::UnitVector;
-		NumTree = 10;
+		NumTree = 100;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
 			LowPolyTreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
@@ -393,6 +376,11 @@ namespace GraphX
 
 	void Application::LoadNewResources()
 	{
+		if (m_Loaded3DMeshes.empty())
+		{
+			return;
+		}
+
 		Timer timer("LoadNewResources");
 
 		// Load new 3D Meshes
@@ -434,7 +422,6 @@ namespace GraphX
 				m_Objects2D[i]->Update(DeltaTime);
 		}
 		
-		// Update lights
 		{
 			GX_PROFILE_SCOPE("Update::3D Meshes")
 
@@ -596,6 +583,9 @@ namespace GraphX
 		GraphXGui::GlobalSettings(m_CurrentSkybox, m_EngineDayTime, m_SunLight->Intensity, GX_ENABLE_PARTICLE_EFFECTS);
 
 		GraphXGui::RenderEngineRunTimeStats();
+
+		GraphXGui::RendererOptions();
+
 		GraphXGui::Render();		
 	}
 
@@ -702,6 +692,10 @@ namespace GraphX
 			{
 				handled = dispatcher.Dispatch<CameraProjectionModeChange>(BIND_EVENT_FUNC(Application::OnCameraProjectionModeChanged));
 			}
+			if (!handled)
+			{
+				handled = dispatcher.Dispatch<RenderModeChangedEvent>(BIND_EVENT_FUNC(Application::OnRenderModeChange));
+			}
 		}
 		
 		// Raise an error if the event is not handled
@@ -803,7 +797,7 @@ namespace GraphX
 		}
 	}
 
-#pragma region eventHandlers
+#pragma region Event Handlers
 
 	bool Application::OnWindowResize(WindowResizedEvent& e)
 	{
@@ -965,6 +959,15 @@ namespace GraphX
 	bool Application::OnCreateTerrain(CreateTerrainEvent& e)
 	{
 		m_Terrain.push_back(e.GetTerrain());
+		return true;
+	}
+
+	bool Application::OnRenderModeChange(RenderModeChangedEvent& e)
+	{
+		Renderer::ChangeRenderMode(e.GetNewRenderMode());
+
+		gRunTimeStats.ResetCustomStats();
+
 		return true;
 	}
 

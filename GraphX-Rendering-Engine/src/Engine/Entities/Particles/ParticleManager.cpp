@@ -58,6 +58,11 @@ namespace GraphX
 	{
 		GX_PROFILE_FUNCTION()
 
+		if (!GX_ENABLE_PARTICLE_EFFECTS)
+		{
+			return;
+		}
+
 		for (const auto& System : s_Data->ParticleSystems)
 		{
 			if(System.second->IsActive())

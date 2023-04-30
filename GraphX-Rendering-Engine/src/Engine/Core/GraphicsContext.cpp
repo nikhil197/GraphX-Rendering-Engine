@@ -89,10 +89,16 @@ namespace GraphX
 		}
 
 		// Print the gl version
+		// Load the Context Info
+		glGetIntegerv(GL_MAJOR_VERSION, &m_Info.MajorVersion);
+		glGetIntegerv(GL_MINOR_VERSION, &m_Info.MinorVersion);
+		m_Info.Vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+		m_Info.RendererName = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+
 		GX_ENGINE_INFO("OpenGL Info:");
-		GX_ENGINE_INFO("	Vendor: {0}", glGetString(GL_VENDOR));
-		GX_ENGINE_INFO("	Renderer: {0}", glGetString(GL_RENDERER));
-		GX_ENGINE_INFO("	Version: {0}", glGetString(GL_VERSION));
+		GX_ENGINE_INFO("	Vendor: {0}", m_Info.Vendor);
+		GX_ENGINE_INFO("	Renderer: {0}", m_Info.RendererName);
+		GX_ENGINE_INFO("	Version: {0}.{1}", m_Info.MajorVersion, m_Info.MinorVersion);
 
 		// Enable Debugging
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

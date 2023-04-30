@@ -24,10 +24,6 @@
 /********************* Engine Files **************************/
 #include "Engine/EngineConfig.h"
 
-#include "Engine/Profiler/Profiler.h"
-
-#include "Engine/Core/AssetManager/Manager.h"
-
 /* Engine Global Headers */
 #include "Engine/Log.h"
 #include "Engine/EngineMacros.h"
@@ -36,3 +32,8 @@
 #include "Engine/Timer/Timer.h"
 #include "Engine/Utilities/EngineConstants.h"
 #include "Engine/Utilities/EngineProperties.h"
+
+#include "Engine/Profiler/Profiler.h"
+#include "Engine/Profiler/EngineRunTimeStats.h"
+
+#include "Engine/Core/AssetManager/Manager.h"

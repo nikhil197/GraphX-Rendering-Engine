@@ -13,6 +13,6 @@ namespace GraphX
 
 	RendererCommandList::~RendererCommandList()
 	{
-		// The executor will have to make sure that both the lists are emtpy
+		// The executor will have to make sure that both the lists are empty
 	}
 }

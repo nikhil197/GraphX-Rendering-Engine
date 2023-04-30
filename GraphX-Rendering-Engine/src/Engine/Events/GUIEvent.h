@@ -106,4 +106,22 @@ namespace GraphX
 
 		EVENT_CLASS_TYPE(GX_PROJECTION_MODE_CHANGED)
 	};
+
+	class RenderModeChangedEvent
+		: public Event
+	{
+	private:
+		RenderMode m_NewMode;
+
+	public:
+		RenderModeChangedEvent(RenderMode newMode)
+			: m_NewMode(newMode)
+		{}
+
+		/* Returns the new mode to set for the renderer */
+		inline RenderMode GetNewRenderMode() const { return m_NewMode; }
+
+		EVENT_CLASS_TYPE(GX_RENDER_MODE_CHANGED)
+		EVENT_CLASS_CATEGORY(EventCategory::GX_EVENT_CATEGORY_GUI)
+	};
 }

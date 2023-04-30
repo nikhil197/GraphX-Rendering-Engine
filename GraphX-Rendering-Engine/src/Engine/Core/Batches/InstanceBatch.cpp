@@ -72,7 +72,7 @@ namespace GraphX
 
 		m_VAO->Bind();
 
-		glDrawElementsInstanced(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, nullptr, m_CurrentInstanceCount);
+		Renderer3D::DrawCallInstanced(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, m_CurrentInstanceCount);
 
 		m_CurrentInstanceCount = 0;
 		m_TextureSlotIndex = 1;
@@ -128,7 +128,7 @@ namespace GraphX
 		// Add Data into the mesh
 		Ref<Material> mat = mesh->GetMaterial();
 
-		// Matrix needs to be transposed because GPU expects matrices in data in column major format
+		// Matrix needs to be transposed because GPU expects matrices data in column major format
 		m_InstanceDataPtr->ModelMatrix = std::move(mesh->GetModelMatrix().Transpose());
 
 		// Normal matrix is the transpose of inverse of model matrix
@@ -144,5 +144,10 @@ namespace GraphX
 
 		m_InstanceDataPtr++;
 		m_CurrentInstanceCount++;
+	}
+
+	bool InstanceBatch::IsFull() const
+	{
+		return m_CurrentInstanceCount >= m_PrimitivesCount;
 	}
 }

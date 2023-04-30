@@ -156,6 +156,7 @@
     <ClCompile Include="src\Engine\Core\Shaders\Shader.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\CubeMap.cpp" />
     <ClCompile Include="src\Engine\Core\Textures\Texture2D.cpp" />
+    <ClCompile Include="src\Engine\Profiler\EngineRunTimeStats.cpp" />
     <ClCompile Include="src\Engine\Profiler\Profiler.cpp" />
     <ClCompile Include="src\Engine\Subsystems\Multithreading\Misc\QueuedThreadTrigger.cpp" />
     <ClCompile Include="src\Engine\Subsystems\Multithreading\Multithreading.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Core\Renderer\RendererCommandList.h" />
     <ClInclude Include="src\Engine\Core\Renderer\RendererResources.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\RendererTypes.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />
@@ -252,6 +254,7 @@
     <ClInclude Include="src\Engine\Core\Shaders\Shader.h" />
     <ClInclude Include="src\Engine\Core\Textures\CubeMap.h" />
     <ClInclude Include="src\Engine\Core\Textures\Texture2D.h" />
+    <ClInclude Include="src\Engine\Profiler\EngineRunTimeStats.h" />
     <ClInclude Include="src\Engine\Profiler\Profiler.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncQueuedWork.h" />
     <ClInclude Include="src\Engine\Subsystems\Multithreading\Async\AsyncTask.h" />
@@ -293,6 +296,9 @@
     <ProjectReference Include="..\GraphXM\GraphXM.vcxproj">
       <Project>{1be73eec-c60f-422e-b797-2bed8d339ab9}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
