@@ -214,6 +214,7 @@
     <ClInclude Include="src\Engine\Core\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine\Core\Renderer\RendererCommandList.h" />
     <ClInclude Include="src\Engine\Core\Renderer\RendererResources.h" />
+    <ClInclude Include="src\Engine\Core\Renderer\RendererTypes.h" />
     <ClInclude Include="src\Engine\Core\Shaders\ShaderLibrary.h" />
     <ClInclude Include="src\Engine\Core\Textures\SpriteSheet.h" />
     <ClInclude Include="src\Engine\Core\Textures\SubTexture2D.h" />

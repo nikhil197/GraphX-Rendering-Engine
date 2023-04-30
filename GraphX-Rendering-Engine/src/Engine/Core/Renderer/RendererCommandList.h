@@ -63,7 +63,7 @@ namespace GraphX
 
 #define RENDER_COMMAND(CommandName)												\
 	struct CommandName##RenderCommand : public RenderCommandBase {				\
-			const std::string GetName() const {return #CommandName; }
+			const std::string GetName() const { return #CommandName; }
 
 	class RendererCommandList
 	{
@@ -96,6 +96,6 @@ namespace GraphX
 		std::deque<RenderCommandBase*> m_CommandsForNextPass;
 
 		// Render commands being executed in the current render pass
-		std::deque<RenderCommandBase*> m_CommandsForCurrentPass; 
+		std::deque<RenderCommandBase*> m_CommandsForCurrentPass;
 	};
 }

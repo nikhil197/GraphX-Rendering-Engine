@@ -105,7 +105,32 @@ namespace GraphX
 	void Renderer3D::Render()
 	{
 		s_Data->Stats.GeometryCount += s_Data->RenderQueue.size();
+		
+		auto mode = Renderer::s_Config.Mode;
+		if (mode == RenderMode::Normal)
+		{
+			RenderNormal();
+		}
+		else if (mode == RenderMode::Instanced)
+		{
+			RenderInstanced();
+		}
+		else if (mode == RenderMode::Batched)
+		{
+			// TODO
+		}
+		else if (mode == RenderMode::Hybrid)
+		{
+			// TODO
+		}
+		else
+		{
+			GX_ENGINE_ASSERT(false, "Unknown Rencer Mode {0}", mode);
+		}
+	}
 
+	void Renderer3D::RenderNormal()
+	{
 		while (!s_Data->RenderQueue.empty())
 		{
 			const Ref<Mesh3D>& mesh = s_Data->RenderQueue.front();
@@ -118,7 +143,7 @@ namespace GraphX
 			const Ref<Material>& Mat = mesh->GetMaterial();
 			Mat->Bind();
 			const Ref<Shader>& shader = Mat->GetShader();	// NOTE: No Need to bind the shader again (Material binds the shader)
-			
+
 			// Set the transformation matrix
 			const Matrix4& Model = mesh->GetModelMatrix();
 			shader->SetUniformMat4f("u_Model", Model);
@@ -134,7 +159,7 @@ namespace GraphX
 
 			// Disable the mesh after drawing
 			mesh->Disable();
-			
+
 			// Draw debug collision box
 			if (GX_ENABLE_DEBUG_COLLISIONS_RENDERING)
 			{
@@ -251,5 +276,17 @@ namespace GraphX
 		glDrawElements(RenderMode, Count, Type, indices);
 		s_Data->Stats.DrawCalls++;
 		s_Data->Stats.IndexCount += Count;
+	}
+
+	void Renderer3D::DrawCallInstanced(uint32_t RenderMode, uint32_t IndicesCount, uint32_t Type, uint32_t InstanceCount)
+	{
+		glDrawElementsInstanced(RenderMode, IndicesCount, Type, nullptr, InstanceCount);
+		s_Data->Stats.DrawCalls++;
+		s_Data->Stats.IndexCount += IndicesCount;
+	}
+
+	void Renderer3D::OnRenderModeChange(RenderMode newMode)
+	{
+		//TODO
 	}
 }

@@ -103,6 +103,7 @@ namespace GraphX
 	Ref<Shader> Renderer::s_DebugShader = nullptr;
 	RunnableThread* Renderer::s_RenderThread = nullptr;
 	RenderThread* Renderer::s_RenderThreadRunnable = new RenderThread();
+	Renderer::RendererConfig Renderer::s_Config;
 
 	void Renderer::Init()
 	{
@@ -115,6 +116,9 @@ namespace GraphX
 		s_Renderer = new SimpleRenderer();
 
 		s_SceneInfo = new Renderer::SceneInfo();
+
+		// Default Config
+		s_Config.Mode = RenderMode::Normal;
 
 		// Setup the skybox render data
 		s_SkyboxData = new SkyboxRenderData();
@@ -280,16 +284,6 @@ namespace GraphX
 		Renderer2D::Render();
 	}
 
-	void Renderer::RenderInstanced()
-	{
-		Renderer3D::RenderInstanced();
-
-		Renderer2D::Render();
-
-		// Renderer2D is not instanced for now
-		//Render
-	}
-
 	void Renderer::RenderDepth(Shader& DepthShader)
 	{
 		Renderer3D::Render(DepthShader);
@@ -304,5 +298,17 @@ namespace GraphX
 	void Renderer::RenderIndexed(const IndexBuffer& indexBuffer)
 	{
 		s_Renderer->DrawIndexed(indexBuffer);
+	}
+
+	void Renderer::ChangeRenderMode(RenderMode newMode)
+	{
+		if (s_Config.Mode == newMode)
+		{
+			return;
+		}
+
+		s_Config.Mode = newMode;
+
+		Renderer3D::OnRenderModeChange(newMode);
 	}
 }

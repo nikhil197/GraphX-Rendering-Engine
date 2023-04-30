@@ -488,5 +488,8 @@
     <ClInclude Include="src\Engine\Profiler\EngineRunTimeStats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Core\Renderer\RendererTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

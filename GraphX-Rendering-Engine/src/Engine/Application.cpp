@@ -97,6 +97,7 @@ namespace GraphX
 
 		// Initialise the renderer
 		Renderer::Init();
+		Renderer::ChangeRenderMode(RenderMode::Instanced);
 
 		InitializeApplication();
 	}
@@ -311,7 +312,7 @@ namespace GraphX
 		Ref<Mesh3D> TreeMesh = ft.get();
 		//Ref<Mesh3D> TreeMesh = Mesh3D::Load("res/Models/tree.obj", TreeMaterial);
 		TreeMesh->Scale *= 2.5f;
-		unsigned int NumTree = 100;
+		unsigned int NumTree = 1000;
 		for (unsigned int i = 0; i < NumTree; i++)
 		{
 			TreeMesh->Position = Vector3((2 * EngineUtil::Rand<float>() - 1) * ter->GetWidth() / 2, 0.0f, (2 * EngineUtil::Rand<float>() - 1) * ter->GetDepth() / 2);
@@ -421,7 +422,6 @@ namespace GraphX
 				m_Objects2D[i]->Update(DeltaTime);
 		}
 		
-		// Update lights
 		{
 			GX_PROFILE_SCOPE("Update::3D Meshes")
 
@@ -510,7 +510,7 @@ namespace GraphX
 		}
 		else
 		{
-			Renderer::RenderInstanced();
+			Renderer::Render();
 		}
 		
 		RenderTerrain(IsShadowPhase);

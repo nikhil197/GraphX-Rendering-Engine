@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Renderer/RendererTypes.h"
+
 namespace GraphX
 {
 	class Shader;
@@ -8,6 +10,7 @@ namespace GraphX
 
 	class Renderer3D
 	{
+		friend class Renderer;
 	public:
 		struct Statistics
 		{
@@ -32,9 +35,6 @@ namespace GraphX
 		/* Renders the objects submitted to the rendered*/
 		static void Render();
 
-		/* Renders the submitted objects using instanced rendering */
-		static void RenderInstanced();
-
 		/* Renders the objects submitted to the renderer to the depth framebuffer (Shader should be bound before calling the render method) */
 		static void Render(Shader& DepthShader);
 
@@ -42,12 +42,22 @@ namespace GraphX
 
 		static void ResetStats();
 
+		/* The actual Draw call for the GPU to render geometry */
+		static void DrawCall(uint32_t RenderMode, uint32_t Count, uint32_t Type, const void* indices = nullptr);
+
+		/* The actual Draw call for the GPU to render instanced geometry */
+		static void DrawCallInstanced(uint32_t RenderMode, uint32_t IndicesCount, uint32_t Type, uint32_t InstanceCount);
+
 	private:
+		static void RenderNormal();
+		
 		/* Renders the collision bounds for debugging */
 		static void RenderDebugCollisions(const Ref<GM::BoundingBox>& Box);
 
-		/* The actual Draw call for the GPU to render geometry */
-		static void DrawCall(uint32_t RenderMode, uint32_t Count, uint32_t Type, const void* indices = nullptr);
+		/* Renders the submitted objects using instanced rendering */
+		static void RenderInstanced();
+
+		static void OnRenderModeChange(RenderMode newMode);
 
 	private:
 		struct Renderer3DData
